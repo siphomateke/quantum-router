@@ -1,0 +1,51 @@
+$breakpoints: ( "phone": 400px, "phone-wide": 480px, "phablet": 550px, "tablet-small": 640px, "tablet": 769px, "desktop": 1008px, "widescreen": 1200px);
+@mixin mq($width, $type: min) {
+  @if map_has_key($breakpoints, $width) {
+    $width: map_get($breakpoints, $width);
+    @if $type==max {
+      $width: $width - 1px;
+    }
+    @media only screen and (#{$type}-width: $width) {
+      @content;
+    }
+  }
+  @if $width=="print" {
+    @media only print {
+      @content;
+    }
+  }
+  @if $width=="screen" {
+    @media only screen {
+      @content;
+    }
+  }
+}
+
+@import "~bulma/sass/utilities/functions";
+@import "~bulma/sass/utilities/initial-variables";
+
+// Bulma overrides
+$primary: #00a2d3;
+$primary-invert: findColorInvert($primary);
+
+@import "~bulma/sass/utilities/derived-variables";
+
+/* Custom colors
+--------------------------------------*/
+$drawer-header-color: #F6F7F7;
+$drawer-background-color: #333645;
+
+$drawer-item-color: #b1c5cc;
+$drawer-item-active-background-color: #202334;
+$drawer-item-active-color: #F6F7F7;
+$drawer-item-hover-background-color: lighten(#333645, 5);
+
+// Toolbar
+$toolbar-background-color: #fff;
+$toolbar-border-color: #dddee0;
+$toolbar-item-color: #bdc4ca;
+$toolbar-item-active-color: $success;
+$toolbar-item-hover-color: darken($toolbar-item-color, 20);
+
+// Page
+$page-background-color: #eee;

@@ -1,0 +1,46 @@
+{
+    "manifest_version": 2,
+    "name": "Quantum Router",
+    "short_name": "QuantumRouter",
+    "author": "Sipho Mateke",
+    "version": "0.0.1",
+    "default_locale": "en",
+    "description": "Redesigns router admin pagues for the 21st century.",
+    "icons": {
+        "16" : "./icons/icon128.png",
+        "48" : "./icons/icon128.png",
+        "128" : "./icons/icon128.png"
+    },
+    "content_scripts": [{
+        "matches": [
+            "http://192.168.8.1/*"
+        ],
+        "js": [
+            "./vendor/jquery/jquery.min.js",
+            "./chrome/universal_content.js",
+            "./chrome/content.js"
+        ],
+        "run_at": "document_end"
+    }],
+    "background": {
+        "scripts": [
+            "./vendor/jquery/jquery.min.js",
+            "./chrome/universal.js",
+            "./chrome/background.js"
+        ]
+    },
+    "browser_action": {
+        "default_icon": "icons/icon128.png",
+        "default_title": "Quantum Router"
+    },
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "contextMenus",
+        "notifications",
+        "downloads",
+        "storage",
+        "https://*/*",
+        "http://*/*"
+    ]
+}
