@@ -1,5 +1,5 @@
 <template>
-<router-link exact class="drawer-item link" :to="{ name: link }" active-class="active">
+<router-link class="drawer-item link" :to="{ name: link }" active-class="active">
   <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon>
   <span class="name">{{ label }}</span>
 </router-link>
