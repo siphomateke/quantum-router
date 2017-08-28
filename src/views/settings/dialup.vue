@@ -24,7 +24,7 @@
           </div>
           <b-field label="Search mode">
             <b-select v-model="values.networkSearchMode">
-              <option v-for="option in networkSearchModes" :value="option.id" :key="option.id">
+              <option v-for="option in networkSearchModes" :value="option.value" :key="option.value">
                 {{ option.label }}
               </option>
             </b-select>
@@ -41,11 +41,12 @@
 
 <script>
   export default {
+    name: 'SettingsDialUp',
     data() {
       return {
         networkSearchModes: [
-          {id: 'auto', label: 'Auto'},
-          {id: 'manual', label: 'Manual'}
+          {value: 'auto', label: 'Auto'},
+          {value: 'manual', label: 'Manual'}
         ],
         values:{
           networkSearchMode: 'auto'
