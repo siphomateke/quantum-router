@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home';
-import SMS from '@/views/SMS';
+import Sms from '@/views/Sms';
 import Settings from '@/views/Settings';
-import wlan from '@/views/settings/wlan';
-import dialup from '@/views/settings/dialup';
+import Wlan from '@/views/settings/Wlan';
+import DialUp from '@/views/settings/DialUp';
 
 Vue.use(Router);
 
@@ -19,7 +19,7 @@ export default new Router({
     {
         path: '/sms',
         name: 'sms',
-        component: SMS
+        component: Sms
     },
     {
         path: '/statistics',
@@ -37,13 +37,13 @@ export default new Router({
             {
                 path: 'wlan',
                 name: 'settings/wlan',
-                component: wlan,
+                component: Wlan,
                 label: 'WLAN'
             },
             {
                 path: 'dialup',
                 name: 'settings/dialup',
-                component: dialup,
+                component: DialUp,
                 label: 'Dial-up'
             }
         ]
