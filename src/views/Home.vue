@@ -1,5 +1,5 @@
 <template>
-<div class="card">
+<div class="page-content">
   <h2 class="title is-2">Overview</h2>
   <div class="nav menu">
     <div class="container">
