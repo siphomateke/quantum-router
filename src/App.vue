@@ -55,7 +55,7 @@ export default {
             icon: 'terminal'
           },
           {
-            link: 'settings/wlan',
+            link: 'settings',
             label: 'Settings',
             icon: 'cog'
           }
