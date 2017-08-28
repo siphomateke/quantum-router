@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <div class="page-wrapper columns is-gapless">
+  <div class="app-wrapper columns is-gapless">
     <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
     <div class="column">
       <q-toolbar :items="toolbar.items">
@@ -10,7 +10,7 @@
           </q-toolbar-item>
         </template>
       </q-toolbar>
-      <div class="content">
+      <div class="page-wrapper">
         <router-view></router-view>
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
             icon: 'terminal'
           },
           {
-            link: 'settings',
+            link: 'settings/wlan',
             label: 'Settings',
             icon: 'cog'
           }
@@ -71,7 +71,7 @@ export default {
     }
   },
   methods: {
-    
+
   },
   components: {
     'app-drawer': Drawer,
@@ -95,10 +95,14 @@ body{
   background: $page-background-color;
 }
 
-.content {
-  display: block;
+.page-wrapper{
+  position: relative;
+}
+
+.page-content {
+  /*display: block;
   background-color: $page-background-color;
-  padding: 2em 1em;
+  padding: 2em 1em;*/
 }
 
 .nav.menu {
