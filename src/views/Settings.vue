@@ -12,22 +12,12 @@
             <router-link v-for="item in nav" :key="item.name" active-class="is-active" tag="li" :to="{ name: item.name }">
               <a>{{ item.label }}</a>
             </router-link>
-            <!-- <router-link :to="{ name: 'settings/wlan' }">WLAN</router-link> -->
-            <!-- <li><a>System</a></li> -->
           </ul>
         </nav>
       </div>
     </div>
 
     <router-view></router-view>
-
-    <!--<div>
-      <b-tabs type="is-boxed" v-model="currentTab">
-        <b-tab-item label="Mobile connection"></b-tab-item>
-        <b-tab-item label="WLAN"></b-tab-item>
-        <b-tab-item label="System"></b-tab-item>
-      </b-tabs>
-    </div>-->
 
   </div>
 </div>
