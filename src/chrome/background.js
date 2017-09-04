@@ -11,27 +11,49 @@ chrome.storage.sync.set({
     console.log('Settings saved');
 });
 
-function _recursiveXml2Object($xml) {
-    if ($xml.children().length > 0) {
+var parseXml;
+if (typeof window.DOMParser != "undefined") {
+    parseXml = function(xmlStr) {
+        return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+    };
+} else if (typeof window.ActiveXObject != "undefined" &&
+       new window.ActiveXObject("Microsoft.XMLDOM")) {
+    parseXml = function(xmlStr) {
+        var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+        xmlDoc.async = "false";
+        xmlDoc.loadXML(xmlStr);
+        return xmlDoc;
+    };
+} else {
+    throw new Error("No XML parser found");
+}
+
+function _recursiveXml2Object(xml) {
+    if (xml.children.length > 0) {
         var _obj = {};
-        $xml.children().each(function () {
-            var _childObj = ($(this).children().length > 0) ? _recursiveXml2Object($(this)) : $(this).text();
-            if ($(this).siblings().length > 0 && $(this).siblings().get(0).tagName == this.tagName) {
+        console.log(xml.children);
+        Array.prototype.forEach.call(xml.children, function () {
+            var _childObj = (this.children.length > 0) ? _recursiveXml2Object(this) : this.textContent;
+            var result = Array.prototype.filter.call(this.parentNode.children, function(child){
+              return child !== el;
+            });
+            console.log(result);
+            /*if ($(this).siblings().length > 0 && $(this).siblings().get(0).tagName == this.tagName) {
                 if (_obj[this.tagName] == null) {
                     _obj[this.tagName] = [];
                 }
                 _obj[this.tagName].push(_childObj);
             } else {
                 _obj[this.tagName] = _childObj;
-            }
+            }*/
         });
         return _obj;
     } else {
-        return $xml.text();
+        return xml.textContent;
     }
 }
 
-function xml2object($xml) {
+function xml2object2($xml) {
     var obj = {};
     if ($xml.find('response').length > 0) {
         var _response = _recursiveXml2Object($xml.find('response'));
@@ -53,6 +75,11 @@ function xml2object($xml) {
         obj.type = 'unknown';
     }
     return obj;
+}
+
+function xml2object(xml) {
+  console.dir(xml);
+  console.dir(xml.children);
 }
 
 class HuaweiModule extends Module {
@@ -119,14 +146,49 @@ class HuaweiModule extends Module {
         this.sendTabMessage(data, callback);
     }
 
+    xmlAjax(params) {
+      var request = new XMLHttpRequest();
+      request.open('GET', params.url, true);
+      request.setRequestHeader('Accept', 'application/xml');
+      request.overrideMimeType('application/xml');
+
+      function getXHR(self) {
+        return {
+          responseType: self.responseType,
+          response: self.response,
+          responseText: self.responseText,
+          responseXML: self.responseXML
+        };
+      }
+
+      request.onload = function() {
+        if (this.status >= 200 && this.status < 400) {
+          params.success(getXHR(this));
+        } else {
+          // We reached our target server, but it returned an error
+          params.error(getXHR(this));
+        }
+      };
+
+      request.onerror = function() {
+        // There was a connection error of some sort
+        params.error(getXHR(this));
+      };
+
+      request.send();
+    }
+
     getRouterData(url, callback) {
         var parsedUrl = new URL(this.getTab().url);
         var origin = parsedUrl.origin;
-        $.ajax({
+        this.xmlAjax({
             url: origin + '/' + url,
-            type: 'GET',
-            success: function (data) {
-                var xml;
+            success: function (xhr) {
+              var data = xhr.responseXML;
+              console.log(data);
+              var ret = xml2object(data.documentElement);
+              console.log(ret);
+                /*var xml;
                 if (typeof data === 'string') {
                     // console.log(data);
                     xml = $.parseXML(data);
@@ -140,7 +202,7 @@ class HuaweiModule extends Module {
                 var ret = xml2object($(xml));
                 if (typeof callback !== 'undefined') {
                     callback(ret);
-                }
+                }*/
             }
         });
     }
