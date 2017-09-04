@@ -18,41 +18,24 @@ chrome.storage.sync.set({
   console.log('Settings saved');
 });
 
-var parseXml;
-if (typeof window.DOMParser != "undefined") {
-  parseXml = function(xmlStr) {
-    return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
-  };
-} else if (typeof window.ActiveXObject != "undefined" &&
-  new window.ActiveXObject("Microsoft.XMLDOM")) {
-  parseXml = function(xmlStr) {
-    var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-    xmlDoc.async = "false";
-    xmlDoc.loadXML(xmlStr);
-    return xmlDoc;
-  };
-} else {
-  throw new Error("No XML parser found");
-}
-
 function _recursiveXml2Object(xml) {
   if (xml.children.length > 0) {
     var _obj = {};
-    console.log(xml.children);
-    Array.prototype.forEach.call(xml.children, function() {
-      var _childObj = (this.children.length > 0) ? _recursiveXml2Object(this) : this.textContent;
-      var result = Array.prototype.filter.call(this.parentNode.children, function(child) {
+    Array.prototype.forEach.call(xml.children, function(el) {
+      var _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
+      var siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
         return child !== el;
       });
-      console.log(result);
-      /*if ($(this).siblings().length > 0 && $(this).siblings().get(0).tagName == this.tagName) {
-          if (_obj[this.tagName] == null) {
-              _obj[this.tagName] = [];
-          }
-          _obj[this.tagName].push(_childObj);
+      // If there is more than one of these elements, then it's an array
+      if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
+        if (_obj[el.tagName] == null) {
+          _obj[el.tagName] = [];
+        }
+        _obj[el.tagName].push(_childObj);
+      // Otherwise just store it normally
       } else {
-          _obj[this.tagName] = _childObj;
-      }*/
+        _obj[el.tagName] = _childObj;
+      }
     });
     return _obj;
   } else {
@@ -60,33 +43,11 @@ function _recursiveXml2Object(xml) {
   }
 }
 
-function xml2object2($xml) {
-  var obj = {};
-  if ($xml.find('response').length > 0) {
-    var _response = _recursiveXml2Object($xml.find('response'));
-    obj.type = 'response';
-    obj.response = _response;
-  } else if ($xml.find('error').length > 0) {
-    var _code = $xml.find('code').text();
-    var _message = $xml.find('message').text();
-    obj.type = 'error';
-    obj.error = {
-      code: _code,
-      message: _message
-    };
-  } else if ($xml.find('config').length > 0) {
-    var _config = _recursiveXml2Object($xml.find('config'));
-    obj.type = 'config';
-    obj.config = _config;
-  } else {
-    obj.type = 'unknown';
-  }
-  return obj;
-}
-
 function xml2object(xml) {
-  console.log(xml);
-  console.log(xml.children);
+  var obj = {};
+  obj.type = xml.documentElement.tagName;
+  obj.data = _recursiveXml2Object(xml.documentElement);
+  return obj;
 }
 
 class HuaweiModule extends Module {
@@ -192,24 +153,10 @@ class HuaweiModule extends Module {
       url: origin + '/' + url,
       success: function(xhr) {
         var data = xhr.responseXML;
-        console.log(data);
-        var ret = xml2object(data.documentElement);
-        console.log(ret);
-        /*var xml;
-        if (typeof data === 'string') {
-            // console.log(data);
-            xml = $.parseXML(data);
-        } else if ($.isXMLDoc(data)) {
-            xml = data;
-        }
-        // console.log(xml);
-        var $xml = $(xml);
-        var ret = xml2object($xml);
-
-        var ret = xml2object($(xml));
+        var ret = xml2object(data);
         if (typeof callback !== 'undefined') {
             callback(ret);
-        }*/
+        }
       }
     });
   }
