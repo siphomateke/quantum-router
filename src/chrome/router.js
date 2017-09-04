@@ -1,63 +1,16 @@
-import {
-  Reactor,
-  TabTracker,
-  Module
-} from './universal.js';
-
-class HuaweiModule extends Module {
-  constructor() {
-    super('HuaweiModule');
-    this.tabTracker = new TabTracker({
-      'urlPatterns': chrome.runtime.getManifest().content_scripts[0].matches
-    });
-
-    this.events = new Reactor();
-    this.events.registerEvent('onPageReady');
-
-    this.tabTracker.events.addEventListener('onTabLoad', (tab) => {
-      console.log('Tab loaded: ');
-      console.log(tab);
-    });
-
-    this.tabTracker.events.addEventListener('onTabUnload', (tab) => {
-      console.log('Tab unloaded: ' + tab);
-    });
-
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.from == 'huaweiContent') {
-        if (request.type == 'ready') {
-          this.events.dispatchEvent('onPageReady', request);
-        }
-      }
-    });
+class Router {
+  getTab(callback) {
+    chrome.runtime.sendMessage({
+      from: 'app',
+      type: 'get',
+      get: 'tab'
+    }, callback);
   }
 
-  /** Gets a single tab from the list of injected tabs */
-  getTab() {
-    if (this.tabTracker.numTabs == 1) {
-      return this.tabTracker.tabs[Object.keys(this.tabTracker.tabs)[0]];
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * Sends a chrome message to all WhatsApp tabs
-   * @param {object} data The message data
-   */
   sendTabMessage(data, callback) {
-    if (this.tabTracker.numTabs == 1) {
-      // Calls the default module sendTabMessage
-      super.sendTabMessage(this.getTab().id, data, callback);
-    } else if (this.tabTracker.numTabs > 1) {
-      console.log('Error: More than one WhatsApp tab found!');
-      for (var key in this.tabTracker.tabs) {
-        let tab = this.tabTracker.tabs[key];
-        super.sendTabMessage(tab.id, data, callback);
-      }
-    } else {
-      console.log('Error: No WhatsApp tabs found!');
-    }
+    this.getTab((tab) => {
+      chrome.tabs.sendMessage(tab.id, data, callback);
+    });
   }
 
   _sendPageMessage(_data, callback) {
@@ -132,18 +85,20 @@ class HuaweiModule extends Module {
     return obj;
   }
 
-  getRouterData(url, callback) {
-    var parsedUrl = new URL(this.getTab().url);
-    var origin = parsedUrl.origin;
-    this._xmlAjax({
-      url: origin + '/' + url,
-      success: (xhr) => {
-        var data = xhr.responseXML;
-        var ret = this._xml2object(data);
-        if (typeof callback !== 'undefined') {
-            callback(ret);
+  getAjaxDataDirect(url, callback) {
+    this.getTab((tab) => {
+      var parsedUrl = new URL(tab.url);
+      var origin = parsedUrl.origin;
+      this._xmlAjax({
+        url: origin + '/' + url,
+        success: (xhr) => {
+          var data = xhr.responseXML;
+          var ret = this._xml2object(data);
+          if (typeof callback !== 'undefined') {
+              callback(ret);
+          }
         }
-      }
+      });
     });
   }
 
@@ -153,16 +108,6 @@ class HuaweiModule extends Module {
     this._sendPageMessage(data, callback);
   }
 
-  /**
-   * @callback HuaweiModule~ajaxCallback
-   * @param {object} ret The ajax return data
-   */
-
-  /**
-   * Sends an ajax command to the router
-   * @param {object}   data     The data to send
-   * @param {{HuaweiModule~ajaxCallback}} callback Function called when a response is received
-   */
   saveAjaxData(data, callback) {
     data.type = 'command';
     data.command = 'saveAjaxData';
@@ -209,10 +154,10 @@ class HuaweiModule extends Module {
   }
 
   getSmsCount(callback) {
-    this.getRouterData('api/sms/sms-count', (ret) => {
+    this.getAjaxDataDirect('api/sms/sms-count', (ret) => {
       callback(ret);
     });
   }
 }
 
-export let huawei = new HuaweiModule();
+export let router = new Router();
