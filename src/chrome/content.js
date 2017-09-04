@@ -215,7 +215,7 @@ core.init();
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       console.log(request);
-      if (request.from == 'HuaweiModule') {
+      if (request.from == 'RouterController') {
         if (request.command == 'pageMessage') {
           sendPageMessage(request.data, function(callbackData) {
             sendResponse(callbackData);

@@ -1,4 +1,4 @@
-class Router {
+class RouterController {
   getTab(callback) {
     chrome.runtime.sendMessage({
       from: 'app',
@@ -9,6 +9,7 @@ class Router {
 
   sendTabMessage(data, callback) {
     this.getTab((tab) => {
+      data.from = 'RouterController';
       chrome.tabs.sendMessage(tab.id, data, callback);
     });
   }
