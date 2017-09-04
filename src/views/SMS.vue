@@ -15,6 +15,9 @@
 <script>
 import {SmsList} from '@/components/sms';
 export default {
+  components: {
+    'sms-list': SmsList
+  },
   data() {
     let list  = [
       {read: false, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'},
@@ -31,9 +34,6 @@ export default {
         {label: 'Import', icon: 'download'}
       ]
     };
-  },
-  components: {
-    'sms-list': SmsList
   }
 }
 </script>
