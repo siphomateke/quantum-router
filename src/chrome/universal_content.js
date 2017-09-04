@@ -4,7 +4,7 @@ chrome.runtime.sendMessage({
     loadState: 'load'
 });
 
-$(window).on('unload', function () {
+window.addEventListener('unload', () => {
     chrome.runtime.sendMessage({
         from: 'contentScript',
         type: 'loadEvent',
