@@ -31,8 +31,7 @@ export class Reactor {
    * @param {Object} eventArgs Arguments to be passed to the event callbacks
    */
   dispatchEvent(eventName, eventArgs) {
-    for (var i = 0; i < this.events[eventName].callbacks.length; i++) {
-      var callback = this.events[eventName].callbacks[i];
+    for (let callback of this.events[eventName].callbacks) {
       callback(eventArgs);
     }
   }
@@ -110,10 +109,10 @@ export class TabTools {
    *                               Whether the tab matches or not is passed to this callback
    */
   static tabMatchesUrl(tab, urlPattern, callback) {
-    TabTools.getByUrl(urlPattern, (query_tabs) => {
+    TabTools.getByUrl(urlPattern, (queryTabs) => {
       var foundMatch = false;
-      for (var i = 0; i < query_tabs.length; i++) {
-        if (tab.id == query_tabs[i].id) {
+      for (let queryTab of queryTabs) {
+        if (tab.id == queryTab.id) {
           callback(true);
           foundMatch = true;
           break;
@@ -225,7 +224,6 @@ export class TabTracker {
   }
 }
 
-/** Core extensions class. Handles notifications and saving tabs */
 export class Notifier {
   /**
    * @private
