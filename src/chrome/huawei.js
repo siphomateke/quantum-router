@@ -132,8 +132,7 @@ class HuaweiModule extends Module {
     return obj;
   }
 
-  getRouterData(data, callback) {
-    var url = data.url;
+  getRouterData(url, callback) {
     var parsedUrl = new URL(this.getTab().url);
     var origin = parsedUrl.origin;
     this._xmlAjax({
@@ -210,9 +209,7 @@ class HuaweiModule extends Module {
   }
 
   getSmsCount(callback) {
-    this.getRouterData({
-      url: 'api/sms/sms-count'
-    }, (ret) => {
+    this.getRouterData('api/sms/sms-count', (ret) => {
       callback(ret);
     });
   }
