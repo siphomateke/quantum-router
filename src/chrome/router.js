@@ -13,12 +13,11 @@ class Router {
     });
   }
 
-  _sendPageMessage(_data, callback) {
-    var data = {
+  _sendPageMessage(data, callback) {
+    this.sendTabMessage({
       command: 'pageMessage',
-      data: _data
-    }
-    this.sendTabMessage(data, callback);
+      data: data
+    }, callback);
   }
 
   _xmlAjax(params) {
@@ -29,6 +28,7 @@ class Router {
 
     function getXHR(self) {
       return {
+        status: self.status,
         responseType: self.responseType,
         response: self.response,
         responseText: self.responseText,
