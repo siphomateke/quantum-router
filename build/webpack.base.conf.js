@@ -8,7 +8,7 @@ function resolve (dir) {
 }
 
 module.exports = {
-  context: resolve('src'), // for chrome extension manifest
+  context: resolve('src'),
   entry: {
     'app': './main.js',
     'background': './chrome/background.js',
