@@ -8,11 +8,10 @@ function resolve (dir) {
 }
 
 module.exports = {
-  context: resolve('src'),
   entry: {
-    'app': './main.js',
-    'background': './chrome/background.js',
-    'content': './chrome/content.js'
+    'app': resolve('src/main.js'),
+    'background': resolve('src/chrome/background.js'),
+    'content': resolve('src/chrome/content.js')
   },
   output: {
     path: config.build.assetsRoot,
