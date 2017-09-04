@@ -8,7 +8,7 @@ chrome.browserAction.onClicked.addListener(() => {
   }
 });
 
-let router = {
+const router = {
   tabTracker: new TabTracker({
     'urlPatterns': chrome.runtime.getManifest().content_scripts[0].matches
   }),
@@ -25,7 +25,7 @@ function notifyApp() {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.from) {
-    case 'huaweiContent':
+    case 'huaweiContent': {
       if (request.type === 'ready') {
         router.ready = true;
         if (appLoaded) {
@@ -33,16 +33,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
       }
       break;
-    case 'app':
+    } case 'app': {
       switch (request.type) {
-        case 'get':
+        case 'get': {
           switch (request.get) {
             case 'numTabs':
               sendResponse(router.tabTracker.numTabs);
               break;
             case 'tab':
               if (router.tabTracker.numTabs == 1) {
-                var tab = router.tabTracker.tabs[Object.keys(router.tabTracker.tabs)[0]];
+                const tab = router.tabTracker.tabs[Object.keys(router.tabTracker.tabs)[0]];
                 sendResponse(tab);
               } else {
                 sendResponse(null);
@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               break;
           }
           break;
-        case 'loadEvent':
+        } case 'loadEvent': {
           console.log('App '+request.loadState);
           console.log(request);
           if (request.loadState == 'load') {
@@ -62,7 +62,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             notifyApp();
           }
           break;
+        }
       }
       break;
+    }
   }
 });
