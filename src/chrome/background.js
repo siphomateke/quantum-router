@@ -146,12 +146,13 @@ class HuaweiModule extends Module {
     return obj;
   }
 
-  getRouterData(url, callback) {
+  getRouterData(data, callback) {
+    var url = data.url;
     var parsedUrl = new URL(this.getTab().url);
     var origin = parsedUrl.origin;
     this._xmlAjax({
       url: origin + '/' + url,
-      success: function(xhr) {
+      success: (xhr) => {
         var data = xhr.responseXML;
         var ret = this._xml2object(data);
         if (typeof callback !== 'undefined') {
@@ -160,7 +161,6 @@ class HuaweiModule extends Module {
       }
     });
   }
-
 
   getAjaxData(data, callback) {
     data.type = 'command';
@@ -224,7 +224,7 @@ class HuaweiModule extends Module {
   }
 
   getSmsCount(callback) {
-    this.getAjaxData({
+    this.getRouterData({
       url: 'api/sms/sms-count'
     }, (ret) => {
       callback(ret);
@@ -233,16 +233,3 @@ class HuaweiModule extends Module {
 }
 
 var huawei = new HuaweiModule();
-
-huawei.events.addEventListener('onPageReady', function() {
-  /*huawei.sendUssdCommand('*114#', function (ret) {
-      console.log(ret);
-  });*/
-  /*huawei.getSmsCount(function (ret) {
-      console.log(ret);
-  });*/
-  huawei.getRouterData('api/sms/sms-count', function(ret) {
-    console.log(ret);
-  });
-
-});
