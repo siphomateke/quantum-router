@@ -175,7 +175,7 @@ core.init();
       // Initiate communication with page
       if (event.data.type == 'ready') {
         chrome.runtime.sendMessage({
-          from: 'huaweiContent',
+          from: 'routerContent',
           type: 'ready'
         });
       }

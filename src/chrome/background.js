@@ -16,7 +16,7 @@ const router = {
 }
 
 function notifyApp() {
-  console.log('Tell app huawei content loaded');
+  console.log('Tell app router content script loaded');
   chrome.runtime.sendMessage({
     from: 'background',
     type: 'ready'
@@ -25,7 +25,7 @@ function notifyApp() {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.from) {
-    case 'huaweiContent': {
+    case 'routerContent': {
       if (request.type === 'ready') {
         router.ready = true;
         if (appLoaded) {
