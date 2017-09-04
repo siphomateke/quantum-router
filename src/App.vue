@@ -74,6 +74,13 @@ export default {
   methods: {
 
   },
+  mounted() {
+    chrome.runtime.sendMessage({
+      from: 'app',
+      type: 'loadEvent',
+      loadState: 'load'
+    });
+  },
   components: {
     'app-drawer': Drawer,
     'b-navbar': Navbar,
