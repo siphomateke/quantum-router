@@ -21,7 +21,7 @@ class Router {
   }
 
   _xmlAjax(params) {
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open('GET', params.url, true);
     request.setRequestHeader('Accept', 'application/xml');
     request.overrideMimeType('application/xml');
@@ -55,10 +55,10 @@ class Router {
 
   _recursiveXml2Object(xml) {
     if (xml.children.length > 0) {
-      var _obj = {};
+      let _obj = {};
       Array.prototype.forEach.call(xml.children, function(el) {
-        var _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
-        var siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
+        let _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
+        let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
           return child !== el;
         });
         // If there is more than one of these elements, then it's an array
@@ -79,7 +79,7 @@ class Router {
   }
 
   _xml2object(xml) {
-    var obj = {};
+    let obj = {};
     obj.type = xml.documentElement.tagName;
     obj.data = this._recursiveXml2Object(xml.documentElement);
     return obj;
@@ -87,13 +87,13 @@ class Router {
 
   getAjaxDataDirect(url, callback) {
     this.getTab((tab) => {
-      var parsedUrl = new URL(tab.url);
-      var origin = parsedUrl.origin;
+      let parsedUrl = new URL(tab.url);
+      let origin = parsedUrl.origin;
       this._xmlAjax({
         url: origin + '/' + url,
         success: (xhr) => {
-          var data = xhr.responseXML;
-          var ret = this._xml2object(data);
+          let data = xhr.responseXML;
+          let ret = this._xml2object(data);
           if (typeof callback !== 'undefined') {
               callback(ret);
           }
