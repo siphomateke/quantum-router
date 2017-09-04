@@ -63,7 +63,7 @@ class Router {
         });
         // If there is more than one of these elements, then it's an array
         if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
-          if (_obj[el.tagName] == null) {
+          if (_obj[el.tagName] === null) {
             _obj[el.tagName] = [];
           }
           _obj[el.tagName].push(_childObj);
@@ -121,7 +121,7 @@ class Router {
    * @returns {boolean} if the response is ok
    */
   _isAjaxReturnOk(ret) {
-    return ret.response.toLowerCase() == 'ok';
+    return ret.response.toLowerCase() === 'ok';
   }
 
   /**
