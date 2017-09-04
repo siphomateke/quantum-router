@@ -1,16 +1,18 @@
-chrome.runtime.sendMessage({
-    from: 'contentScript',
-    type: 'loadEvent',
-    loadState: 'load'
-});
+export function init() {
+  chrome.runtime.sendMessage({
+      from: 'contentScript',
+      type: 'loadEvent',
+      loadState: 'load'
+  });
 
-window.addEventListener('unload', () => {
-    chrome.runtime.sendMessage({
-        from: 'contentScript',
-        type: 'loadEvent',
-        loadState: 'unload'
-    })
-});
+  window.addEventListener('unload', () => {
+      chrome.runtime.sendMessage({
+          from: 'contentScript',
+          type: 'loadEvent',
+          loadState: 'unload'
+      })
+  });
+}
 
 function dispatchMouseEvent(target, var_args) {
   let e = document.createEvent("MouseEvents");
@@ -18,7 +20,7 @@ function dispatchMouseEvent(target, var_args) {
   target.dispatchEvent(e);
 };
 
-function simulateClick(el) {
+export function simulateClick(el) {
   let events = ['mouseover', 'mousedown', 'click', 'mouseup'];
   for (let event of events) {
     dispatchMouseEvent(el[0], event, true, true);
