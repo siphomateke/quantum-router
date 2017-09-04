@@ -18,38 +18,6 @@ chrome.storage.sync.set({
   console.log('Settings saved');
 });
 
-function _recursiveXml2Object(xml) {
-  if (xml.children.length > 0) {
-    var _obj = {};
-    Array.prototype.forEach.call(xml.children, function(el) {
-      var _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
-      var siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
-        return child !== el;
-      });
-      // If there is more than one of these elements, then it's an array
-      if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
-        if (_obj[el.tagName] == null) {
-          _obj[el.tagName] = [];
-        }
-        _obj[el.tagName].push(_childObj);
-      // Otherwise just store it normally
-      } else {
-        _obj[el.tagName] = _childObj;
-      }
-    });
-    return _obj;
-  } else {
-    return xml.textContent;
-  }
-}
-
-function xml2object(xml) {
-  var obj = {};
-  obj.type = xml.documentElement.tagName;
-  obj.data = _recursiveXml2Object(xml.documentElement);
-  return obj;
-}
-
 class HuaweiModule extends Module {
   constructor() {
     super('HuaweiModule');
@@ -114,7 +82,7 @@ class HuaweiModule extends Module {
     this.sendTabMessage(data, callback);
   }
 
-  xmlAjax(params) {
+  _xmlAjax(params) {
     var request = new XMLHttpRequest();
     request.open('GET', params.url, true);
     request.setRequestHeader('Accept', 'application/xml');
@@ -146,14 +114,46 @@ class HuaweiModule extends Module {
     request.send();
   }
 
+  _recursiveXml2Object(xml) {
+    if (xml.children.length > 0) {
+      var _obj = {};
+      Array.prototype.forEach.call(xml.children, function(el) {
+        var _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
+        var siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
+          return child !== el;
+        });
+        // If there is more than one of these elements, then it's an array
+        if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
+          if (_obj[el.tagName] == null) {
+            _obj[el.tagName] = [];
+          }
+          _obj[el.tagName].push(_childObj);
+        // Otherwise just store it normally
+        } else {
+          _obj[el.tagName] = _childObj;
+        }
+      });
+      return _obj;
+    } else {
+      return xml.textContent;
+    }
+  }
+
+  _xml2object(xml) {
+    var obj = {};
+    obj.type = xml.documentElement.tagName;
+    obj.data = this._recursiveXml2Object(xml.documentElement);
+    return obj;
+  }
+
   getRouterData(url, callback) {
     var parsedUrl = new URL(this.getTab().url);
     var origin = parsedUrl.origin;
-    this.xmlAjax({
+    this._xmlAjax({
       url: origin + '/' + url,
       success: function(xhr) {
         var data = xhr.responseXML;
-        var ret = xml2object(data);
+        var ret = this._xml2object(data);
         if (typeof callback !== 'undefined') {
             callback(ret);
         }
