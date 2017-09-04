@@ -16,21 +16,17 @@
             "http://192.168.8.1/*"
         ],
         "js": [
-            "./vendor/jquery/jquery.min.js",
-            "./chrome/universal_content.js",
-            "./chrome/content.js"
+            "./js/manifest.js",
+            "./js/vendor.js",
+            "./js/content.js"
         ],
         "run_at": "document_end"
     }],
     "background": {
-        "scripts": [
-            "./vendor/jquery/jquery.min.js",
-            "./chrome/universal.js",
-            "./chrome/background.js"
-        ]
+        "page": "./background.html"
     },
     "browser_action": {
-        "default_icon": "icons/icon128.png",
+        "default_icon": "./icons/icon128.png",
         "default_title": "Quantum Router"
     },
     "permissions": [

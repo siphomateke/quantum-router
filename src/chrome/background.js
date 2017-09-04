@@ -1,3 +1,5 @@
+import {Event,Reactor,TabTools,TabTracker,core,Module} from './universal.js';
+
 chrome.browserAction.onClicked.addListener(() => {
     TabTools.new(chrome.extension.getURL('../index.html'));
 });

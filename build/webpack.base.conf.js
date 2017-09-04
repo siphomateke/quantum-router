@@ -8,8 +8,11 @@ function resolve (dir) {
 }
 
 module.exports = {
+  context: resolve('src'), // for chrome extension manifest
   entry: {
-    app: './src/main.js'
+    'app': './main.js',
+    'background': './chrome/background.js',
+    'content': './chrome/content.js'
   },
   output: {
     path: config.build.assetsRoot,

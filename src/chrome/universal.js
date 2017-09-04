@@ -1,5 +1,5 @@
 /** Class to store event callbacks*/
-class Event {
+export class Event {
     constructor(name) {
         this.name = name;
         this.callbacks = [];
@@ -15,7 +15,7 @@ class Event {
 }
 
 /** Class to event registering, dispatching and eventListeners */
-class Reactor {
+export class Reactor {
     constructor() {
         this.events = {};
     }
@@ -51,7 +51,7 @@ class Reactor {
 }
 
 /** Provides useful tab functions */
-class TabTools {
+export class TabTools {
     /**
      * Opens a new tab
      * @param {string} url The url of the tab to open
@@ -86,7 +86,7 @@ class TabTools {
             callback(activetab);
         });
     }
-    
+
     /**
      * Closes the active tab
      */
@@ -137,7 +137,7 @@ class TabTools {
 }
 
 /** Used to track tabs specified in the manifest. Sends events like onTabLoad and onTabUnload */
-class TabTracker {
+export class TabTracker {
     /**
      * @param {string[]} options.urlPatterns The url patterns of the tabs to be tracked
      * @param {number[]} options.tabIds      The IDs of the tabs to be tracked
@@ -245,7 +245,7 @@ class TabTracker {
 }
 
 /** Core extensions class. Handles notifications and saving tabs */
-class Core {
+export class Core {
     constructor() {
         /**
          * The core extension actions
@@ -287,13 +287,13 @@ class Core {
     }
 }
 
-let core = new Core();
+export let core = new Core();
 
 /**
  * Base class for modules
  * A module is a class that handles a specific task. For example, sending and receiving WhatsApp messages
  */
-class Module {
+export class Module {
     constructor(name) {
         this.name = name;
     }

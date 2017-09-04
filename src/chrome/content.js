@@ -1,3 +1,5 @@
+import './universal_content.js';
+
 // Wrapping in a function to not leak/modify variables if the script
 // was already inserted before.
 (function () {
@@ -19,8 +21,8 @@
             data.from = 'FROM_PAGE_MTN_QUANTUM';
             window.postMessage(data, '*');
         }
-        
-        function sendContentCallback(eventData, data){ 
+
+        function sendContentCallback(eventData, data){
             sendContentMessage({
                 type: 'callback',
                 callbackFunc: eventData.command,
@@ -36,7 +38,7 @@
                 callback(ret);
             }, request.options);
         }
-        
+
         function quantumGetAjaxData(request, callback) {
             getAjaxData(request.url, function ($xml) {
                 var ret = xml2object($xml);
@@ -45,7 +47,7 @@
                 } else {
                     if (ret.error.code == '111019') {
                         setTimeout(() => {
-                            quantumGetAjaxData(request, callback);    
+                            quantumGetAjaxData(request, callback);
                         }, 3000);
                     } else if (ret.error.code == '111020') {
                         callback(ret);
@@ -168,7 +170,7 @@
         if (event.data.from && (event.data.from == 'FROM_PAGE_MTN_QUANTUM')) {
             console.log('Content script received: ' + event.data.type);
             console.log(event.data);
-            
+
             // Initiate communication with page
             if (event.data.type == 'ready') {
                 chrome.runtime.sendMessage({
@@ -176,7 +178,7 @@
                     type: 'ready'
                 });
             }
-            
+
             if (event.data.type == 'callback' && event.data.uuid && event.data.data) {
                 callbacks[event.data.uuid](event.data.data);
                 delete callbacks[event.data.uuid]
