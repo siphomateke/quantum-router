@@ -30,6 +30,7 @@ Vue.use(Buefy, {
   defaultIconPack: 'fa'
 });
 export default {
+  name: 'app',
   data() {
     return {
       drawer: {
