@@ -1,4 +1,4 @@
-import { TabTools, TabTracker } from './universal.js';
+import { TabTools, TabTracker } from './core.js';
 
 let appLoaded = false;
 

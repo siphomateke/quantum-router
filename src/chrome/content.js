@@ -1,4 +1,5 @@
-import './universal_content.js';
+import * as core from './content_core.js';
+core.init();
 
 // Wrapping in a function to not leak/modify variables if the script
 // was already inserted before.
