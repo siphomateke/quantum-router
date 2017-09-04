@@ -74,7 +74,7 @@ export class TabTools {
       active: true,
       currentWindow: true
     }, (tabs) => {
-      var activetab = tabs[0];
+      let activetab = tabs[0];
       callback(activetab);
     });
   }
@@ -110,7 +110,7 @@ export class TabTools {
    */
   static tabMatchesUrl(tab, urlPattern, callback) {
     TabTools.getByUrl(urlPattern, (queryTabs) => {
-      var foundMatch = false;
+      let foundMatch = false;
       for (let queryTab of queryTabs) {
         if (tab.id == queryTab.id) {
           callback(true);
@@ -164,7 +164,7 @@ export class TabTracker {
    */
   _queryTrackTabLoop(tab, index, isTrackTab, callback) {
     if (index < this.urlPatterns.length) {
-      var url = this.urlPatterns[index];
+      let url = this.urlPatterns[index];
       TabTools.tabMatchesUrl(tab, url, (matches) => {
         if (matches) {
           callback(true);
