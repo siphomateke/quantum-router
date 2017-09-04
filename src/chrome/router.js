@@ -1,4 +1,4 @@
-class RouterController {
+class _RouterController {
   getTab(callback) {
     chrome.runtime.sendMessage({
       from: 'app',
@@ -161,4 +161,4 @@ class RouterController {
   }
 }
 
-export let router = new Router();
+export let RouterController = new _RouterController();
