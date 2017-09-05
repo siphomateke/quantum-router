@@ -1,57 +1,48 @@
 class _RouterController {
-  getTab(callback) {
-    chrome.runtime.sendMessage({
-      from: 'app',
-      type: 'get',
-      get: 'tab'
-    }, callback);
-  }
-
-  sendTabMessage(data, callback) {
-    this.getTab((tab) => {
-      data.from = 'RouterController';
-      chrome.tabs.sendMessage(tab.id, data, callback);
+  sendRuntimeMessage(data) {
+    // TODO: Handle chrome message sending errors
+    return new Promise(resolve => {
+      chrome.runtime.sendMessage(data, r => resolve(r));
     });
   }
 
-  _sendPageMessage(data, callback) {
-    this.sendTabMessage({
-      command: 'pageMessage',
-      data: data
-    }, callback);
+  getTab() {
+    return this.sendRuntimeMessage({from: 'app', type: 'get', get: 'tab'});
   }
 
-  _xmlAjax(params) {
-    let request = new XMLHttpRequest();
-    request.open('GET', params.url, true);
-    request.setRequestHeader('Accept', 'application/xml');
-    request.overrideMimeType('application/xml');
+  _sendTabMessage(id, data) {
+    // TODO: Handle chrome message sending errors
+    return new Promise(resolve => {
+      chrome.tabs.sendMessage(id, data, r => resolve(r));
+    });
+  }
 
-    function getXHR(self) {
-      return {
-        status: self.status,
-        responseType: self.responseType,
-        response: self.response,
-        responseText: self.responseText,
-        responseXML: self.responseXML
+  async sendTabMessage(data) {
+    const tab = await this.getTab();
+    data.from = 'RouterController';
+    return this._sendTabMessage(tab.id, data);
+  }
+
+  _sendPageMessage(data) {
+    return this.sendTabMessage({command: 'pageMessage', data: data});
+  }
+
+  _xmlAjax(url) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.setRequestHeader('Accept', 'application/xml');
+      xhr.overrideMimeType('application/xml');
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          resolve(xhr.responseText, xhr.responseXML);
+        } else {
+          reject(xhr.statusText);
+        }
       };
-    }
-
-    request.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        params.success(getXHR(this));
-      } else {
-        // We reached our target server, but it returned an error
-        params.error(getXHR(this));
-      }
-    };
-
-    request.onerror = function() {
-      // There was a connection error of some sort
-      params.error(getXHR(this));
-    };
-
-    request.send();
+      xhr.onerror = () => {reject(xhr.statusText)};
+      xhr.send();
+    });
   }
 
   _recursiveXml2Object(xml) {
@@ -86,33 +77,25 @@ class _RouterController {
     return obj;
   }
 
-  getAjaxDataDirect(url, callback) {
-    this.getTab((tab) => {
-      let parsedUrl = new URL(tab.url);
-      let origin = parsedUrl.origin;
-      this._xmlAjax({
-        url: origin + '/' + url,
-        success: (xhr) => {
-          let data = xhr.responseXML;
-          let ret = this._xml2object(data);
-          if (typeof callback !== 'undefined') {
-              callback(ret);
-          }
-        }
-      });
+  async getAjaxDataDirect(url) {
+    return new Promise(async (resolve, reject) => {
+      const tab = await this.getTab();
+      const parsedUrl = new URL(tab.url);
+      const xml = await this._xmlAjax(parsedUrl.origin + '/' + url);
+      resolve(this._xml2object(xml));
     });
   }
 
-  getAjaxData(data, callback) {
+  getAjaxData(data) {
     data.type = 'command';
     data.command = 'getAjaxData';
-    this._sendPageMessage(data, callback);
+    return this._sendPageMessage(data);
   }
 
   saveAjaxData(data, callback) {
     data.type = 'command';
     data.command = 'saveAjaxData';
-    this._sendPageMessage(data, callback);
+    return this._sendPageMessage(data);
   }
 
   /**
@@ -128,36 +111,31 @@ class _RouterController {
   /**
    * Sends a USSD command to the router
    * @param {string}   command  the command to send
-   * @param {function} callback function called when a response is received
    */
-  sendUssdCommand(command, callback) {
-    this.saveAjaxData({
-      url: 'api/ussd/send',
-      request: {
-        content: command,
-        codeType: 'CodeType',
-        timeout: ''
-      },
-      options: {
-        enc: true
-      }
-    }, (ret) => {
+  async sendUssdCommand(command) {
+    return new Promise(async (resolve, reject) => {
+      const ret = await this.saveAjaxData({
+        url: 'api/ussd/send',
+        request: {
+          content: command,
+          codeType: 'CodeType',
+          timeout: ''
+        },
+        options: {
+          enc: true
+        }
+      });
+
       if (this._isAjaxReturnOk(ret)) {
-        this.getAjaxData({
-          url: 'api/ussd/get'
-        }, (ret2) => {
-          callback(ret2);
-        });
+        resolve(this.getAjaxData({url: 'api/ussd/get'}));
       } else {
-        callback(ret);
+        reject(ret);
       }
     });
   }
 
   getSmsCount(callback) {
-    this.getAjaxDataDirect('api/sms/sms-count', (ret) => {
-      callback(ret);
-    });
+    return this.getAjaxDataDirect('api/sms/sms-count');
   }
 }
 
