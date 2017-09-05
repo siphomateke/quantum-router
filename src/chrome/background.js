@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               sendResponse(router.tabTracker.numTabs);
               break;
             case 'tab':
-              if (router.tabTracker.numTabs == 1) {
+              if (router.tabTracker.numTabs > 0) {
                 const tab = router.tabTracker.tabs[Object.keys(router.tabTracker.tabs)[0]];
                 sendResponse(tab);
               } else {
@@ -53,11 +53,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } case 'loadEvent': {
           console.log('App '+request.loadState);
           console.log(request);
-          if (request.loadState == 'load') {
-            appLoaded = true;
-          } else if (request.loadState == 'unload') {
-            appLoaded = false;
-          }
+          appLoaded = (request.loadState == 'load');
           if (router.ready) {
             notifyApp();
           }
