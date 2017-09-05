@@ -1,6 +1,23 @@
 # Quantum Router
 
-> A chrome extension that replaces the default Huawei router interface
+A chrome extension that replaces the default Huawei router interface.
+
+The default router interface on a Huawei is outdated and difficult to use;
+
+![Screenshot of MTN router interface](img/mtn_router.png?raw=true)
+
+This extension aims to fix that by offering a sleeker more modern alternative UI to the router;
+
+![Screenshot of QuantumRouter interface](img/quantum_router.png?raw=true)
+
+## Current features
+
+## Planned features
+
+- [ ] change settings
+- [ ] sync usage data
+- [ ] live native notifications
+- [ ] graph usage data
 
 ## Build Setup
 
@@ -10,6 +27,9 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+
+# watch .js and .vue files to trigger npm run build
+npm run watch
 
 # build for production with minification
 npm run build
