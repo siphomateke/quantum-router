@@ -1,3 +1,4 @@
+/*global chrome*/
 import Vue from 'vue';
 import App from './App';
 import router from './router';
@@ -7,7 +8,7 @@ window.addEventListener('unload', () => {
     from: 'app',
     type: 'loadEvent',
     loadState: 'unload'
-  })
+  });
 });
 
 Vue.config.productionTip = false;

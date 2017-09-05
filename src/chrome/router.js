@@ -1,3 +1,4 @@
+/*global chrome*/
 class _RouterController {
   sendRuntimeMessage(data) {
     // TODO: Handle chrome message sending errors
@@ -40,7 +41,7 @@ class _RouterController {
           reject(xhr.statusText);
         }
       };
-      xhr.onerror = () => {reject(xhr.statusText)};
+      xhr.onerror = () => {reject(xhr.statusText);};
       xhr.send();
     });
   }
@@ -49,7 +50,7 @@ class _RouterController {
     if (xml.children.length > 0) {
       let _obj = {};
       Array.prototype.forEach.call(xml.children, function(el) {
-        let _childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
+        let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
         let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
           return child !== el;
         });
@@ -78,7 +79,7 @@ class _RouterController {
   }
 
   async getAjaxDataDirect(url) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
       const tab = await this.getTab();
       const parsedUrl = new URL(tab.url);
       const xml = await this._xmlAjax(parsedUrl.origin + '/' + url);
@@ -92,7 +93,7 @@ class _RouterController {
     return this._sendPageMessage(data);
   }
 
-  saveAjaxData(data, callback) {
+  saveAjaxData(data) {
     data.type = 'command';
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data);
@@ -134,7 +135,7 @@ class _RouterController {
     });
   }
 
-  getSmsCount(callback) {
+  getSmsCount() {
     return this.getAjaxDataDirect('api/sms/sms-count');
   }
 }

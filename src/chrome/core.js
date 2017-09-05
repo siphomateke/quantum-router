@@ -1,3 +1,4 @@
+/*global chrome*/
 /** Class to store event callbacks*/
 export class Event {
   constructor(name) {
@@ -61,7 +62,7 @@ export class TabTools {
    * @param {object} tab The tab to close
    */
   static close(tab) {
-    chrome.tabs.remove(tab.id)
+    chrome.tabs.remove(tab.id);
   }
 
   /**
@@ -80,7 +81,7 @@ export class TabTools {
   }
 
   static closeActive() {
-    TabTools.onActive(TabTools.close)
+    TabTools.onActive(TabTools.close);
   }
 
   /**
@@ -90,16 +91,15 @@ export class TabTools {
    */
   static getByUrl(url, callback, multiple = false) {
     chrome.tabs.query({
-        url: url
-      },
-      (tabs) => {
-        if (multiple) {
-          callback(tabs);
-        } else {
-          callback(tabs[0]);
-        }
+      url: url
+    },
+    (tabs) => {
+      if (multiple) {
+        callback(tabs);
+      } else {
+        callback(tabs[0]);
       }
-    );
+    });
   }
 
   /**
@@ -144,7 +144,7 @@ export class TabTracker {
     this.events.registerEvent('onTabLoad');
     this.events.registerEvent('onTabUnload');
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((request, sender) => {
       // Check if this is one of the tabs we should be tracking
       this._queryTrackTab(sender.tab, (isTrackTab) => {
         if (isTrackTab && request.from == 'contentScript' && request.type == 'loadEvent') {
@@ -154,7 +154,7 @@ export class TabTracker {
             this.removeTab(sender.tab);
           }
         }
-      })
+      });
     });
   }
 
