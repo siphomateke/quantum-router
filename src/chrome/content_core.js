@@ -15,9 +15,9 @@ export function init() {
   });
 }
 
-function dispatchMouseEvent(target, ..args) {
+function dispatchMouseEvent(target) {
   let e = document.createEvent('MouseEvents');
-  e.initEvent.apply(e, args);
+  e.initEvent.apply(e, Array.prototype.slice.call(arguments, this.length));
   target.dispatchEvent(e);
 }
 
