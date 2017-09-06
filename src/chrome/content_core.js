@@ -1,4 +1,6 @@
+'use strict';
 /*global chrome*/
+
 export function init() {
   chrome.runtime.sendMessage({
     from: 'contentScript',

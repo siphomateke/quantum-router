@@ -1,4 +1,6 @@
+'use strict';
 /*global chrome*/
+
 class _RouterController {
   sendRuntimeMessage(data) {
     // TODO: Handle chrome message sending errors

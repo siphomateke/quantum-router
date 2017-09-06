@@ -1,4 +1,6 @@
+'use strict';
 /*global chrome*/
+
 import * as core from './content_core.js';
 core.init();
 

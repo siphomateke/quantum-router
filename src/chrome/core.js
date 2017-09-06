@@ -1,4 +1,6 @@
+'use strict';
 /*global chrome*/
+
 /** Class to store event callbacks*/
 export class Event {
   constructor(name) {

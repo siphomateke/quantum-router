@@ -1,4 +1,6 @@
+'use strict';
 /*global chrome*/
+
 import { TabTools, TabTracker } from './core.js';
 
 let appLoaded = false;
