@@ -1,9 +1,9 @@
 'use strict';
-/*global chrome*/
+/* global chrome*/
 
 import {
   TabTools,
-  TabTracker
+  TabTracker,
 } from './core.js';
 
 let appLoaded = false;
@@ -16,16 +16,16 @@ chrome.browserAction.onClicked.addListener(() => {
 
 const router = {
   tabTracker: new TabTracker({
-    'urlPatterns': chrome.runtime.getManifest().content_scripts[0].matches
+    'urlPatterns': chrome.runtime.getManifest().content_scripts[0].matches,
   }),
-  ready: false
+  ready: false,
 };
 
 function notifyApp() {
   console.log('Tell app router content script loaded');
   chrome.runtime.sendMessage({
     from: 'background',
-    type: 'ready'
+    type: 'ready',
   });
 }
 

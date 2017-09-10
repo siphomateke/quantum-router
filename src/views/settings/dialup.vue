@@ -46,12 +46,12 @@
       return {
         networkSearchModes: [
           {value: 'auto', label: 'Auto'},
-          {value: 'manual', label: 'Manual'}
+          {value: 'manual', label: 'Manual'},
         ],
-        values:{
-          networkSearchMode: 'auto'
-        }
-      }
-    }
-  }
+        values: {
+          networkSearchMode: 'auto',
+        },
+      };
+    },
+  };
 </script>

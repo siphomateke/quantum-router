@@ -14,39 +14,39 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
-        path: '/sms',
-        name: 'sms',
-        component: Sms
+      path: '/sms',
+      name: 'sms',
+      component: Sms,
     },
     {
-        path: '/statistics',
-        name: 'statistics',
+      path: '/statistics',
+      name: 'statistics',
     },
     {
-        path: '/ussd',
-        name: 'ussd',
+      path: '/ussd',
+      name: 'ussd',
     },
     {
-        path: '/settings',
-        name: 'settings',
-        component: Settings,
-        children: [
-            {
-                path: 'wlan',
-                name: 'settings/wlan',
-                component: Wlan,
-                label: 'WLAN'
-            },
-            {
-                path: 'dialup',
-                name: 'settings/dialup',
-                component: DialUp,
-                label: 'Dial-up'
-            }
-        ]
-    }
-  ]
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
+      children: [
+        {
+          path: 'wlan',
+          name: 'settings/wlan',
+          component: Wlan,
+          label: 'WLAN',
+        },
+        {
+          path: 'dialup',
+          name: 'settings/dialup',
+          component: DialUp,
+          label: 'Dial-up',
+        },
+      ],
+    },
+  ],
 });

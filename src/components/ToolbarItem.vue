@@ -11,9 +11,9 @@
       'icon': String,
       'label': String,
       'isActive': Boolean,
-      'link': String
-    }
-  }
+      'link': String,
+    },
+  };
 </script>
 
 <style lang="scss" scoped>

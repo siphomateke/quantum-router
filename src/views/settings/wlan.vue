@@ -97,41 +97,41 @@ export default {
         basic: {
           moduleEnabled: false,
           table: [
-            {'ssid' : 'HUAWEI-B315-6DEE', 'security': 'WPA2-PSK', 'status': true},
-            {'ssid' : 'HUAWEI-B315-6DEE-1', 'security': 'WPA2-PSK', 'status': false},
-            {'ssid' : 'HUAWEI-B315-6DEE-2', 'security': 'WPA2-PSK', 'status': false},
-            {'ssid' : 'HUAWEI-B315-6DEE-3', 'security': 'WPA2-PSK', 'status': false},
-          ]
+            {'ssid': 'HUAWEI-B315-6DEE', 'security': 'WPA2-PSK', 'status': true},
+            {'ssid': 'HUAWEI-B315-6DEE-1', 'security': 'WPA2-PSK', 'status': false},
+            {'ssid': 'HUAWEI-B315-6DEE-2', 'security': 'WPA2-PSK', 'status': false},
+            {'ssid': 'HUAWEI-B315-6DEE-3', 'security': 'WPA2-PSK', 'status': false},
+          ],
         },
         advanced: {
           channel: 'auto',
-          wifiBandwidth: 'auto'
-        }
+          wifiBandwidth: 'auto',
+        },
       },
-      options:{
+      options: {
         basic: {table: {security: [
-          {label: 'WPA2-PSK', value:'WPA2-PSK'}
+          {label: 'WPA2-PSK', value: 'WPA2-PSK'},
         ]}},
         advanced: {
           channel: [
             {label: 'Auto', value: 'auto'},
-            {label: 'Manual', value: 'manual'}
+            {label: 'Manual', value: 'manual'},
           ],
           wifiBandwidth: [
             {label: 'Auto (default)', value: 'auto'},
-            {label: 'Other', value: 'other'}
-          ]
-        }
-      }
-    }
+            {label: 'Other', value: 'other'},
+          ],
+        },
+      },
+    };
   },
   methods: {
     getStatusString: (status) => {
-      return status ? 'On' : 'Off'
-    }
+      return status ? 'On' : 'Off';
+    },
   },
   components: {
-    'q-select' : Select
-  }
-}
+    'q-select': Select,
+  },
+};
 </script>

@@ -1,5 +1,5 @@
-import SmsList from './SmsList'
+import SmsList from './SmsList';
 
 export {
-    SmsList
-}
+  SmsList,
+};

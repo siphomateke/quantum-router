@@ -1,26 +1,27 @@
 'use strict';
-/*global chrome*/
+/* global chrome*/
 
 import * as core from './content_core.js';
 core.init();
 
 // Wrapping in a function to not leak/modify variables if the script
 // was already inserted before.
-(function () {
+(function() {
   // Check if content was loaded already
-  if (window.hasRun)
-    return true; // Will ultimately be passed back to executeScript
+  if (window.hasRun) {
+    return true;
+  } // Will ultimately be passed back to executeScript
   window.hasRun = true;
 
   function injectCode(code) {
-    var script = document.createElement('script');
+    let script = document.createElement('script');
     script.textContent = '(' + code + ')()';
     (document.head || document.documentElement).appendChild(script);
     script.parentNode.removeChild(script);
   }
 
   // This function is going to be stringified, and injected in the page
-  injectCode(function () {
+  injectCode(function() {
     function sendContentMessage(data) {
       data.from = 'FROM_PAGE_MTN_QUANTUM';
       window.postMessage(data, '*');
@@ -31,21 +32,21 @@ core.init();
         type: 'callback',
         callbackFunc: eventData.command,
         uuid: eventData.uuid,
-        data: data
+        data: data,
       });
     }
 
     function quantumSaveAjaxData(request, callback) {
-      var xmlString = object2xml('request', request.request);
-      saveAjaxData(request.url, xmlString, function ($xml) {
-        var ret = xml2object($xml);
+      let xmlString = object2xml('request', request.request);
+      saveAjaxData(request.url, xmlString, function($xml) {
+        let ret = xml2object($xml);
         callback(ret);
       }, request.options);
     }
 
     function quantumGetAjaxData(request, callback) {
-      getAjaxData(request.url, function ($xml) {
-        var ret = xml2object($xml);
+      getAjaxData(request.url, function($xml) {
+        let ret = xml2object($xml);
         if (ret.type == 'response') {
           callback(ret);
         } else {
@@ -60,37 +61,38 @@ core.init();
       }, request.options);
     }
 
-    window.addEventListener('message', function (event) {
+    window.addEventListener('message', function(event) {
       // We only accept messages from ourselves
-      if (event.source != window)
+      if (event.source != window) {
         return;
+      }
 
       if (event.data.from && (event.data.from == 'FROM_CONTENT_MTN_QUANTUM')) {
         console.log('Page script received: ');
         console.log(event.data);
         if (event.data.command == 'saveAjaxData') {
-          quantumSaveAjaxData(event.data, function (ret) {
+          quantumSaveAjaxData(event.data, function(ret) {
             sendContentCallback(event.data, ret);
           });
         } else if (event.data.command == 'getAjaxData') {
-          quantumGetAjaxData(event.data, function (ret) {
+          quantumGetAjaxData(event.data, function(ret) {
             sendContentCallback(event.data, ret);
           });
         } else if (event.data.command == 'login') {
           // Make sure user is logged in
-          getAjaxData('api/user/state-login', function ($xml) {
-            var ret = xml2object($xml);
+          getAjaxData('api/user/state-login', function($xml) {
+            let ret = xml2object($xml);
             if (ret.type == 'response') {
               console.log(ret);
               if (ret.response.State != '0') {
-                q_login(event.data.credentials, function () {
+                q_login(event.data.credentials, function() {
                   sendContentMessage({
-                    type: 'ready'
+                    type: 'ready',
                   });
                 });
               } else {
                 sendContentMessage({
-                  type: 'ready'
+                  type: 'ready',
                 });
               }
             }
@@ -100,7 +102,7 @@ core.init();
     });
 
     function login2(name, psd, callback) {
-      var valid = validateInput(name, psd);
+      let valid = validateInput(name, psd);
       if (!valid) {
         return;
       }
@@ -115,18 +117,18 @@ core.init();
       } else {
         psd = base64encode(psd);
       }
-      var request = {
+      let request = {
         Username: name,
         Password: psd,
-        password_type: g_password_type
+        password_type: g_password_type,
       };
       if (valid) {
-        var xmlstr = object2xml('request', request);
+        let xmlstr = object2xml('request', request);
         log.debug('xmlstr = ' + xmlstr);
-        saveAjaxData('api/user/login', xmlstr, function ($xml) {
+        saveAjaxData('api/user/login', xmlstr, function($xml) {
           log.debug('api/user/login successed!');
-          var ret = xml2object($xml);
-          var error = '';
+          let ret = xml2object($xml);
+          let error = '';
           if (isAjaxReturnOK(ret)) {
             $('#logout_span').text(common_logout);
             g_main_displayingPromptStack.pop();
@@ -148,13 +150,13 @@ core.init();
           ret.error = error;
           callback(ret);
         }, {
-          enc: true
+          enc: true,
         });
       }
     }
 
     function q_login(credentials, successCallback) {
-      login2(credentials.username, credentials.password, function (ret) {
+      login2(credentials.username, credentials.password, function(ret) {
         console.log('Logged in');
         console.log(ret);
         if (ret.response.toLowerCase() == 'ok') {
@@ -164,12 +166,13 @@ core.init();
     }
   });
 
-  var callbacks = {};
+  let callbacks = {};
 
-  window.addEventListener('message', function (event) {
+  window.addEventListener('message', function(event) {
     // We only accept messages from ourselves
-    if (event.source != window)
+    if (event.source != window) {
       return;
+    }
 
     if (event.data.from && (event.data.from == 'FROM_PAGE_MTN_QUANTUM')) {
       console.log('Content script received: ' + event.data.type);
@@ -179,7 +182,7 @@ core.init();
       if (event.data.type == 'ready') {
         chrome.runtime.sendMessage({
           from: 'routerContent',
-          type: 'ready'
+          type: 'ready',
         });
       }
 
@@ -191,14 +194,14 @@ core.init();
   }, false);
 
   function uuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
   }
 
   function sendPageMessage(data, callback) {
     data.from = 'FROM_CONTENT_MTN_QUANTUM';
-    var uuid = uuidv4();
+    let uuid = uuidv4();
     callbacks[uuid] = callback;
     data.uuid = uuid;
     window.postMessage(data, '*');
@@ -206,21 +209,21 @@ core.init();
 
   chrome.storage.sync.get({
     username: '',
-    password: ''
-  }, function (items) {
+    password: '',
+  }, function(items) {
     sendPageMessage({
       type: 'command',
       command: 'login',
-      credentials: items
+      credentials: items,
     });
   });
 
   chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
       console.log(request);
       if (request.from == 'RouterController') {
         if (request.command == 'pageMessage') {
-          sendPageMessage(request.data, function (callbackData) {
+          sendPageMessage(request.data, function(callbackData) {
             sendResponse(callbackData);
           });
         }

@@ -11,8 +11,8 @@
       'link': String,
       'icon': String,
       'label': String,
-    }
- }
+    },
+};
 </script>
 
 <style lang="scss" scoped>

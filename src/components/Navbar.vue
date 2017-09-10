@@ -27,21 +27,21 @@
   export default {
     data() {
       return {
-        isActive: false
+        isActive: false,
       };
     },
-    props:{
-      items: Array
+    props: {
+      items: Array,
     },
-    methods:{
-      checkSlot: function (slotName) {
+    methods: {
+      checkSlot: function(slotName) {
         return typeof this.$slots[slotName] !== 'undefined';
       },
       navToggle: function() {
         this.isActive = !this.isActive;
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss">

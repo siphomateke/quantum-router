@@ -1,25 +1,25 @@
 'use strict';
-/*global chrome*/
+/* global chrome*/
 
 export function init() {
   chrome.runtime.sendMessage({
     from: 'contentScript',
     type: 'loadEvent',
-    loadState: 'load'
+    loadState: 'load',
   });
 
   window.addEventListener('unload', () => {
     chrome.runtime.sendMessage({
       from: 'contentScript',
       type: 'loadEvent',
-      loadState: 'unload'
+      loadState: 'unload',
     });
   });
 }
 
 function dispatchMouseEvent(target) {
   let e = document.createEvent('MouseEvents');
-  e.initEvent.apply(e, Array.prototype.slice.call(arguments, this.length));
+  e.initEvent(...Array.prototype.slice.call(arguments, this.length));
   target.dispatchEvent(e);
 }
 

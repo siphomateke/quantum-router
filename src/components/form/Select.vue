@@ -14,24 +14,26 @@
 <script>
   export default {
     name: 'qSelect',
-    data() { return {
-      selected: this.value,
-    };},
-    props: {
-        'label': String,
-        'value': {
-            type: [String, Number, Boolean, Object, Array, Symbol, Function],
-            default: null
-        },
-        'options': {
-          type: Array,
-          default: []
-        }
+    data() {
+      return {
+        selected: this.value,
+      };
     },
-    watch:{
+    props: {
+      'label': String,
+      'value': {
+        type: [String, Number, Boolean, Object, Array, Function],
+        default: null,
+      },
+      'options': {
+        type: Array,
+        default: [],
+      },
+    },
+    watch: {
       selected(value) {
-        this.$emit('input', value)
-      }
-    }
-  }
+        this.$emit('input', value);
+      },
+    },
+  };
 </script>

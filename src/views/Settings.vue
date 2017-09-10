@@ -28,7 +28,7 @@
 export default {
   data() {
     return {
-      nav: []
+      nav: [],
     };
   },
   mounted() {
@@ -48,9 +48,9 @@ export default {
       for (let child of children) {
         this.nav.push({name: child.name, label: child.label});
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

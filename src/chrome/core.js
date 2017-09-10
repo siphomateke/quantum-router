@@ -1,5 +1,5 @@
 'use strict';
-/*global chrome*/
+/* global chrome*/
 
 /** Class to store event callbacks*/
 export class Event {
@@ -57,7 +57,7 @@ export class TabTools {
   static new(url, callback, active) {
     chrome.tabs.create({
       active: active,
-      url: url
+      url: url,
     }, callback);
   }
   /**
@@ -75,7 +75,7 @@ export class TabTools {
   static onActive(callback) {
     chrome.tabs.query({
       active: true,
-      currentWindow: true
+      currentWindow: true,
     }, (tabs) => {
       let activetab = tabs[0];
       callback(activetab);
@@ -93,7 +93,7 @@ export class TabTools {
    */
   static getByUrl(url, callback, multiple = false) {
     chrome.tabs.query({
-      url: url
+      url: url,
     },
     (tabs) => {
       if (multiple) {
@@ -247,11 +247,11 @@ export class Notifier {
   static notify(msg, type = 'normal') {
     if (type == 'error') {
       this._notify({
-        'message': 'Error: ' + msg
+        'message': 'Error: ' + msg,
       });
     } else {
       this._notify({
-        'message': msg
+        'message': msg,
       });
     }
   }

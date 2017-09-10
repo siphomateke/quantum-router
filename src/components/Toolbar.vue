@@ -13,19 +13,21 @@
 <script>
   import ToolbarItem from '@/components/ToolbarItem.vue';
   export default {
-    data() { return { }; },
+    data() {
+      return { };
+    },
     props: {
-      items: Array
+      items: Array,
     },
     methods: {
-      checkSlot: function (slotName) {
+      checkSlot: function(slotName) {
         return typeof this.$slots[slotName] !== 'undefined';
-      }
+      },
     },
     components: {
-      'q-toolbar-item': ToolbarItem
-    }
-  }
+      'q-toolbar-item': ToolbarItem,
+    },
+  };
 </script>
 
 <style lang="scss" scoped>

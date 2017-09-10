@@ -1,11 +1,11 @@
 'use strict';
-/*global chrome*/
+/* global chrome*/
 
 class _RouterController {
   sendRuntimeMessage(data) {
     // TODO: Handle chrome message sending errors
-    return new Promise(resolve => {
-      chrome.runtime.sendMessage(data, r => resolve(r));
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage(data, (r) => resolve(r));
     });
   }
 
@@ -13,14 +13,14 @@ class _RouterController {
     return this.sendRuntimeMessage({
       from: 'app',
       type: 'get',
-      get: 'tab'
+      get: 'tab',
     });
   }
 
   _sendTabMessage(id, data) {
     // TODO: Handle chrome message sending errors
-    return new Promise(resolve => {
-      chrome.tabs.sendMessage(id, data, r => resolve(r));
+    return new Promise((resolve) => {
+      chrome.tabs.sendMessage(id, data, (r) => resolve(r));
     });
   }
 
@@ -33,7 +33,7 @@ class _RouterController {
   _sendPageMessage(data) {
     return this.sendTabMessage({
       command: 'pageMessage',
-      data: data
+      data: data,
     });
   }
 
@@ -60,9 +60,9 @@ class _RouterController {
   _recursiveXml2Object(xml) {
     if (xml.children.length > 0) {
       let _obj = {};
-      Array.prototype.forEach.call(xml.children, function (el) {
+      Array.prototype.forEach.call(xml.children, function(el) {
         let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
-        let siblings = Array.prototype.filter.call(el.parentNode.children, function (child) {
+        let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
           return child !== el;
         });
         // If there is more than one of these elements, then it's an array
@@ -90,7 +90,7 @@ class _RouterController {
   }
 
   async getAjaxDataDirect(url) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const tab = await this.getTab();
       const parsedUrl = new URL(tab.url);
       const xml = await this._xmlAjax(parsedUrl.origin + '/' + url);
@@ -126,22 +126,22 @@ class _RouterController {
    * @param {string}   command  the command to send
    */
   async sendUssdCommand(command) {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const ret = await this.saveAjaxData({
         url: 'api/ussd/send',
         request: {
           content: command,
           codeType: 'CodeType',
-          timeout: ''
+          timeout: '',
         },
         options: {
-          enc: true
-        }
+          enc: true,
+        },
       });
 
       if (this._isAjaxReturnOk(ret)) {
         resolve(this.getAjaxData({
-          url: 'api/ussd/get'
+          url: 'api/ussd/get',
         }));
       } else {
         reject(ret);

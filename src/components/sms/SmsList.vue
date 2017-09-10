@@ -40,15 +40,15 @@ export default {
     'checked-rows': Array,
     'loading': {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     formatDate(date) {
-      return moment(date).fromNow()
-    }
-  }
-}
+      return moment(date).fromNow();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

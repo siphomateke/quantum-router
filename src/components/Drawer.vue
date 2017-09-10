@@ -17,12 +17,12 @@
 import DrawerItem from '@/components/DrawerItem.vue';
 export default {
   components: {
-    'drawer-item': DrawerItem
+    'drawer-item': DrawerItem,
   },
   props: {
     title: String,
-    items: Array
-  }
+    items: Array,
+  },
 };
 </script>
 

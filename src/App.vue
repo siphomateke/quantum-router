@@ -26,10 +26,10 @@ import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
-import { RouterController } from './chrome/router.js';
+import {RouterController} from './chrome/router.js';
 
 Vue.use(Buefy, {
-  defaultIconPack: 'fa'
+  defaultIconPack: 'fa',
 });
 export default {
   name: 'app',
@@ -37,7 +37,7 @@ export default {
     'app-drawer': Drawer,
     'b-navbar': Navbar,
     'q-toolbar': Toolbar,
-    'q-toolbar-item': ToolbarItem
+    'q-toolbar-item': ToolbarItem,
   },
   data() {
     return {
@@ -48,58 +48,58 @@ export default {
         items: [{
           link: 'home',
           label: 'Home',
-          icon: 'home'
+          icon: 'home',
         },
         {
           link: 'sms',
           label: 'SMS',
-          icon: 'comment'
+          icon: 'comment',
         },
         {
           link: 'statistics',
           label: 'Statistics',
-          icon: 'pie-chart'
+          icon: 'pie-chart',
         },
         {
           link: 'ussd',
           label: 'USSD',
-          icon: 'terminal'
+          icon: 'terminal',
         },
         {
           link: 'settings',
           label: 'Settings',
-          icon: 'cog'
-        }
-        ]
+          icon: 'cog',
+        },
+        ],
       },
       toolbar: {
         items: [
-          { id: 0, icon: 'bell' },
-          { id: 1, icon: 'plug' },
-          { id: 2, icon: 'wifi' },
-        ]
-      }
-    }
+          {id: 0, icon: 'bell'},
+          {id: 1, icon: 'plug'},
+          {id: 2, icon: 'wifi'},
+        ],
+      },
+    };
   },
   mounted() {
     chrome.runtime.sendMessage({
       from: 'app',
       type: 'loadEvent',
-      loadState: 'load'
+      loadState: 'load',
     });
     this.refresh(0);
   },
   methods: {
     refresh() {
-      RouterController.getSmsCount().then(response => {
+      RouterController.getSmsCount().then((response) => {
         if (response.type === 'response') {
           this.smsCount = response.data.LocalUnread;
         }
       });
       setTimeout(this.refresh, this.refreshInterval);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">

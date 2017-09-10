@@ -13,29 +13,29 @@
 </template>
 
 <script>
-import { SmsList } from '@/components/sms';
+import {SmsList} from '@/components/sms';
 export default {
   components: {
-    'sms-list': SmsList
+    'sms-list': SmsList,
   },
   data() {
     let list = [
-      { read: false, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.' },
-      { read: true, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.' },
-      { read: true, number: '260977446080', date: '2017-08-28 08:23:26', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' },
-      { read: false, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.' }
-    ]
+      {read: false, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'},
+      {read: true, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'},
+      {read: true, number: '260977446080', date: '2017-08-28 08:23:26', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
+      {read: false, number: 'MTNZM', date: '2017-08-28 08:23:26', content: 'You have Data 16.0 MB Home Data Valid until 2017-09-02 00:00:00. Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'},
+    ];
     return {
       list: list,
       checkedRows: [],
       actions: [
-        { name: "new_message", label: 'New message', icon: 'plus', class: 'is-primary' },
-        { name: "delete", label: 'Delete', icon: 'trash', class: 'is-danger' },
-        { name: "import", label: 'Import', icon: 'download' }
-      ]
+        {name: 'new_message', label: 'New message', icon: 'plus', class: 'is-primary'},
+        {name: 'delete', label: 'Delete', icon: 'trash', class: 'is-danger'},
+        {name: 'import', label: 'Import', icon: 'download'},
+      ],
     };
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
