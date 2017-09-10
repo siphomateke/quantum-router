@@ -1,7 +1,10 @@
 'use strict';
 /*global chrome*/
 
-import { TabTools, TabTracker } from './core.js';
+import {
+  TabTools,
+  TabTracker
+} from './core.js';
 
 let appLoaded = false;
 
@@ -28,7 +31,8 @@ function notifyApp() {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.from) {
-  case 'routerContent': {
+  case 'routerContent':
+  {
     if (request.type === 'ready') {
       router.ready = true;
       if (appLoaded) {
@@ -36,9 +40,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     }
     break;
-  } case 'app': {
+  }
+  case 'app':
+  {
     switch (request.type) {
-    case 'get': {
+    case 'get':
+    {
       switch (request.get) {
       case 'numTabs':
         sendResponse(router.tabTracker.numTabs);
@@ -53,8 +60,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         break;
       }
       break;
-    } case 'loadEvent': {
-      console.log('App '+request.loadState);
+    }
+    case 'loadEvent':
+    {
+      console.log('App ' + request.loadState);
       console.log(request);
       appLoaded = (request.loadState == 'load');
       if (router.ready) {

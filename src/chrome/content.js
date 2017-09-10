@@ -6,7 +6,7 @@ core.init();
 
 // Wrapping in a function to not leak/modify variables if the script
 // was already inserted before.
-(function() {
+(function () {
   // Check if content was loaded already
   if (window.hasRun)
     return true; // Will ultimately be passed back to executeScript
@@ -20,7 +20,7 @@ core.init();
   }
 
   // This function is going to be stringified, and injected in the page
-  injectCode(function() {
+  injectCode(function () {
     function sendContentMessage(data) {
       data.from = 'FROM_PAGE_MTN_QUANTUM';
       window.postMessage(data, '*');
@@ -37,14 +37,14 @@ core.init();
 
     function quantumSaveAjaxData(request, callback) {
       var xmlString = object2xml('request', request.request);
-      saveAjaxData(request.url, xmlString, function($xml) {
+      saveAjaxData(request.url, xmlString, function ($xml) {
         var ret = xml2object($xml);
         callback(ret);
       }, request.options);
     }
 
     function quantumGetAjaxData(request, callback) {
-      getAjaxData(request.url, function($xml) {
+      getAjaxData(request.url, function ($xml) {
         var ret = xml2object($xml);
         if (ret.type == 'response') {
           callback(ret);
@@ -60,7 +60,7 @@ core.init();
       }, request.options);
     }
 
-    window.addEventListener('message', function(event) {
+    window.addEventListener('message', function (event) {
       // We only accept messages from ourselves
       if (event.source != window)
         return;
@@ -69,21 +69,21 @@ core.init();
         console.log('Page script received: ');
         console.log(event.data);
         if (event.data.command == 'saveAjaxData') {
-          quantumSaveAjaxData(event.data, function(ret) {
+          quantumSaveAjaxData(event.data, function (ret) {
             sendContentCallback(event.data, ret);
           });
         } else if (event.data.command == 'getAjaxData') {
-          quantumGetAjaxData(event.data, function(ret) {
+          quantumGetAjaxData(event.data, function (ret) {
             sendContentCallback(event.data, ret);
           });
         } else if (event.data.command == 'login') {
           // Make sure user is logged in
-          getAjaxData('api/user/state-login', function($xml) {
+          getAjaxData('api/user/state-login', function ($xml) {
             var ret = xml2object($xml);
             if (ret.type == 'response') {
               console.log(ret);
               if (ret.response.State != '0') {
-                q_login(event.data.credentials, function() {
+                q_login(event.data.credentials, function () {
                   sendContentMessage({
                     type: 'ready'
                   });
@@ -123,7 +123,7 @@ core.init();
       if (valid) {
         var xmlstr = object2xml('request', request);
         log.debug('xmlstr = ' + xmlstr);
-        saveAjaxData('api/user/login', xmlstr, function($xml) {
+        saveAjaxData('api/user/login', xmlstr, function ($xml) {
           log.debug('api/user/login successed!');
           var ret = xml2object($xml);
           var error = '';
@@ -154,7 +154,7 @@ core.init();
     }
 
     function q_login(credentials, successCallback) {
-      login2(credentials.username, credentials.password, function(ret) {
+      login2(credentials.username, credentials.password, function (ret) {
         console.log('Logged in');
         console.log(ret);
         if (ret.response.toLowerCase() == 'ok') {
@@ -166,7 +166,7 @@ core.init();
 
   var callbacks = {};
 
-  window.addEventListener('message', function(event) {
+  window.addEventListener('message', function (event) {
     // We only accept messages from ourselves
     if (event.source != window)
       return;
@@ -207,7 +207,7 @@ core.init();
   chrome.storage.sync.get({
     username: '',
     password: ''
-  }, function(items) {
+  }, function (items) {
     sendPageMessage({
       type: 'command',
       command: 'login',
@@ -216,11 +216,11 @@ core.init();
   });
 
   chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    function (request, sender, sendResponse) {
       console.log(request);
       if (request.from == 'RouterController') {
         if (request.command == 'pageMessage') {
-          sendPageMessage(request.data, function(callbackData) {
+          sendPageMessage(request.data, function (callbackData) {
             sendResponse(callbackData);
           });
         }
