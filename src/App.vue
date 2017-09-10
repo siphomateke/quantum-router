@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* global chrome */
 import Vue from 'vue';
 import Buefy from 'buefy';
 import Drawer from '@/components/Drawer.vue';
