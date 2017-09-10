@@ -10,7 +10,11 @@ class _RouterController {
   }
 
   getTab() {
-    return this.sendRuntimeMessage({from: 'app', type: 'get', get: 'tab'});
+    return this.sendRuntimeMessage({
+      from: 'app',
+      type: 'get',
+      get: 'tab'
+    });
   }
 
   _sendTabMessage(id, data) {
@@ -27,7 +31,10 @@ class _RouterController {
   }
 
   _sendPageMessage(data) {
-    return this.sendTabMessage({command: 'pageMessage', data: data});
+    return this.sendTabMessage({
+      command: 'pageMessage',
+      data: data
+    });
   }
 
   _xmlAjax(url) {
@@ -38,12 +45,14 @@ class _RouterController {
       xhr.overrideMimeType('application/xml');
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 400) {
-          resolve(xhr.responseText, xhr.responseXML);
+          resolve(xhr.responseXML);
         } else {
           reject(xhr.statusText);
         }
       };
-      xhr.onerror = () => {reject(xhr.statusText);};
+      xhr.onerror = () => {
+        reject(xhr.statusText);
+      };
       xhr.send();
     });
   }
@@ -51,9 +60,9 @@ class _RouterController {
   _recursiveXml2Object(xml) {
     if (xml.children.length > 0) {
       let _obj = {};
-      Array.prototype.forEach.call(xml.children, function(el) {
+      Array.prototype.forEach.call(xml.children, function (el) {
         let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
-        let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
+        let siblings = Array.prototype.filter.call(el.parentNode.children, function (child) {
           return child !== el;
         });
         // If there is more than one of these elements, then it's an array
@@ -62,7 +71,7 @@ class _RouterController {
             _obj[el.tagName] = [];
           }
           _obj[el.tagName].push(_childObj);
-        // Otherwise just store it normally
+          // Otherwise just store it normally
         } else {
           _obj[el.tagName] = _childObj;
         }
@@ -85,6 +94,7 @@ class _RouterController {
       const tab = await this.getTab();
       const parsedUrl = new URL(tab.url);
       const xml = await this._xmlAjax(parsedUrl.origin + '/' + url);
+      // TODO: Make sure xml is type document
       resolve(this._xml2object(xml));
     });
   }
@@ -116,7 +126,7 @@ class _RouterController {
    * @param {string}   command  the command to send
    */
   async sendUssdCommand(command) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
       const ret = await this.saveAjaxData({
         url: 'api/ussd/send',
         request: {
@@ -130,7 +140,9 @@ class _RouterController {
       });
 
       if (this._isAjaxReturnOk(ret)) {
-        resolve(this.getAjaxData({url: 'api/ussd/get'}));
+        resolve(this.getAjaxData({
+          url: 'api/ussd/get'
+        }));
       } else {
         reject(ret);
       }
