@@ -1,27 +1,27 @@
-var utils = require('./utils');
-var webpack = require('webpack');
-var config = require('../config');
-var merge = require('webpack-merge');
-var baseWebpackConfig = require('./webpack.base.conf');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-var ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
+let utils = require('./utils');
+let webpack = require('webpack');
+let config = require('../config');
+let merge = require('webpack-merge');
+let baseWebpackConfig = require('./webpack.base.conf');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+let FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+let ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
 module.exports = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
-      sourceMap: config.dev.cssSourceMap
-    })
+      sourceMap: config.dev.cssSourceMap,
+    }),
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': config.dev.env
+      'process.env': config.dev.env,
     }),
     new ChromeExtensionReloader({
       entries: {
         contentScript: 'content',
-        background: 'background'
-      }
+        background: 'background',
+      },
     }),
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
@@ -29,13 +29,13 @@ module.exports = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       chunks: ['app'],
-      inject: true
+      inject: true,
     }),
     new HtmlWebpackPlugin({
       filename: 'background.html',
       chunks: ['background'],
-      inject: true
+      inject: true,
     }),
-    new FriendlyErrorsPlugin()
-  ]
+    new FriendlyErrorsPlugin(),
+  ],
 });
