@@ -91,10 +91,8 @@ export default {
   },
   methods: {
     refresh() {
-      RouterController.getSmsCount().then((response) => {
-        if (response.type === 'response') {
-          this.smsCount = response.data.LocalUnread;
-        }
+      RouterController.getSmsCount().then((data) => {
+        this.smsCount = data.LocalUnread;
       });
       setTimeout(this.refresh, this.refreshInterval);
     },
