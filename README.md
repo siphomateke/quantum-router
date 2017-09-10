@@ -25,7 +25,7 @@ This extension aims to fix that by offering a sleeker more modern alternative UI
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload as chrome extension
 npm run dev
 
 # watch .js and .vue files to trigger npm run build
