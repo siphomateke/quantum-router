@@ -1,6 +1,9 @@
 'use strict';
 /* global chrome*/
 
+/**
+ * Controls access to the router
+ */
 class _RouterController {
   sendRuntimeMessage(data) {
     // TODO: Handle chrome message sending errors
@@ -26,6 +29,7 @@ class _RouterController {
 
   async sendTabMessage(data) {
     const tab = await this.getTab();
+    // TODO: Handle no tab found
     data.from = 'RouterController';
     return this._sendTabMessage(tab.id, data);
   }
@@ -149,8 +153,55 @@ class _RouterController {
     });
   }
 
-  getSmsCount() {
-    return this.getAjaxDataDirect('api/sms/sms-count');
+  /**
+   * Gets the number of read and unread messages
+   * @return {Promise}
+   */
+  async getSmsCount() {
+    return new Promise(async (resolve, reject) => {
+      let ret = await this.getAjaxDataDirect('api/sms/sms-count');
+      if (ret.type === 'response') {
+        resolve(ret.data);
+      } else {
+        reject(ret);
+      }
+    });
+  }
+
+  /**
+   * Get's the list of SMSs from the router
+   * @param {Object} options Options
+   * @return {Promise}
+   */
+  getSmsList(options) {
+    options = Object.assign({
+      page: 1,
+      perPage: 20,
+      boxType: 1,
+      sortOrder: 'desc',
+    }, options);
+    /*
+    SMS_BOXTYPE_INBOX = 1
+    SMS_BOXTYPE_SENT = 2
+    SMS_BOXTYPE_DRAFT = 3
+    */
+    return this.saveAjaxData({
+      url: 'api/sms/sms-list',
+      request: {
+        PageIndex: options.page,
+        ReadCount: options.perPage,
+        BoxType: options.boxType,
+        SortType: 0,
+        Ascending: options.sortOrder === 'desc' ? 0 : 1,
+        UnreadPreferred: 0,
+      },
+    }).then((ret) => {
+      if (ret.type === 'response') {
+        return ret.response;
+      } else {
+        return Promise.reject(new Error('Returned ajax data is not of type response'));
+      }
+    });
   }
 }
 
