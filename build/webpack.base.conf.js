@@ -33,6 +33,12 @@ module.exports = {
       loader: 'babel-loader',
       include: [utils.resolve('src'), utils.resolve('test')],
     },
+    /* {
+      test: /\.(js|vue)$/,
+      loader: 'eslint-loader',
+      enforce: 'pre',
+      include: [utils.resolve('src'), utils.resolve('test')],
+    },*/
     {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
       loader: 'url-loader',
