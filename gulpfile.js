@@ -1,6 +1,7 @@
-var gulp = require('gulp');
-var notifier = require('node-notifier');
-const { spawn } = require('child_process');
+const gulp = require('gulp');
+const notifier = require('node-notifier');
+const {spawn} = require('child_process');
+const eslint = require('gulp-eslint');
 
 function webpackNotify(message) {
   notifier.notify({
@@ -8,13 +9,13 @@ function webpackNotify(message) {
     'message': message,
     'sound': false,
     'wait': true,
-    'appID': 'Gulp'
+    'appID': 'Gulp',
   });
 }
 
 gulp.task('webpack', function(callback) {
   webpackNotify('Starting webpack.');
-  var build = spawn('node', ['build/build.js']);
+  let build = spawn('node', ['build/build.js']);
 
   build.stdout.on('data', (data) => {
     console.log(data.toString());
@@ -25,11 +26,11 @@ gulp.task('webpack', function(callback) {
   });
 
   build.on('close', (code) => {
-    webpackNotify('Compilation complete!')
+    webpackNotify('Compilation complete!');
     callback(null);
   });
 });
 
 gulp.task('watch', ['webpack'], function() {
-	gulp.watch(['src/**/*.js', 'src/**/*.vue'], ['webpack']);
+  gulp.watch(['src/**/*.js', 'src/**/*.vue'], ['webpack']);
 });
