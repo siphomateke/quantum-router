@@ -12,18 +12,6 @@ const compiler = webpack(webpackConfig);
 
 const watching = compiler.watch({}, (err, stats) => {
   if (err) throw err;
-  process.stdout.write(stats.toString({
-    colors: true,
-    modules: false,
-    children: false,
-    chunks: false,
-    chunkModules: false,
-
-    assets: false,
-    hash: false,
-    version: false,
-    timings: false,
-  }) + '\n\n');
 });
 
 module.exports = {
