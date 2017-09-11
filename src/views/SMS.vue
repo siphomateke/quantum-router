@@ -9,7 +9,7 @@
       </div>
     </div>
     <!-- <sms-list :list="list" :checked-rows="checkedRows"></sms-list> -->
-    <b-message title="Error" type="is-danger" has-icon :active.sync="error.visible">
+    <b-message type="is-danger" has-icon :active.sync="error.visible">
         {{ error.message }}
     </b-message>
     <b-table
@@ -43,7 +43,10 @@
 
       <template slot="empty">
         <section class="section">
-          <p class="content">No messages found.</p>
+          <div class="content has-text-grey has-text-centered">
+            <b-icon pack="fa" icon="frown-o" size="is-large"></b-icon>
+            <p>No SMSs found</p>
+          </div>
         </section>
       </template>
     </b-table>
