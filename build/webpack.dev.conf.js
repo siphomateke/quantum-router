@@ -5,6 +5,7 @@ let merge = require('webpack-merge');
 let baseWebpackConfig = require('./webpack.base.conf');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+let notifier = require('node-notifier');
 let ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 
 module.exports = merge(baseWebpackConfig, {
@@ -36,6 +37,19 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['background'],
       inject: true,
     }),
-    new FriendlyErrorsPlugin(),
+    new FriendlyErrorsPlugin({
+      onErrors: (severity, errors) => {
+        if (severity !== 'error') {
+          return;
+        }
+        const error = errors[0];
+        notifier.notify({
+          title: 'Webpack error',
+          message: severity + ': ' + error.name,
+          subtitle: error.file || '',
+          icon: utils.resolve('img/icon.png'),
+        });
+      },
+    }),
   ],
 });
