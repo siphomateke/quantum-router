@@ -51,14 +51,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse(router.tabTracker.numTabs);
         break;
       case 'tab':
-        if (router.tabTracker.numTabs > 0) {
-          const tab = router.tabTracker.tabs[Object.keys(router.tabTracker.tabs)[0]];
-          sendResponse(tab);
-        } else {
-          // TODO: Handle no tab found
-          sendResponse(null);
-        }
-        break;
+        return sendResponse(router.tabTracker.tabs[Object.keys(router.tabTracker.tabs)[0]]);
       }
       break;
     }

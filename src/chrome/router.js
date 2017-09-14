@@ -2,6 +2,16 @@
 /* global chrome*/
 
 /**
+ * Current errors are xhr_error, tabs_not_found
+ */
+class RouterControllerError {
+  constructor(code, message) {
+    this.code = code;
+    this.error = new Error(message);
+  }
+}
+
+/**
  * Controls access to the router
  */
 class _RouterController {
@@ -17,6 +27,12 @@ class _RouterController {
       from: 'app',
       type: 'get',
       get: 'tab',
+    }).then((tab) => {
+      if (tab) {
+        return tab;
+      } else {
+        return Promise.reject(new RouterControllerError('tabs_not_found','No matched tabs open'));
+      }
     });
   }
 
@@ -27,11 +43,11 @@ class _RouterController {
     });
   }
 
-  async sendTabMessage(data) {
-    const tab = await this.getTab();
-    // TODO: Handle no tab found
-    data.from = 'RouterController';
-    return this._sendTabMessage(tab.id, data);
+  sendTabMessage(data) {
+    return this.getTab().then((tab) => {
+      data.from = 'RouterController';
+      return this._sendTabMessage(tab.id, data);
+    });
   }
 
   _sendPageMessage(data) {
@@ -51,11 +67,11 @@ class _RouterController {
         if (xhr.status >= 200 && xhr.status < 400) {
           resolve(xhr.responseXML);
         } else {
-          reject(xhr.statusText);
+          reject(new RouterControllerError('xhr_error',xhr.statusText));
         }
       };
       xhr.onerror = () => {
-        reject(xhr.statusText);
+        reject(new RouterControllerError('xhr_error', xhr.statusText));
       };
       xhr.send();
     });
@@ -64,7 +80,7 @@ class _RouterController {
   _recursiveXml2Object(xml) {
     if (xml.children.length > 0) {
       let _obj = {};
-      Array.prototype.forEach.call(xml.children, function(el) {
+      Array.prototype.forEach.call(xml.children, (el) => {
         let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
         let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
           return child !== el;
@@ -93,33 +109,68 @@ class _RouterController {
     return obj;
   }
 
-  async getAjaxDataDirect(url) {
-    return new Promise(async (resolve) => {
-      const tab = await this.getTab();
+  getAjaxDataDirect(url) {
+    return this.getTab().then((tab) => {
       const parsedUrl = new URL(tab.url);
-      const xml = await this._xmlAjax(parsedUrl.origin + '/' + url);
-      // TODO: Make sure xml is type document
-      resolve(this._xml2object(xml));
+      return this._xmlAjax(parsedUrl.origin + '/' + url).then((xml) => {
+        // TODO: Make sure xml is type document
+        return this._xml2object(xml).then((ret) => {
+          if ('returnType' in data) {
+            if (ret.type === data.returnType) {
+              return ret[data.returnType];
+            } else {
+              return Promise.reject(new RouterControllerError('xml_type_invalid',
+              'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+            }
+          } else {
+            return ret;
+          }
+        });
+      });
     });
   }
 
   getAjaxData(data) {
     data.type = 'command';
     data.command = 'getAjaxData';
-    return this._sendPageMessage(data);
+    // TODO: data.type
+    return this._sendPageMessage(data).then((ret) => {
+      if ('returnType' in data) {
+        if (ret.type === data.returnType) {
+          return ret[data.returnType];
+        } else {
+          return Promise.reject(new RouterControllerError('xml_type_invalid',
+          'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+        }
+      } else {
+        return ret;
+      }
+    });
   }
 
   saveAjaxData(data) {
     data.type = 'command';
     data.command = 'saveAjaxData';
-    return this._sendPageMessage(data);
+    // TODO: data.type
+    return this._sendPageMessage(data).then((ret) => {
+      if ('returnType' in data) {
+        if (ret.type === data.returnType) {
+          return ret[data.returnType];
+        } else {
+          return Promise.reject(new RouterControllerError('xml_type_invalid',
+          'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+        }
+      } else {
+        return ret;
+      }
+    });
   }
 
   /**
    * Checks if an ajax return is valid by checking if the response is 'ok'
    * @private
    * @param   {object}  ret The AJAX return
-   * @returns {boolean} if the response is ok
+   * @return {boolean} if the response is ok
    */
   _isAjaxReturnOk(ret) {
     return ret.response.toLowerCase() === 'ok';
@@ -128,27 +179,28 @@ class _RouterController {
   /**
    * Sends a USSD command to the router
    * @param {string}   command  the command to send
+   * @return {Promise}
    */
   async sendUssdCommand(command) {
-    return new Promise(async (resolve, reject) => {
-      const ret = await this.saveAjaxData({
-        url: 'api/ussd/send',
-        request: {
-          content: command,
-          codeType: 'CodeType',
-          timeout: '',
-        },
-        options: {
-          enc: true,
-        },
-      });
-
+    return this.saveAjaxData({
+      url: 'api/ussd/send',
+      request: {
+        content: command,
+        codeType: 'CodeType',
+        timeout: '',
+      },
+      options: {
+        enc: true,
+      },
+      returnType: 'response',
+    }).then((ret) => {
       if (this._isAjaxReturnOk(ret)) {
-        resolve(this.getAjaxData({
+        // TODO: Handle getAjaxData fail
+        return this.getAjaxData({
           url: 'api/ussd/get',
-        }));
+        });
       } else {
-        reject(ret);
+        Promise.reject(new RouterControllerError('xml_not_ok',ret));
       }
     });
   }
@@ -158,14 +210,7 @@ class _RouterController {
    * @return {Promise}
    */
   async getSmsCount() {
-    return new Promise(async (resolve, reject) => {
-      let ret = await this.getAjaxDataDirect('api/sms/sms-count');
-      if (ret.type === 'response') {
-        resolve(ret.data);
-      } else {
-        reject(ret);
-      }
-    });
+    return this.getAjaxDataDirect({url:'api/sms/sms-count', returnType: 'response'});
   }
 
   /**
@@ -185,6 +230,7 @@ class _RouterController {
     SMS_BOXTYPE_SENT = 2
     SMS_BOXTYPE_DRAFT = 3
     */
+    // TODO: Handle saveAjaxData fail
     return this.saveAjaxData({
       url: 'api/sms/sms-list',
       request: {
@@ -195,12 +241,7 @@ class _RouterController {
         Ascending: options.sortOrder === 'desc' ? 0 : 1,
         UnreadPreferred: 0,
       },
-    }).then((ret) => {
-      if (ret.type === 'response') {
-        return ret.response;
-      } else {
-        return Promise.reject(new Error('Returned ajax data is not of type response'));
-      }
+      returnType: 'response',
     });
   }
 }
