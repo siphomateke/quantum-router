@@ -21,16 +21,12 @@
 <script>
 /* global chrome */
 import Vue from 'vue';
-import Buefy from 'buefy';
 import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
 import {RouterController} from './chrome/router.js';
 
-Vue.use(Buefy, {
-  defaultIconPack: 'fa',
-});
 export default {
   name: 'app',
   components: {
