@@ -42,7 +42,7 @@
       </template>
 
       <template slot="empty">
-        <section class="section">
+        <section class="section" v-if="!loading">
           <div class="content has-text-grey has-text-centered">
             <b-icon pack="fa" icon="frown-o" size="is-large"></b-icon>
             <p>No SMSs found</p>
