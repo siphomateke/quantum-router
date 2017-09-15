@@ -23,6 +23,15 @@ Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });
 
+const bus = new Vue();
+Vue.mixin({
+  data: function() {
+    return {
+      bus,
+    };
+  },
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
