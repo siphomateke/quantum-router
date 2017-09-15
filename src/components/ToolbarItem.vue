@@ -7,6 +7,7 @@
 
 <script>
   export default {
+    name: 'q-toolbar-item',
     props: {
       'icon': String,
       'label': String,
