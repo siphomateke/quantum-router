@@ -3,6 +3,8 @@
 
 /* const errors = [
   'xhr_error',
+  'xhr_invalid_xml',
+  'xhr_invalid_status',
   'xml_type_invalid',
   'xml_response_not_ok',
   'tabs_not_found',
@@ -47,6 +49,12 @@ class _RouterController {
     });
   }
 
+  /**
+   *
+   * @param {number} id The id of the tab to send a message to
+   * @param {Object} data Data to send to the tab
+   * @return {Promise}
+   */
   _sendTabMessage(id, data) {
     return new Promise((resolve, reject) => {
       chrome.tabs.sendMessage(id, data, (r) => {
@@ -59,6 +67,11 @@ class _RouterController {
     });
   }
 
+  /**
+   * Sends a message to the router's interface tab
+   * @param {Object} data
+   * @return {Promise}
+   */
   sendTabMessage(data) {
     return this.getTab().then((tab) => {
       data.from = 'RouterController';
@@ -81,13 +94,18 @@ class _RouterController {
       xhr.overrideMimeType('application/xml');
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 400) {
-          resolve(xhr.responseXML);
+          if (xhr.responseXML instanceof Document) {
+            resolve(xhr.responseXML);
+          } else {
+            reject(new RouterControllerError('xhr_invalid_xml',
+              'Expected XML to be instance of Document. Got: ' + xhr.responseXML));
+          }
         } else {
-          reject(new RouterControllerError('xhr_error', xhr.statusText));
+          reject(new RouterControllerError('xhr_invalid_status', 'XHR status invalid; '+xhr.statusText));
         }
       };
-      xhr.onerror = () => {
-        reject(new RouterControllerError('xhr_error', xhr.statusText));
+      xhr.onerror = (e) => {
+        reject(new RouterControllerError('xhr_error', 'Unknown XHR error. Status: '+xhr.statusText));
       };
       xhr.send();
     });
@@ -125,11 +143,18 @@ class _RouterController {
     return obj;
   }
 
-  getAjaxDataDirect(url) {
+  /**
+   *
+   * @param {Object} data
+   * @param {string} data.url The url to get ajax data from
+   * @param {string} [data.returnType] The expected returned xml tag.
+   *                                 e.g 'response' would  expect a <response> tag
+   * @return {Promise}
+   */
+  getAjaxDataDirect(data) {
     return this.getTab().then((tab) => {
       const parsedUrl = new URL(tab.url);
-      return this._xmlAjax(parsedUrl.origin + '/' + url).then((xml) => {
-        // TODO: Make sure xml is type document
+      return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
         return this._xml2object(xml).then((ret) => {
           if ('returnType' in data) {
             if (ret.type === data.returnType) {
@@ -146,10 +171,18 @@ class _RouterController {
     });
   }
 
+  /**
+   *
+   * @param {Object} data
+   * @param {string} data.url The url to get ajax data from
+   * @param {Object} [data.options]
+   * @param {string} [data.returnType] The expected returned xml tag.
+   *                                 e.g 'response' would  expect a <response> tag
+   * @return {Promise}
+   */
   getAjaxData(data) {
     data.type = 'command';
     data.command = 'getAjaxData';
-    // TODO: data.type
     return this._sendPageMessage(data).then((ret) => {
       if ('returnType' in data) {
         if (ret.type === data.returnType) {
@@ -164,10 +197,19 @@ class _RouterController {
     });
   }
 
+  /**
+   *
+   * @param {Object} data
+   * @param {string} data.url The url to get ajax data from
+   * @param {Object} data.request
+   * @param {Object} [data.options]
+   * @param {string} [data.returnType] The expected returned xml tag.
+   *                                   e.g 'response' would  expect a <response> tag
+   * @return {Promise}
+   */
   saveAjaxData(data) {
     data.type = 'command';
     data.command = 'saveAjaxData';
-    // TODO: data.type
     return this._sendPageMessage(data).then((ret) => {
       if ('returnType' in data) {
         if (ret.type === data.returnType) {
@@ -211,12 +253,11 @@ class _RouterController {
       returnType: 'response',
     }).then((ret) => {
       if (this._isAjaxReturnOk(ret)) {
-        // TODO: Handle getAjaxData fail
         return this.getAjaxData({
           url: 'api/ussd/get',
         });
       } else {
-        Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
       }
     });
   }
@@ -246,7 +287,6 @@ class _RouterController {
     SMS_BOXTYPE_SENT = 2
     SMS_BOXTYPE_DRAFT = 3
     */
-    // TODO: Handle saveAjaxData fail
     return this.saveAjaxData({
       url: 'api/sms/sms-list',
       request: {
