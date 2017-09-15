@@ -2,6 +2,8 @@
 /* global chrome*/
 
 /* const errors = [
+  'sms_count_response_invalid',
+  'sms_list_response_invalid',
   'xhr_error',
   'xhr_invalid_xml',
   'xhr_invalid_status',
@@ -155,18 +157,17 @@ class _RouterController {
     return this.getTab().then((tab) => {
       const parsedUrl = new URL(tab.url);
       return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
-        return this._xml2object(xml).then((ret) => {
-          if ('returnType' in data) {
-            if (ret.type === data.returnType) {
-              return ret[data.returnType];
-            } else {
-              return Promise.reject(new RouterControllerError('xml_type_invalid',
-                'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
-            }
-          } else {
+        const ret = this._xml2object(xml);
+        if ('returnType' in data) {
+          if (ret.type === data.returnType) {
             return ret;
+          } else {
+            return Promise.reject(new RouterControllerError('xml_type_invalid',
+              'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
           }
-        });
+        } else {
+          return ret;
+        }
       });
     });
   }
@@ -186,7 +187,7 @@ class _RouterController {
     return this._sendPageMessage(data).then((ret) => {
       if ('returnType' in data) {
         if (ret.type === data.returnType) {
-          return ret[data.returnType];
+          return ret;
         } else {
           return Promise.reject(new RouterControllerError('xml_type_invalid',
             'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
@@ -213,7 +214,7 @@ class _RouterController {
     return this._sendPageMessage(data).then((ret) => {
       if ('returnType' in data) {
         if (ret.type === data.returnType) {
-          return ret[data.returnType];
+          return ret;
         } else {
           return Promise.reject(new RouterControllerError('xml_type_invalid',
             'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
@@ -267,7 +268,13 @@ class _RouterController {
    * @return {Promise}
    */
   async getSmsCount() {
-    return this.getAjaxDataDirect({url: 'api/sms/sms-count', returnType: 'response'});
+    return this.getAjaxDataDirect({url: 'api/sms/sms-count', returnType: 'response'}).then((ret) => {
+      if ('data' in ret) {
+        return ret.data;
+      } else {
+        return Promise.reject(new RouterControllerError('sms_count_response_invalid'));
+      }
+    });
   }
 
   /**
@@ -297,6 +304,12 @@ class _RouterController {
         UnreadPreferred: 0,
       },
       returnType: 'response',
+    }).then((ret) => {
+      if ('response' in ret) {
+        return ret.response;
+      } else {
+        return Promise.reject(new RouterControllerError('sms_list_response_invalid'));
+      }
     });
   }
 }
