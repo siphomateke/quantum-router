@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "ES6",
+    "checkJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
@@ -7,5 +9,10 @@
   },
   "include": [
     "./src/**/*"
-  ]
+  ],
+  "typeAcquisition": {
+    "include": [
+      "chrome"
+    ]
+  }
 }
