@@ -1,6 +1,7 @@
 <template>
   <router-link :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}">
     <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
+    <div class="badge" v-if="badgeVisible">{{ badge }}</div>
     <slot></slot>
   </router-link>
 </template>
@@ -11,8 +12,16 @@
     props: {
       'icon': String,
       'label': String,
-      'isActive': Boolean,
+      'isActive': {
+        type: Boolean,
+        default: false,
+      },
       'link': String,
+      'badgeVisible': {
+        type: Boolean,
+        default: false,
+      },
+      'badge': [Number, String],
     },
   };
 </script>

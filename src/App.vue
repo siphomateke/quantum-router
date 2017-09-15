@@ -3,11 +3,11 @@
     <div class="app-wrapper columns is-gapless">
       <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
       <div class="column">
-        <q-toolbar :items="toolbar.items">
+        <q-toolbar>
           <template slot="toolbar-end">
-            <q-toolbar-item icon="bell" link="sms">
-              <div class="badge">{{ smsCount }}</div>
-            </q-toolbar-item>
+            <q-toolbar-item icon="bell" link="sms" :badge="smsCount" :badge-visible="smsCount > 0"></q-toolbar-item>
+            <q-toolbar-item icon="plug"></q-toolbar-item>
+            <q-toolbar-item icon="wifi"></q-toolbar-item>
           </template>
         </q-toolbar>
         <div class="page-wrapper">
@@ -20,7 +20,6 @@
 
 <script>
 /* global chrome */
-import Vue from 'vue';
 import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
@@ -66,13 +65,6 @@ export default {
           label: 'Settings',
           icon: 'cog',
         },
-        ],
-      },
-      toolbar: {
-        items: [
-          {id: 0, icon: 'bell'},
-          {id: 1, icon: 'plug'},
-          {id: 2, icon: 'wifi'},
         ],
       },
     };
