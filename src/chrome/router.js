@@ -4,6 +4,7 @@
 /* const errors = [
   'sms_count_response_invalid',
   'sms_list_response_invalid',
+  'traffic_statistics_response_invalid',
   'xhr_error',
   'xhr_invalid_xml',
   'xhr_invalid_status',
@@ -54,7 +55,7 @@ class _RouterController {
   /**
    *
    * @param {number} id The id of the tab to send a message to
-   * @param {Object} data Data to send to the tab
+   * @param {object} data Data to send to the tab
    * @return {Promise}
    */
   _sendTabMessage(id, data) {
@@ -71,7 +72,7 @@ class _RouterController {
 
   /**
    * Sends a message to the router's interface tab
-   * @param {Object} data
+   * @param {object} data
    * @return {Promise}
    */
   sendTabMessage(data) {
@@ -147,7 +148,7 @@ class _RouterController {
 
   /**
    *
-   * @param {Object} data
+   * @param {object} data
    * @param {string} data.url The url to get ajax data from
    * @param {string} [data.returnType] The expected returned xml tag.
    *                                 e.g 'response' would  expect a <response> tag
@@ -174,9 +175,9 @@ class _RouterController {
 
   /**
    *
-   * @param {Object} data
+   * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   * @param {Object} [data.options]
+   * @param {object} [data.options]
    * @param {string} [data.returnType] The expected returned xml tag.
    *                                 e.g 'response' would  expect a <response> tag
    * @return {Promise}
@@ -200,10 +201,10 @@ class _RouterController {
 
   /**
    *
-   * @param {Object} data
+   * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   * @param {Object} data.request
-   * @param {Object} [data.options]
+   * @param {object} data.request
+   * @param {object} [data.options]
    * @param {string} [data.returnType] The expected returned xml tag.
    *                                   e.g 'response' would  expect a <response> tag
    * @return {Promise}
@@ -264,8 +265,25 @@ class _RouterController {
   }
 
   /**
+   * @typedef SmsCount
+   * @property {number} LocalUnread
+   * @property {number} LocalInbox
+   * @property {number} LocalOutbox
+   * @property {number} LocalDraft
+   * @property {number} LocalDeleted
+   * @property {number} SimUnread
+   * @property {number} SimInbox
+   * @property {number} SimOutbox
+   * @property {number} SimDraft
+   * @property {number} LocalMax
+   * @property {number} SimMax
+   * @property {number} SimUsed
+   * @property {number} NewMsg
+   */
+
+  /**
    * Gets the number of read and unread messages
-   * @return {Promise}
+   * @return {Promise<SmsCount>}
    */
   async getSmsCount() {
     return this.getAjaxDataDirect({url: 'api/sms/sms-count', returnType: 'response'}).then((ret) => {
@@ -278,13 +296,37 @@ class _RouterController {
   }
 
   /**
+   * @typedef Message
+   * @property {number} Smstat
+   * @property {number} Index
+   * @property {string|number} Phone The phone number from which the SMS was sent
+   * @property {string} Content The actual content of the SMS
+   * @property {string} Date The date the SMS was received
+   * @property {*} Sca
+   * @property {number} SaveType
+   * @property {number} Priority
+   * @property {number} SmsType
+   */
+
+  /**
+   * @typedef Messages
+   * @property {Message[]} Message
+   */
+
+  /**
+   * @typedef SmsList
+   * @property {number} Count
+   * @property {Messages} Messages
+   */
+
+  /**
    * Get's the list of SMSs from the router
-   * @param {Object} options Options
+   * @param {object} options Options
    * @param {number} [options.page=1]
    * @param {number} [options.perPage=20]
    * @param {(1|2|3)} [options.boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
    * @param {('desc'|'asc')} [options.sortOrder=desc]
-   * @return {Promise}
+   * @return {Promise<SmsList>}
    */
   getSmsList(options) {
     options = Object.assign({
@@ -309,6 +351,37 @@ class _RouterController {
         return ret.response;
       } else {
         return Promise.reject(new RouterControllerError('sms_list_response_invalid'));
+      }
+    });
+  }
+
+  /**
+   * @typedef TrafficStatistics
+   * @property {number} CurrentConnectTime
+   * @property {number} CurrentDownload
+   * @property {number} CurrentDownloadRate
+   * @property {number} CurrentUpload
+   * @property {number} CurrentUploadRate
+   *
+   * @property {number} TotalConnectTime
+   * @property {number} TotalDownload
+   * @property {number} TotalUpload
+   * @property {number} TotalDownload
+   * @property {number} showtraffic
+   */
+
+  /**
+   * @return {Promise<TrafficStatistics>}
+   */
+  getTrafficStatistics() {
+    return this.getAjaxDataDirect({
+      url: 'api/monitoring/traffic-statistics',
+      returnType: 'response',
+    }).then((ret) => {
+      if ('data' in ret) {
+        return ret.data;
+      } else {
+        return Promise.reject(new RouterControllerError('traffic_statistics_response_invalid'));
       }
     });
   }
