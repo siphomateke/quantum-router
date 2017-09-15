@@ -5,27 +5,20 @@
     </div>
     <div class="toolbar-end">
       <slot name="toolbar-end"></slot>
-      <q-toolbar-item v-for="item in items" :key="item.id" :isActive="item.isActive" :icon="item.icon" :label="item.label"></q-toolbar-item>
     </div>
   </div>
 </template>
 
 <script>
-  import ToolbarItem from '@/components/ToolbarItem.vue';
   export default {
+    name: 'q-toolbar',
     data() {
       return { };
-    },
-    props: {
-      items: Array,
     },
     methods: {
       checkSlot: function(slotName) {
         return typeof this.$slots[slotName] !== 'undefined';
       },
-    },
-    components: {
-      'q-toolbar-item': ToolbarItem,
     },
   };
 </script>
