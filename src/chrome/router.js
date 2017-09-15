@@ -1,9 +1,15 @@
 'use strict';
 /* global chrome*/
 
-/**
- * Current errors are xhr_error, tabs_not_found
- */
+/* const errors = [
+  'xhr_error',
+  'xml_type_invalid',
+  'xml_response_not_ok',
+  'tabs_not_found',
+  'chrome_runtime_message_error',
+  'chrome_tabs_message_error',
+];*/
+
 class RouterControllerError {
   constructor(code, message) {
     this.code = code;
@@ -16,9 +22,14 @@ class RouterControllerError {
  */
 class _RouterController {
   sendRuntimeMessage(data) {
-    // TODO: Handle chrome message sending errors
-    return new Promise((resolve) => {
-      chrome.runtime.sendMessage(data, (r) => resolve(r));
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(data, (r) => {
+        if (!chrome.runtime.lastError) {
+          resolve(r);
+        } else {
+          reject(new RouterControllerError('chrome_runtime_message_error', chrome.runtime.lastError));
+        }
+      });
     });
   }
 
@@ -31,15 +42,20 @@ class _RouterController {
       if (tab) {
         return tab;
       } else {
-        return Promise.reject(new RouterControllerError('tabs_not_found','No matched tabs open'));
+        return Promise.reject(new RouterControllerError('tabs_not_found', 'No matched tabs open'));
       }
     });
   }
 
   _sendTabMessage(id, data) {
-    // TODO: Handle chrome message sending errors
-    return new Promise((resolve) => {
-      chrome.tabs.sendMessage(id, data, (r) => resolve(r));
+    return new Promise((resolve, reject) => {
+      chrome.tabs.sendMessage(id, data, (r) => {
+        if (!chrome.runtime.lastError) {
+          resolve(r);
+        } else {
+          reject(new RouterControllerError('chrome_tabs_message_error', chrome.runtime.lastError));
+        }
+      });
     });
   }
 
@@ -67,7 +83,7 @@ class _RouterController {
         if (xhr.status >= 200 && xhr.status < 400) {
           resolve(xhr.responseXML);
         } else {
-          reject(new RouterControllerError('xhr_error',xhr.statusText));
+          reject(new RouterControllerError('xhr_error', xhr.statusText));
         }
       };
       xhr.onerror = () => {
@@ -120,7 +136,7 @@ class _RouterController {
               return ret[data.returnType];
             } else {
               return Promise.reject(new RouterControllerError('xml_type_invalid',
-              'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+                'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
             }
           } else {
             return ret;
@@ -140,7 +156,7 @@ class _RouterController {
           return ret[data.returnType];
         } else {
           return Promise.reject(new RouterControllerError('xml_type_invalid',
-          'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+            'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
         }
       } else {
         return ret;
@@ -158,7 +174,7 @@ class _RouterController {
           return ret[data.returnType];
         } else {
           return Promise.reject(new RouterControllerError('xml_type_invalid',
-          'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
+            'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
         }
       } else {
         return ret;
@@ -200,7 +216,7 @@ class _RouterController {
           url: 'api/ussd/get',
         });
       } else {
-        Promise.reject(new RouterControllerError('xml_not_ok',ret));
+        Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
       }
     });
   }
@@ -210,7 +226,7 @@ class _RouterController {
    * @return {Promise}
    */
   async getSmsCount() {
-    return this.getAjaxDataDirect({url:'api/sms/sms-count', returnType: 'response'});
+    return this.getAjaxDataDirect({url: 'api/sms/sms-count', returnType: 'response'});
   }
 
   /**
