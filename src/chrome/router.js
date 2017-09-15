@@ -273,6 +273,10 @@ class _RouterController {
   /**
    * Get's the list of SMSs from the router
    * @param {Object} options Options
+   * @param {number} [options.page=1]
+   * @param {number} [options.perPage=20]
+   * @param {(1|2|3)} [options.boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
+   * @param {('desc'|'asc')} [options.sortOrder=desc]
    * @return {Promise}
    */
   getSmsList(options) {
@@ -282,11 +286,6 @@ class _RouterController {
       boxType: 1,
       sortOrder: 'desc',
     }, options);
-    /*
-    SMS_BOXTYPE_INBOX = 1
-    SMS_BOXTYPE_SENT = 2
-    SMS_BOXTYPE_DRAFT = 3
-    */
     return this.saveAjaxData({
       url: 'api/sms/sms-list',
       request: {
