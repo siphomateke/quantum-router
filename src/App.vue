@@ -24,7 +24,7 @@ import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
-import {RouterController} from './chrome/router.js';
+import {RouterController} from '@/chrome/router.js';
 
 export default {
   name: 'app',
@@ -75,13 +75,16 @@ export default {
       type: 'loadEvent',
       loadState: 'load',
     });
+    this.bus.$on('refresh', () => {
+      RouterController.getSmsCount().then((data) => {
+        this.smsCount = data.LocalUnread;
+      });
+    });
     this.refresh(0);
   },
   methods: {
     refresh() {
-      RouterController.getSmsCount().then((data) => {
-        this.smsCount = data.LocalUnread;
-      });
+      this.bus.$emit('refresh');
       setTimeout(this.refresh, this.refreshInterval);
     },
   },
