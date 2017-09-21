@@ -41,7 +41,7 @@ export default {
         self.end(); return;
       }
 
-      let it = {id: ids++, text: text, type: 'ntf' + (type ? ' ' + type : '')};
+      let it = {id: ids++, text: text, type: type ? type : ''};
 
       time = (time !== undefined ? time : self.duration);
 
@@ -97,36 +97,8 @@ export default {
 
 .vs-notify {
   position: fixed;
-  /* width: 300px; */
   z-index: 9999;
 }
-
-/*.vs-notify .ntf {
-  font-size: 14px;
-  padding: 10px;
-  margin: 0 5px 5px;
-  color: #fff;
-  background: #44A4FC;
-  border-left: 5px solid #187FE7;
-  box-sizing: border-box;
-  text-align: left;
-  cursor: pointer;
-}*/
-
-/*.vs-notify .warn {
-  background: #ffb648;
-  border-left-color: #f48a06;
-}
-
-.vs-notify .error {
-  background: #E54D42;
-  border-left-color: #B82E24;
-}
-
-.vs-notify .success {
-  background: #68CD86;
-  border-left-color: #42A85F;
-}*/
 
 .ntf-left-enter-active,
 .ntf-left-leave-active,
