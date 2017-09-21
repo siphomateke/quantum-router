@@ -19,6 +19,7 @@ module.exports = {
     alias: {
       '@': utils.resolve('src'),
       'styles': utils.resolve('src/styles'),
+      'vendor': utils.resolve('vendor'),
     },
   },
   module: {
