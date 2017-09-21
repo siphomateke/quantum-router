@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <vs-notify position="top center" group="notifications" transition="ntf-top">
+      <template slot="body" scope="props">
+        <b-notification
+        :type="'is-' + props.item.type"
+        has-icon
+        @close="() => {props.close()}">
+          <div v-html="props.item.text"></div>
+        </b-notification>
+      </template>
+    </vs-notify>
     <div class="app-wrapper columns is-gapless">
       <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
       <div class="column">
@@ -24,6 +34,7 @@ import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
+import {VsNotify} from '@/components/vs-notify';
 import {RouterController} from '@/chrome/router.js';
 
 export default {
@@ -33,6 +44,7 @@ export default {
     'b-navbar': Navbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
+    'vs-notify': VsNotify,
   },
   data() {
     return {
@@ -42,30 +54,33 @@ export default {
         title: 'Quantum Router',
         items: [{
           link: 'home',
-          label: 'Home',
+          label: chrome.i18n.getMessage('menu_home'),
           icon: 'home',
         },
         {
           link: 'sms',
-          label: 'SMS',
+          label: chrome.i18n.getMessage('menu_sms'),
           icon: 'comment',
         },
         {
           link: 'statistics',
-          label: 'Statistics',
+          label: chrome.i18n.getMessage('menu_statistics'),
           icon: 'pie-chart',
         },
         {
           link: 'ussd',
-          label: 'USSD',
+          label: chrome.i18n.getMessage('menu_services'),
           icon: 'terminal',
         },
         {
           link: 'settings',
-          label: 'Settings',
+          label: chrome.i18n.getMessage('menu_settings'),
           icon: 'cog',
         },
         ],
+      },
+      error: {
+        visible: false,
       },
     };
   },
@@ -78,6 +93,24 @@ export default {
     this.bus.$on('refresh', () => {
       RouterController.getSmsCount().then((data) => {
         this.smsCount = data.LocalUnread;
+      }).catch((err) => {
+        // this.$notify('notifications', , 'danger');
+        let message = err.code+' : '+err.error.message;
+        if (err.code === 'tabs_not_found') {
+          message = chrome.i18n.getMessage('router_error_'+err.code);
+        }
+        if (!this.error.visible) {
+          this.error.visible = true;
+          this.$dialog.alert({
+            title: 'Error',
+            type: 'is-danger',
+            hasIcon: true,
+            message: message,
+            onConfirm: () => {
+              this.error.visible = false;
+            },
+          });
+        }
       });
     });
     this.refresh(0);
