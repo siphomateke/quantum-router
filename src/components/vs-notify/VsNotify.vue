@@ -97,6 +97,7 @@ export default {
 
 .vs-notify {
   position: fixed;
+  width:900px;
   z-index: 9999;
 }
 
