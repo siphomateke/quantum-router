@@ -30,6 +30,23 @@ class RouterControllerError {
  * Controls access to the router
  */
 class _RouterController {
+  constructor() {
+    this.apiErrorCodes = {
+      100002: 'ERROR_SYSTEM_NO_SUPPORT',
+      100003: 'ERROR_SYSTEM_NO_RIGHTS',
+      100004: 'ERROR_SYSTEM_BUSY',
+      108001: 'ERROR_LOGIN_USERNAME_WRONG',
+      108002: 'ERROR_LOGIN_PASSWORD_WRONG',
+      108003: 'ERROR_LOGIN_ALREADY_LOGIN',
+      108006: 'ERROR_LOGIN_USERNAME_PWD_WRONG',
+      108007: 'ERROR_LOGIN_USERNAME_PWD_ORERRUN',
+      120001: 'ERROR_VOICE_BUSY',
+      125001: 'ERROR_WRONG_TOKEN',
+      125002: 'ERROR_WRONG_SESSION',
+      125003: 'ERROR_WRONG_SESSION_TOKEN',
+    };
+  }
+
   sendRuntimeMessage(data) {
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(data, (r) => {
@@ -173,11 +190,28 @@ class _RouterController {
     return obj;
   }
 
+  _getRouterApiErrorName(code) {
+    return this.apiErrorCodes[code];
+  }
+
+  _validateXmlResponse(ret, data) {
+    if (ret.type === 'response') {
+      return ret;
+    } else if (ret.type === 'error') {
+      let errorName = this._getRouterApiErrorName(ret.data.code);
+      let message = errorName ? errorName : ret.data.code;
+      message += ((ret.data.message) ? ' : ' + ret.data.message : '');
+      return Promise.reject(new RouterControllerError('router_api_error', message));
+    } else {
+      return Promise.reject(new RouterControllerError('xml_type_invalid',
+        'Returned xml data does not contain &lt;response&gt; instead it contains: &lt;'+ret.type+'&gt;'));
+    }
+  }
+
   /**
    *
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   * @param {string} [data.returnType] The expected returned xml tag.
    *                                 e.g 'response' would  expect a <response> tag
    * @return {Promise}
    */
@@ -195,16 +229,7 @@ class _RouterController {
       }
       return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
         const ret = this._xml2object(xml);
-        if ('returnType' in data) {
-          if (ret.type === data.returnType) {
-            return ret;
-          } else {
-            return Promise.reject(new RouterControllerError('xml_type_invalid',
-              'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
-          }
-        } else {
-          return ret;
-        }
+        return this._validateXmlResponse(ret, data);
       });
     });
   }
@@ -214,7 +239,6 @@ class _RouterController {
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
    * @param {object} [data.options]
-   * @param {string} [data.returnType] The expected returned xml tag.
    *                                 e.g 'response' would  expect a <response> tag
    * @return {Promise}
    */
@@ -222,16 +246,7 @@ class _RouterController {
     data.type = 'command';
     data.command = 'getAjaxData';
     return this._sendPageMessage(data).then((ret) => {
-      if ('returnType' in data) {
-        if (ret.type === data.returnType) {
-          return ret;
-        } else {
-          return Promise.reject(new RouterControllerError('xml_type_invalid',
-            'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
-        }
-      } else {
-        return ret;
-      }
+      return this._validateXmlResponse(ret, data);
     });
   }
 
@@ -241,7 +256,6 @@ class _RouterController {
    * @param {string} data.url The url to get ajax data from
    * @param {object} data.request
    * @param {object} [data.options]
-   * @param {string} [data.returnType] The expected returned xml tag.
    *                                   e.g 'response' would  expect a <response> tag
    * @return {Promise}
    */
@@ -249,16 +263,7 @@ class _RouterController {
     data.type = 'command';
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data).then((ret) => {
-      if ('returnType' in data) {
-        if (ret.type === data.returnType) {
-          return ret;
-        } else {
-          return Promise.reject(new RouterControllerError('xml_type_invalid',
-            'Returned xml data does not contain <'+data.returnType+'> instead it contains: '+ret.type));
-        }
-      } else {
-        return ret;
-      }
+      return this._validateXmlResponse(ret, data);
     });
   }
 
@@ -288,7 +293,6 @@ class _RouterController {
       options: {
         enc: true,
       },
-      returnType: 'response',
     }).then((ret) => {
       if (this._isAjaxReturnOk(ret)) {
         return this.getAjaxData({
@@ -322,7 +326,7 @@ class _RouterController {
    * @return {Promise<SmsCount>}
    */
   async getSmsCount() {
-    return this.getAjaxDataDirect({url: 'api/sms/sms-count', returnType: 'response'}).then((ret) => {
+    return this.getAjaxDataDirect({url: 'api/sms/sms-count'}).then((ret) => {
       if ('data' in ret) {
         return ret.data;
       } else {
@@ -381,7 +385,6 @@ class _RouterController {
         Ascending: options.sortOrder === 'desc' ? 0 : 1,
         UnreadPreferred: 0,
       },
-      returnType: 'response',
     }).then((ret) => {
       if ('response' in ret) {
         return ret.response;
@@ -412,7 +415,6 @@ class _RouterController {
   getTrafficStatistics() {
     return this.getAjaxDataDirect({
       url: 'api/monitoring/traffic-statistics',
-      returnType: 'response',
     }).then((ret) => {
       if ('data' in ret) {
         return ret.data;
