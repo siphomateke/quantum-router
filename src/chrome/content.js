@@ -207,10 +207,7 @@ core.init();
     window.postMessage(data, '*');
   }
 
-  chrome.storage.sync.get({
-    username: '',
-    password: '',
-  }, function(items) {
+  chrome.storage.sync.get(['username', 'password'], function(items) {
     sendPageMessage({
       type: 'command',
       command: 'login',

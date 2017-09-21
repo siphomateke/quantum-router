@@ -1,6 +1,16 @@
 'use strict';
 /* global chrome*/
 
+// Set default settings
+// TODO: Add router options
+chrome.storage.sync.get({
+  routerUrl: 'http://192.168.1.1',
+  username: '',
+  password: '',
+}, (data) => {
+  chrome.storage.sync.set(data);
+});
+
 import {
   TabTools,
   TabTracker,
