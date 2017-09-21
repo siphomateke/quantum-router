@@ -235,6 +235,16 @@ class _RouterController {
   }
 
   /**
+   * Converts an xml string to an object
+   * @param {string} xml
+   * @return {object}
+   */
+  _parseXmlString(xml) {
+    let xmlDocument = new DOMParser().parseFromString(xml, 'application/xml');
+    return RouterController._xml2object(xmlDocument);
+  }
+
+  /**
    *
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
@@ -245,7 +255,8 @@ class _RouterController {
   getAjaxData(data) {
     data.type = 'command';
     data.command = 'getAjaxData';
-    return this._sendPageMessage(data).then((ret) => {
+    return this._sendPageMessage(data).then((xml) => {
+      let ret = this._parseXmlString(xml);
       return this._validateXmlResponse(ret, data);
     });
   }
@@ -262,7 +273,8 @@ class _RouterController {
   saveAjaxData(data) {
     data.type = 'command';
     data.command = 'saveAjaxData';
-    return this._sendPageMessage(data).then((ret) => {
+    return this._sendPageMessage(data).then((xml) => {
+      let ret = this._parseXmlString(xml);
       return this._validateXmlResponse(ret, data);
     });
   }

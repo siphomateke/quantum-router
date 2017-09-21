@@ -36,28 +36,20 @@ core.init();
       });
     }
 
+    function jqueryXmltoString($xml) {
+      return new XMLSerializer().serializeToString($xml[0]);
+    }
+
     function quantumSaveAjaxData(request, callback) {
       let xmlString = object2xml('request', request.request);
       saveAjaxData(request.url, xmlString, function($xml) {
-        let ret = xml2object($xml);
-        callback(ret);
+        callback(jqueryXmltoString($xml));
       }, request.options);
     }
 
     function quantumGetAjaxData(request, callback) {
       getAjaxData(request.url, function($xml) {
-        let ret = xml2object($xml);
-        if (ret.type == 'response') {
-          callback(ret);
-        } else {
-          if (ret.error.code == '111019') {
-            setTimeout(() => {
-              quantumGetAjaxData(request, callback);
-            }, 3000);
-          } else if (ret.error.code == '111020') {
-            callback(ret);
-          }
-        }
+        callback(jqueryXmltoString($xml));
       }, request.options);
     }
 
