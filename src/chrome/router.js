@@ -13,6 +13,10 @@
   'tabs_not_found',
   'chrome_runtime_message_error',
   'chrome_tabs_message_error',
+  'router_url_not_set',
+  'chrome_storage_error',
+  'invalid_router_url',
+  'xhr_timeout'
 ];*/
 
 class RouterControllerError {
@@ -49,6 +53,26 @@ class _RouterController {
       } else {
         return Promise.reject(new RouterControllerError('tabs_not_found', 'No matched tabs open'));
       }
+    });
+  }
+
+  /**
+   * Gets the url of router page from chrome.storage
+   * @return {Promise<string>}
+   */
+  getRouterUrl() {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get('routerUrl', function(items) {
+        if (!chrome.runtime.lastError) {
+          if ('routerUrl' in items) {
+            resolve(items.routerUrl);
+          } else {
+            reject(new RouterControllerError('router_url_not_set', 'No router url set in storage'));
+          }
+        } else {
+          reject(new RouterControllerError('chrome_storage_error', chrome.runtime.lastError));
+        }
+      });
     });
   }
 
@@ -107,8 +131,11 @@ class _RouterController {
           reject(new RouterControllerError('xhr_invalid_status', 'XHR status invalid; '+xhr.statusText));
         }
       };
+      xhr.ontimeout = () => {
+        reject(new RouterControllerError('xhr_timeout', 'XHR timed out'));
+      };
       xhr.onerror = (e) => {
-        reject(new RouterControllerError('xhr_error', 'Unknown XHR error. Status: '+xhr.statusText));
+        reject(new RouterControllerError('xhr_error', 'Unknown XHR error.'));
       };
       xhr.send();
     });
@@ -155,8 +182,17 @@ class _RouterController {
    * @return {Promise}
    */
   getAjaxDataDirect(data) {
-    return this.getTab().then((tab) => {
-      const parsedUrl = new URL(tab.url);
+    return this.getRouterUrl().then((url) => {
+      let parsedUrl = null;
+      try {
+        parsedUrl = new URL(url);
+      } catch (e) {
+        if (e instanceof TypeError) {
+          return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+url));
+        } else {
+          throw e;
+        }
+      }
       return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
         const ret = this._xml2object(xml);
         if ('returnType' in data) {
