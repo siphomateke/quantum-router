@@ -2,9 +2,6 @@
 /* global chrome*/
 
 /* const errors = [
-  'sms_count_response_invalid',
-  'sms_list_response_invalid',
-  'traffic_statistics_response_invalid',
   'xhr_error',
   'xhr_invalid_xml',
   'xhr_invalid_status',
@@ -168,7 +165,7 @@ class _RouterController {
         });
         // If there is more than one of these elements, then it's an array
         if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
-          if (_obj[el.tagName] === null) {
+          if (!(el.tagName in _obj)) {
             _obj[el.tagName] = [];
           }
           _obj[el.tagName].push(_childObj);
@@ -194,9 +191,9 @@ class _RouterController {
     return this.apiErrorCodes[code];
   }
 
-  _validateXmlResponse(ret, data) {
+  _processXmlResponse(ret, data) {
     if (ret.type === 'response') {
-      return ret;
+      return ret.data;
     } else if (ret.type === 'error') {
       let errorName = this._getRouterApiErrorName(ret.data.code);
       let message = errorName ? errorName : ret.data.code;
@@ -229,7 +226,7 @@ class _RouterController {
       }
       return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
         const ret = this._xml2object(xml);
-        return this._validateXmlResponse(ret, data);
+        return this._processXmlResponse(ret, data);
       });
     });
   }
@@ -257,7 +254,7 @@ class _RouterController {
     data.command = 'getAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._validateXmlResponse(ret, data);
+      return this._processXmlResponse(ret, data);
     });
   }
 
@@ -275,7 +272,7 @@ class _RouterController {
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._validateXmlResponse(ret, data);
+      return this._processXmlResponse(ret, data);
     });
   }
 
@@ -286,6 +283,7 @@ class _RouterController {
    * @return {boolean} if the response is ok
    */
   _isAjaxReturnOk(ret) {
+    // FIXME: This probably doesn't work anymore. It should use something like ret.data
     return ret.response.toLowerCase() === 'ok';
   }
 
@@ -338,13 +336,7 @@ class _RouterController {
    * @return {Promise<SmsCount>}
    */
   async getSmsCount() {
-    return this.getAjaxDataDirect({url: 'api/sms/sms-count'}).then((ret) => {
-      if ('data' in ret) {
-        return ret.data;
-      } else {
-        return Promise.reject(new RouterControllerError('sms_count_response_invalid'));
-      }
-    });
+    return this.getAjaxDataDirect({url: 'api/sms/sms-count'});
   }
 
   /**
@@ -397,12 +389,6 @@ class _RouterController {
         Ascending: options.sortOrder === 'desc' ? 0 : 1,
         UnreadPreferred: 0,
       },
-    }).then((ret) => {
-      if ('response' in ret) {
-        return ret.response;
-      } else {
-        return Promise.reject(new RouterControllerError('sms_list_response_invalid'));
-      }
     });
   }
 
@@ -427,12 +413,6 @@ class _RouterController {
   getTrafficStatistics() {
     return this.getAjaxDataDirect({
       url: 'api/monitoring/traffic-statistics',
-    }).then((ret) => {
-      if ('data' in ret) {
-        return ret.data;
-      } else {
-        return Promise.reject(new RouterControllerError('traffic_statistics_response_invalid'));
-      }
     });
   }
 }
