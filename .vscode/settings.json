@@ -1,0 +1,8 @@
+{
+  "search.exclude": {
+    "**/dist": true,
+    "**/build": true,
+    "**/config": true,
+    "**/original_router": true
+  }
+}
