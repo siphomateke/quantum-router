@@ -125,6 +125,12 @@ export default {
       },
     };
   },
+  mounted() {
+    this.$store.commit('settings', {
+      domain: 'wlan',
+      data: this.settings,
+    });
+  },
   methods: {
     getStatusString: (status) => {
       return status ? 'On' : 'Off';

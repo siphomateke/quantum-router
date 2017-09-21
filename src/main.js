@@ -22,7 +22,7 @@ const store = new Vuex.Store({
     settings: {},
   },
   mutations: {
-    updateSettings(state, payload) {
+    settings(state, payload) {
       state.settings[payload.domain] = payload.data;
     },
   },
