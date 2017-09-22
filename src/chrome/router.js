@@ -70,23 +70,29 @@ class _RouterController {
     });
   }
 
+  getStorage(keys) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get(keys, function(items) {
+        if (!chrome.runtime.lastError) {
+          resolve(items);
+        } else {
+          reject(new RouterControllerError('chrome_storage_error', chrome.runtime.lastError));
+        }
+      });
+    });
+  }
+
   /**
    * Gets the url of router page from chrome.storage
    * @return {Promise<string>}
    */
   getRouterUrl() {
-    return new Promise((resolve, reject) => {
-      chrome.storage.sync.get('routerUrl', function(items) {
-        if (!chrome.runtime.lastError) {
-          if ('routerUrl' in items) {
-            resolve(items.routerUrl);
-          } else {
-            reject(new RouterControllerError('router_url_not_set', 'No router url set in storage'));
-          }
-        } else {
-          reject(new RouterControllerError('chrome_storage_error', chrome.runtime.lastError));
-        }
-      });
+    return this.getStorage('routerUrl').then((items) => {
+      if ('routerUrl' in items) {
+        return items.routerUrl;
+      } else {
+        return Promise.reject(new RouterControllerError('router_url_not_set', 'No router url set in storage'));
+      }
     });
   }
 
@@ -102,7 +108,7 @@ class _RouterController {
         if (!chrome.runtime.lastError) {
           resolve(r);
         } else {
-          reject(new RouterControllerError('chrome_tabs_message_error', chrome.runtime.lastError));
+          reject(new RouterControllerError('chrome_tabs_message_error', 'tabId: '+id+', msg: '+chrome.runtime.lastError.message));
         }
       });
     });
@@ -191,15 +197,17 @@ class _RouterController {
     return this.apiErrorCodes[code];
   }
 
-  _processXmlResponse(ret, data) {
-    if (ret.type !== 'error') {
-      return ret.data;
-    } else {
-      let errorName = this._getRouterApiErrorName(ret.data.code);
-      let message = errorName ? errorName : ret.data.code;
-      message += ((ret.data.message) ? ' : ' + ret.data.message : '');
-      return Promise.reject(new RouterControllerError('router_api_error', message));
-    }
+  _processXmlResponse(ret) {
+    return new Promise((resolve, reject) => {
+      if (ret.type !== 'error') {
+        resolve(ret.data);
+      } else {
+        let errorName = this._getRouterApiErrorName(ret.data.code);
+        let message = errorName ? errorName : ret.data.code;
+        message += ((ret.data.message) ? ' : ' + ret.data.message : '');
+        reject(new RouterControllerError('router_api_error', message));
+      }
+    });
   }
 
   /**
@@ -223,7 +231,7 @@ class _RouterController {
       }
       return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
         const ret = this._xml2object(xml);
-        return this._processXmlResponse(ret, data);
+        return this._processXmlResponse(ret);
       });
     });
   }
@@ -251,7 +259,7 @@ class _RouterController {
     data.command = 'getAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._processXmlResponse(ret, data);
+      return this._processXmlResponse(ret);
     });
   }
 
@@ -269,7 +277,7 @@ class _RouterController {
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._processXmlResponse(ret, data);
+      return this._processXmlResponse(ret);
     });
   }
 
@@ -418,6 +426,40 @@ class _RouterController {
   getTrafficStatistics() {
     return this.getAjaxDataDirect({
       url: 'api/monitoring/traffic-statistics',
+    });
+  }
+
+  getLoginState() {
+    return this.getAjaxDataDirect({url: 'api/user/state-login'});
+  }
+
+  isLoggedIn() {
+    return this.getLoginState().then((ret) => {
+      if (parseInt(ret.State) === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  login() {
+    return this.getStorage(['username', 'password']).then((items) => {
+      return this._sendPageMessage({
+        type: 'command',
+        command: 'login',
+        credentials: {
+          username: items.username,
+          password: items.password,
+        },
+      }).then((pageResponse) => {
+        if (pageResponse.type === 'xml') {
+          let xmlObject = this._parseXmlString(pageResponse.xml);
+          return this._processXmlResponse(xmlObject);
+        } else if (pageResponse.type === 'error') {
+          return Promise.reject(new RouterControllerError(pageResponse.error));
+        }
+      });
     });
   }
 }

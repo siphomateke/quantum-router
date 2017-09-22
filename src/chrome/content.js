@@ -53,49 +53,10 @@ core.init();
       }, request.options);
     }
 
-    window.addEventListener('message', function(event) {
-      // We only accept messages from ourselves
-      if (event.source != window) {
-        return;
-      }
-
-      if (event.data.from && (event.data.from == 'FROM_CONTENT_MTN_QUANTUM')) {
-        console.log('Page script received: ');
-        console.log(event.data);
-        if (event.data.command == 'saveAjaxData') {
-          quantumSaveAjaxData(event.data, function(ret) {
-            sendContentCallback(event.data, ret);
-          });
-        } else if (event.data.command == 'getAjaxData') {
-          quantumGetAjaxData(event.data, function(ret) {
-            sendContentCallback(event.data, ret);
-          });
-        } else if (event.data.command == 'login') {
-          // Make sure user is logged in
-          getAjaxData('api/user/state-login', function($xml) {
-            let ret = xml2object($xml);
-            if (ret.type == 'response') {
-              console.log(ret);
-              if (ret.response.State != '0') {
-                q_login(event.data.credentials, function() {
-                  sendContentMessage({
-                    type: 'ready',
-                  });
-                });
-              } else {
-                sendContentMessage({
-                  type: 'ready',
-                });
-              }
-            }
-          });
-        }
-      }
-    });
-
-    function login2(name, psd, callback) {
+    function login2(name, psd, successCallback, errorCallback) {
       let valid = validateInput(name, psd);
       if (!valid) {
+        errorCallback('invalid_username_or_password');
         return;
       }
       if ($.isArray(g_requestVerificationToken)) {
@@ -118,44 +79,52 @@ core.init();
         let xmlstr = object2xml('request', request);
         log.debug('xmlstr = ' + xmlstr);
         saveAjaxData('api/user/login', xmlstr, function($xml) {
-          log.debug('api/user/login successed!');
+          successCallback(jqueryXmltoString($xml));
           let ret = xml2object($xml);
-          let error = '';
           if (isAjaxReturnOK(ret)) {
             $('#logout_span').text(common_logout);
-            g_main_displayingPromptStack.pop();
-          } else {
-            if (ret.type == 'error') {
-              if (ret.error.code == ERROR_LOGIN_PASSWORD_WRONG) {
-                error = system_hint_wrong_password;
-              } else if (ret.error.code == ERROR_LOGIN_ALREADY_LOGIN) {
-                error = common_user_login_repeat;
-              } else if (ret.error.code == ERROR_LOGIN_USERNAME_WRONG) {
-                error = settings_hint_user_name_not_exist;
-              } else if (ret.error.code == ERROR_LOGIN_USERNAME_PWD_WRONG) {
-                error = IDS_login_username_password_wrong;
-              } else if (ret.error.code == ERROR_LOGIN_USERNAME_PWD_ORERRUN) {
-                error = IDS_login_username_password_input_overrun;
-              }
-            }
           }
-          ret.error = error;
-          callback(ret);
         }, {
           enc: true,
         });
       }
     }
 
-    function q_login(credentials, successCallback) {
-      login2(credentials.username, credentials.password, function(ret) {
-        console.log('Logged in');
-        console.log(ret);
-        if (ret.response.toLowerCase() == 'ok') {
-          successCallback(ret);
-        }
-      });
+    function q_login(credentials, successCallback, errorCallback) {
+      login2(credentials.username, credentials.password, successCallback, errorCallback);
     }
+
+    window.addEventListener('message', function(event) {
+      // We only accept messages from ourselves
+      if (event.source != window) {
+        return;
+      }
+
+      if (event.data.from && (event.data.from == 'FROM_CONTENT_MTN_QUANTUM')) {
+        console.log('Page script received: ', event.data);
+        if (event.data.command == 'saveAjaxData') {
+          quantumSaveAjaxData(event.data, function(ret) {
+            sendContentCallback(event.data, ret);
+          });
+        } else if (event.data.command == 'getAjaxData') {
+          quantumGetAjaxData(event.data, function(ret) {
+            sendContentCallback(event.data, ret);
+          });
+        } else if (event.data.command == 'login') {
+          q_login(event.data.credentials, function(xml) {
+            sendContentCallback(event.data, {
+              type: 'xml',
+              xml: xml,
+            });
+          }, function(error) {
+            sendContentCallback(event.data, {
+              type: 'error',
+              error: error,
+            });
+          });
+        }
+      }
+    });
   });
 
   let callbacks = {};
@@ -167,18 +136,9 @@ core.init();
     }
 
     if (event.data.from && (event.data.from == 'FROM_PAGE_MTN_QUANTUM')) {
-      console.log('Content script received: ' + event.data.type);
-      console.log(event.data);
+      console.log('Content script received: ', event.data);
 
-      // Initiate communication with page
-      if (event.data.type == 'ready') {
-        chrome.runtime.sendMessage({
-          from: 'routerContent',
-          type: 'ready',
-        });
-      }
-
-      if (event.data.type == 'callback' && event.data.uuid && event.data.data) {
+      if (event.data.type == 'callback' && event.data.uuid && 'data' in event.data) {
         callbacks[event.data.uuid](event.data.data);
         delete callbacks[event.data.uuid];
       }
@@ -199,17 +159,14 @@ core.init();
     window.postMessage(data, '*');
   }
 
-  chrome.storage.sync.get(['username', 'password'], function(items) {
-    sendPageMessage({
-      type: 'command',
-      command: 'login',
-      credentials: items,
-    });
+  chrome.runtime.sendMessage({
+    from: 'routerContent',
+    type: 'ready',
   });
 
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      console.log(request);
+      console.log('runtime message: ', request);
       if (request.from == 'RouterController') {
         if (request.command == 'pageMessage') {
           sendPageMessage(request.data, function(callbackData) {
