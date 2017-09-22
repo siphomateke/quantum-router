@@ -108,7 +108,7 @@ export default {
     });
     this.checkMode();
     this.bus.$on('refresh', () => {
-      if (this.$store.state.mode === 'basic' || this.$store.state.mode === 'admin') {
+      if (this.$store.state.mode > modes.OFFLINE) {
         RouterController.getSmsCount().then((data) => {
           this.smsCount = data.LocalUnread;
         }).catch((e) => {
