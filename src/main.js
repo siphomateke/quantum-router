@@ -29,6 +29,11 @@ Vue.mixin({
       bus,
     };
   },
+  filters: {
+    i18n: function(value) {
+      return chrome.i18n.getMessage(value);
+    },
+  },
 });
 
 /* eslint-disable no-new */
