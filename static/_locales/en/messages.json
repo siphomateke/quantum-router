@@ -5,7 +5,7 @@
     "menu_services":{"message": "Services"},
     "menu_settings":{"message": "Settings"},
     "router_error_tabs_not_found":{
-      "message": "The router page is not open. It must be open to carry out admin tasks such as changing the WiFi password.",
+      "message": "Could not find the router page. It must be open to carry out admin tasks such as changing the WiFi password.",
       "description": "Error message displayed when the router page (usually 192.168.1.1) is not open."
     }
 }
