@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}">
+  <router-link :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}" :style="{color: color}">
     <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
     <div class="badge" v-if="badgeVisible">{{ badge }}</div>
     <slot></slot>
@@ -22,6 +22,7 @@
         default: false,
       },
       'badge': [Number, String],
+      'color': String,
     },
   };
 </script>
