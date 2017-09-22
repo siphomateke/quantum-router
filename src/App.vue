@@ -5,6 +5,9 @@
       <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
       <div class="column">
         <q-toolbar>
+          <template slot="toolbar-start">
+            <q-toolbar-item icon="bolt" :color="modeColor"></q-toolbar-item>
+          </template>
           <template slot="toolbar-end">
             <q-toolbar-item icon="bell" link="sms" :badge="smsCount" :badge-visible="smsCount > 0"></q-toolbar-item>
             <q-toolbar-item icon="plug"></q-toolbar-item>
@@ -100,11 +103,33 @@ export default {
       },
     };
   },
+  computed: {
+    modeColor() {
+      switch (this.$store.state.mode) {
+      case modes.OFFLINE: {
+        return '#f00';
+      }
+      case modes.BASIC: {
+        return '#ffa500';
+      }
+      case modes.ADMIN: {
+        return '#0f0';
+      }
+      }
+    },
+  },
   mounted() {
     chrome.runtime.sendMessage({
       from: 'app',
       type: 'loadEvent',
       loadState: 'load',
+    });
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.from === 'background' && request.type === 'ready') {
+        // TODO: update mode when router page is opened
+        /* this.$toast.open('Connected to router page');
+        this.checkMode();*/
+      }
     });
     this.checkMode();
     this.bus.$on('refresh', () => {
@@ -120,20 +145,41 @@ export default {
   },
   methods: {
     changeMode(mode) {
-      this.$store.commit('mode', mode);
-      this.$toast.open('Changed mode to: '+this.$store.state.mode);
+      if (mode !== this.$store.state.mode) {
+        this.$store.commit('mode', mode);
+        this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
+      }
+    },
+    openConfirmDialog(data) {
+      data.type = 'is-warning';
+      data.hasIcon = true;
+      this.$dialog.confirm(data);
     },
     checkMode() {
       this.loading = true;
       RouterController.ping().then(() => {
-        RouterController.getTab().then(() => {
-          this.changeMode(modes.ADMIN);
+        RouterController.getTab().then((tab) => {
+          return RouterController.isLoggedIn().then((loggedIn) => {
+            if (!loggedIn) {
+              RouterController.login().then(() => {
+                this.changeMode(modes.ADMIN);
+              }).catch((e) => {
+                this.openConfirmDialog({
+                  message: chrome.i18n.getMessage('router_error_logging_in'),
+                  confirmText: chrome.i18n.getMessage('dialog_retry'),
+                  cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
+                  onConfirm: () => this.checkMode(),
+                  onCancel: () => this.changeMode(modes.BASIC),
+                });
+              });
+            } else {
+              this.changeMode(modes.ADMIN);
+            }
+          });
         }).catch((e) => {
           if (e instanceof RouterControllerError) {
             if (e.code === 'tabs_not_found') {
-              this.$dialog.confirm({
-                type: 'is-warning',
-                hasIcon: true,
+              this.openConfirmDialog({
                 message: chrome.i18n.getMessage('router_error_no_admin'),
                 confirmText: chrome.i18n.getMessage('dialog_retry'),
                 cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
@@ -146,9 +192,7 @@ export default {
       }).catch((e) => {
         return RouterController.getRouterUrl().then((url) => {
           // TODO: Add option to redirect user to settings
-          this.$dialog.confirm({
-            type: 'is-warning',
-            hasIcon: true,
+          this.openConfirmDialog({
             message: chrome.i18n.getMessage('connection_error', url),
             confirmText: chrome.i18n.getMessage('dialog_retry'),
             cancelText: chrome.i18n.getMessage('dialog_go_offline'),
@@ -156,9 +200,7 @@ export default {
             onCancel: () => this.changeMode(modes.OFFLINE),
           });
         }).catch((e2) => {
-          this.$dialog.confirm({
-            type: 'is-warning',
-            hasIcon: true,
+          this.openConfirmDialog({
             message: chrome.i18n.getMessage('missing_router_url_error'),
             confirmText: chrome.i18n.getMessage('dialog_open_settings'),
             cancelText: chrome.i18n.getMessage('dialog_go_offline'),
