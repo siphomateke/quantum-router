@@ -36,6 +36,7 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings,
+      redirect: {name: 'settings/wlan'},
       children: [
         {
           path: 'wlan',
@@ -50,6 +51,10 @@ export default new Router({
           label: 'Dial-up',
         },
       ],
+    },
+    {
+      path: '/extension-settings',
+      name: 'extension-settings',
     },
   ],
 });
