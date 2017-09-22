@@ -39,11 +39,10 @@
       </template>
 
       <template slot="empty">
-        <section class="section" v-if="!loading">
-          <div class="content has-text-grey has-text-centered">
-            <b-icon pack="fa" icon="frown-o" size="is-large"></b-icon>
-            <p>No SMSs found</p>
-          </div>
+        <section class="section">
+          <template v-if="!loading">
+            <p>There are no SMSs</p>
+          </template>
         </section>
       </template>
     </b-table>
@@ -53,8 +52,9 @@
 <script>
 /* global chrome */
 import {SmsList} from '@/components/sms';
-import {RouterController} from '../chrome/router.js';
+import {RouterController} from '@/chrome/router.js';
 import moment from 'moment';
+import {modes} from '@/store';
 
 export default {
   components: {
@@ -77,15 +77,25 @@ export default {
       ],
     };
   },
+  computed: {
+    mode() {
+      return this.$store.state.mode;
+    },
+  },
+  watch: {
+    mode() {
+      this.refresh();
+    },
+  },
   mounted() {
-    this.loadAsyncData();
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.from === 'background' && request.type === 'ready') {
-        this.loadAsyncData();
-      }
-    });
+    this.refresh();
   },
   methods: {
+    refresh() {
+      if (this.mode === modes.ADMIN) {
+        this.loadAsyncData();
+      }
+    },
     /*
     * Load async data
     */
@@ -120,15 +130,9 @@ export default {
               read: false,
             });
           }
-
-          this.loading = false;
         });
-      }).catch((e) => {
+      }).then(() => {
         this.loading = false;
-        let handled = this.handleError(e);
-        if (!handled) {
-          // TODO: Handle sms specific errors
-        }
       });
     },
     /*
