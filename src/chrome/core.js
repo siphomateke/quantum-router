@@ -153,10 +153,16 @@ export class TabTracker {
           if (request.loadState == 'load') {
             this.addTab(sender.tab);
           } else if (request.loadState == 'unload') {
-            this.removeTab(sender.tab);
+            this.removeTab(sender.tab.id);
           }
         }
       });
+    });
+
+    chrome.tabs.onRemoved.addListener((tabId, removed) => {
+      if (tabId in this.tabs) {
+        this.removeTab(tabId);
+      }
     });
   }
 
@@ -218,11 +224,11 @@ export class TabTracker {
 
   /**
    * Removes a tab being tracked and fires the onTabUnloadEvent
-   * @param {object} tab The tab to remove
+   * @param {number} tabId The id of the tab to remove
    */
-  removeTab(tab) {
-    delete this.tabs[tab.id];
-    this.events.dispatchEvent('onTabUnload', tab.id);
+  removeTab(tabId) {
+    delete this.tabs[tabId];
+    this.events.dispatchEvent('onTabUnload', tabId);
   }
 }
 
