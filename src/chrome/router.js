@@ -192,16 +192,13 @@ class _RouterController {
   }
 
   _processXmlResponse(ret, data) {
-    if (ret.type === 'response') {
+    if (ret.type !== 'error') {
       return ret.data;
-    } else if (ret.type === 'error') {
+    } else {
       let errorName = this._getRouterApiErrorName(ret.data.code);
       let message = errorName ? errorName : ret.data.code;
       message += ((ret.data.message) ? ' : ' + ret.data.message : '');
       return Promise.reject(new RouterControllerError('router_api_error', message));
-    } else {
-      return Promise.reject(new RouterControllerError('xml_type_invalid',
-        'Returned xml data does not contain &lt;response&gt; instead it contains: &lt;'+ret.type+'&gt;'));
     }
   }
 
@@ -285,6 +282,14 @@ class _RouterController {
   _isAjaxReturnOk(ret) {
     // FIXME: This probably doesn't work anymore. It should use something like ret.data
     return ret.response.toLowerCase() === 'ok';
+  }
+
+  /**
+   * Sends a request for the router's global config to determine if there is a connection
+   * @return {Promise}
+   */
+  ping() {
+    return this.getAjaxDataDirect({url: 'config/global/config.xml'});
   }
 
   /**
