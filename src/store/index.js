@@ -1,10 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+export const modes = {
+  OFFLINE: 0,
+  BASIC: 1,
+  ADMIN: 2,
+};
+
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
-    mode: 'offline', // offline -> basic -> admin
+    mode: modes.OFFLINE,
     settings: {},
   },
   mutations: {

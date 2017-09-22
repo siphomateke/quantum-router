@@ -27,6 +27,7 @@ import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
 import {RouterController, RouterControllerError} from '@/chrome/router.js';
+import {modes} from '@/store';
 
 Vue.mixin({
   methods: {
@@ -126,7 +127,7 @@ export default {
       this.loading = true;
       RouterController.ping().then(() => {
         RouterController.getTab().then(() => {
-          this.changeMode('admin');
+          this.changeMode(modes.ADMIN);
         }).catch((e) => {
           if (e instanceof RouterControllerError) {
             if (e.code === 'tabs_not_found') {
@@ -137,7 +138,7 @@ export default {
                 confirmText: chrome.i18n.getMessage('dialog_retry'),
                 cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
                 onConfirm: () => this.checkMode(),
-                onCancel: () => this.changeMode('basic'),
+                onCancel: () => this.changeMode(modes.BASIC),
               });
             }
           }
@@ -152,7 +153,7 @@ export default {
             confirmText: chrome.i18n.getMessage('dialog_retry'),
             cancelText: chrome.i18n.getMessage('dialog_go_offline'),
             onConfirm: () => this.checkMode(),
-            onCancel: () => this.changeMode('offline'),
+            onCancel: () => this.changeMode(modes.OFFLINE),
           });
         }).catch((e2) => {
           this.$dialog.confirm({
@@ -163,7 +164,7 @@ export default {
             cancelText: chrome.i18n.getMessage('dialog_go_offline'),
             // Go to settings page so user can set router url
             onConfirm: () => this.$router.push('extension-settings'),
-            onCancel: () => this.changeMode('offline'),
+            onCancel: () => this.changeMode(modes.OFFLINE),
           });
         });
       }).then(() => {
