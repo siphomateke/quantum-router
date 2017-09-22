@@ -26,7 +26,7 @@ import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
-import {RouterController} from '@/chrome/router.js';
+import {RouterController, RouterControllerError} from '@/chrome/router.js';
 
 Vue.mixin({
   methods: {
@@ -41,8 +41,8 @@ Vue.mixin({
           type: 'is-danger',
           hasIcon: true,
           message: message,
-          confirmText: 'Retry',
-          cancelText: 'Ignore',
+          confirmText: 'OK',
+          cancelText: 'Cancel',
           onConfirm: () => {
             resolve();
           },
@@ -97,10 +97,6 @@ export default {
         },
         ],
       },
-      error: {
-        visible: false,
-        message: '',
-      },
     };
   },
   mounted() {
@@ -109,26 +105,71 @@ export default {
       type: 'loadEvent',
       loadState: 'load',
     });
+    this.checkMode();
     this.bus.$on('refresh', () => {
-      let promises = [];
-      promises.push(RouterController.getSmsCount().then((data) => {
-        this.smsCount = data.LocalUnread;
-      }).catch((e) => {
-        if (!this.error.visible) {
-          this.error.visible = true;
-          this.handleError(e).then(() => {
-            this.loading = true;
-            this.error.visible = false;
-          });
-        }
-      }));
-      Promise.all(promises).then(() => {
-        this.loading = false;
-      });
+      if (this.$store.state.mode === 'basic' || this.$store.state.mode === 'admin') {
+        RouterController.getSmsCount().then((data) => {
+          this.smsCount = data.LocalUnread;
+        }).catch((e) => {
+          this.handleError(e);
+        });
+      }
     });
-    this.refresh(0);
+    this.refresh();
   },
   methods: {
+    changeMode(mode) {
+      this.$store.commit('mode', mode);
+      this.$toast.open('Changed mode to: '+this.$store.state.mode);
+    },
+    checkMode() {
+      this.loading = true;
+      RouterController.ping().then(() => {
+        RouterController.getTab().then(() => {
+          this.changeMode('admin');
+        }).catch((e) => {
+          if (e instanceof RouterControllerError) {
+            if (e.code === 'tabs_not_found') {
+              this.$dialog.confirm({
+                type: 'is-warning',
+                hasIcon: true,
+                message: chrome.i18n.getMessage('router_error_no_admin'),
+                confirmText: chrome.i18n.getMessage('dialog_retry'),
+                cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
+                onConfirm: () => this.checkMode(),
+                onCancel: () => this.changeMode('basic'),
+              });
+            }
+          }
+        });
+      }).catch((e) => {
+        return RouterController.getRouterUrl().then((url) => {
+          // TODO: Add option to redirect user to settings
+          this.$dialog.confirm({
+            type: 'is-warning',
+            hasIcon: true,
+            message: chrome.i18n.getMessage('connection_error', url),
+            confirmText: chrome.i18n.getMessage('dialog_retry'),
+            cancelText: chrome.i18n.getMessage('dialog_go_offline'),
+            onConfirm: () => this.checkMode(),
+            onCancel: () => this.changeMode('offline'),
+          });
+        }).catch((e2) => {
+          this.$dialog.confirm({
+            type: 'is-warning',
+            hasIcon: true,
+            message: chrome.i18n.getMessage('missing_router_url_error'),
+            confirmText: chrome.i18n.getMessage('dialog_open_settings'),
+            cancelText: chrome.i18n.getMessage('dialog_go_offline'),
+            // Go to settings page so user can set router url
+            onConfirm: () => this.$router.push('extension-settings'),
+            onCancel: () => this.changeMode('offline'),
+          });
+        });
+      }).then(() => {
+        this.loading = false;
+      });
+    },
     refresh() {
       this.bus.$emit('refresh');
       setTimeout(this.refresh, this.refreshInterval);

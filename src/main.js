@@ -5,6 +5,7 @@ import router from './router';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
 import VsNotify from '@/components/vs-notify';
+import store from './store';
 
 window.addEventListener('unload', () => {
   chrome.runtime.sendMessage({
@@ -16,17 +17,6 @@ window.addEventListener('unload', () => {
 
 Vue.config.productionTip = false;
 
-Vue.use(Vuex);
-const store = new Vuex.Store({
-  state: {
-    settings: {},
-  },
-  mutations: {
-    settings(state, payload) {
-      state.settings[payload.domain] = payload.data;
-    },
-  },
-});
 Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });
