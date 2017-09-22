@@ -16,7 +16,7 @@
   'xhr_timeout'
 ];*/
 
-class RouterControllerError {
+export class RouterControllerError {
   constructor(code, message) {
     this.code = code;
     this.error = new Error(message);
