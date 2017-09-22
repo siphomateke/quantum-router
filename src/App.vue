@@ -1,15 +1,6 @@
 <template>
   <div id="app">
-    <vs-notify position="top center" group="notifications" transition="ntf-top">
-      <template slot="body" scope="props">
-        <b-notification
-        :type="'is-' + props.item.type"
-        has-icon
-        @close="() => {props.close()}">
-          <div v-html="props.item.text"></div>
-        </b-notification>
-      </template>
-    </vs-notify>
+    <b-loading :active.sync="loading" :canCancel="false"></b-loading>
     <div class="app-wrapper columns is-gapless">
       <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
       <div class="column">
@@ -30,12 +21,39 @@
 
 <script>
 /* global chrome */
+import Vue from 'vue';
 import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
-import {VsNotify} from '@/components/vs-notify';
 import {RouterController} from '@/chrome/router.js';
+
+Vue.mixin({
+  methods: {
+    handleError(err) {
+      return new Promise((resolve, reject) => {
+        let message = err.code+' : '+err.error.message;
+        if (err.code === 'tabs_not_found') {
+          message = chrome.i18n.getMessage('router_error_'+err.code);
+        }
+        this.$dialog.confirm({
+          title: 'Error',
+          type: 'is-danger',
+          hasIcon: true,
+          message: message,
+          confirmText: 'Retry',
+          cancelText: 'Ignore',
+          onConfirm: () => {
+            resolve();
+          },
+          onCancel: () => {
+            reject();
+          },
+        });
+      });
+    },
+  },
+});
 
 export default {
   name: 'app',
@@ -44,10 +62,10 @@ export default {
     'b-navbar': Navbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
-    'vs-notify': VsNotify,
   },
   data() {
     return {
+      loading: true,
       refreshInterval: 1000,
       smsCount: 0,
       drawer: {
@@ -81,6 +99,7 @@ export default {
       },
       error: {
         visible: false,
+        message: '',
       },
     };
   },
@@ -91,26 +110,20 @@ export default {
       loadState: 'load',
     });
     this.bus.$on('refresh', () => {
-      RouterController.getSmsCount().then((data) => {
+      let promises = [];
+      promises.push(RouterController.getSmsCount().then((data) => {
         this.smsCount = data.LocalUnread;
-      }).catch((err) => {
-        // this.$notify('notifications', , 'danger');
-        let message = err.code+' : '+err.error.message;
-        if (err.code === 'tabs_not_found') {
-          message = chrome.i18n.getMessage('router_error_'+err.code);
-        }
+      }).catch((e) => {
         if (!this.error.visible) {
           this.error.visible = true;
-          this.$dialog.alert({
-            title: 'Error',
-            type: 'is-danger',
-            hasIcon: true,
-            message: message,
-            onConfirm: () => {
-              this.error.visible = false;
-            },
+          this.handleError(e).then(() => {
+            this.loading = true;
+            this.error.visible = false;
           });
         }
+      }));
+      Promise.all(promises).then(() => {
+        this.loading = false;
       });
     });
     this.refresh(0);

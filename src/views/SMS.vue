@@ -9,9 +9,6 @@
       </div>
     </div>
     <!-- <sms-list :list="list" :checked-rows="checkedRows"></sms-list> -->
-    <b-message type="is-danger" has-icon :active.sync="error.visible">
-        {{ error.message }}
-    </b-message>
     <b-table
     :data="list"
     :bordered="true"
@@ -78,10 +75,6 @@ export default {
         {name: 'delete', label: 'Delete', icon: 'trash', class: 'is-danger'},
         {name: 'import', label: 'Import', icon: 'download'},
       ],
-      error: {
-        visible: false,
-        message: '',
-      },
     };
   },
   mounted() {
@@ -98,13 +91,11 @@ export default {
     */
     async loadAsyncData() {
       this.loading = true;
-      this.error.visible = false;
-      try {
-        let data = await RouterController.getSmsList({
-          page: this.page,
-          sortOrder: this.sortOrder,
-          perPage: this.perPage,
-        });
+      RouterController.getSmsList({
+        page: this.page,
+        sortOrder: this.sortOrder,
+        perPage: this.perPage,
+      }).then((data) => {
         const _messages = data.Messages.Message;
         let messages = [];
         if (Array.isArray(_messages)) {
@@ -114,29 +105,31 @@ export default {
         }
 
         this.list = [];
-        let smsData = await RouterController.getSmsCount();
-        let currentTotal = smsData.LocalInbox;
-        if (smsData.LocalInbox / this.perPage > 10) {
-          currentTotal = this.perPage * 10;
-        }
-        this.total = currentTotal;
+        return RouterController.getSmsCount().then((smsData) => {
+          let currentTotal = smsData.LocalInbox;
+          if (smsData.LocalInbox / this.perPage > 10) {
+            currentTotal = this.perPage * 10;
+          }
+          this.total = currentTotal;
 
-        for (let m of messages) {
-          this.list.push({
-            number: m.Phone,
-            date: m.Date,
-            content: m.Content,
-            read: false,
-          });
-        }
+          for (let m of messages) {
+            this.list.push({
+              number: m.Phone,
+              date: m.Date,
+              content: m.Content,
+              read: false,
+            });
+          }
 
+          this.loading = false;
+        });
+      }).catch((e) => {
         this.loading = false;
-      } catch (err) {
-        this.loading = false;
-        this.error.message = 'Oops! An error occured: ' + err.message;
-        this.error.visible = true;
-        console.error(err);
-      }
+        let handled = this.handleError(e);
+        if (!handled) {
+          // TODO: Handle sms specific errors
+        }
+      });
     },
     /*
     * Handle page-change event
