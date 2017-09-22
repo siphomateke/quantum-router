@@ -7,11 +7,22 @@ export const modes = {
   ADMIN: 2,
 };
 
+const modeNames = {};
+
+modeNames[modes.OFFLINE] = 'offline';
+modeNames[modes.BASIC] = 'basic';
+modeNames[modes.ADMIN] = 'admin';
+
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     mode: modes.OFFLINE,
     settings: {},
+  },
+  getters: {
+    modeName(state) {
+      return modeNames[state.mode];
+    },
   },
   mutations: {
     mode(state, mode) {
