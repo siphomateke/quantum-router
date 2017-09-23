@@ -1,21 +1,15 @@
 <template>
 <div class="page-content">
   <div class="card">
-
-    <div class="hero is-primary">
-      <div class="hero-body">
-        <h1 class="title">Settings</h1>
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+          <router-link v-for="item in nav" :key="item.name" class="navbar-item is-tab" active-class="is-active" tag="a" :to="{ name: item.name }">
+            {{ item.label }}
+          </router-link>
+        </div>
       </div>
-      <div class="hero-foot">
-        <nav class="tabs is-boxed">
-          <ul>
-            <router-link v-for="item in nav" :key="item.name" active-class="is-active" tag="li" :to="{ name: item.name }">
-              <a>{{ item.label }}</a>
-            </router-link>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    </nav>
 
     <router-view></router-view>
 

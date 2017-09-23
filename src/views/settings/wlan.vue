@@ -1,16 +1,5 @@
 <template>
 <div>
-  <nav class="navbar has-shadow">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item is-tab is-active">Basic</a>
-        <a class="navbar-item is-tab">Advanced</a>
-        <a class="navbar-item is-tab">MAC Filter</a>
-        <a class="navbar-item is-tab">WPS</a>
-      </div>
-    </div>
-  </nav>
-
   <section class="section">
     <h3 class="title is-3">Basic settings</h3>
     <p class="content">
