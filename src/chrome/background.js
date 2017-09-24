@@ -1,6 +1,12 @@
 'use strict';
 /* global chrome*/
 
+let iframe = document.querySelector('#router-page');
+
+function updateIframe(url) {
+  iframe.src = url;
+}
+
 // Set default settings
 // TODO: Add router options
 chrome.storage.sync.get({
@@ -9,6 +15,13 @@ chrome.storage.sync.get({
   password: '',
 }, (data) => {
   chrome.storage.sync.set(data);
+  updateIframe(data.routerUrl);
+});
+
+chrome.storage.onChanged.addListener((changes) => {
+  if ('routerUrl' in changes && 'newValue' in changes.routerUrl) {
+    updateIframe(changes.routerUrl.newValue);
+  }
 });
 
 import {
@@ -20,7 +33,7 @@ let appLoaded = false;
 
 chrome.browserAction.onClicked.addListener(() => {
   if (!appLoaded) {
-    TabTools.new(chrome.extension.getURL('../index.html'));
+    TabTools.new({url: chrome.extension.getURL('../index.html')});
   }
 });
 
@@ -32,12 +45,20 @@ const router = {
 };
 
 function notifyApp() {
-  console.log('Tell app router content script loaded');
   chrome.runtime.sendMessage({
     from: 'background',
-    type: 'ready',
+    type: 'routerContentLoadEvent',
+    event: 'load',
   });
 }
+
+router.tabTracker.events.addEventListener('onTabUnload', () => {
+  chrome.runtime.sendMessage({
+    from: 'background',
+    type: 'routerContentLoadEvent',
+    event: 'unload',
+  });
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.from) {
