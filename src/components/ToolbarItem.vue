@@ -1,9 +1,22 @@
 <template>
-  <router-link :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}" :style="{color: color}">
+  <router-link v-if="!checkSlot('dropdown')" :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}" :style="{color: color}">
     <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
     <div class="badge" v-if="badgeVisible">{{ badge }}</div>
     <slot></slot>
   </router-link>
+  <b-dropdown
+  v-else
+  :value="value"
+  @input="input"
+  ref="dropdown"
+   class="toolbar-item" :class="{'active': isActive}">
+    <router-link slot="trigger" :to="{ name: link }" :style="{color: color}">
+      <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
+      <div class="badge" v-if="badgeVisible">{{ badge }}</div>
+      <slot></slot>
+    </router-link>
+    <slot name="dropdown"></slot>
+  </b-dropdown>
 </template>
 
 <script>
@@ -23,6 +36,15 @@
       },
       'badge': [Number, String],
       'color': String,
+      'value': {},
+    },
+    methods: {
+      checkSlot(slotName) {
+        return typeof this.$slots[slotName] !== 'undefined';
+      },
+      input(value) {
+        this.$emit('input', value);
+      },
     },
   };
 </script>
