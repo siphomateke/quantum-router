@@ -3,15 +3,22 @@
   <div class="box">
     <section class="section">
       <div class="content">
-        <template v-if="usage">
-          Received/Sent: {{ usage.received | round(2) }} / {{ usage.sent | round(2) }}
+        <template v-if="!offline">
+          <template v-if="usage">
+            Received/Sent: {{ usage.received | round(2) }} / {{ usage.sent | round(2) }}
+          </template>
+          <line-chart
+          :chart-data="lineChartData"
+          :options="chartOptions"
+          :height="400"
+          >
+          </line-chart>
         </template>
-        <line-chart
-        :chart-data="lineChartData"
-        :options="chartOptions"
-        :height="400"
-        >
-        </line-chart>
+        <template v-else>
+          <b-message type="is-info" has-icon>
+            Cannot view data usage while offline
+          </b-message>
+        </template>
       </div>
     </section>
   </div>
@@ -19,6 +26,7 @@
 </template>
 
 <script>
+import {modes} from '@/store';
 import LineChart from '@/components/charts/LineChart.js';
 import {RouterController} from '@/chrome/router.js';
 export default {
@@ -78,31 +86,38 @@ export default {
       previousUsage: null,
     };
   },
+  computed: {
+    offline() {
+      return !(this.$store.state.mode > modes.OFFLINE);
+    },
+  },
   mounted() {
     this.bus.$on('refresh', () => {
-      RouterController.getTrafficStatistics().then((data) => {
-        this.lineChartData = Object.assign({}, this.lineChartData);
+      if (!this.offline) {
+        RouterController.getTrafficStatistics().then((data) => {
+          this.lineChartData = Object.assign({}, this.lineChartData);
 
-        if (!this.usage) {
-          this.usage = {};
-        }
-
-        this.usage.received = data.CurrentDownload / (1024 * 1024);
-        this.usage.sent = data.CurrentUpload/ (1024 * 1024);
-
-        if (this.previousUsage) {
-          if (this.lineChartData.datasets[0].data.length > 60) {
-            this.lineChartData.labels.splice(0, 1);
-            this.lineChartData.datasets[0].data.splice(0, 1);
-            console.log(this.lineChartData.datasets[0].data);
+          if (!this.usage) {
+            this.usage = {};
           }
-          let diff = this.usage.received - this.previousUsage.received;
-          this.lineChartData.labels.push(Date.now());
-          this.lineChartData.datasets[0].data.push(diff);
-        }
 
-        this.previousUsage = Object.assign({}, this.usage);
-      });
+          this.usage.received = data.CurrentDownload / (1024 * 1024);
+          this.usage.sent = data.CurrentUpload/ (1024 * 1024);
+
+          if (this.previousUsage) {
+            if (this.lineChartData.datasets[0].data.length > 60) {
+              this.lineChartData.labels.splice(0, 1);
+              this.lineChartData.datasets[0].data.splice(0, 1);
+              console.log(this.lineChartData.datasets[0].data);
+            }
+            let diff = this.usage.received - this.previousUsage.received;
+            this.lineChartData.labels.push(Date.now());
+            this.lineChartData.datasets[0].data.push(diff);
+          }
+
+          this.previousUsage = Object.assign({}, this.usage);
+        });
+      }
     });
   },
   filters: {
