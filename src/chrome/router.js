@@ -16,12 +16,16 @@
   'xhr_timeout'
 ];*/
 
-export class RouterControllerError {
+import ExtendableError from 'es6-error';
+
+export class RouterControllerError extends ExtendableError {
   constructor(code, message) {
+    super(typeof message !== 'undefined' ? message : code);
     this.code = code;
-    this.error = new Error(message);
   }
 }
+
+export class RouterApiError extends RouterControllerError {}
 
 /**
  * Controls access to the router
@@ -205,7 +209,7 @@ class _RouterController {
         let errorName = this._getRouterApiErrorName(ret.data.code);
         let message = errorName ? errorName : ret.data.code;
         message += ((ret.data.message) ? ' : ' + ret.data.message : '');
-        reject(new RouterControllerError('router_api_error', message));
+        reject(new RouterApiError(message));
       }
     });
   }
