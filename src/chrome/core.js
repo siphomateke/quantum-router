@@ -50,15 +50,19 @@ export class Reactor {
 
 export class TabTools {
   /**
-   * @param {string} url The url of the tab to open
-   * @param {function} callback Function to be called when the tab is opened
-   * @param {boolean} active Whether the new tab should be switched to and made the active tab
+   * @param {chrome.tabs.CreateProperties} createProperties
+   * @return {Promise}
    */
-  static new(url, callback, active) {
-    chrome.tabs.create({
-      active: active,
-      url: url,
-    }, callback);
+  static new(createProperties) {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.create(createProperties, (tab) => {
+        if (!chrome.runtime.lastError) {
+          resolve(tab);
+        } else {
+          reject(new Error(chrome.runtime.lastError.message));
+        }
+      });
+    });
   }
   /**
    * @param {object} tab The tab to close
