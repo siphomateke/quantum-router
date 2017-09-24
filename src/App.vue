@@ -6,7 +6,14 @@
       <div class="column">
         <q-toolbar>
           <template slot="toolbar-start">
-            <q-toolbar-item icon="bolt" :color="modeColor"></q-toolbar-item>
+            <!-- FIXME: Dropdown does not update with selectedMode -->
+            <q-toolbar-item icon="bolt" :color="modeColor" :value="selectedMode" @input="selectedModeChanged" ref="modeToolbarItem">
+              <template slot="dropdown">
+                <b-dropdown-item :value="modes.OFFLINE">Offline</b-dropdown-item>
+                <b-dropdown-item :value="modes.BASIC">Basic</b-dropdown-item>
+                <b-dropdown-item :value="modes.ADMIN">Admin</b-dropdown-item>
+              </template>
+            </q-toolbar-item>
           </template>
           <template slot="toolbar-end">
             <q-toolbar-item icon="bell" link="sms" :badge="smsCount" :badge-visible="smsCount > 0"></q-toolbar-item>
@@ -72,6 +79,7 @@ export default {
       loading: true,
       refreshInterval: 1000,
       smsCount: 0,
+      selectedMode: this.$store.state.mode,
       drawer: {
         title: 'Quantum Router',
         items: [{
@@ -104,6 +112,10 @@ export default {
     };
   },
   computed: {
+    // used in html
+    modes() {
+      return modes;
+    },
     modeColor() {
       switch (this.$store.state.mode) {
       case modes.OFFLINE: {
@@ -125,10 +137,14 @@ export default {
       loadState: 'load',
     });
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.from === 'background' && request.type === 'ready') {
-        // TODO: update mode when router page is opened
-        /* this.$toast.open('Connected to router page');
-        this.checkMode();*/
+      if (request.from === 'background' && request.type === 'routerContentLoadEvent') {
+        if (request.event === 'load') {
+          // TODO: update mode when router page is opened
+          // this.$toast.open('Connected to router page');
+          // this.checkMode();
+        } else if (request.event === 'unload') {
+          // this.checkMode();
+        }
       }
     });
     this.checkMode();
@@ -144,8 +160,70 @@ export default {
     this.refresh();
   },
   methods: {
+    selectedModeChanged(newMode) {
+      this.tryChangeMode(newMode);
+    },
+    tryChangeMode(newMode) {
+      if (newMode === modes.BASIC || newMode === modes.ADMIN) {
+        this.loading = true;
+        RouterController.ping().then(() => {
+          if (newMode === modes.BASIC) {
+            this.changeMode(newMode);
+          } else if (newMode === modes.ADMIN) {
+            RouterController.getTab().then((tab) => {
+              return RouterController.isLoggedIn().then((loggedIn) => {
+                if (!loggedIn) {
+                  RouterController.login().then(() => {
+                    this.changeMode(newMode);
+                  }).catch((e) => {
+                    this.openConfirmDialog({
+                      message: chrome.i18n.getMessage('router_error_logging_in'),
+                      confirmText: chrome.i18n.getMessage('dialog_retry'),
+                      onConfirm: () => this.tryChangeMode(newMode),
+                    });
+                  });
+                } else {
+                  this.changeMode(newMode);
+                }
+              });
+            }).catch((e) => {
+              if (e instanceof RouterControllerError) {
+                if (e.code === 'tabs_not_found') {
+                  this.openConfirmDialog({
+                    message: chrome.i18n.getMessage('router_error_no_admin'),
+                    confirmText: chrome.i18n.getMessage('dialog_retry'),
+                    onConfirm: () => this.tryChangeMode(newMode),
+                  });
+                }
+              }
+            });
+          }
+        }).catch((e) => {
+          return RouterController.getRouterUrl().then((url) => {
+            this.openConfirmDialog({
+              message: chrome.i18n.getMessage('connection_error', url),
+              confirmText: chrome.i18n.getMessage('dialog_retry'),
+              onConfirm: () => this.tryChangeMode(newMode),
+            });
+          }).catch((e2) => {
+            this.openConfirmDialog({
+              message: chrome.i18n.getMessage('missing_router_url_error'),
+              confirmText: chrome.i18n.getMessage('dialog_open_settings'),
+              // Go to settings page so user can set router url
+              onConfirm: () => this.$router.push('extension-settings'),
+            });
+          });
+        }).then(() => {
+          // FIXME: loading stops before new tab loads
+          this.loading = false;
+        });
+      } else {
+        this.changeMode(newMode);
+      }
+    },
     changeMode(mode) {
       if (mode !== this.$store.state.mode) {
+        this.selectedMode = mode;
         this.$store.commit('mode', mode);
         this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
       }
