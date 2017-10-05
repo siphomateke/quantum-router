@@ -6,7 +6,6 @@ let merge = require('webpack-merge');
 let baseWebpackConfig = require('./webpack.base.conf');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-let notifier = require('node-notifier');
 let ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 let CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -21,16 +20,17 @@ module.exports = merge(baseWebpackConfig, {
     filename: utils.assetsPath('js/[name].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
   },
+  devtool: 'inline-source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': config.dev.env,
     }),
-    new ChromeExtensionReloader({
+    /* new ChromeExtensionReloader({
       entries: {
         contentScript: 'content',
         background: 'background',
       },
-    }),
+    }), */
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
@@ -45,20 +45,7 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['manifest', 'vendor', 'background'],
       inject: true,
     }),
-    new FriendlyErrorsPlugin({
-      onErrors: (severity, errors) => {
-        if (severity !== 'error') {
-          return;
-        }
-        const error = errors[0];
-        notifier.notify({
-          title: 'Webpack error',
-          message: severity + ': ' + error.name,
-          subtitle: error.file || '',
-          icon: utils.resolve('img/icon.png'),
-        });
-      },
-    }),
+    new FriendlyErrorsPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
