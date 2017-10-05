@@ -17,6 +17,7 @@
 ];*/
 
 import ExtendableError from 'es6-error';
+import moment from 'moment';
 
 export class RouterControllerError extends ExtendableError {
   constructor(code, message) {
@@ -469,3 +470,46 @@ class _RouterController {
 }
 
 export let RouterController = new _RouterController();
+
+class _SmsUtils {
+  /**
+   * @typedef SmsDataUsage
+   * @property {number} amount
+   * @property {string} unit
+   */
+  /**
+   * Get's data usage strings in the message
+   * @param {string} message
+   * @return {SmsDataUsage[]}
+   */
+  _getDataUsage(message) {
+    let data = message.match(/(\d*)(\.*)(\d*)( *)mb/gi);
+    if (data) {
+      data = data.map((element) => {
+        return {
+          amount: parseFloat(element.replace(/( *)mb/i, '')),
+          unit: 'MB',
+        };
+      });
+    } else {
+      data = [];
+    }
+    return data;
+  }
+  _getExpiryDate(message) {
+    let dates = message.match(/(\d+)-(\d+)-(\d+) (\d{2}):(\d{2}):(\d{2})/g);
+    return dates.map((date) => {
+      return moment(date);
+    });
+  }
+  parse(message) {
+    return {
+      data: this._getDataUsage(message),
+      expires: this._getExpiryDate(message),
+    };
+  }
+}
+
+export let SmsUtils = new _SmsUtils();
+
+console.log(SmsUtils.parse('You have Data 16.0MB Data Valid until 2017-09-02 00:00:00. 2017-09-02 00:00:20 Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'));
