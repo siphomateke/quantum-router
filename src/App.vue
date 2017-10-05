@@ -38,6 +38,8 @@ import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
 import {RouterController, RouterControllerError} from '@/chrome/router.js';
 import {modes} from '@/store';
+import {mapGetters} from 'vuex';
+import * as types from '@/store/mutation_types.js';
 
 Vue.mixin({
   methods: {
@@ -112,6 +114,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      unreadNotifications: 'unreadNotifications'
+    }),
     // used in html
     modes() {
       return modes;
@@ -224,7 +229,7 @@ export default {
     changeMode(mode) {
       if (mode !== this.$store.state.mode) {
         this.selectedMode = mode;
-        this.$store.commit('mode', mode);
+        this.$store.commit(types.MODE, mode);
         this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
       }
     },

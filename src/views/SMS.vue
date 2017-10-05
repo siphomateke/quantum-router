@@ -61,6 +61,7 @@ import {SmsList} from '@/components/sms';
 import {RouterController, SmsUtils} from '@/chrome/router.js';
 import moment from 'moment';
 import {modes} from '@/store';
+import {Notification} from '@/chrome/notification.js';
 
 export default {
   components: {
@@ -98,6 +99,19 @@ export default {
   },
   mounted() {
     this.refresh();
+    RouterController.getSmsCount().then((_data) => {
+      return RouterController.getSmsList({
+        // TODO: Get all SMSs
+        perPage: 20,
+      }).then((data) => {
+        for (let message of data.Messages.Message) {
+          this.$store.dispatch('addNotification',new Notification({
+            title: 'SMS',
+            message: message.Content,
+          }));
+        }
+      });
+    });
   },
   methods: {
     refresh() {

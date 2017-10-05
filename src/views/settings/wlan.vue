@@ -77,6 +77,7 @@
 
 <script>
 import Select from '@/components/form/Select';
+import * as types from '@/store/mutation_types.js';
 export default {
   name: 'SettingsWlan',
   data() {
@@ -115,7 +116,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit('settings', {
+    this.$store.commit(types.SETTINGS, {
       domain: 'wlan',
       data: this.settings,
     });

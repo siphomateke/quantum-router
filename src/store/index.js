@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import notifications from '@/store/modules/notifications.js';
+import * as types from '@/store/mutation_types.js';
 
 export const modes = {
   OFFLINE: 0,
@@ -15,6 +17,9 @@ modeNames[modes.ADMIN] = 'admin';
 
 Vue.use(Vuex);
 export default new Vuex.Store({
+  modules: {
+    notifications,
+  },
   state: {
     mode: modes.OFFLINE,
     settings: {},
@@ -25,10 +30,10 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    mode(state, mode) {
+    [types.MODE](state, mode) {
       state.mode = mode;
     },
-    settings(state, payload) {
+    [types.SETTINGS](state, payload) {
       state.settings[payload.domain] = payload.data;
     },
   },
