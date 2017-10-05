@@ -511,5 +511,3 @@ class _SmsUtils {
 }
 
 export let SmsUtils = new _SmsUtils();
-
-console.log(SmsUtils.parse('You have Data 16.0MB Data Valid until 2017-09-02 00:00:00. 2017-09-02 00:00:20 Get a bundle that allows you to CALL across ALL NETWORKS. Dial *211# and get it NOW.'));
