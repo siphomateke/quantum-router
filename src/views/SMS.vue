@@ -10,6 +10,7 @@
     </div>
     <!-- <sms-list :list="list" :checked-rows="checkedRows"></sms-list> -->
     <b-table
+    v-if="this.adminMode"
     :data="list"
     :bordered="true"
     :striped="false"
@@ -46,13 +47,18 @@
         </section>
       </template>
     </b-table>
+    <template v-else>
+      <b-message type="is-info" has-icon>
+        You must have administrator access to view SMS messages
+      </b-message>
+    </template>
   </div>
 </template>
 
 <script>
 /* global chrome */
 import {SmsList} from '@/components/sms';
-import {RouterController} from '@/chrome/router.js';
+import {RouterController, SmsUtils} from '@/chrome/router.js';
 import moment from 'moment';
 import {modes} from '@/store';
 
@@ -81,6 +87,9 @@ export default {
     mode() {
       return this.$store.state.mode;
     },
+    adminMode() {
+      return this.mode === modes.ADMIN;
+    },
   },
   watch: {
     mode() {
@@ -92,7 +101,7 @@ export default {
   },
   methods: {
     refresh() {
-      if (this.mode === modes.ADMIN) {
+      if (this.adminMode) {
         this.loadAsyncData();
       }
     },
@@ -153,6 +162,10 @@ export default {
 
     formatDate(date) {
       return moment(date).fromNow();
+    },
+
+    parseMessage(message) {
+      return SmsUtils.parse(message);
     },
   },
 };
