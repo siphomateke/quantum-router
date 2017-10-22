@@ -4,5 +4,13 @@
     "**/build": true,
     "**/config": true,
     "**/original_router": true
-  }
+  },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/static/manifest.json"
+      ],
+      "url": "http://json.schemastore.org/chrome-manifest"
+    }
+  ]
 }
