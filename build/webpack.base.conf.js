@@ -7,6 +7,7 @@ module.exports = {
     'app': utils.resolve('src/main.js'),
     'background': utils.resolve('src/chrome/background.js'),
     'content': utils.resolve('src/chrome/content.js'),
+    'options': utils.resolve('src/options/options.js'),
   },
   output: {
     path: config.build.assetsRoot,

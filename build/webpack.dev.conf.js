@@ -45,6 +45,12 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['manifest', 'vendor', 'background'],
       inject: true,
     }),
+    new HtmlWebpackPlugin({
+      filename: 'options.html',
+      template: path.resolve(__dirname, '../src/options/options.html'),
+      chunks: ['manifest', 'vendor', 'options'],
+      inject: true,
+    }),
     new FriendlyErrorsPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({

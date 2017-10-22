@@ -76,6 +76,18 @@ let webpackConfig = merge(baseWebpackConfig, {
       },
       chunksSortMode: 'dependency',
     }),
+    new HtmlWebpackPlugin({
+      filename: path.resolve(__dirname, '../dist/options.html'),
+      template: path.resolve(__dirname, '../src/options/options.html'),
+      inject: true,
+      chunks: ['manifest', 'vendor', 'options'],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+      },
+      chunksSortMode: 'dependency',
+    }),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
