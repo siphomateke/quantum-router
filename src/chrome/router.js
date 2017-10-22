@@ -216,29 +216,45 @@ class _RouterController {
   }
 
   /**
-   *
+   * @param {string} routerUrl
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
    *                                 e.g 'response' would  expect a <response> tag
    * @return {Promise}
    */
-  getAjaxDataDirect(data) {
-    return this.getRouterUrl().then((url) => {
-      let parsedUrl = null;
-      try {
-        parsedUrl = new URL(url);
-      } catch (e) {
-        if (e instanceof TypeError) {
-          return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+url));
-        } else {
-          throw e;
-        }
+  _getAjaxDataDirect(routerUrl, data) {
+    let parsedUrl = null;
+    try {
+      parsedUrl = new URL(routerUrl);
+    } catch (e) {
+      if (e instanceof TypeError) {
+        return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+url));
+      } else {
+        throw e;
       }
-      return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
-        const ret = this._xml2object(xml);
-        return this._processXmlResponse(ret);
-      });
+    }
+    return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
+      const ret = this._xml2object(xml);
+      return this._processXmlResponse(ret);
     });
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @param {string} data.url The url to get ajax data from
+   *                                 e.g 'response' would  expect a <response> tag
+   * @param {string} [routerUrl='']
+   * @return {Promise}
+   */
+  getAjaxDataDirect(data, routerUrl='') {
+    if (!routerUrl) {
+      return this.getRouterUrl().then((_routerUrl) => {
+        return this._getAjaxDataDirect(_routerUrl, data);
+      });
+    } else {
+      return this._getAjaxDataDirect(routerUrl, data);
+    }
   }
 
   /**
@@ -299,10 +315,15 @@ class _RouterController {
 
   /**
    * Sends a request for the router's global config to determine if there is a connection
+   * @param {string} [routerUrl='']
    * @return {Promise}
    */
-  ping() {
-    return this.getAjaxDataDirect({url: 'config/global/config.xml'});
+  ping(routerUrl='') {
+    if (routerUrl) {
+      return this.getAjaxDataDirect({url: 'config/global/config.xml'}, routerUrl);
+    } else {
+      return this.getAjaxDataDirect({url: 'config/global/config.xml'});
+    }
   }
 
   /**
