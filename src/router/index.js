@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home';
 import Sms from '@/views/Sms';
+import Services from '@/views/Services';
 import Settings from '@/views/Settings';
 import Wlan from '@/views/settings/Wlan';
 import DialUp from '@/views/settings/DialUp';
@@ -29,8 +30,9 @@ export default new Router({
       name: 'statistics',
     },
     {
-      path: '/ussd',
-      name: 'ussd',
+      path: '/services',
+      name: 'services',
+      component: Services,
     },
     {
       path: '/settings',

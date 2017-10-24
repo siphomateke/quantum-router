@@ -100,7 +100,7 @@ export default {
           icon: 'pie-chart',
         },
         {
-          link: 'ussd',
+          link: 'services',
           label: chrome.i18n.getMessage('menu_services'),
           icon: 'terminal',
         },
