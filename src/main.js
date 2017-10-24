@@ -6,6 +6,7 @@ import Vuex from 'vuex';
 import Buefy from 'buefy';
 import VsNotify from '@/components/vs-notify';
 import store from './store';
+import {modes} from '@/store';
 
 window.addEventListener('unload', () => {
   chrome.runtime.sendMessage({
@@ -32,6 +33,14 @@ Vue.mixin({
   filters: {
     i18n: function(value) {
       return chrome.i18n.getMessage(value);
+    },
+  },
+  computed: {
+    $mode() {
+      return this.$store.state.mode;
+    },
+    $adminMode() {
+      return this.$mode === modes.ADMIN;
     },
   },
 });
