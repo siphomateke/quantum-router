@@ -26,6 +26,8 @@
   "missing_router_url_error": {
     "message": "Failed to retrieve router url. Make sure you have set it in settings."
   },
+
+  // region Dialog
   "dialog_switch_to_basic": {
     "message": "Switch to basic mode"
   },
@@ -37,5 +39,33 @@
   },
   "dialog_go_offline": {
     "message": "Go offline"
+  },
+  // endregion
+
+  // region Options
+  "options_field_router_url": {
+    "message": "Router URL",
+    "description": "Router URL field on the extensions options page."
+  },
+  "options_field_admin_username": {
+    "message": "Username",
+    "description": "Username field on the extension options page."
+  },
+  "options_field_admin_password": {
+    "message": "Password",
+    "description": "Password field on the extension options page."
+  },
+  "options_button_save": {
+    "message": "Save",
+    "description": "Save button on the extension options page."
+  },
+  "options_button_cancel": {
+    "message": "Cancel",
+    "description": "Cancel button on the extension options page."
+  },
+  "options_error_ping": {
+    "message": "Cannot connect to specified URL.",
+    "description": "Error message displayed when a connection to the router URL can't be established. Used on the extension options page."
   }
+  // endregion
 }

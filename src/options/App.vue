@@ -1,19 +1,19 @@
 <template>
   <form style="padding:1em;" ref="form" v-on:submit.prevent>
     <b-field
-    label="Router url"
+    :label="'options_field_router_url' | i18n"
     :type="routerUrl.type"
     :message="routerUrl.message">
-        <b-input v-model="routerUrl.value" placeholder="URL" type="url" :loading="pinging"></b-input>
+        <b-input v-model="routerUrl.value" type="url" :loading="pinging"></b-input>
     </b-field>
-    <b-field label="Username">
-        <b-input v-model="username" placeholder="" type="text"></b-input>
+    <b-field :label="'options_field_admin_username' | i18n">
+        <b-input v-model="username" type="text"></b-input>
     </b-field>
-    <b-field label="Password">
-        <b-input v-model="password" placeholder="" type="password" password-reveal></b-input>
+    <b-field :label="'options_field_admin_password' | i18n">
+        <b-input v-model="password" type="password" password-reveal></b-input>
     </b-field>
-    <button @click="save" class="button is-primary" :class="{'is-loading': formLoading}">Save</button>
-    <button @click="cancel" class="button">Cancel</button>
+    <button @click="save" class="button is-primary" :class="{'is-loading': formLoading}">{{ 'options_button_save' | i18n}}</button>
+    <button @click="cancel" class="button">{{ 'options_button_cancel' | i18n}}</button>
   </form>
 </template>
 
@@ -68,7 +68,7 @@ export default {
           return resolve(true);
         }).catch(() => {
           this.routerUrl.type = 'is-danger';
-          this.routerUrl.message = 'Cannot connect to specified URL.';
+          this.routerUrl.message = chrome.i18n.getMessage('options_error_ping');
           this.pinging = false;
           return reject(false);
         });
