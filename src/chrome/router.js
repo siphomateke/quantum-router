@@ -598,3 +598,39 @@ class _SmsUtils {
 }
 
 export let SmsUtils = new _SmsUtils();
+
+class _UssdUtils {
+  /**
+   * Get's USSD options from a message string.
+   * E.g
+   * 1. WhatsApp pack
+   * 2. Facebook pack
+   * 3. Nightly bundle
+   * @param {string} message
+   * @return {string[]}
+   */
+  _getOptions(message) {
+    let options = message.match(/(^|\n)\d+.(.+)/gi);
+    if (options) {
+      options = options.map((element) => {
+        return element.replace(/(^|\n)\d+.( *)/i, '');
+      });
+    } else {
+      options = [];
+    }
+    return options;
+  }
+  parse(message) {
+    let options = this._getOptions(message);
+    let content = message;
+    if (options) {
+      content = content.replace(/(^|\n)\d+.((.|\n)+)/i, '');
+    }
+    return {
+      content: content,
+      options: options,
+    };
+  }
+}
+
+export let UssdUtils = new _UssdUtils();

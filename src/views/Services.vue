@@ -4,19 +4,24 @@
     <b-field label="USSD Command">
       <b-input v-model="ussd" type="text"></b-input>
     </b-field>
+    <div class="box">
+      <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
+      <template v-for="(option, key) in ussdOptions">
+        <b-radio :key="key + 1"
+          v-model="selectedUssdOption"
+          :native-value="key + 1">
+            {{ (key + 1) + '. ' + option }}
+        </b-radio>
+        <br>
+      </template>
+    </div>
     <button @click="send" class="button is-primary" :class="{'is-loading': loading}">Send</button>
   </form>
-  <br>
-  <section class="box" :class="{'is-loading': loading}">
-    <p style="white-space: pre-wrap;">
-      {{ ussdResult }}
-    </p>
-  </section>
 </div>
 </template>
 
 <script>
-import {RouterController} from '@/chrome/router.js';
+import {RouterController, UssdUtils} from '@/chrome/router.js';
 
 export default {
   data() {
@@ -25,11 +30,16 @@ export default {
       loading: false,
       ussdResult: '',
       ussdCommands: [],
+      ussdOptions: [],
+      selectedUssdOption: null,
     };
   },
   watch: {
     '$mode'() {
       this.refresh();
+    },
+    selectedUssdOption(key) {
+      this.ussd = key;
     },
   },
   mounted() {
@@ -46,7 +56,9 @@ export default {
     send() {
       this.loading = true;
       RouterController.sendUssdCommand(this.ussd).then((data) => {
-        this.ussdResult = data.content;
+        let parsed = UssdUtils.parse(data.content);
+        this.ussdResult = parsed.content;
+        this.ussdOptions = parsed.options;
         this.loading = false;
       }).catch((err) => {
         this.loading = false;
