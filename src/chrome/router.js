@@ -1,4 +1,5 @@
 'use strict';
+import {Utils} from '@/chrome/core';
 /* global chrome*/
 
 /* const errors = [
@@ -13,7 +14,8 @@
   'router_url_not_set',
   'chrome_storage_error',
   'invalid_router_url',
-  'xhr_timeout'
+  'xhr_timeout',
+  'ussd_timeout'
 ];*/
 
 import ExtendableError from 'es6-error';
@@ -46,6 +48,8 @@ class _RouterController {
       125001: 'ERROR_WRONG_TOKEN',
       125002: 'ERROR_WRONG_SESSION',
       125003: 'ERROR_WRONG_SESSION_TOKEN',
+      111019: 'ERROR_USSD_PROCESSING',
+      111020: 'ERROR_USSD_TIMEOUT',
     };
   }
 
@@ -309,8 +313,7 @@ class _RouterController {
    * @return {boolean} if the response is ok
    */
   _isAjaxReturnOk(ret) {
-    // FIXME: This probably doesn't work anymore. It should use something like ret.data
-    return ret.response.toLowerCase() === 'ok';
+    return ret.toLowerCase() === 'ok';
   }
 
   /**
@@ -327,9 +330,36 @@ class _RouterController {
   }
 
   /**
+   * @typedef UssdResult
+   * @property {string} content
+   */
+
+  /**
+   * Get's the result of a USSD command. Waits for result
+   * @return {Promise<UssdResult>}
+   */
+  getUssdResult() {
+    return this.getAjaxDataDirect({
+      url: 'api/ussd/get',
+    }).catch((err) => {
+      if (err instanceof RouterApiError) {
+        if (err.code === 'ERROR_USSD_PROCESSING') {
+          return Utils.delay(1000).then(() => {
+            return this.getUssdResult();
+          });
+        } else if (err.code == 'ERROR_USSD_TIMEOUT') {
+          return Promise.reject(new RouterControllerError('ussd_timeout'));
+        }
+      } else {
+        return Promise.reject(err);
+      }
+    });
+  }
+
+  /**
    * Sends a USSD command to the router
    * @param {string}   command  the command to send
-   * @return {Promise}
+   * @return {Promise<UssdResult>}
    */
   async sendUssdCommand(command) {
     return this.saveAjaxData({
@@ -339,14 +369,9 @@ class _RouterController {
         codeType: 'CodeType',
         timeout: '',
       },
-      options: {
-        enc: true,
-      },
     }).then((ret) => {
       if (this._isAjaxReturnOk(ret)) {
-        return this.getAjaxData({
-          url: 'api/ussd/get',
-        });
+        return this.getUssdResult();
       } else {
         return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
       }
