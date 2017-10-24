@@ -1,6 +1,6 @@
 /* global chrome*/
 import Vue from 'vue';
-import App from './App.vue';
+import Options from './Options.vue';
 import Buefy from 'buefy';
 
 Vue.config.productionTip = false;
@@ -21,6 +21,6 @@ Vue.mixin({
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: (h) => h(App),
+  render: (h) => h(Options),
 });
 
