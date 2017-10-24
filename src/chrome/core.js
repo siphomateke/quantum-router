@@ -266,3 +266,16 @@ export class Notifier {
     }
   }
 }
+
+export class Utils {
+  /**
+   * Promise version of setTimeout
+   * @param {number} t
+   * @return {Promise}
+   */
+  static delay(t) {
+    return new Promise(function(resolve) {
+      setTimeout(resolve, t);
+    });
+  }
+}
