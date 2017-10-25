@@ -610,10 +610,10 @@ class _UssdUtils {
    * @return {string[]}
    */
   _getOptions(message) {
-    let options = message.match(/(^|\n)\d+.(.+)/gi);
+    let options = message.match(/(^|\n).+\. (.+)/gi);
     if (options) {
       options = options.map((element) => {
-        return element.replace(/(^|\n)\d+.( *)/i, '');
+        return element.replace(/(^|\n).+\. /i, '');
       });
     } else {
       options = [];
@@ -624,7 +624,7 @@ class _UssdUtils {
     let options = this._getOptions(message);
     let content = message;
     if (options) {
-      content = content.replace(/(^|\n)\d+.((.|\n)+)/i, '');
+      content = content.replace(/(^|\n).+\.((.|\n)+)/i, '');
     }
     return {
       content: content,
