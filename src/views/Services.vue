@@ -4,6 +4,15 @@
     <b-field label="USSD Command">
       <b-input v-model="ussd" type="text"></b-input>
     </b-field>
+    <b-field v-if="ussdCommands.length > 0">
+      <b-select v-model="selectedUssdCommand">
+        <option
+          v-for="command in ussdCommands"
+          :value="command.Command"
+          :key="command.Command"
+          >{{ command.Name }}</option>
+      </b-select>
+    </b-field>
     <div class="box">
       <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
       <template v-for="(option, key) in ussdOptions">
@@ -30,6 +39,7 @@ export default {
       loading: false,
       ussdResult: '',
       ussdCommands: [],
+      selectedUssdCommand: '',
       ussdOptions: [],
       selectedUssdOption: null,
     };
@@ -41,13 +51,16 @@ export default {
     selectedUssdOption(key) {
       this.ussd = key;
     },
+    selectedUssdCommand(command) {
+      this.ussd = command;
+    },
   },
   mounted() {
     this.refresh();
   },
   methods: {
     refresh() {
-      if (this.adminMode) {
+      if (this.$adminMode) {
         RouterController.getUssdConfig().then((config) => {
           this.ussdCommands = config.USSD.General.Menu.MenuItem;
         });
