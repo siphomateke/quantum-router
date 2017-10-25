@@ -610,13 +610,15 @@ class _UssdUtils {
    * @return {string[]}
    */
   _getOptions(message) {
-    let options = message.match(/(^|\n).+\. (.+)/gi);
-    if (options) {
-      options = options.map((element) => {
-        return element.replace(/(^|\n).+\. /i, '');
+    let foundOptions = message.match(/(^.|\n.)+\. (.+)/gi);
+    let options = {};
+    if (foundOptions) {
+      foundOptions.map((element) => {
+        let regExp = /((^.|\n.)+)\. /;
+        let match = regExp.exec(element);
+        let key = match[1].replace(/\n/, '');
+        options[key] = element.replace(/(^.|\n.)+\. /i, '');
       });
-    } else {
-      options = [];
     }
     return options;
   }
@@ -624,7 +626,7 @@ class _UssdUtils {
     let options = this._getOptions(message);
     let content = message;
     if (options) {
-      content = content.replace(/(^|\n).+\.((.|\n)+)/i, '');
+      content = content.replace(/(^.|\n.)+\.((.|\n)+)/i, '');
     }
     return {
       content: content,

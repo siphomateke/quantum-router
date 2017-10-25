@@ -7,10 +7,10 @@
     <div class="box">
       <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
       <template v-for="(option, key) in ussdOptions">
-        <b-radio :key="key + 1"
+        <b-radio :key="key"
           v-model="selectedUssdOption"
-          :native-value="key + 1">
-            {{ (key + 1) + '. ' + option }}
+          :native-value="key">
+            {{ key + '. ' + option }}
         </b-radio>
         <br>
       </template>
