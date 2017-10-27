@@ -15,7 +15,8 @@ import {Utils} from '@/chrome/core';
   'chrome_storage_error',
   'invalid_router_url',
   'xhr_timeout',
-  'ussd_timeout'
+  'ussd_timeout',
+  'ussd_release_fail',
 ];*/
 
 import ExtendableError from 'es6-error';
@@ -330,6 +331,20 @@ class _RouterController {
   }
 
   /**
+   * Releases previous USSD result. Must be called after getting a USSD result.
+   * @return {Promise}
+   */
+  releaseUssd() {
+    return this.getAjaxDataDirect({url: 'api/ussd/release'}).then((ret) => {
+      if (this._isAjaxReturnOk(ret)) {
+        return true;
+      } else {
+        return Promise.reject(new RouterControllerError('ussd_release_fail'));
+      }
+    });
+  }
+
+  /**
    * @typedef UssdResult
    * @property {string} content
    */
@@ -348,6 +363,7 @@ class _RouterController {
             return this.getUssdResult();
           });
         } else if (err.code == 'ERROR_USSD_TIMEOUT') {
+          this.releaseUssd();
           return Promise.reject(new RouterControllerError('ussd_timeout'));
         }
       } else {
