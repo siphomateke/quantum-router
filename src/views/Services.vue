@@ -27,7 +27,10 @@
         <br>
       </template>
     </div>
-    <button @click="send" class="button is-primary" :class="{'is-loading': loading}">Send</button>
+    <button @click="send"
+    class="button is-primary"
+    :class="{'is-loading': loading}"
+    :disabled="ussd.content.length === 0">Send</button>
   </form>
   <template v-else>
     <b-message type="is-info" has-icon>
