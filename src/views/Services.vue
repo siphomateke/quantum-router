@@ -1,6 +1,6 @@
 <template>
 <div class="box">
-  <form v-on:submit.prevent>
+  <form v-on:submit.prevent v-if="$adminMode">
     <b-field label="USSD Command">
       <b-input v-model="ussd" type="text"></b-input>
     </b-field>
@@ -13,11 +13,13 @@
           >{{ command.Name }}</option>
       </b-select>
     </b-field>
-    <div class="box">
+    <b-message type="is-danger" has-icon v-if="error">{{ error }}</b-message>
+    <div class="box" v-if="ussdResult.length > 0 || ussdOptions.length > 0">
       <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
       <template v-for="(option, key) in ussdOptions">
         <b-radio :key="key"
-          v-model="selectedUssdOption"
+          :value="selectedUssdOption"
+          @input="selectedUssdOptionChanged"
           :native-value="key">
             {{ key + '. ' + option }}
         </b-radio>
@@ -26,6 +28,11 @@
     </div>
     <button @click="send" class="button is-primary" :class="{'is-loading': loading}">Send</button>
   </form>
+  <template v-else>
+    <b-message type="is-info" has-icon>
+      You must be in administrator mode to access USSD services
+    </b-message>
+  </template>
 </div>
 </template>
 
@@ -42,14 +49,12 @@ export default {
       selectedUssdCommand: '',
       ussdOptions: [],
       selectedUssdOption: null,
+      error: '',
     };
   },
   watch: {
     '$mode'() {
       this.refresh();
-    },
-    selectedUssdOption(key) {
-      this.ussd = key;
     },
     selectedUssdCommand(command) {
       this.ussd = command;
@@ -59,6 +64,10 @@ export default {
     this.refresh();
   },
   methods: {
+    selectedUssdOptionChanged(value) {
+      this.selectedUssdOption = value;
+      this.ussd = this.selectedUssdOption;
+    },
     refresh() {
       if (this.$adminMode) {
         RouterController.getUssdConfig().then((config) => {
@@ -68,12 +77,15 @@ export default {
     },
     send() {
       this.loading = true;
+      this.error = '';
+      this.selectedUssdOption = null;
       RouterController.sendUssdCommand(this.ussd).then((data) => {
         let parsed = UssdUtils.parse(data.content);
         this.ussdResult = parsed.content;
         this.ussdOptions = parsed.options;
         this.loading = false;
       }).catch((err) => {
+        this.error = err;
         this.loading = false;
       });
     },
