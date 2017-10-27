@@ -2,24 +2,25 @@
 <div class="box">
   <form v-on:submit.prevent v-if="$adminMode">
     <b-field label="USSD Command">
-      <b-input v-model="ussd" type="text"></b-input>
+      <b-input v-model="ussd.content" type="text"></b-input>
     </b-field>
-    <b-field v-if="ussdCommands.length > 0">
-      <b-select v-model="selectedUssdCommand">
+    <b-field v-if="ussd.commands.length > 0" label="USSD Presets">
+      <b-select :value="ussd.selectedCommand" @input="ussdSelectedCommandChanged">
+        <option value="">--</option>
         <option
-          v-for="command in ussdCommands"
+          v-for="command in ussd.commands"
           :value="command.Command"
           :key="command.Command"
           >{{ command.Name }}</option>
       </b-select>
     </b-field>
     <b-message type="is-danger" has-icon v-if="error">{{ error }}</b-message>
-    <div class="box" v-if="ussdResult.length > 0 || Object.keys(ussdOptions).length > 0">
-      <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
-      <template v-for="(option, key) in ussdOptions">
+    <div class="box" v-if="ussd.result.length > 0 || ussdOptionsExist">
+      <p style="white-space: pre-wrap;">{{ ussd.result }}</p>
+      <template v-for="(option, key) in ussd.options">
         <b-radio :key="key"
-          :value="selectedUssdOption"
-          @input="selectedUssdOptionChanged"
+          :value="ussd.selectedOption"
+          @input="ussdSelectedOptionChanged"
           :native-value="key">
             {{ key + '. ' + option }}
         </b-radio>
@@ -42,22 +43,31 @@ import {RouterController, UssdUtils} from '@/chrome/router.js';
 export default {
   data() {
     return {
-      ussd: '',
+      ussd: {
+        content: '',
+        result: '',
+        commands: [],
+        selectedCommand: '',
+        options: [],
+        selectedOption: null,
+      },
       loading: false,
-      ussdResult: '',
-      ussdCommands: [],
-      selectedUssdCommand: '',
-      ussdOptions: [],
-      selectedUssdOption: null,
       error: '',
     };
+  },
+  computed: {
+    ussdOptionsExist() {
+      return Object.keys(this.ussd.options).length > 0;
+    },
   },
   watch: {
     '$mode'() {
       this.refresh();
     },
-    selectedUssdCommand(command) {
-      this.ussd = command;
+    ussd(value) {
+      if (value !== this.ussd.selectedCommand && this.ussd.selectedCommand.length > 0) {
+        this.ussd.selectedCommand = '';
+      }
     },
   },
   mounted() {
@@ -65,26 +75,31 @@ export default {
     RouterController.releaseUssd();
   },
   methods: {
-    selectedUssdOptionChanged(value) {
-      this.selectedUssdOption = value;
-      this.ussd = this.selectedUssdOption;
+    ussdSelectedCommandChanged(command) {
+      this.ussd.selectedCommand = command;
+      this.ussd.content = this.ussd.selectedCommand;
+    },
+    ussdSelectedOptionChanged(value) {
+      this.ussd.selectedOption = value;
+      this.ussd.content = this.ussd.selectedOption;
     },
     refresh() {
       if (this.$adminMode) {
         RouterController.getUssdConfig().then((config) => {
-          this.ussdCommands = config.USSD.General.Menu.MenuItem;
+          this.ussd.commands = config.USSD.General.Menu.MenuItem;
         });
       }
     },
     send() {
       this.loading = true;
       this.error = '';
-      this.selectedUssdOption = null;
-      RouterController.sendUssdCommand(this.ussd).then((data) => {
+      RouterController.sendUssdCommand(this.ussd.content).then((data) => {
         let parsed = UssdUtils.parse(data.content);
-        this.ussdResult = parsed.content;
-        this.ussdOptions = parsed.options;
-        this.ussd = '';
+        this.ussd.result = parsed.content;
+        this.ussd.options = parsed.options;
+        this.ussd.selectedCommand = '';
+        this.ussd.selectedOption = null;
+        this.ussd.content = '';
         this.loading = false;
       }).catch((err) => {
         this.error = err;
