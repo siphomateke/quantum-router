@@ -601,9 +601,13 @@ class _SmsUtils {
   }
   _getExpiryDate(message) {
     let dates = message.match(/(\d+)-(\d+)-(\d+) (\d{2}):(\d{2}):(\d{2})/g);
-    return dates.map((date) => {
-      return moment(date);
-    });
+    if (dates) {
+      return dates.map((date) => {
+        return moment(date);
+      });
+    } else {
+      return [];
+    }
   }
   parse(message) {
     return {
