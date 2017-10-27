@@ -14,7 +14,7 @@
       </b-select>
     </b-field>
     <b-message type="is-danger" has-icon v-if="error">{{ error }}</b-message>
-    <div class="box" v-if="ussdResult.length > 0 || ussdOptions.length > 0">
+    <div class="box" v-if="ussdResult.length > 0 || Object.keys(ussdOptions).length > 0">
       <p style="white-space: pre-wrap;">{{ ussdResult }}</p>
       <template v-for="(option, key) in ussdOptions">
         <b-radio :key="key"
@@ -62,6 +62,7 @@ export default {
   },
   mounted() {
     this.refresh();
+    RouterController.releaseUssd();
   },
   methods: {
     selectedUssdOptionChanged(value) {
@@ -83,6 +84,7 @@ export default {
         let parsed = UssdUtils.parse(data.content);
         this.ussdResult = parsed.content;
         this.ussdOptions = parsed.options;
+        this.ussd = '';
         this.loading = false;
       }).catch((err) => {
         this.error = err;
