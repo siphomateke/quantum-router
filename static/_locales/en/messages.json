@@ -27,6 +27,21 @@
     "message": "Failed to retrieve router url. Make sure you have set it in settings."
   },
 
+  //region Services
+  "services_ussd_command" : {
+    "message": "USSD Command"
+  },
+  "services_ussd_presets": {
+    "message": "USSD Presets"
+  },
+  "services_ussd_send": {
+    "message": "Send"
+  },
+  "services_admin_only": {
+    "message": "You must be in administrator mode to access USSD services"
+  },
+  //endregion
+
   // region Dialog
   "dialog_switch_to_basic": {
     "message": "Switch to basic mode"
