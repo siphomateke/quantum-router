@@ -7,11 +7,13 @@
         <q-toolbar>
           <template slot="toolbar-start">
             <!-- FIXME: Dropdown does not update with selectedMode -->
-            <q-toolbar-item icon="bolt" :color="modeColor" :value="selectedMode" @input="selectedModeChanged" ref="modeToolbarItem">
+            <q-toolbar-item icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
-                <b-dropdown-item :value="modes.OFFLINE">Offline</b-dropdown-item>
-                <b-dropdown-item :value="modes.BASIC">Basic</b-dropdown-item>
-                <b-dropdown-item :value="modes.ADMIN">Admin</b-dropdown-item>
+                <q-dropdown-select :value="selectedMode" @input="selectedModeChanged">
+                  <q-dropdown-item :value="modes.OFFLINE">Offline</q-dropdown-item>
+                  <q-dropdown-item :value="modes.BASIC">Basic</q-dropdown-item>
+                  <q-dropdown-item :value="modes.ADMIN">Admin</q-dropdown-item>
+                </q-dropdown-select>
               </template>
             </q-toolbar-item>
           </template>
@@ -36,6 +38,8 @@ import Drawer from '@/components/Drawer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
+import DropdownItem from '@/components/DropdownItem.vue';
+import DropdownSelect from '@/components/DropdownSelect.vue';
 import {RouterController, RouterControllerError} from '@/chrome/router.js';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
@@ -75,6 +79,8 @@ export default {
     'b-navbar': Navbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
+    'q-dropdown-item': DropdownItem,
+    'q-dropdown-select': DropdownSelect,
   },
   data() {
     return {
