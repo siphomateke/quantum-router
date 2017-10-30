@@ -105,7 +105,7 @@ export default {
         perPage: 20,
       }).then((data) => {
         for (let message of data.Messages.Message) {
-          this.$store.dispatch('addNotification',new Notification({
+          this.$store.dispatch('addNotification', new Notification({
             title: 'SMS',
             message: message.Content,
           }));
