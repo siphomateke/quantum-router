@@ -611,6 +611,13 @@ class _SmsUtils {
       return parseFloat(element.replace(/( *)kwacha/i, ''));
     });
   }
+
+  _getPercent(message) {
+    return this._arrayMatch(message, /\d+%/gi, (element) => {
+      return parseFloat(element.replace(/%/, ''));
+    });
+  }
+
   _getType(info, message) {
     let adPhrases = [
       'spaka',
@@ -659,6 +666,7 @@ class _SmsUtils {
       data: this._getDataUsage(message),
       expires: this._getExpiryDate(message),
       money: this._getMoney(message),
+      percent: this._getPercent(message),
     };
 
     return Object.assign(info, {
