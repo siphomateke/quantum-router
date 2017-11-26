@@ -30,7 +30,7 @@
     :default-sort-direction="sortOrder"
     :default-sort="[sortField, sortOrder]"
     @sort="onSort">
-      <template scope="props">
+      <template slot-scope="props">
           <b-table-column field="read" sortable>{{ props.row.read }}</b-table-column>
           <b-table-column label="Number" field="number" sortable>{{ props.row.number }}</b-table-column>
           <b-table-column label="Content" field="content" sortable>

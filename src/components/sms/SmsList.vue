@@ -9,7 +9,7 @@
   :mobile-cards="true"
   :checked-rows.sync="checkedRows"
   checkable>
-    <template scope="props">
+    <template slot-scope="props">
         <b-table-column>{{ props.row.read }}</b-table-column>
         <b-table-column label="Number">{{ props.row.number }}</b-table-column>
         <b-table-column label="Content">

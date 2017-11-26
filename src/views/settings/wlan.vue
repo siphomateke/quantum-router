@@ -19,7 +19,7 @@
       :striped="true"
       :mobile-cards="true">
 
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column label="SSID">
           <b-field v-if="editMode">
             <b-input v-model="props.row.ssid"></b-input>
