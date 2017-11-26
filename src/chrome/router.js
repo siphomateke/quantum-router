@@ -575,6 +575,14 @@ class _RouterController {
 export let RouterController = new _RouterController();
 
 class _SmsUtils {
+  _arrayMatch(message, regExpMatch, mapFunc) {
+    let data = message.match(regExpMatch);
+    if (data) {
+      return data.map(mapFunc);
+    } else {
+      return [];
+    }
+  }
   /**
    * @typedef SmsDataUsage
    * @property {number} amount
@@ -586,34 +594,76 @@ class _SmsUtils {
    * @return {SmsDataUsage[]}
    */
   _getDataUsage(message) {
-    let data = message.match(/(\d*)(\.*)(\d*)( *)mb/gi);
-    if (data) {
-      data = data.map((element) => {
-        return {
-          amount: parseFloat(element.replace(/( *)mb/i, '')),
-          unit: 'MB',
-        };
-      });
-    } else {
-      data = [];
-    }
-    return data;
+    return this._arrayMatch(message, /(\d*)(\.*)(\d*)( *)mb/gi, (element) => {
+      return {
+        amount: parseFloat(element.replace(/( *)mb/i, '')),
+        unit: 'MB',
+      };
+    });
   }
   _getExpiryDate(message) {
-    let dates = message.match(/(\d+)-(\d+)-(\d+) (\d{2}):(\d{2}):(\d{2})/g);
-    if (dates) {
-      return dates.map((date) => {
-        return moment(date);
-      });
-    } else {
-      return [];
+    return this._arrayMatch(message, /(\d+)-(\d+)-(\d+) (\d{2}):(\d{2}):(\d{2})/g, (date) => {
+      return moment(date);
+    });
+  }
+  _getMoney(message) {
+    return this._arrayMatch(message, /(\d*)(\.*)(\d*)( *)kwacha/gi, (element) => {
+      return parseFloat(element.replace(/( *)kwacha/i, ''));
+    });
+  }
+  _getType(info, message) {
+    let adPhrases = [
+      'spaka',
+      'bonus',
+      'congratulations',
+      'songs', 'tunes', 'music',
+      'subscribe',
+      'enjoy',
+      'watch tv', 'mtn tv plus', 'mtn tv+',
+      'download',
+      'call across all networks',
+      'youtube',
+      'borrow',
+      'laugh',
+      'app',
+      'sport',
+    ];
+    let count = 0;
+    for (let phrase of adPhrases) {
+      if (message.toLowerCase().search(phrase) > -1) {
+        count++;
+      }
     }
+    let ml = message.toLowerCase();
+    if (info.money.length >= 2 && ml.includes('recharged') && ml.includes('balance')) {
+      return 'recharge';
+    }
+    if (info.data.length > 0) {
+      if (info.expires.length > 0) {
+        return 'data';
+      }
+      if (ml.search(/\d+%/) > 0) {
+        return 'data_percent';
+      }
+    }
+    if (ml.includes('activated') && ml.includes('bundle')) {
+      return 'activated';
+    }
+    if (ml.includes('depleted') && ml.includes('bundle')) {
+      return 'depleted';
+    }
+    return 'ad';
   }
   parse(message) {
-    return {
+    let info = {
       data: this._getDataUsage(message),
       expires: this._getExpiryDate(message),
+      money: this._getMoney(message),
     };
+
+    return Object.assign(info, {
+      type: this._getType(info, message),
+    });
   }
 }
 
