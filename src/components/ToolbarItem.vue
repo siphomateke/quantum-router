@@ -9,8 +9,10 @@
   :value="value"
   @input="input"
   ref="dropdown"
+  :position="position"
+  :mobile-modal="mobileModal"
    class="toolbar-item" :class="{'active': isActive}">
-    <router-link slot="trigger" :to="{ name: link }" :style="{color: color}">
+    <router-link class="toolbar-item-trigger" slot="trigger" :to="{ name: link }" :style="{color: color}">
       <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
       <div class="badge" v-if="badgeVisible">{{ badge }}</div>
       <slot></slot>
@@ -37,6 +39,8 @@
       'badge': [Number, String],
       'color': String,
       'value': {},
+      'position': String,
+      'mobileModal': Boolean,
     },
     methods: {
       checkSlot(slotName) {
@@ -67,6 +71,17 @@
 
   &.active {
     color: $toolbar-item-active-color;
+  }
+
+  .toolbar-item-trigger{
+    color: $toolbar-item-color;
+    &:hover{
+      color: $toolbar-item-hover-color;
+    }
+
+    &.active {
+      color: $toolbar-item-active-color;
+    }
   }
 }
 </style>
