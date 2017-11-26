@@ -18,7 +18,14 @@
             </q-toolbar-item>
           </template>
           <template slot="toolbar-end">
-            <q-toolbar-item icon="bell" link="sms" :badge="smsCount" :badge-visible="smsCount > 0"></q-toolbar-item>
+            <q-toolbar-item icon="bell" :badge="smsCount" :badge-visible="smsCount > 0"
+              position="is-bottom-left" class="notification-dropdown" :mobile-modal="false">
+              <template slot="dropdown">
+                <b-dropdown-item custom paddingless>
+                  <q-notifications-popup :list="unreadNotifications"></q-notifications-popup>
+                </b-dropdown-item>
+              </template>
+            </q-toolbar-item>
             <q-toolbar-item icon="plug"></q-toolbar-item>
             <q-toolbar-item icon="wifi"></q-toolbar-item>
           </template>
@@ -44,6 +51,7 @@ import {RouterController, RouterControllerError} from '@/chrome/router.js';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
+import NotificationsPopup from '@/components/notifications/NotificationsPopup';
 
 Vue.mixin({
   methods: {
@@ -81,6 +89,7 @@ export default {
     'q-toolbar-item': ToolbarItem,
     'q-dropdown-item': DropdownItem,
     'q-dropdown-select': DropdownSelect,
+    'q-notifications-popup': NotificationsPopup
   },
   data() {
     return {
@@ -336,5 +345,11 @@ body {
   background-color: #fff;
   border-bottom: 1px solid #e1e1e1;
   z-index: 1;
+}
+
+.notification-dropdown .dropdown-content{
+  box-shadow: 0 0 15px rgba(0,0,0,0.18);
+  border: solid 1px rgba(10,10,10,0.2);
+  padding: 0;
 }
 </style>
