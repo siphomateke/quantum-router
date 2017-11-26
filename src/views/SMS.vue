@@ -146,11 +146,13 @@ export default {
           this.total = currentTotal;
 
           for (let m of messages) {
+            let parsed = this.parseMessage(m.Content);
             this.list.push({
               number: m.Phone,
               date: m.Date,
               content: m.Content,
               read: false,
+              parsed: parsed,
             });
           }
         });
