@@ -3,7 +3,7 @@
     <div class="field is-grouped">
       <div v-for="action in actions" :key="action.name" class="control">
         <button class="button" :class="action.class">
-          <b-icon :icon="action.icon"></b-icon>
+          <b-icon v-if="action.icon" :icon="action.icon"></b-icon>
           <span>{{action.label}}</span>
         </button>
       </div>
