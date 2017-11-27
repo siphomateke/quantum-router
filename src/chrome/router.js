@@ -439,6 +439,37 @@ class _RouterController {
   }
 
   /**
+  * @typedef SmsConfig
+  * @property {number} cbsenable
+  * @property {number} cdma_enabled
+  * @property {number} enable
+  * @property {number} getcontactenable
+  * @property {number} import_enabled
+  * @property {number} localmax
+  * @property {number} maxphone
+  * @property {number} pagesize
+  * @property {number} session_sms_enabled
+  * @property {number} sms_center_enabled
+  * @property {number} sms_priority_enabled
+  * @property {number} sms_validity_enabled
+  * @property {number} smscharlang
+  * @property {number} smscharmap
+  * @property {number} smsfulltype
+  * @property {number} url_enabled
+  * @property {number} validity
+  */
+
+  /**
+   * Get's SMS configuration
+   * @return {Promise<SmsConfig>}
+   */
+  getSmsConfig() {
+    return this.getAjaxDataDirect({
+      url: 'config/sms/config.xml',
+    });
+  }
+
+  /**
    * @typedef SmsCount
    * @property {number} LocalUnread
    * @property {number} LocalInbox
