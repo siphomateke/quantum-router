@@ -103,8 +103,8 @@ export default {
       return RouterController.getSmsList({
         // TODO: Get all SMSs
         perPage: 20,
-      }).then((data) => {
-        for (let message of data.Messages) {
+      }).then((messages) => {
+        for (let message of messages) {
           this.$store.dispatch('addNotification', new Notification({
             title: 'SMS',
             message: message.Content,
@@ -128,8 +128,7 @@ export default {
         page: this.page,
         sortOrder: this.sortOrder,
         perPage: this.perPage,
-      }).then((data) => {
-        const _messages = data.Messages;
+      }).then((_messages) => {
         let messages = [];
         if (Array.isArray(_messages)) {
           messages = _messages;

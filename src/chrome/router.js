@@ -508,23 +508,17 @@ class _RouterController {
    */
 
   /**
-   * @typedef SmsList
-   * @property {number} Count
-   * @property {Message[]} Messages
-   */
-
-  /**
   * @typedef SmsListOptions
   * @property {number} [page=1]
   * @property {number} [perPage=20]
   * @property {(1|2|3)} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
   * @property {('desc'|'asc')} [sortOrder=desc]
-   */
+  */
 
   /**
    * Get's the list of SMSs from the router
    * @param {SmsListOptions} options Options
-   * @return {Promise<SmsList>}
+   * @return {Promise<Message[]>}
    */
   getSmsList(options) {
     options = Object.assign({
@@ -544,10 +538,7 @@ class _RouterController {
         UnreadPreferred: 0,
       },
     }).then((_data) => {
-      return {
-        Count: parseInt(_data.Count),
-        Messages: _data.Messages.Message,
-      };
+      return _data.Messages.Message;
     });
   }
 
