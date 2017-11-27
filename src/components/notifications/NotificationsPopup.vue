@@ -2,7 +2,7 @@
   <div class="notification-popup">
     <div class="popup-card">
       <header class="popup-card-head">
-        <span class="popup-card-title">Notifications</span>
+        <span class="popup-card-title">{{ 'notifications_title' | i18n}}</span>
       </header>
       <section class="popup-card-body">
         <q-notification-list :list="list"></q-notification-list>

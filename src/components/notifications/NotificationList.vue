@@ -14,7 +14,7 @@
     <section class="section">
       <div class="content has-text-grey has-text-centered">
         <p>
-          No notifications
+          {{ 'notifications_empty' | i18n }}
         </p>
       </div>
     </section>

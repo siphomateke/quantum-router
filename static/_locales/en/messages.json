@@ -4,6 +4,12 @@
   "menu_statistics":{"message": "Statistics"},
   "menu_services":{"message": "Services"},
   "menu_settings":{"message": "Settings"},
+
+  //region Notifications
+  "notifications_title":{"message": "Notifications"},
+  "notifications_empty":{"message": "No notifications"},
+  //endregion
+
   "router_error_tabs_not_found":{
     "message": "Could not find the router page. It must be open to carry out admin tasks such as changing the WiFi password.",
     "description": "Error message displayed when the router page (usually 192.168.1.1) is not open."
