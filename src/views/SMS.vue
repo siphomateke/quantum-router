@@ -81,6 +81,7 @@ export default {
         {name: 'new_message', label: 'New message', icon: 'plus', class: 'is-primary'},
         {name: 'delete', label: 'Delete', icon: 'trash', class: 'is-danger'},
         {name: 'import', label: 'Import', icon: 'download'},
+        {name: 'mark_as_read', label: 'Mark as read'}
       ],
     };
   },
