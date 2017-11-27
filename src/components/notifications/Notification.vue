@@ -3,7 +3,7 @@
   <span class="q-title">{{ title }}</span>
   <span class="q-subtitle">{{ dateFromNow }}</span>
   <div class="q-message">{{ message }}</div>
-  <progress v-if="progress" class="progress is-primary is-small" :value="progress" max="1">progress</progress>
+  <progress v-if="progress" class="progress is-primary is-small" :value="progress" max="1">{{progress * 100}}%</progress>
 </div>
 </template>
 
