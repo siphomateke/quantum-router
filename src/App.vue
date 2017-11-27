@@ -57,24 +57,15 @@ Vue.mixin({
   methods: {
     handleError(err) {
       return new Promise((resolve, reject) => {
-        let message = err.code+' : '+err.error.message;
+        let message = err.code+' : '+err.message;
         if (err.code === 'tabs_not_found') {
           message = chrome.i18n.getMessage('router_error_'+err.code);
         }
-        this.$dialog.confirm({
-          title: 'Error',
+        this.$toast.open({
           type: 'is-danger',
-          hasIcon: true,
-          message: message,
-          confirmText: 'OK',
-          cancelText: 'Cancel',
-          onConfirm: () => {
-            resolve();
-          },
-          onCancel: () => {
-            reject();
-          },
+          message: 'Error: ' + message
         });
+            reject();
       });
     },
   },
