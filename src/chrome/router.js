@@ -628,6 +628,26 @@ class _RouterController {
   }
 
   /**
+   *
+   * @param {number} idx The index of the SMS
+   * @return {Promise<Boolean>}
+   */
+  setSmsRead(idx) {
+    return this.saveAjaxData({
+      url: 'api/sms/set-read',
+      request: {
+        Index: idx
+      },
+    }).then((ret) => {
+      if (this._isAjaxReturnOk(ret)) {
+        return true;
+      } else {
+        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+      }
+    });
+  }
+
+  /**
    * @typedef TrafficStatistics
    * @property {number} CurrentConnectTime
    * @property {number} CurrentDownload
