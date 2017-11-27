@@ -430,8 +430,11 @@ class _RouterController {
    * @return {Promise<UssdConfig>}
    */
   getUssdConfig(postpaid=false) {
+    let url = 'config/ussd/'
+    url += postpaid ? 'postpaid' : 'prepaid';
+    url += 'ussd.xml';
     return this.getAjaxDataDirect({
-      url: 'config/ussd/prepaidussd.xml',
+      url: url,
     });
   }
 
