@@ -28,6 +28,10 @@ $breakpoints: ( "phone": 400px, "phone-wide": 480px, "phablet": 550px, "tablet-s
 $primary: #00a2d3;
 $primary-invert: findColorInvert($primary);
 
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
 @import "~bulma/sass/utilities/derived-variables";
 
 /* Custom colors
