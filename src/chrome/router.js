@@ -543,6 +543,91 @@ class _RouterController {
   }
 
   /**
+   *
+   * @param {FullSmsListOptions} options
+   * @param {Message[]} list
+   * @return {Message[]}
+   */
+  _filterSmsList(options, list) {
+    let filteredList = [];
+    for (let message of list) {
+      if (options.minDate) {
+        if (Date.parse(message.Date) > options.minDate) {
+          filteredList.push(message);
+        }
+      } else {
+        filteredList.push(message);
+      }
+    }
+    return filteredList;
+  }
+
+  /**
+   *
+   * @param {FullSmsListOptions} options
+   * @param {SmsListOptions} smsListOptions
+   * @param {number} perPage
+   * @param {number} total
+   * @param {number} [page=1]
+   * @param {Message[]} list
+   */
+  _getFullSmsListRecursive(options, smsListOptions, perPage, total, page=1, list) {
+    smsListOptions.perPage = perPage;
+    smsListOptions.page = page;
+    return this.getSmsList(smsListOptions).then((currentList) => {
+      page++;
+      let filteredList = this._filterSmsList(options, currentList);
+      // Add all messages to list
+      if (!list) {
+        list = filteredList;
+      } else {
+        list = list.concat(filteredList);
+      }
+      // If we have not reached the end of the messages
+      if (((page - 1) * perPage) < total) {
+        return this._getFullSmsListRecursive(
+          options, smsListOptions, perPage, total, page, list);
+      } else {
+        return list;
+      }
+    });
+  }
+
+  /**
+   * @typedef FullSmsListOptions
+   * @property {number} total
+   * @property {number} [minDate]
+   */
+
+  /**
+   *
+   * @param {FullSmsListOptions} options
+   * @param {SmsListOptions} [smsListOptions]
+   * @return {Promise<Message[]>}
+   */
+  getFullSmsList(options, smsListOptions={}) {
+    smsListOptions = Object.assign({
+      sortOrder: 'desc',
+    }, smsListOptions);
+
+    options = Object.assign({
+      total: 0,
+    }, options);
+
+    if (options.total > 0) {
+      return this.getSmsConfig().then((smsConfig) => {
+        return this._getFullSmsListRecursive(
+          options, smsListOptions, smsConfig.pagesize, options.total
+        ).then((list) => {
+          return list;
+        });
+      });
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
+  /**
    * @typedef TrafficStatistics
    * @property {number} CurrentConnectTime
    * @property {number} CurrentDownload
