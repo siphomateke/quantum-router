@@ -508,23 +508,22 @@ class _RouterController {
    */
 
   /**
-   * @typedef Messages
-   * @property {Message[]} Message
+   * @typedef SmsList
+   * @property {number} Count
+   * @property {Message[]} Messages
    */
 
   /**
-   * @typedef SmsList
-   * @property {number} Count
-   * @property {Messages} Messages
+  * @typedef SmsListOptions
+  * @property {number} [page=1]
+  * @property {number} [perPage=20]
+  * @property {(1|2|3)} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
+  * @property {('desc'|'asc')} [sortOrder=desc]
    */
 
   /**
    * Get's the list of SMSs from the router
-   * @param {object} options Options
-   * @param {number} [options.page=1]
-   * @param {number} [options.perPage=20]
-   * @param {(1|2|3)} [options.boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
-   * @param {('desc'|'asc')} [options.sortOrder=desc]
+   * @param {SmsListOptions} options Options
    * @return {Promise<SmsList>}
    */
   getSmsList(options) {
@@ -544,6 +543,11 @@ class _RouterController {
         Ascending: options.sortOrder === 'desc' ? 0 : 1,
         UnreadPreferred: 0,
       },
+    }).then((_data) => {
+      return {
+        Count: parseInt(_data.Count),
+        Messages: _data.Messages.Message,
+      };
     });
   }
 

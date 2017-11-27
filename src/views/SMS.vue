@@ -104,7 +104,7 @@ export default {
         // TODO: Get all SMSs
         perPage: 20,
       }).then((data) => {
-        for (let message of data.Messages.Message) {
+        for (let message of data.Messages) {
           this.$store.dispatch('addNotification', new Notification({
             title: 'SMS',
             message: message.Content,
@@ -129,7 +129,7 @@ export default {
         sortOrder: this.sortOrder,
         perPage: this.perPage,
       }).then((data) => {
-        const _messages = data.Messages.Message;
+        const _messages = data.Messages;
         let messages = [];
         if (Array.isArray(_messages)) {
           messages = _messages;
