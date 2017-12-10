@@ -80,24 +80,12 @@ class _RouterController {
     });
   }
 
-  getStorage(keys) {
-    return new Promise((resolve, reject) => {
-      chrome.storage.sync.get(keys, function(items) {
-        if (!chrome.runtime.lastError) {
-          resolve(items);
-        } else {
-          reject(new RouterControllerError('chrome_storage_error', chrome.runtime.lastError));
-        }
-      });
-    });
-  }
-
   /**
    * Gets the url of router page from chrome.storage
    * @return {Promise<string>}
    */
   getRouterUrl() {
-    return this.getStorage('routerUrl').then((items) => {
+    return Utils.getStorage('routerUrl').then((items) => {
       if ('routerUrl' in items) {
         return items.routerUrl;
       } else {
@@ -686,7 +674,7 @@ class _RouterController {
   }
 
   login() {
-    return this.getStorage(['username', 'password']).then((items) => {
+    return Utils.getStorage(['username', 'password']).then((items) => {
       return this._sendPageMessage({
         type: 'command',
         command: 'login',

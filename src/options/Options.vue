@@ -20,6 +20,7 @@
 <script>
 /* global chrome */
 import {RouterController} from '@/chrome/router.js';
+import {Utils} from '@/chrome/core';
 
 export default {
   name: 'app',
@@ -37,7 +38,7 @@ export default {
     };
   },
   mounted() {
-    RouterController.getStorage(['routerUrl', 'username', 'password']).then((items) => {
+    Utils.getStorage(['routerUrl', 'username', 'password']).then((items) => {
       if ('routerUrl' in items) {
         this.routerUrl.value = items.routerUrl;
       }

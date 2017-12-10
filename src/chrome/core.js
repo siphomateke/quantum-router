@@ -278,4 +278,16 @@ export class Utils {
       setTimeout(resolve, t);
     });
   }
+
+  static getStorage(keys) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get(keys, function(items) {
+        if (!chrome.runtime.lastError) {
+          resolve(items);
+        } else {
+          reject(new Error(chrome.runtime.lastError));
+        }
+      });
+    });
+  }
 }
