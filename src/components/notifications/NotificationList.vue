@@ -8,6 +8,7 @@
       :title="n.title"
       :message="n.message"
       :date="n.date"
+      :read="n.read"
       :progress="n.progress"
       ></notification>
     </template>

@@ -15,6 +15,7 @@ export default {
     'title': String,
     'message': String,
     'date': Number,
+    'read': Boolean,
     'progress': Number,
   },
   data() {
