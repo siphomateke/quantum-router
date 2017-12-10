@@ -21,7 +21,7 @@
               position="is-bottom-left" class="notification-dropdown" :mobile-modal="false">
               <template slot="dropdown">
                 <b-dropdown-item custom paddingless>
-                  <q-notifications-popup :list="unreadNotifications"></q-notifications-popup>
+                  <q-notifications-popup :list="unreadNotifications" :loading="loadingNotifications"></q-notifications-popup>
                 </b-dropdown-item>
               </template>
             </q-toolbar-item>
@@ -51,6 +51,8 @@ import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup';
+import {Notification} from '@/chrome/notification.js';
+import moment from 'moment';
 
 Vue.mixin({
   methods: {
@@ -64,7 +66,7 @@ Vue.mixin({
           type: 'is-danger',
           message: 'Error: ' + message
         });
-            reject();
+        reject();
       });
     },
   },
@@ -85,6 +87,8 @@ export default {
     return {
       loading: true,
       refreshInterval: 1000,
+      lastUpdatedNotifications: null,
+      gettingSmsList: false,
       smsCount: 0,
       drawer: {
         title: 'Quantum Router',
@@ -121,21 +125,27 @@ export default {
     ...mapGetters({
       unreadNotifications: 'unreadNotifications'
     }),
+    allNotifications() {
+      return this.$store.state.notifications.all;
+    },
+    loadingNotifications() {
+      return this.allNotifications.length===0 && this.gettingSmsList;
+    },
     // needed to send imported modes to html
     modes() {
       return modes;
     },
     modeColor() {
       switch (this.mode) {
-      case modes.OFFLINE: {
-        return '#f00';
-      }
-      case modes.BASIC: {
-        return '#ffa500';
-      }
-      case modes.ADMIN: {
-        return '#0f0';
-      }
+        case modes.OFFLINE: {
+          return '#f00';
+        }
+        case modes.BASIC: {
+          return '#ffa500';
+        }
+        case modes.ADMIN: {
+          return '#0f0';
+        }
       }
     },
     mode() {
@@ -162,16 +172,66 @@ export default {
     this.checkMode();
     this.bus.$on('refresh', () => {
       if (this.mode > modes.OFFLINE) {
-        RouterController.getSmsCount().then((data) => {
-          this.smsCount = data.LocalUnread;
-        }).catch((e) => {
-          this.handleError(e);
-        });
+        if (!this.gettingSmsList) {
+          this.gettingSmsList = true;
+          RouterController.getSmsCount().then((data) => {
+            this.smsCount = data.LocalUnread;
+
+            return RouterController.getFullSmsList({
+              total: data.LocalInbox,
+              minDate: this.lastUpdatedNotifications
+            }, {
+              sortOrder: 'desc'
+            }).then((list) => {
+              let newNotifications = [];
+              for (let message of list) {
+                let exists = false;
+                let n = new Notification({
+                  title: 'SMS',
+                  message: message.Content,
+                  date: Date.parse(message.Date),
+                });
+
+                // Check if this notification is new
+                for (let n2 of this.allNotifications) {
+                  if (n.date > n2.Date) {
+                    break;
+                  } else if (n.date === n2.Date) {
+                    if (n.id === n2.id) {
+                      exists = true;
+                    }
+                  }
+                }
+
+                if (!exists) {
+                  newNotifications.push(n);
+                }
+              }
+              this.$store.dispatch('addNotifications', newNotifications);
+
+              this.lastUpdatedNotifications = Date.now();
+            });
+          }).catch((e) => {
+            this.handleError(e);
+          }).finally(() => {
+            this.gettingSmsList = false;
+          });
+        }
       }
     });
     this.refresh();
   },
+  watch: {
+    mode(val, oldVal) {
+      this.modeChanged(val, oldVal);
+    }
+  },
   methods: {
+    modeChanged(val, oldVal) {
+      if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
+        this.$store.dispatch('loadNotifications');
+      }
+    },
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
     },
