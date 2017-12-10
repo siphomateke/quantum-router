@@ -100,19 +100,6 @@ export default {
   },
   mounted() {
     this.refresh();
-    RouterController.getSmsCount().then((_data) => {
-      return RouterController.getSmsList({
-        // TODO: Get all SMSs
-        perPage: 20,
-      }).then((messages) => {
-        for (let message of messages) {
-          this.$store.dispatch('addNotification', new Notification({
-            title: 'SMS',
-            message: message.Content,
-          }));
-        }
-      });
-    });
   },
   methods: {
     refresh() {
