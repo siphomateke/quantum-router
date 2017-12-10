@@ -6,6 +6,7 @@ export class Notification {
    * @property {string} message
    * @property {('basic'|'sms')} [type='basic']
    * @property {number} [date]
+   * @property {number} [progress]
    * @property {object} [metadata]
    */
 
@@ -18,6 +19,7 @@ export class Notification {
     this.title = data.title;
     this.message = data.message;
     this.date = 'date' in data ? data.date : null;
+    this.progress = data.progress;
     this.metadata = 'metadata' in data ? data.metadata : '';
     this.id = this.title + this.message + this.date + JSON.stringify(this.metadata);
   }
