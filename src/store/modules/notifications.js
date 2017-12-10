@@ -60,6 +60,9 @@ export default {
     [types.ADD_NOTIFICATIONS](state, notifications) {
       state.all = state.all.concat(notifications);
     },
+    [types.UPDATE_NOTIFICATION](state, {index, notification}) {
+      state.all[index] = notification;
+    },
     [types.REMOVE_NOTIFICATION](state, notification) {
       let index = state.all.indexOf(notification);
       state.all.splice(index, 1);
