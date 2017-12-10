@@ -17,7 +17,7 @@
             </q-toolbar-item>
           </template>
           <template slot="toolbar-end">
-            <q-toolbar-item icon="bell" :badge="smsCount" :badge-visible="smsCount > 0"
+            <q-toolbar-item icon="bell" :badge="unreadNotifications.length" :badge-visible="unreadNotifications.length > 0"
               position="is-bottom-left" class="notification-dropdown" :mobile-modal="false">
               <template slot="dropdown">
                 <b-dropdown-item custom paddingless>
@@ -89,7 +89,6 @@ export default {
       refreshInterval: 1000,
       lastUpdatedNotifications: null,
       gettingSmsList: false,
-      smsCount: 0,
       drawer: {
         title: 'Quantum Router',
         items: [{
@@ -175,8 +174,6 @@ export default {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
           RouterController.getSmsCount().then((data) => {
-            this.smsCount = data.LocalUnread;
-
             return RouterController.getFullSmsList({
               total: data.LocalInbox,
               minDate: this.lastUpdatedNotifications
