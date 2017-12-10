@@ -1,6 +1,7 @@
 export class Notification {
   /**
-   * @typedef NotificationOptions
+   * @typedef NotificationData
+   * @property {boolean} [read]
    * @property {string} title
    * @property {string} message
    * @property {('basic'|'sms')} [type='basic']
@@ -8,12 +9,12 @@ export class Notification {
 
   /**
    *
-   * @param {NotificationOptions} options
+   * @param {NotificationData} data
    */
-  constructor(options) {
-    this.read = false;
-    this.title = options.title;
-    this.message = options.message;
+  constructor(data) {
+    this.read = 'read' in data ? data.read : false;
+    this.title = data.title;
+    this.message = data.message;
   }
 
   /**
@@ -22,9 +23,13 @@ export class Notification {
    */
   toJSON() {
     return {
-      read: false,
+      read: this.read,
       title: this.title,
       message: this.message,
     };
+  }
+
+  static fromJSON(json) {
+    return new Notification(json);
   }
 }
