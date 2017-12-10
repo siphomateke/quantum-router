@@ -1,3 +1,6 @@
+import {SmsUtils, SmsTypes} from '@/chrome/router.js';
+import moment from 'moment';
+
 export class Notification {
   /**
    * @typedef NotificationData
@@ -40,5 +43,39 @@ export class Notification {
 
   static fromJSON(json) {
     return new Notification(json);
+  }
+
+  static fromSms(sms) {
+    let parsed = SmsUtils.parse(sms.Content);
+
+    let progress = null;
+    if ('percent' in parsed
+    && parsed.percent.length > 0
+    && parsed.type === SmsTypes.DATA_PERCENT) {
+      progress = parsed.percent[0] / 100;
+    }
+
+    let message = '';
+    switch (parsed.type) {
+    case SmsTypes.AD:
+      message = '[[ ADVERTISEMENT  ]]';
+      break;
+    case SmsTypes.DATA:
+      message = 'You have '
+      + parsed.data[0].amount + parsed.data[0].unit
+      + ' valid until ' + moment(parsed.expires[0]).format('Y-M-D H:mm:ss');
+      break;
+    default:
+      message = sms.Content;
+    }
+
+    return new Notification({
+      title: 'SMS from '+sms.Phone,
+      message: message,
+      date: Date.parse(sms.Date),
+      read: parseInt(sms.Smstat) === 1,
+      progress: progress,
+      metadata: parsed,
+    });
   }
 }
