@@ -187,6 +187,7 @@ export default {
                   title: 'SMS',
                   message: message.Content,
                   date: Date.parse(message.Date),
+                  read: parseInt(message.Smstat) === 1,
                 });
 
                 // Check if this notification is new
@@ -196,6 +197,7 @@ export default {
                   } else if (n.date === n2.Date) {
                     if (n.id === n2.id) {
                       exists = true;
+                      break;
                     }
                   }
                 }
