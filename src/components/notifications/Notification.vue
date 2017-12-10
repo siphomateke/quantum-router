@@ -14,7 +14,7 @@ export default {
   props: {
     'title': String,
     'message': String,
-    'date': String,
+    'date': Number,
     'progress': Number,
   },
   data() {
