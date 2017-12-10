@@ -484,7 +484,7 @@ class _RouterController {
 
   /**
    * @typedef Message
-   * @property {number} Smstat
+   * @property {number} Smstat Whether the message is read or not
    * @property {number} Index
    * @property {string|number} Phone The phone number from which the SMS was sent
    * @property {string} Content The actual content of the SMS
