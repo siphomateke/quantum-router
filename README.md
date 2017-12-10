@@ -6,7 +6,7 @@ The default router interface on a Huawei is outdated and difficult to use;
 
 ![Screenshot of MTN router interface](img/mtn_router.png?raw=true)
 
-This extension aims to fix that by offering a sleeker more modern alternative UI to the router;
+This extension aims to fix that by offering a sleeker and more modern alternative UI to the router;
 
 ![Screenshot of QuantumRouter interface](img/quantum_router.png?raw=true)
 
