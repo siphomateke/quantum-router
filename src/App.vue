@@ -121,7 +121,7 @@ export default {
     ...mapGetters({
       unreadNotifications: 'unreadNotifications'
     }),
-    // used in html
+    // needed to send imported modes to html
     modes() {
       return modes;
     },
