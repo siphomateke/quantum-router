@@ -5,7 +5,7 @@ export class Notification {
    * @property {string} title
    * @property {string} message
    * @property {('basic'|'sms')} [type='basic']
-   * @property {string} [date]
+   * @property {number} [date]
    * @property {object} [metadata]
    */
 
