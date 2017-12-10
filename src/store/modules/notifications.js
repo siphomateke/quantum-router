@@ -1,4 +1,7 @@
 import * as types from '@/store/mutation_types.js';
+import {Notification} from '@/chrome/notification.js';
+import {Utils} from '@/chrome/core';
+/* global chrome*/
 
 export default {
   state: {
@@ -16,16 +19,46 @@ export default {
     },
   },
   actions: {
-    addNotification({commit}, notification) {
-      commit(types.ADD_NOTIFICATION, notification);
+    loadNotifications({commit}) {
+      return Utils.getStorage('notifications').then((items) => {
+        commit(types.CLEAR_NOTIFICATIONS);
+        let notifications = [];
+        for (let n of items.notifications) {
+          notifications.push(Notification.fromJSON(n));
+        }
+        commit(types.ADD_NOTIFICATIONS, notifications);
+        return items.notifications.length;
+      });
     },
-    removeNotification({commit, state}, notification) {
+    // TODO: Evaluate better persistent storage methods
+    saveNotifications({state}) {
+      return new Promise((resolve, reject) => {
+        chrome.storage.sync.set({
+          notifications: state.all,
+        }, () => {
+          if (!chrome.runtime.lastError) {
+            resolve();
+          } else {
+            reject(chrome.runtime.lastError);
+          }
+        });
+      });
+    },
+    addNotifications({commit, dispatch}, notifications) {
+      commit(types.ADD_NOTIFICATIONS, notifications);
+      // dispatch('saveNotifications');
+    },
+    removeNotification({commit, dispatch}, notification) {
       commit(types.REMOVE_NOTIFICATION, notification);
+      // dispatch('saveNotifications');
     },
   },
   mutations: {
-    [types.ADD_NOTIFICATION](state, notification) {
-      state.all.push(notification);
+    [types.CLEAR_NOTIFICATIONS](state) {
+      state.all = [];
+    },
+    [types.ADD_NOTIFICATIONS](state, notifications) {
+      state.all = state.all.concat(notifications);
     },
     [types.REMOVE_NOTIFICATION](state, notification) {
       let index = state.all.indexOf(notification);
