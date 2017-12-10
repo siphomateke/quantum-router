@@ -5,7 +5,7 @@
         <span class="popup-card-title">{{ 'notifications_title' | i18n}}</span>
       </header>
       <section class="popup-card-body">
-        <q-notification-list :list="list"></q-notification-list>
+        <q-notification-list :list="list" :loading="loading"></q-notification-list>
       </section>
     </div>
   </div>
@@ -21,6 +21,7 @@ export default {
   },
   props: {
     list: Array,
+    loading: Boolean,
   },
 };
 </script>
