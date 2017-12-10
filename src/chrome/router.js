@@ -696,6 +696,18 @@ class _RouterController {
 
 export let RouterController = new _RouterController();
 
+/**
+ * @enum {string}
+ */
+export let SmsTypes = {
+  RECHARGE: 'RECHARGE',
+  DATA: 'DATA',
+  DATA_PERCENT: 'DATA_PERCENT',
+  ACTIVATED: 'ACTIVATED',
+  DEPLETED: 'DEPLETED',
+  AD: 'AD'
+}
+
 class _SmsUtils {
   _arrayMatch(message, regExpMatch, mapFunc) {
     let data = message.match(regExpMatch);
@@ -740,6 +752,12 @@ class _SmsUtils {
     });
   }
 
+  /**
+   *
+   * @param {object} info
+   * @param {string} message
+   * @return {SmsTypes}
+   */
   _getType(info, message) {
     let adPhrases = [
       'spaka',
@@ -765,23 +783,23 @@ class _SmsUtils {
     }
     let ml = message.toLowerCase();
     if (info.money.length >= 2 && ml.includes('recharged') && ml.includes('balance')) {
-      return 'recharge';
+      return SmsTypes.RECHARGE;
     }
     if (info.data.length > 0) {
       if (info.expires.length > 0) {
-        return 'data';
+        return SmsTypes.DATA;
       }
       if (ml.search(/\d+%/) > 0) {
-        return 'data_percent';
+        return SmsTypes.DATA_PERCENT;
       }
     }
     if (ml.includes('activated') && ml.includes('bundle')) {
-      return 'activated';
+      return SmsTypes.ACTIVATED;
     }
     if (ml.includes('depleted') && ml.includes('bundle')) {
-      return 'depleted';
+      return SmsTypes.DEPLETED;
     }
-    return 'ad';
+    return SmsTypes.AD;
   }
   parse(message) {
     let info = {
