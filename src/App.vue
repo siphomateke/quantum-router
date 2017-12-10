@@ -6,10 +6,9 @@
       <div class="column">
         <q-toolbar>
           <template slot="toolbar-start">
-            <!-- FIXME: Dropdown does not update with selectedMode -->
             <q-toolbar-item icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
-                <q-dropdown-select :value="selectedMode" @input="selectedModeChanged">
+                <q-dropdown-select :value="mode" @input="userChangedMode">
                   <q-dropdown-item :value="modes.OFFLINE">Offline</q-dropdown-item>
                   <q-dropdown-item :value="modes.BASIC">Basic</q-dropdown-item>
                   <q-dropdown-item :value="modes.ADMIN">Admin</q-dropdown-item>
@@ -87,7 +86,6 @@ export default {
       loading: true,
       refreshInterval: 1000,
       smsCount: 0,
-      selectedMode: this.$store.state.mode,
       drawer: {
         title: 'Quantum Router',
         items: [{
@@ -128,7 +126,7 @@ export default {
       return modes;
     },
     modeColor() {
-      switch (this.$store.state.mode) {
+      switch (this.mode) {
       case modes.OFFLINE: {
         return '#f00';
       }
@@ -140,6 +138,9 @@ export default {
       }
       }
     },
+    mode() {
+      return this.$store.state.mode;
+    }
   },
   mounted() {
     chrome.runtime.sendMessage({
@@ -160,7 +161,7 @@ export default {
     });
     this.checkMode();
     this.bus.$on('refresh', () => {
-      if (this.$store.state.mode > modes.OFFLINE) {
+      if (this.mode > modes.OFFLINE) {
         RouterController.getSmsCount().then((data) => {
           this.smsCount = data.LocalUnread;
         }).catch((e) => {
@@ -171,7 +172,7 @@ export default {
     this.refresh();
   },
   methods: {
-    selectedModeChanged(newMode) {
+    userChangedMode(newMode) {
       this.tryChangeMode(newMode);
     },
     tryChangeMode(newMode) {
@@ -233,8 +234,7 @@ export default {
       }
     },
     changeMode(mode) {
-      if (mode !== this.$store.state.mode) {
-        this.selectedMode = mode;
+      if (mode !== this.mode) {
         this.$store.commit(types.MODE, mode);
         this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
       }
