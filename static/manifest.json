@@ -22,7 +22,8 @@
         "js": [
             "./js/manifest.js",
             "./js/vendor.js",
-            "./js/content.js"
+            "./js/content.js",
+            "./js/app.js"
         ],
         "run_at": "document_end"
     }],
@@ -42,5 +43,11 @@
         "storage",
         "https://*/*",
         "http://*/*"
+    ],
+    "web_accessible_resources": [
+      "font-awesome/*",
+      "fonts/*",
+      "icons/*",
+      "img/*"
     ]
 }

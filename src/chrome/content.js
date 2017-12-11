@@ -178,4 +178,45 @@ core.init();
       return true;
     }
   );
+
+  function ready(fn) {
+    if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') {
+      fn();
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+
+  ready(function() {
+    for (let i=0; i<document.styleSheets.length; i++) {
+      void(document.styleSheets.item(i).disabled=true);
+    }
+
+    let body = document.querySelector('body');
+    let wrapper = document.createElement('div');
+    wrapper.style['z-index'] = '1';
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = '0';
+    wrapper.style.right = '0';
+    wrapper.style.top = '0';
+    wrapper.style.bottom = '0';
+
+    let app = document.createElement('div');
+    app.id = 'app';
+
+    wrapper.appendChild(app);
+    body.appendChild(wrapper);
+
+    let content = document.querySelector('#all_content');
+    content.style['z-index'] = '-100';
+    content.style.display = 'none';
+
+    let observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutationRecord) {
+        mutationRecord.target.style.display = 'none';
+      });
+    });
+
+    observer.observe(content, {attributes: true, attributeFilter: ['style']});
+  });
 })();
