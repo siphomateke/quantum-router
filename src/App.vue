@@ -183,12 +183,7 @@ export default {
               let newNotifications = [];
               for (let message of list) {
                 let exists = false;
-                let n = new Notification({
-                  title: 'SMS',
-                  message: message.Content,
-                  date: Date.parse(message.Date),
-                  read: parseInt(message.Smstat) === 1,
-                });
+                let n = Notification.fromSms(message);
 
                 // Check if this notification is new
                 for (let n2 of this.allNotifications) {
