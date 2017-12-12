@@ -10,7 +10,6 @@
       </div>
     </div>
     <sms-list
-    v-if="this.adminMode"
     :list="list"
     :loading="loading"
     :checked-rows="checkedRows"
@@ -21,11 +20,6 @@
     @page-change="onPageChange"
     @sort="onSort">
     </sms-list>
-    <template v-else>
-      <b-message type="is-info" has-icon>
-        You must have administrator access to view SMS messages
-      </b-message>
-    </template>
   </div>
 </template>
 
