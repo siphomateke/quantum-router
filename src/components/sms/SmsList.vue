@@ -13,6 +13,7 @@
     paginated
     backend-pagination
     :total="total"
+    :current-page="page"
     :per-page="perPage"
     @page-change="onPageChange"
 
@@ -57,6 +58,7 @@ export default {
     'total': Number,
     'per-page': Number,
     'sort-order': String,
+    'page': Number,
   },
   methods: {
     formatDate(date) {

@@ -15,6 +15,7 @@
     :loading="loading"
     :checked-rows="checkedRows"
     :total="total"
+    :page="page"
     :per-page="perPage"
     :sort-order="sortOrder"
     @page-change="onPageChange"
