@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div>
     <template v-if="adminMode">
     <b-tabs type="is-boxed" expanded>
       <b-tab-item label="Inbox">
@@ -14,9 +14,11 @@
     </b-tabs>
     </template>
     <template v-else>
-      <b-message type="is-info" has-icon>
-        You must have administrator access to view SMS messages
-      </b-message>
+      <div class="box">
+        <b-message type="is-info" has-icon>
+          You must have administrator access to view SMS messages
+        </b-message>
+      </div>
     </template>
   </div>
 </template>

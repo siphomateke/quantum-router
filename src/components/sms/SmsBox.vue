@@ -1,5 +1,5 @@
 <template>
-  <div class='sms-box'>
+  <div class='sms-box box'>
     <br>
     <div class="field is-grouped">
       <div v-for="action in actions" :key="action.name" class="control">
