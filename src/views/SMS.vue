@@ -8,13 +8,12 @@
         </button>
       </div>
     </div>
-    <!-- <sms-list :list="list" :checked-rows="checkedRows"></sms-list> -->
     <b-table
     v-if="this.adminMode"
     :data="list"
-    :bordered="true"
-    :striped="false"
-    :narrowed="false"
+    :bordered="false"
+    :striped="true"
+    :narrowed="true"
     :loading="loading"
     :mobile-cards="true"
     :checked-rows.sync="checkedRows"
@@ -31,7 +30,9 @@
     :default-sort="[sortField, sortOrder]"
     @sort="onSort">
       <template slot-scope="props">
-          <b-table-column field="read" sortable>{{ props.row.read }}</b-table-column>
+          <b-table-column field="read" sortable>
+            <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
+          </b-table-column>
           <b-table-column label="Number" field="number" sortable>{{ props.row.number }}</b-table-column>
           <b-table-column label="Content" field="content" sortable>
             <div class="content">{{ props.row.content }}</div>
@@ -138,7 +139,7 @@ export default {
               number: m.Phone,
               date: m.Date,
               content: m.Content,
-              read: false,
+              read: parseInt(m.Smstat) === 1,
               parsed: parsed,
             });
           }
