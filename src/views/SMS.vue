@@ -8,46 +8,18 @@
         </button>
       </div>
     </div>
-    <b-table
+    <sms-list
     v-if="this.adminMode"
-    :data="list"
-    :bordered="false"
-    :striped="true"
-    :narrowed="true"
+    :list="list"
     :loading="loading"
-    :mobile-cards="true"
-    :checked-rows.sync="checkedRows"
-    checkable
-
-    paginated
-    backend-pagination
+    :checked-rows="checkedRows"
     :total="total"
     :per-page="perPage"
+    :sort-order="sortOrder"
+    :sort-field="sortField"
     @page-change="onPageChange"
-
-    backend-sorting
-    :default-sort-direction="sortOrder"
-    :default-sort="[sortField, sortOrder]"
     @sort="onSort">
-      <template slot-scope="props">
-          <b-table-column field="read" sortable>
-            <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
-          </b-table-column>
-          <b-table-column label="Number" field="number" sortable>{{ props.row.number }}</b-table-column>
-          <b-table-column label="Content" field="content" sortable>
-            <div class="content">{{ props.row.content }}</div>
-          </b-table-column>
-          <b-table-column width="120" field="date" label="Date" sortable centered>{{ formatDate(props.row.date) }}</b-table-column>
-      </template>
-
-      <template slot="empty">
-        <section class="section">
-          <template v-if="!loading">
-            <p>There are no SMSs</p>
-          </template>
-        </section>
-      </template>
-    </b-table>
+    </sms-list>
     <template v-else>
       <b-message type="is-info" has-icon>
         You must have administrator access to view SMS messages
@@ -162,10 +134,6 @@ export default {
       this.sortField = field;
       this.sortOrder = order;
       this.loadAsyncData();
-    },
-
-    formatDate(date) {
-      return moment(date).fromNow();
     },
 
     parseMessage(message) {
