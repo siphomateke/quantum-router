@@ -1,5 +1,5 @@
 <template>
-  <div class='sms-box box'>
+  <div class='sms-box'>
     <br>
     <div class="field is-grouped">
       <sms-action label="New message" icon="plus" type="is-primary"></sms-action>

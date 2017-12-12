@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-content">
     <template v-if="adminMode">
     <b-tabs type="is-boxed" expanded>
       <b-tab-item label="Inbox">

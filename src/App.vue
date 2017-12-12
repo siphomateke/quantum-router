@@ -383,9 +383,7 @@ body {
 }
 
 .page-content {
-  /*display: block;
-  background-color: $page-background-color;
-  padding: 2em 1em;*/
+  background-color: $content-background-color;
 }
 
 .nav.menu {
