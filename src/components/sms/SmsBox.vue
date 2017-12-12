@@ -71,9 +71,6 @@ export default {
         this.loadAsyncData();
       }
     },
-    /*
-    * Load async data
-    */
     async loadAsyncData() {
       this.loading = true;
       RouterController.getSmsList({
@@ -112,21 +109,14 @@ export default {
         this.loading = false;
       });
     },
-    /*
-    * Handle page-change event
-    */
     onPageChange(page) {
       this.page = page;
       this.loadAsyncData();
     },
-    /*
-    * Handle sort event
-    */
     onSort(order) {
       this.sortOrder = order;
       this.loadAsyncData();
     },
-
     parseMessage(message) {
       return SmsUtils.parse(message);
     },
