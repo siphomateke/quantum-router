@@ -3,9 +3,10 @@
     <br>
     <div class="field is-grouped">
       <sms-action label="New message" icon="plus" type="is-primary" @click="newMessage"></sms-action>
-      <sms-action label="Delete" icon="trash" type="is-danger"></sms-action>
-      <sms-action label="Import" icon="upload"></sms-action>
-      <sms-action label="Mark as read"></sms-action>
+      <sms-action label="Delete" icon="trash" type="is-danger"
+      :disabled="this.checkedRows.length === 0" @click="deleteMessage"></sms-action>
+      <sms-action label="Import" icon="upload" :disabled="true"></sms-action>
+      <sms-action label="Mark as read" :disabled="true"></sms-action>
     </div>
     <sms-list
     :list="list"
@@ -130,6 +131,11 @@ export default {
     newMessage() {
       this.showNewMessageDialog = true;
     },
+    deleteMessage() {
+      let indices = this.checkedRows.map(row => row.index);
+      RouterController.deleteSms(indices);
+      // TODO: delete sms loading indicator
+    }
   },
 };
 </script>
