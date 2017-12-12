@@ -206,10 +206,23 @@ class _RouterController {
     return this.apiErrorCodes[code];
   }
 
-  _processXmlResponse(ret) {
+  /**
+   *
+   * @param {*} ret
+   * @param {boolean} responseMustBeOk
+   */
+  _processXmlResponse(ret, responseMustBeOk=false) {
     return new Promise((resolve, reject) => {
       if (ret.type !== 'error') {
-        resolve(ret.data);
+        if (responseMustBeOk) {
+          if (this._isAjaxReturnOk(ret.data)) {
+            resolve(ret.data);
+          } else {
+            return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+          }
+        } else {
+          resolve(ret.data);
+        }
       } else {
         let errorName = this._getRouterApiErrorName(ret.data.code);
         let message = errorName ? errorName : ret.data.code;
@@ -239,7 +252,7 @@ class _RouterController {
     }
     return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
       const ret = this._xml2object(xml);
-      return this._processXmlResponse(ret);
+      return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
 
@@ -248,6 +261,7 @@ class _RouterController {
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
    *                                 e.g 'response' would  expect a <response> tag
+   * @param {boolean} [data.responseMustBeOk]
    * @param {string} [routerUrl='']
    * @return {Promise}
    */
@@ -275,8 +289,7 @@ class _RouterController {
    *
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   * @param {object} [data.options]
-   *                                 e.g 'response' would  expect a <response> tag
+   * @param {boolean} [data.responseMustBeOk]
    * @return {Promise}
    */
   getAjaxData(data) {
@@ -284,7 +297,7 @@ class _RouterController {
     data.command = 'getAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._processXmlResponse(ret);
+      return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
 
@@ -293,8 +306,7 @@ class _RouterController {
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
    * @param {object} data.request
-   * @param {object} [data.options]
-   *                                   e.g 'response' would  expect a <response> tag
+   * @param {boolean} [data.responseMustBeOk]
    * @return {Promise}
    */
   saveAjaxData(data) {
@@ -302,7 +314,7 @@ class _RouterController {
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data).then((xml) => {
       let ret = this._parseXmlString(xml);
-      return this._processXmlResponse(ret);
+      return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
 
@@ -384,12 +396,9 @@ class _RouterController {
         codeType: 'CodeType',
         timeout: '',
       },
+      responseMustBeOk: true,
     }).then((ret) => {
-      if (this._isAjaxReturnOk(ret)) {
-        return this.getUssdResult();
-      } else {
-        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
-      }
+      return this.getUssdResult();
     });
   }
 
@@ -641,12 +650,7 @@ class _RouterController {
       request: {
         Index: idx
       },
-    }).then((ret) => {
-      if (this._isAjaxReturnOk(ret)) {
-        return true;
-      } else {
-        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
-      }
+      responseMustBeOk: true,
     });
   }
 
@@ -690,12 +694,7 @@ class _RouterController {
     return this.saveAjaxData({
       url: 'api/sms/save-sms',
       request: this.createSmsRequest(options),
-    }).then((ret) => {
-      if (this._isAjaxReturnOk(ret)) {
-        return true;
-      } else {
-        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
-      }
+      responseMustBeOk: true,
     });
   }
 
@@ -744,13 +743,8 @@ class _RouterController {
     let request = indices.map(i => {return {Index: i}});
     return this.saveAjaxData({
       url: 'api/sms/delete-sms',
-      request: request
-    }).then((ret) => {
-      if (this._isAjaxReturnOk(ret)) {
-        return true;
-      } else {
-        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
-      }
+      request: request,
+      responseMustBeOk: true,
     });
   }
 
