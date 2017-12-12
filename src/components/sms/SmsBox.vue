@@ -32,7 +32,7 @@ import {Notification} from '@/chrome/notification.js';
 export default {
   name: 'sms-box',
   components: {
-    'sms-list': SmsList,
+    SmsList,
     SmsAction,
   },
   props: {
