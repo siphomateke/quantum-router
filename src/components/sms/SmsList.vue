@@ -18,14 +18,14 @@
 
   backend-sorting
   :default-sort-direction="sortOrder"
-  :default-sort="[sortField, sortOrder]"
+  :default-sort="['date', sortOrder]"
   @sort="onSort">
     <template slot-scope="props">
-        <b-table-column field="read" sortable>
+        <b-table-column field="read">
           <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
         </b-table-column>
-        <b-table-column label="Number" field="number" sortable>{{ props.row.number }}</b-table-column>
-        <b-table-column label="Content" field="content" sortable>
+        <b-table-column label="Number" field="number">{{ props.row.number }}</b-table-column>
+        <b-table-column label="Content" field="content">
           <div class="content">{{ props.row.content }}</div>
         </b-table-column>
         <b-table-column field="date" label="Date" sortable centered>
@@ -62,7 +62,6 @@ export default {
     'total': Number,
     'per-page': Number,
     'sort-order': String,
-    'sort-field': String,
   },
   methods: {
     formatDate(date) {
@@ -72,7 +71,7 @@ export default {
       this.$emit('page-change', page);
     },
     onSort(field, order) {
-      this.$emit('sort', field, order);
+      this.$emit('sort', order);
     },
   },
 };

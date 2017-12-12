@@ -16,7 +16,6 @@
     :total="total"
     :per-page="perPage"
     :sort-order="sortOrder"
-    :sort-field="sortField"
     @page-change="onPageChange"
     @sort="onSort">
     </sms-list>
@@ -44,7 +43,6 @@ export default {
     return {
       total: 0,
       loading: false,
-      sortField: 'number',
       sortOrder: 'desc',
       page: 1,
       perPage: 20,
@@ -130,8 +128,7 @@ export default {
     /*
     * Handle sort event
     */
-    onSort(field, order) {
-      this.sortField = field;
+    onSort(order) {
       this.sortOrder = order;
       this.loadAsyncData();
     },
