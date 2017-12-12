@@ -372,6 +372,8 @@ export default {
 @import "~buefy/src/scss/buefy";
 @import "~styles/bulma-extensions";
 
+@import "~font-awesome/css/font-awesome.min.css";
+
 body {
   background: $page-background-color;
 }

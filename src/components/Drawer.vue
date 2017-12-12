@@ -27,7 +27,6 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../../static/font-awesome/css/font-awesome.min.css';
   @import '~styles/vars.scss';
   .app-drawer {
     @media only screen and (min-width: map_get($breakpoints, 'tablet')) and (max-width: map_get($breakpoints, 'desktop')) {
