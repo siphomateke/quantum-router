@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return moment(date).fromNow();
+      return moment(date).format('Y-M-D H:mm:ss');
     },
     onPageChange(page) {
       this.$emit('page-change', page);
