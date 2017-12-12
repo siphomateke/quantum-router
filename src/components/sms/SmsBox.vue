@@ -107,7 +107,7 @@ export default {
               count = smsData.LocalDraft;
               break;
           }
-          this.total = count;
+          this.total = parseInt(count);
 
           for (let m of messages) {
             let parsed = this.parseMessage(m.Content);
