@@ -737,6 +737,21 @@ class _RouterController {
   }
 
   /**
+   * Delete's all messages with the given indices
+   * @param {number[]} indices An array of indices of messages
+   */
+  deleteSms(indices) {
+    let request = [];
+    for (let i of indices) {
+      request.push({Index: i});
+    }
+    return this.saveAjaxData({
+      url: 'api/sms/delete-sms',
+      request: request
+    });
+  }
+
+  /**
    * @typedef TrafficStatistics
    * @property {number} CurrentConnectTime
    * @property {number} CurrentDownload
