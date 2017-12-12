@@ -535,7 +535,11 @@ class _RouterController {
         UnreadPreferred: 0,
       },
     }).then((_data) => {
-      return _data.Messages.Message;
+      if (_data.Count > 0) {
+        return _data.Messages.Message;
+      } else {
+        return [];
+      }
     });
   }
 
