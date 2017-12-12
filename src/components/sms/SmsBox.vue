@@ -2,12 +2,10 @@
   <div class='sms-box box'>
     <br>
     <div class="field is-grouped">
-      <div v-for="action in actions" :key="action.name" class="control">
-        <button class="button" :class="action.class">
-          <b-icon v-if="action.icon" :icon="action.icon"></b-icon>
-          <span>{{action.label}}</span>
-        </button>
-      </div>
+      <sms-action label="New message" icon="plus" type="is-primary"></sms-action>
+      <sms-action label="Delete" icon="trash" type="is-danger"></sms-action>
+      <sms-action label="Import" icon="upload"></sms-action>
+      <sms-action label="Mark as read"></sms-action>
     </div>
     <sms-list
     :list="list"
@@ -25,6 +23,7 @@
 
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
+import SmsAction from '@/components/sms/SmsAction.vue';
 import {RouterController, SmsUtils} from '@/chrome/router.js';
 import moment from 'moment';
 import {modes} from '@/store';
@@ -34,6 +33,7 @@ export default {
   name: 'sms-box',
   components: {
     'sms-list': SmsList,
+    SmsAction,
   },
   props: {
     'box-type': Number,
@@ -47,12 +47,6 @@ export default {
       perPage: 20,
       list: [],
       checkedRows: [],
-      actions: [
-        {name: 'new_message', label: 'New message', icon: 'plus', class: 'is-primary'},
-        {name: 'delete', label: 'Delete', icon: 'trash', class: 'is-danger'},
-        {name: 'import', label: 'Import', icon: 'download'},
-        {name: 'mark_as_read', label: 'Mark as read'}
-      ],
     };
   },
   computed: {
