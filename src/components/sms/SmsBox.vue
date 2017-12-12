@@ -9,6 +9,14 @@
       <sms-action label="Mark as read"
       :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-action>
     </div>
+    <b-message type="is-info">
+      <template v-if="checkedRows.length > 0">
+        {{ checkedRows.length }} row(s) selected
+      </template>
+      <template v-else>
+        Showing {{list.length}} messages
+      </template>
+    </b-message>
     <sms-list
     :list="list"
     :loading="loading"
@@ -154,8 +162,8 @@ export default {
           let row = this.list.find(row => row.index === idx);
           row.read = true;
         });
-    }
-  },
+      }
+    },
   },
 };
 </script>
