@@ -745,6 +745,12 @@ class _RouterController {
     return this.saveAjaxData({
       url: 'api/sms/delete-sms',
       request: request
+    }).then((ret) => {
+      if (this._isAjaxReturnOk(ret)) {
+        return true;
+      } else {
+        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+      }
     });
   }
 
