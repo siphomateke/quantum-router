@@ -32,6 +32,15 @@ export class RouterControllerError extends ExtendableError {
 export class RouterApiError extends RouterControllerError {}
 
 /**
+ * @enum {number}
+ */
+export let SmsBoxTypes = {
+  INBOX: 1,
+  SENT: 2,
+  DRAFT: 3
+}
+
+/**
  * Controls access to the router
  */
 class _RouterController {
@@ -499,7 +508,7 @@ class _RouterController {
   * @typedef SmsListOptions
   * @property {number} [page=1]
   * @property {number} [perPage=20]
-  * @property {(1|2|3)} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
+  * @property {SmsBoxTypes} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
   * @property {('desc'|'asc')} [sortOrder=desc]
   */
 
