@@ -644,7 +644,7 @@ class _RouterController {
    * @param {number} idx The index of the SMS
    * @return {Promise<Boolean>}
    */
-  setSmsRead(idx) {
+  setSmsAsRead(idx) {
     return this.saveAjaxData({
       url: 'api/sms/set-read',
       request: {
