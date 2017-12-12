@@ -741,10 +741,7 @@ class _RouterController {
    * @param {number[]} indices An array of indices of messages
    */
   deleteSms(indices) {
-    let request = [];
-    for (let i of indices) {
-      request.push({Index: i});
-    }
+    let request = indices.map(i => {return {Index: i}});
     return this.saveAjaxData({
       url: 'api/sms/delete-sms',
       request: request
