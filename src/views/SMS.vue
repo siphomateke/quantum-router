@@ -30,11 +30,6 @@ export default {
   components: {
     'sms-box': SmsBox,
   },
-  data() {
-    return {
-
-    };
-  },
   computed: {
     boxTypes() {
       return SmsBoxTypes;
