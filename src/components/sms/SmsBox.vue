@@ -10,7 +10,7 @@
     <sms-list
     :list="list"
     :loading="loading"
-    :checked-rows="checkedRows"
+    :checked-rows.sync="checkedRows"
     :total="total"
     :page="page"
     :per-page="perPage"

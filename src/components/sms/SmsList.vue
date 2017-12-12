@@ -7,7 +7,7 @@
     :narrowed="true"
     :loading="loading"
     :mobile-cards="true"
-    :checked-rows.sync="checkedRows"
+    :checked-rows.sync="internalCheckedRows"
     checkable
 
     paginated
@@ -59,6 +59,16 @@ export default {
     'per-page': Number,
     'sort-order': String,
     'page': Number,
+  },
+  data() {
+    return {
+      internalCheckedRows: this.checkedRows,
+    };
+  },
+  watch: {
+    internalCheckedRows(val) {
+      this.$emit('update:checkedRows', val);
+    },
   },
   methods: {
     formatDate(date) {
