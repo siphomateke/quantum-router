@@ -2,7 +2,7 @@
   <div class='sms-box'>
     <br>
     <div class="field is-grouped">
-      <sms-action label="New message" icon="plus" type="is-primary"></sms-action>
+      <sms-action label="New message" icon="plus" type="is-primary" @click="newMessage"></sms-action>
       <sms-action label="Delete" icon="trash" type="is-danger"></sms-action>
       <sms-action label="Import" icon="upload"></sms-action>
       <sms-action label="Mark as read"></sms-action>
@@ -18,12 +18,16 @@
     @page-change="onPageChange"
     @sort="onSort">
     </sms-list>
+    <b-modal :active.sync="showNewMessageDialog" has-modal-card>
+      <sms-dialog></sms-dialog>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
 import SmsAction from '@/components/sms/SmsAction.vue';
+import SmsDialog from '@/components/sms/SmsDialog.vue';
 import {RouterController, SmsUtils} from '@/chrome/router.js';
 import moment from 'moment';
 import {modes} from '@/store';
@@ -34,6 +38,7 @@ export default {
   components: {
     SmsList,
     SmsAction,
+    SmsDialog,
   },
   props: {
     'box-type': Number,
@@ -47,6 +52,7 @@ export default {
       perPage: 20,
       list: [],
       checkedRows: [],
+      showNewMessageDialog: false,
     };
   },
   computed: {
@@ -97,6 +103,7 @@ export default {
           for (let m of messages) {
             let parsed = this.parseMessage(m.Content);
             this.list.push({
+              index: m.Index,
               number: m.Phone,
               date: m.Date,
               content: m.Content,
@@ -119,6 +126,9 @@ export default {
     },
     parseMessage(message) {
       return SmsUtils.parse(message);
+    },
+    newMessage() {
+      this.showNewMessageDialog = true;
     },
   },
 };
