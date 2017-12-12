@@ -29,7 +29,7 @@
 import SmsList from '@/components/sms/SmsList.vue';
 import SmsAction from '@/components/sms/SmsAction.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
-import {RouterController, SmsUtils} from '@/chrome/router.js';
+import {RouterController, SmsUtils, SmsBoxTypes} from '@/chrome/router.js';
 import moment from 'moment';
 import {modes} from '@/store';
 import {Notification} from '@/chrome/notification.js';
@@ -95,11 +95,19 @@ export default {
 
         this.list = [];
         return RouterController.getSmsCount().then((smsData) => {
-          let currentTotal = smsData.LocalInbox;
-          if (smsData.LocalInbox / this.perPage > 10) {
-            currentTotal = this.perPage * 10;
+          let count = 0;
+          switch (this.boxType) {
+            case SmsBoxTypes.INBOX:
+              count = smsData.LocalInbox;
+              break;
+            case SmsBoxTypes.SENT:
+              count = smsData.LocalOutbox;
+              break;
+            case SmsBoxTypes.DRAFT:
+              count = smsData.LocalDraft;
+              break;
           }
-          this.total = currentTotal;
+          this.total = count;
 
           for (let m of messages) {
             let parsed = this.parseMessage(m.Content);
@@ -133,6 +141,7 @@ export default {
     },
     deleteMessage() {
       let indices = this.checkedRows.map(row => row.index);
+      console.log(indices);
       RouterController.deleteSms(indices);
       // TODO: delete sms loading indicator
     }
