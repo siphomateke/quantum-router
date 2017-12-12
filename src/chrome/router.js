@@ -60,6 +60,8 @@ class _RouterController {
       125003: 'ERROR_WRONG_SESSION_TOKEN',
       111019: 'ERROR_USSD_PROCESSING',
       111020: 'ERROR_USSD_TIMEOUT',
+      113018: 'SMS_SYSTEM_BUSY',
+      113053: 'SMS_NOT_ENOUGH_SPACE'
     };
   }
 
@@ -645,6 +647,92 @@ class _RouterController {
       } else {
         return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
       }
+    });
+  }
+
+  createSmsRequest(options) {
+    options = Object.assign({
+      smsIndex: -1,
+      numbers: [],
+      content: '',
+    }, options);
+
+    return {
+      Index: options.smsIndex,
+      Phones: {
+        Phone: options.numbers,
+      },
+      Sca: '',
+      Content: options.content,
+      Length: options.content.length,
+      // TODO: Add different text modes
+      // SMS_TEXT_MODE_UCS2 = 0
+      // SMS_TEXT_MODE_7BIT = 1
+      // SMS_TEXT_MODE_8BIT = 2
+      Reserved: 1,
+      Date: moment(Date.now()).format('Y-M-D H:mm:ss'),
+    };
+  }
+
+  /**
+   * @typedef SaveSmsOptions
+   * @property {number} smsIndex The index of the SMS. Only used for sending drafts
+   * @property {string[]} numbers An array of numbers to send the sms to
+   * @property {string} content The SMS body
+   */
+
+  /**
+   * Sends an sms or saves a draft
+   * @param {SaveSmsOptions} options
+   * @return {Promise<boolean>}
+   */
+  saveSms(options) {
+    return this.saveAjaxData({
+      url: 'api/sms/save-sms',
+      request: this.createSmsRequest(options),
+    }).then((ret) => {
+      if (this._isAjaxReturnOk(ret)) {
+        return true;
+      } else {
+        return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+      }
+    });
+  }
+
+  /**
+   * @typedef SmsSendStatus
+   * @property {string} TotalCount
+   * @property {string} CurIndex
+   * @property {string} Phone
+   * @property {string} SucPhone
+   * @property {string} FailPhone
+   */
+
+  /**
+   * @return {Promise<SmsSendStatus>}
+   */
+  getSmsSendStatus() {
+    return this.getAjaxDataDirect({
+      url: 'api/sms/send-status'
+    });
+  }
+
+  /**
+   * @typedef SendSmsOptions
+   * @property {string[]} numbers An array of numbers to send the sms to
+   * @property {string} content The SMS body
+   */
+
+  /**
+   * @param {SendSmsOptions} options
+   * @return {Promise<SmsSendStatus>}
+   */
+  sendSms(options) {
+    return this.saveAjaxData({
+      url: 'api/sms/send-sms',
+      request: this.createSmsRequest(options),
+    }).then(() => {
+      return this.getSmsSendStatus();
     });
   }
 
