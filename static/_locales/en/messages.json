@@ -5,6 +5,10 @@
   "menu_services":{"message": "Services"},
   "menu_settings":{"message": "Settings"},
 
+  "mode_offline":{"message": "Offline"},
+  "mode_basic":{"message": "Basic"},
+  "mode_admin":{"message": "Admin"},
+
   //region Notifications
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},

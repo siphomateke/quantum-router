@@ -9,9 +9,9 @@
             <q-toolbar-item icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
                 <q-dropdown-select :value="mode" @input="userChangedMode">
-                  <q-dropdown-item :value="modes.OFFLINE">Offline</q-dropdown-item>
-                  <q-dropdown-item :value="modes.BASIC">Basic</q-dropdown-item>
-                  <q-dropdown-item :value="modes.ADMIN">Admin</q-dropdown-item>
+                  <q-dropdown-item :value="modes.OFFLINE">{{ 'mode_offline' | $i18n }}</q-dropdown-item>
+                  <q-dropdown-item :value="modes.BASIC">{{ 'mode_basic' | $i18n }}</q-dropdown-item>
+                  <q-dropdown-item :value="modes.ADMIN">{{ 'mode_admin' | $i18n }}</q-dropdown-item>
                 </q-dropdown-select>
               </template>
             </q-toolbar-item>
