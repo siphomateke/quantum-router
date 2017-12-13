@@ -25,11 +25,11 @@
           <b-table-column field="read">
             <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
           </b-table-column>
-          <b-table-column label="Number" field="number">{{ props.row.number }}</b-table-column>
-          <b-table-column label="Content" field="content">
+          <b-table-column field="number" :label="this.$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
+          <b-table-column field="content" :label="this.$i18n('sms_message_content')">
             <div class="content">{{ props.row.content }}</div>
           </b-table-column>
-          <b-table-column field="date" label="Date" sortable centered>
+          <b-table-column field="date" :label="this.$i18n('sms_message_date')" sortable centered>
             <span style="white-space:nowrap;">{{ formatDate(props.row.date) }}</span>
           </b-table-column>
       </template>
@@ -37,7 +37,7 @@
       <template slot="empty">
         <section class="section">
           <template v-if="!loading">
-            <p>There are no SMSs</p>
+            <p>{{ 'sms_empty' | $i18n }}</p>
           </template>
         </section>
       </template>

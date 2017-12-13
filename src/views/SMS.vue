@@ -1,14 +1,14 @@
 <template>
   <div class="page-content">
-    <template v-if="adminMode">
+    <template v-if="adminMode || true">
     <b-tabs type="is-boxed" expanded>
-      <b-tab-item label="Inbox">
+      <b-tab-item :label="this.$i18n('sms_box_inbox')">
         <sms-box :box-type="boxTypes.INBOX"></sms-box>
       </b-tab-item>
-      <b-tab-item label="Outbox">
+      <b-tab-item :label="this.$i18n('sms_box_sent')">
         <sms-box :box-type="boxTypes.SENT"></sms-box>
       </b-tab-item>
-      <b-tab-item label="Drafts">
+      <b-tab-item :label="this.$i18n('sms_box_draft')">
         <sms-box :box-type="boxTypes.DRAFT"></sms-box>
       </b-tab-item>
     </b-tabs>
@@ -16,7 +16,7 @@
     <template v-else>
       <div class="box">
         <b-message type="is-info" has-icon>
-          You must have administrator access to view SMS messages
+          {{ 'sms_admin_only' | $i18n}}
         </b-message>
       </div>
     </template>

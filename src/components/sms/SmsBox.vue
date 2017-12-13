@@ -2,19 +2,19 @@
   <div class='sms-box'>
     <br>
     <div class="field is-grouped">
-      <sms-action label="New message" icon="plus" type="is-primary" @click="newMessage"></sms-action>
-      <sms-action label="Delete" icon="trash" type="is-danger"
+      <sms-action :label="this.$i18n('sms_action_new_message')" icon="plus" type="is-primary" @click="newMessage"></sms-action>
+      <sms-action :label="this.$i18n('sms_action_delete')" icon="trash" type="is-danger"
       :disabled="this.checkedRows.length === 0" @click="deleteMessages"></sms-action>
-      <sms-action label="Import" icon="upload" :disabled="true"></sms-action>
-      <sms-action label="Mark as read"
+      <sms-action :label="this.$i18n('sms_action_import')" icon="upload" :disabled="true"></sms-action>
+      <sms-action :label="this.$i18n('sms_action_mark_as_read')"
       :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-action>
     </div>
     <b-message type="is-info">
       <template v-if="checkedRows.length > 0">
-        {{ checkedRows.length }} row(s) selected
+        {{ this.$i18n('sms_checked_rows', checkedRows.length) }}
       </template>
       <template v-else>
-        Showing {{list.length}} messages
+        {{ this.$i18n('sms_message_count', list.length) }}
       </template>
     </b-message>
     <sms-list

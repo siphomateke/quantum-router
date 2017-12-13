@@ -1,24 +1,24 @@
 <template>
 <div class="modal-card">
   <header class="modal-card-head">
-    <p class="modal-card-title">Message</p>
+    <p class="modal-card-title">{{ 'sms_dialog_title' | $i18n }}</p>
   </header>
   <section class="modal-card-body">
-    <b-field label="Recipients:">
+    <b-field :label="this.$i18n('sms_dialog_field_numbers')">
       <b-taginput
         v-model="numbers"
         icon="phone"
-        placeholder="Add a number">
+        :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
       </b-taginput>
     </b-field>
-    <b-field label="Content">
+    <b-field :label="this.$i18n('sms_dialog_field_content')">
       <b-input type="textarea" v-model="content"></b-input>
     </b-field>
   </section>
   <footer class="modal-card-foot">
-    <button class="button is-primary" @click="send">Send</button>
-    <button class="button" @click="save">Save as draft</button>
-    <button class="button" @click="cancel">Cancel</button>
+    <button class="button is-primary" @click="send">{{ 'sms_dialog_action_send' | $i18n }}</button>
+    <button class="button" @click="save">{{ 'sms_dialog_action_save' | $i18n }}</button>
+    <button class="button" @click="cancel">{{ 'sms_dialog_action_cancel' | $i18n }}</button>
   </footer>
 </div>
 </template>

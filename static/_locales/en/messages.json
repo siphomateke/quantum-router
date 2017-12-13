@@ -37,6 +37,55 @@
     "message": "Failed to retrieve router url. Make sure you have set it in settings."
   },
 
+  //region Sms
+  "sms_admin_only": {
+    "message": "You must have administrator access to view SMS messages"
+  },
+  "sms_action_new_message": {"message": "New message"},
+  "sms_action_delete": {"message": "Delete"},
+  "sms_action_import": {"message": "Import"},
+  "sms_action_mark_as_read": {"message": "Mark as read"},
+  "sms_checked_rows": {
+    "message": "$count$ row(s) selected",
+    "description": "Shows the number of rows that have been selected",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "20"
+      }
+    }
+  },
+  "sms_message_count":{
+    "message": "Showing $count$ message(s)",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "20"
+      }
+    }
+  },
+  "sms_empty": {
+    "message": "There are no SMSs",
+    "description": "Displayed when there are no messages"
+  },
+  "sms_box_inbox": {"message": "Inbox"},
+  "sms_box_sent": {"message": "Outbox"},
+  "sms_box_draft": {"message": "Drafts"},
+  "sms_message_number": {"message": "Number"},
+  "sms_message_content": {"message": "Content"},
+  "sms_message_date": {"message": "Date"},
+  "sms_dialog_title": {"message": "Message"},
+  "sms_dialog_field_numbers": {"message": "Recipients"},
+  "sms_dialog_field_numbers_placeholder": {
+    "message": "Add a number",
+    "description": "Placeholder value for sms dialog numbers field"
+  },
+  "sms_dialog_field_content": {"message": "Content"},
+  "sms_dialog_action_send": {"message": "Send"},
+  "sms_dialog_action_save": {"message": "Save as draft"},
+  "sms_dialog_action_cancel": {"message": "Cancel"},
+  //endregion
+
   //region Services
   "services_ussd_command" : {
     "message": "USSD Command"
