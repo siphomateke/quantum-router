@@ -9,10 +9,8 @@
   "mode_basic":{"message": "Basic"},
   "mode_admin":{"message": "Admin"},
 
-  //region Notifications
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
-  //endregion
 
   "router_error_tabs_not_found":{
     "message": "Could not find the router page. It must be open to carry out admin tasks such as changing the WiFi password.",
@@ -37,7 +35,6 @@
     "message": "Failed to retrieve router url. Make sure you have set it in settings."
   },
 
-  //region Sms
   "sms_admin_only": {
     "message": "You must have administrator access to view SMS messages"
   },
@@ -84,9 +81,7 @@
   "sms_dialog_action_send": {"message": "Send"},
   "sms_dialog_action_save": {"message": "Save as draft"},
   "sms_dialog_action_cancel": {"message": "Cancel"},
-  //endregion
 
-  //region Services
   "services_ussd_command" : {
     "message": "USSD Command"
   },
@@ -99,9 +94,7 @@
   "services_admin_only": {
     "message": "You must be in administrator mode to access USSD services"
   },
-  //endregion
 
-  // region Dialog
   "dialog_switch_to_basic": {
     "message": "Switch to basic mode"
   },
@@ -114,9 +107,7 @@
   "dialog_go_offline": {
     "message": "Go offline"
   },
-  // endregion
 
-  // region Options
   "options_field_router_url": {
     "message": "Router URL",
     "description": "Router URL field on the extensions options page."
@@ -141,5 +132,4 @@
     "message": "Cannot connect to specified URL.",
     "description": "Error message displayed when a connection to the router URL can't be established. Used on the extension options page."
   }
-  // endregion
 }
