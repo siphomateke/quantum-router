@@ -13,8 +13,8 @@ Vue.use(Buefy, {
 
 Vue.mixin({
   methods: {
-    $i18n: function(key) {
-      return i18n.getMessage(key);
+    $i18n: function(key, ...args) {
+      return i18n.getMessage(key, args);
     },
   },
   filters: {

@@ -1,5 +1,5 @@
 export default class i18n {
-  static getMessage(key) {
-    return chrome.i18n.getMessage(key);
+  static getMessage(key, ...args) {
+    return chrome.i18n.getMessage(key, args);
   }
 }
