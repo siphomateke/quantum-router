@@ -60,7 +60,7 @@ Vue.mixin({
       return new Promise((resolve, reject) => {
         let message = err.code+' : '+err.message;
         if (err.code === 'tabs_not_found') {
-          message = chrome.i18n.getMessage('router_error_'+err.code);
+          message = this.$i18n('router_error_'+err.code);
         }
         this.$toast.open({
           type: 'is-danger',
@@ -93,27 +93,27 @@ export default {
         title: 'Quantum Router',
         items: [{
           link: 'home',
-          label: chrome.i18n.getMessage('menu_home'),
+          label: this.$i18n('menu_home'),
           icon: 'home',
         },
         {
           link: 'sms',
-          label: chrome.i18n.getMessage('menu_sms'),
+          label: this.$i18n('menu_sms'),
           icon: 'comment',
         },
         {
           link: 'statistics',
-          label: chrome.i18n.getMessage('menu_statistics'),
+          label: this.$i18n('menu_statistics'),
           icon: 'pie-chart',
         },
         {
           link: 'services',
-          label: chrome.i18n.getMessage('menu_services'),
+          label: this.$i18n('menu_services'),
           icon: 'terminal',
         },
         {
           link: 'settings',
-          label: chrome.i18n.getMessage('menu_settings'),
+          label: this.$i18n('menu_settings'),
           icon: 'cog',
         },
         ],
@@ -243,8 +243,8 @@ export default {
                     this.changeMode(newMode);
                   }).catch((e) => {
                     this.openConfirmDialog({
-                      message: chrome.i18n.getMessage('router_error_logging_in'),
-                      confirmText: chrome.i18n.getMessage('dialog_retry'),
+                      message: this.$i18n('router_error_logging_in'),
+                      confirmText: this.$i18n('dialog_retry'),
                       onConfirm: () => this.tryChangeMode(newMode),
                     });
                   });
@@ -256,8 +256,8 @@ export default {
               if (e instanceof RouterControllerError) {
                 if (e.code === 'tabs_not_found') {
                   this.openConfirmDialog({
-                    message: chrome.i18n.getMessage('router_error_no_admin'),
-                    confirmText: chrome.i18n.getMessage('dialog_retry'),
+                    message: this.$i18n('router_error_no_admin'),
+                    confirmText: this.$i18n('dialog_retry'),
                     onConfirm: () => this.tryChangeMode(newMode),
                   });
                 }
@@ -267,14 +267,14 @@ export default {
         }).catch((e) => {
           return RouterController.getRouterUrl().then((url) => {
             this.openConfirmDialog({
-              message: chrome.i18n.getMessage('connection_error', url),
-              confirmText: chrome.i18n.getMessage('dialog_retry'),
+              message: this.$i18n('connection_error', url),
+              confirmText: this.$i18n('dialog_retry'),
               onConfirm: () => this.tryChangeMode(newMode),
             });
           }).catch((e2) => {
             this.openConfirmDialog({
-              message: chrome.i18n.getMessage('missing_router_url_error'),
-              confirmText: chrome.i18n.getMessage('dialog_open_settings'),
+              message: this.$i18n('missing_router_url_error'),
+              confirmText: this.$i18n('dialog_open_settings'),
               // Go to settings page so user can set router url
               onConfirm: () => this.$router.push('extension-settings'),
             });
@@ -308,9 +308,9 @@ export default {
                 this.changeMode(modes.ADMIN);
               }).catch((e) => {
                 this.openConfirmDialog({
-                  message: chrome.i18n.getMessage('router_error_logging_in'),
-                  confirmText: chrome.i18n.getMessage('dialog_retry'),
-                  cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
+                  message: this.$i18n('router_error_logging_in'),
+                  confirmText: this.$i18n('dialog_retry'),
+                  cancelText: this.$i18n('dialog_switch_to_basic'),
                   onConfirm: () => this.checkMode(),
                   onCancel: () => this.changeMode(modes.BASIC),
                 });
@@ -323,9 +323,9 @@ export default {
           if (e instanceof RouterControllerError) {
             if (e.code === 'tabs_not_found') {
               this.openConfirmDialog({
-                message: chrome.i18n.getMessage('router_error_no_admin'),
-                confirmText: chrome.i18n.getMessage('dialog_retry'),
-                cancelText: chrome.i18n.getMessage('dialog_switch_to_basic'),
+                message: this.$i18n('router_error_no_admin'),
+                confirmText: this.$i18n('dialog_retry'),
+                cancelText: this.$i18n('dialog_switch_to_basic'),
                 onConfirm: () => this.checkMode(),
                 onCancel: () => this.changeMode(modes.BASIC),
               });
@@ -336,17 +336,17 @@ export default {
         return RouterController.getRouterUrl().then((url) => {
           // TODO: Add option to redirect user to settings
           this.openConfirmDialog({
-            message: chrome.i18n.getMessage('connection_error', url),
-            confirmText: chrome.i18n.getMessage('dialog_retry'),
-            cancelText: chrome.i18n.getMessage('dialog_go_offline'),
+            message: this.$i18n('connection_error', url),
+            confirmText: this.$i18n('dialog_retry'),
+            cancelText: this.$i18n('dialog_go_offline'),
             onConfirm: () => this.checkMode(),
             onCancel: () => this.changeMode(modes.OFFLINE),
           });
         }).catch((e2) => {
           this.openConfirmDialog({
-            message: chrome.i18n.getMessage('missing_router_url_error'),
-            confirmText: chrome.i18n.getMessage('dialog_open_settings'),
-            cancelText: chrome.i18n.getMessage('dialog_go_offline'),
+            message: this.$i18n('missing_router_url_error'),
+            confirmText: this.$i18n('dialog_open_settings'),
+            cancelText: this.$i18n('dialog_go_offline'),
             // Go to settings page so user can set router url
             onConfirm: () => this.$router.push('extension-settings'),
             onCancel: () => this.changeMode(modes.OFFLINE),

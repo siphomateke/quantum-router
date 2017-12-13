@@ -2,6 +2,7 @@
 import Vue from 'vue';
 import Options from './Options.vue';
 import Buefy from 'buefy';
+import i18n from '@/chrome/i18n.js';
 
 Vue.config.productionTip = false;
 
@@ -11,9 +12,14 @@ Vue.use(Buefy, {
 });
 
 Vue.mixin({
+  methods: {
+    $i18n: function(key) {
+      return i18n.getMessage(key);
+    },
+  },
   filters: {
-    i18n: function(value) {
-      return chrome.i18n.getMessage(value);
+    $i18n: function(key) {
+      return i18n.getMessage(key);
     },
   },
 });

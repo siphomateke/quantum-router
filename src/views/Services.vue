@@ -1,10 +1,10 @@
 <template>
 <div class="box">
   <form v-on:submit.prevent v-if="$adminMode">
-    <b-field :label="'services_ussd_command' | i18n">
+    <b-field :label="'services_ussd_command' | $i18n">
       <b-input v-model="ussd.content" type="text"></b-input>
     </b-field>
-    <b-field v-if="ussd.commands.length > 0" :label="'services_ussd_presets' | i18n">
+    <b-field v-if="ussd.commands.length > 0" :label="'services_ussd_presets' | $i18n">
       <b-select :value="ussd.selectedCommand" @input="ussdSelectedCommandChanged">
         <option value="">--</option>
         <option
@@ -30,11 +30,11 @@
     <button @click="send"
     class="button is-primary"
     :class="{'is-loading': loading}"
-    :disabled="ussd.content.length === 0">{{ 'services_ussd_send' | i18n }}</button>
+    :disabled="ussd.content.length === 0">{{ 'services_ussd_send' | $i18n }}</button>
   </form>
   <template v-else>
     <b-message type="is-info" has-icon>
-      {{ 'services_admin_only' | i18n }}
+      {{ 'services_admin_only' | $i18n }}
     </b-message>
   </template>
 </div>

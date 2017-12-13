@@ -7,6 +7,7 @@ import Buefy from 'buefy';
 import VsNotify from '@/components/vs-notify';
 import store from './store';
 import {modes} from '@/store';
+import i18n from '@/chrome/i18n.js';
 
 window.addEventListener('unload', () => {
   chrome.runtime.sendMessage({
@@ -30,9 +31,14 @@ Vue.mixin({
       bus,
     };
   },
+  methods: {
+    $i18n: function(key) {
+      return i18n.getMessage(key);
+    },
+  },
   filters: {
-    i18n: function(value) {
-      return chrome.i18n.getMessage(value);
+    $i18n: function(key) {
+      return i18n.getMessage(key);
     },
   },
   computed: {
