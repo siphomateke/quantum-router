@@ -23,11 +23,13 @@ export default {
       return Utils.getStorage('notifications').then((items) => {
         commit(types.CLEAR_NOTIFICATIONS);
         let notifications = [];
-        for (let n of items.notifications) {
-          notifications.push(Notification.fromJSON(n));
+        if ('notifications' in items) {
+          for (let n of items.notifications) {
+            notifications.push(Notification.fromJSON(n));
+          }
         }
         commit(types.ADD_NOTIFICATIONS, notifications);
-        return items.notifications.length;
+        return notifications.length;
       });
     },
     // TODO: Evaluate better persistent storage methods
