@@ -46,7 +46,7 @@ import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
-import {RouterController, RouterControllerError} from '@/router';
+import {router, RouterControllerError} from '@/router';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
@@ -173,8 +173,8 @@ export default {
       if (this.mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
-          RouterController.sms.getSmsCount().then((data) => {
-            return RouterController.sms.getFullSmsList({
+          router.sms.getSmsCount().then((data) => {
+            return router.sms.getFullSmsList({
               total: data.LocalInbox,
               minDate: this.lastUpdatedNotifications
             }, {
@@ -232,14 +232,14 @@ export default {
     tryChangeMode(newMode) {
       if (newMode === modes.BASIC || newMode === modes.ADMIN) {
         this.loading = true;
-        RouterController.utils.ping().then(() => {
+        router.utils.ping().then(() => {
           if (newMode === modes.BASIC) {
             this.changeMode(newMode);
           } else if (newMode === modes.ADMIN) {
-            RouterController.utils.getTab().then((tab) => {
-              return RouterController.admin.isLoggedIn().then((loggedIn) => {
+            router.utils.getTab().then((tab) => {
+              return router.admin.isLoggedIn().then((loggedIn) => {
                 if (!loggedIn) {
-                  RouterController.admin.login().then(() => {
+                  router.admin.login().then(() => {
                     this.changeMode(newMode);
                   }).catch((e) => {
                     this.openConfirmDialog({
@@ -265,7 +265,7 @@ export default {
             });
           }
         }).catch((e) => {
-          return RouterController.utils.getRouterUrl().then((url) => {
+          return router.utils.getRouterUrl().then((url) => {
             this.openConfirmDialog({
               message: this.$i18n('connection_error', url),
               confirmText: this.$i18n('dialog_retry'),
@@ -300,11 +300,11 @@ export default {
     },
     checkMode() {
       this.loading = true;
-      RouterController.utils.ping().then(() => {
-        RouterController.utils.getTab().then((tab) => {
-          return RouterController.admin.isLoggedIn().then((loggedIn) => {
+      router.utils.ping().then(() => {
+        router.utils.getTab().then((tab) => {
+          return router.admin.isLoggedIn().then((loggedIn) => {
             if (!loggedIn) {
-              RouterController.admin.login().then(() => {
+              router.admin.login().then(() => {
                 this.changeMode(modes.ADMIN);
               }).catch((e) => {
                 this.openConfirmDialog({
@@ -333,7 +333,7 @@ export default {
           }
         });
       }).catch((e) => {
-        return RouterController.utils.getRouterUrl().then((url) => {
+        return router.utils.getRouterUrl().then((url) => {
           // TODO: Add option to redirect user to settings
           this.openConfirmDialog({
             message: this.$i18n('connection_error', url),

@@ -1,7 +1,7 @@
-import RouterController from './controller';
+import router from './controller';
 import {RouterControllerError} from './error';
 
 export {
-  RouterController,
+  router,
   RouterControllerError,
 };

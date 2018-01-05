@@ -25,7 +25,7 @@
 
 <script>
 import SmsBox from '@/components/sms/SmsBox.vue';
-import {RouterController} from '@/router';
+import {router} from '@/router';
 import {modes} from '@/store';
 
 export default {
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     boxTypes() {
-      return RouterController.sms.boxTypes;
+      return router.sms.boxTypes;
     },
     adminMode() {
       return this.$store.state.mode === modes.ADMIN;
