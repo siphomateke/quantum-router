@@ -25,7 +25,7 @@
 
 <script>
 import SmsBox from '@/components/sms/SmsBox.vue';
-import {SmsBoxTypes} from '@/chrome/router.js';
+import {SmsBoxTypes} from '@/router';
 import {modes} from '@/store';
 
 export default {

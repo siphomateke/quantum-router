@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import {RouterController, UssdUtils} from '@/chrome/router.js';
+import {RouterController, UssdUtils} from '@/router';
 
 export default {
   data() {

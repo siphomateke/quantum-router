@@ -19,7 +19,7 @@
 
 <script>
 /* global chrome */
-import {RouterController} from '@/chrome/router.js';
+import {RouterController} from '@/router';
 import {Utils} from '@/chrome/core';
 
 export default {

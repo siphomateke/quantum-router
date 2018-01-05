@@ -28,7 +28,7 @@
 <script>
 import {modes} from '@/store';
 import LineChart from '@/components/charts/LineChart.js';
-import {RouterController} from '@/chrome/router.js';
+import {RouterController} from '@/router';
 export default {
   name: 'Home',
   components: {

@@ -1,4 +1,4 @@
-import {SmsUtils, SmsTypes} from '@/chrome/router.js';
+import {SmsUtils, SmsTypes} from '@/router';
 import moment from 'moment';
 
 export class Notification {

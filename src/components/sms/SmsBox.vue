@@ -38,7 +38,7 @@
 import SmsList from '@/components/sms/SmsList.vue';
 import SmsAction from '@/components/sms/SmsAction.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
-import {RouterController, SmsUtils, SmsBoxTypes} from '@/chrome/router.js';
+import {RouterController, SmsUtils, SmsBoxTypes} from '@/router';
 import moment from 'moment';
 import {modes} from '@/store';
 import {Notification} from '@/chrome/notification.js';

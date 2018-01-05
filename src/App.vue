@@ -46,7 +46,7 @@ import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
-import {RouterController, RouterControllerError} from '@/chrome/router.js';
+import {RouterController, RouterControllerError} from '@/router';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
