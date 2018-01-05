@@ -173,8 +173,8 @@ export default {
       if (this.mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
-          RouterController.getSmsCount().then((data) => {
-            return RouterController.getFullSmsList({
+          RouterController.sms.getSmsCount().then((data) => {
+            return RouterController.sms.getFullSmsList({
               total: data.LocalInbox,
               minDate: this.lastUpdatedNotifications
             }, {
@@ -232,14 +232,14 @@ export default {
     tryChangeMode(newMode) {
       if (newMode === modes.BASIC || newMode === modes.ADMIN) {
         this.loading = true;
-        RouterController.ping().then(() => {
+        RouterController.utils.ping().then(() => {
           if (newMode === modes.BASIC) {
             this.changeMode(newMode);
           } else if (newMode === modes.ADMIN) {
-            RouterController.getTab().then((tab) => {
-              return RouterController.isLoggedIn().then((loggedIn) => {
+            RouterController.utils.getTab().then((tab) => {
+              return RouterController.admin.isLoggedIn().then((loggedIn) => {
                 if (!loggedIn) {
-                  RouterController.login().then(() => {
+                  RouterController.admin.login().then(() => {
                     this.changeMode(newMode);
                   }).catch((e) => {
                     this.openConfirmDialog({
@@ -265,7 +265,7 @@ export default {
             });
           }
         }).catch((e) => {
-          return RouterController.getRouterUrl().then((url) => {
+          return RouterController.utils.getRouterUrl().then((url) => {
             this.openConfirmDialog({
               message: this.$i18n('connection_error', url),
               confirmText: this.$i18n('dialog_retry'),
@@ -300,11 +300,11 @@ export default {
     },
     checkMode() {
       this.loading = true;
-      RouterController.ping().then(() => {
-        RouterController.getTab().then((tab) => {
-          return RouterController.isLoggedIn().then((loggedIn) => {
+      RouterController.utils.ping().then(() => {
+        RouterController.utils.getTab().then((tab) => {
+          return RouterController.admin.isLoggedIn().then((loggedIn) => {
             if (!loggedIn) {
-              RouterController.login().then(() => {
+              RouterController.admin.login().then(() => {
                 this.changeMode(modes.ADMIN);
               }).catch((e) => {
                 this.openConfirmDialog({
@@ -333,7 +333,7 @@ export default {
           }
         });
       }).catch((e) => {
-        return RouterController.getRouterUrl().then((url) => {
+        return RouterController.utils.getRouterUrl().then((url) => {
           // TODO: Add option to redirect user to settings
           this.openConfirmDialog({
             message: this.$i18n('connection_error', url),

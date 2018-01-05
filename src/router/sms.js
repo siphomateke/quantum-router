@@ -24,6 +24,8 @@ export let boxTypes = {
 };
 
 export default {
+  types: types,
+  boxTypes: boxTypes,
   _arrayMatch(message, regExpMatch, mapFunc) {
     let data = message.match(regExpMatch);
     if (data) {

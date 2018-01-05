@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import {RouterController, UssdUtils} from '@/router';
+import {RouterController} from '@/router';
 
 export default {
   data() {
@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     this.refresh();
-    RouterController.releaseUssd();
+    RouterController.ussd.releaseUssd();
   },
   methods: {
     ussdSelectedCommandChanged(command) {
@@ -88,7 +88,7 @@ export default {
     },
     refresh() {
       if (this.$adminMode) {
-        RouterController.getUssdConfig().then((config) => {
+        RouterController.ussd.getUssdConfig().then((config) => {
           this.ussd.commands = config.USSD.General.Menu.MenuItem;
         });
       }
@@ -96,8 +96,8 @@ export default {
     send() {
       this.loading = true;
       this.error = '';
-      RouterController.sendUssdCommand(this.ussd.content).then((data) => {
-        let parsed = UssdUtils.parse(data.content);
+      RouterController.ussd.sendUssdCommand(this.ussd.content).then((data) => {
+        let parsed = RouterController.ussd.parse(data.content);
         this.ussd.result = parsed.content;
         this.ussd.options = parsed.options;
         this.ussd.selectedCommand = '';

@@ -62,7 +62,7 @@ export default {
         this.routerUrl.type = '';
         this.routerUrl.message = '';
         this.pinging = true;
-        RouterController.ping(this.routerUrl.value).then(() => {
+        RouterController.utils.ping(this.routerUrl.value).then(() => {
           this.routerUrl.type = 'is-success';
           this.routerUrl.message = '';
           this.pinging = false;
