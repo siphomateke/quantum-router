@@ -1,5 +1,5 @@
 'use strict';
-/* global chrome*/
+/* global chrome */
 
 /** Class to store event callbacks*/
 export class Event {
@@ -131,11 +131,18 @@ export class TabTools {
   }
 }
 
-/** Used to track tabs specified in the manifest. Sends events like onTabLoad and onTabUnload */
+/**
+ * Used to track tabs specified in the manifest.
+ * Sends events like onTabLoad and onTabUnload
+ */
 export class TabTracker {
   /**
-   * @param {string[]} options.urlPatterns The url patterns of the tabs to be tracked
-   * @param {number[]} options.tabIds      The IDs of the tabs to be tracked
+   * @typedef TabTrackerOptions
+   * @property {string[]} urlPatterns The url patterns of the tabs to be tracked
+   * @property {number[]} tabIds      The IDs of the tabs to be tracked
+   */
+  /**
+   * @param {TabTrackerOptions} options
    */
   constructor(options) {
     this.tabs = {};
@@ -172,6 +179,10 @@ export class TabTracker {
 
   /**
    * Used by _queryTrackTab to iteratively check if a tab matches the list of contentScript urls
+   * @param {object} tab
+   * @param {number} index
+   * @param {boolean} isTrackTab
+   * @param {function} callback
    * @private
    */
   _queryTrackTabLoop(tab, index, isTrackTab, callback) {
