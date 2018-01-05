@@ -2,7 +2,6 @@
 import {Utils} from '@/chrome/core';
 import {RouterControllerError, RouterApiError} from './error';
 import XhrUtils from './xhr';
-import {SmsBoxTypes} from './sms';
 import moment from 'moment';
 
 /* global chrome */
@@ -425,12 +424,13 @@ class _RouterController {
    * @property {number} SmsType
    */
 
+  // TODO: Fix SmsBoxTypes JSDoc
   /**
-  * @typedef SmsListOptions
-  * @property {number} [page=1]
-  * @property {number} [perPage=20]
-  * @property {SmsBoxTypes} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
-  * @property {('desc'|'asc')} [sortOrder=desc]
+   * @typedef SmsListOptions
+   * @property {number} [page=1]
+   * @property {number} [perPage=20]
+   * @property {SmsBoxTypes} [boxType=1] Which box to retreive. Can be Inbox(1), sent(2) or draft(3)
+   * @property {('desc'|'asc')} [sortOrder=desc]
   */
 
   /**
