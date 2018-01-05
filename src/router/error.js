@@ -8,3 +8,10 @@ export class RouterControllerError extends ExtendableError {
 }
 
 export class RouterApiError extends RouterControllerError {}
+
+export class XhrError extends ExtendableError {
+  constructor(code, message) {
+    super(typeof message !== 'undefined' ? message : code);
+    this.code = code;
+  }
+}

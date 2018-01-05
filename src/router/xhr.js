@@ -1,12 +1,4 @@
 'use strict';
-import ExtendableError from 'es6-error';
-
-export class XhrError extends ExtendableError {
-  constructor(code, message) {
-    super(typeof message !== 'undefined' ? message : code);
-    this.code = code;
-  }
-}
 
 export class _XhrUtils {
   request(options) {
