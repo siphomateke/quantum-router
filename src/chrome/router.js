@@ -801,6 +801,36 @@ class _RouterController {
     });
   }
 
+  getPage(url) {
+    return this._xhr({url: url, responseType: 'document'}).then((xhr) => {
+      return xhr.response;
+    });
+  }
+
+  /**
+   * Gets a verification token required for making admin requests and logging in
+   * @return {Promise<string[]>}
+   */
+  getRequestVerificationToken() {
+    return this.getRouterUrl().then((url) => {
+      return this.getPage(url+'/'+'html/home.html').then((doc) => {
+        let meta = doc.querySelectorAll("meta[name=csrf_token]");
+        let requestVerificationToken;
+        if (meta.length > 0) {
+          requestVerificationToken = [];
+          for (let i=0; i < meta.length; i++) {
+            requestVerificationToken.push(meta[i].content);
+          }
+          return requestVerificationToken;
+        } else {
+          return this.getAjaxDataDirect({url: 'api/webserver/token'}).then((data) => {
+            return [data.token];
+          });
+        }
+      });
+    });
+  }
+
   login() {
     return Utils.getStorage(['username', 'password']).then((items) => {
       return this._sendPageMessage({
