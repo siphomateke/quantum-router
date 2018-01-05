@@ -1,8 +1,11 @@
 'use strict';
 import {Utils} from '@/chrome/core';
 import {RouterControllerError, RouterApiError} from './error';
+import XhrUtils from './xhr';
+import {SmsBoxTypes} from './sms';
+import moment from 'moment';
 
-/* global chrome*/
+/* global chrome */
 
 /* const errors = [
   'xhr_error',
@@ -42,7 +45,7 @@ class _RouterController {
       111019: 'ERROR_USSD_PROCESSING',
       111020: 'ERROR_USSD_TIMEOUT',
       113018: 'SMS_SYSTEM_BUSY',
-      113053: 'SMS_NOT_ENOUGH_SPACE'
+      113053: 'SMS_NOT_ENOUGH_SPACE',
     };
   }
 
@@ -123,81 +126,6 @@ class _RouterController {
     });
   }
 
-  _xhr(options) {
-    options = Object.assign({
-      mimeType: null,
-      responseType: null
-    }, options);
-    return new Promise((resolve, reject) => {
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', options.url, true);
-      if (options.responseType) {
-        xhr.responseType = options.responseType;
-      }
-      if (options.mimeType) {
-        xhr.setRequestHeader('Accept', options.mimeType);
-        xhr.overrideMimeType(options.mimeType);
-      }
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 400) {
-          resolve(xhr);
-        } else {
-          reject(new RouterControllerError('xhr_invalid_status', 'XHR status invalid; '+xhr.statusText));
-        }
-      };
-      xhr.ontimeout = () => {
-        reject(new RouterControllerError('xhr_timeout', 'XHR timed out'));
-      };
-      xhr.onerror = (e) => {
-        reject(new RouterControllerError('xhr_error', 'Unknown XHR error.'));
-      };
-      xhr.send();
-    });
-  }
-
-  _xmlAjax(url) {
-    return this._xhr({url:url,mimeType: 'application/xml'}).then((xhr) => {
-      if (xhr.responseXML instanceof Document) {
-        return xhr.responseXML;
-      } else {
-        Promise.reject(new RouterControllerError('xhr_invalid_xml',
-          'Expected XML to be instance of Document. Got: ' + xhr.responseXML));
-      }
-    });
-  }
-
-  _recursiveXml2Object(xml) {
-    if (xml.children.length > 0) {
-      let _obj = {};
-      Array.prototype.forEach.call(xml.children, (el) => {
-        let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
-        let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
-          return child !== el;
-        });
-        // If there is more than one of these elements, then it's an array
-        if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
-          if (!(el.tagName in _obj)) {
-            _obj[el.tagName] = [];
-          }
-          _obj[el.tagName].push(_childObj);
-          // Otherwise just store it normally
-        } else {
-          _obj[el.tagName] = _childObj;
-        }
-      });
-      return _obj;
-    } else {
-      return xml.textContent;
-    }
-  }
-
-  _xml2object(xml) {
-    let obj = {};
-    obj.type = xml.documentElement.tagName;
-    obj.data = this._recursiveXml2Object(xml.documentElement);
-    return obj;
-  }
-
   _getRouterApiErrorName(code) {
     return this.apiErrorCodes[code];
   }
@@ -206,6 +134,7 @@ class _RouterController {
    *
    * @param {*} ret
    * @param {boolean} responseMustBeOk
+   * @return {Promise<any>}
    */
   _processXmlResponse(ret, responseMustBeOk=false) {
     return new Promise((resolve, reject) => {
@@ -241,13 +170,13 @@ class _RouterController {
       parsedUrl = new URL(routerUrl);
     } catch (e) {
       if (e instanceof TypeError) {
-        return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+url));
+        return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+routerUrl));
       } else {
         throw e;
       }
     }
-    return this._xmlAjax(parsedUrl.origin + '/' + data.url).then((xml) => {
-      const ret = this._xml2object(xml);
+    return XhrUtils.getXml(parsedUrl.origin + '/' + data.url).then((xml) => {
+      const ret = XhrUtils.xml2object(xml);
       return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
@@ -259,7 +188,7 @@ class _RouterController {
    *                                 e.g 'response' would  expect a <response> tag
    * @param {boolean} [data.responseMustBeOk]
    * @param {string} [routerUrl='']
-   * @return {Promise}
+   * @return {Promise<any>}
    */
   getAjaxDataDirect(data, routerUrl='') {
     if (!routerUrl) {
@@ -269,16 +198,6 @@ class _RouterController {
     } else {
       return this._getAjaxDataDirect(routerUrl, data);
     }
-  }
-
-  /**
-   * Converts an xml string to an object
-   * @param {string} xml
-   * @return {object}
-   */
-  _parseXmlString(xml) {
-    let xmlDocument = new DOMParser().parseFromString(xml, 'application/xml');
-    return RouterController._xml2object(xmlDocument);
   }
 
   /**
@@ -292,7 +211,7 @@ class _RouterController {
     data.type = 'command';
     data.command = 'getAjaxData';
     return this._sendPageMessage(data).then((xml) => {
-      let ret = this._parseXmlString(xml);
+      let ret = XhrUtils.parseXmlString(xml);
       return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
@@ -309,7 +228,7 @@ class _RouterController {
     data.type = 'command';
     data.command = 'saveAjaxData';
     return this._sendPageMessage(data).then((xml) => {
-      let ret = this._parseXmlString(xml);
+      let ret = XhrUtils.parseXmlString(xml);
       return this._processXmlResponse(ret, data.responseMustBeOk);
     });
   }
@@ -339,7 +258,7 @@ class _RouterController {
 
   /**
    * Releases previous USSD result. Must be called after getting a USSD result.
-   * @return {Promise}
+   * @return {Promise<boolean>}
    */
   releaseUssd() {
     return this.getAjaxDataDirect({url: 'api/ussd/release'}).then((ret) => {
@@ -434,7 +353,7 @@ class _RouterController {
    * @return {Promise<UssdConfig>}
    */
   getUssdConfig(postpaid=false) {
-    let url = 'config/ussd/'
+    let url = 'config/ussd/';
     url += postpaid ? 'postpaid' : 'prepaid';
     url += 'ussd.xml';
     return this.getAjaxDataDirect({
@@ -578,6 +497,7 @@ class _RouterController {
    * @param {number} total
    * @param {number} [page=1]
    * @param {Message[]} list
+   * @return {Promise<Message[]>}
    */
   _getFullSmsListRecursive(options, smsListOptions, perPage, total, page=1, list) {
     smsListOptions.perPage = perPage;
@@ -644,7 +564,7 @@ class _RouterController {
     return this.saveAjaxData({
       url: 'api/sms/set-read',
       request: {
-        Index: idx
+        Index: idx,
       },
       responseMustBeOk: true,
     });
@@ -708,7 +628,7 @@ class _RouterController {
    */
   getSmsSendStatus() {
     return this.getAjaxDataDirect({
-      url: 'api/sms/send-status'
+      url: 'api/sms/send-status',
     });
   }
 
@@ -734,9 +654,12 @@ class _RouterController {
   /**
    * Delete's all messages with the given indices
    * @param {number[]} indices An array of indices of messages
+   * @return {Promise<any>}
    */
   deleteSms(indices) {
-    let request = indices.map(i => {return {Index: i}});
+    let request = indices.map((i) => {
+      return {Index: i};
+    });
     return this.saveAjaxData({
       url: 'api/sms/delete-sms',
       request: request,
@@ -783,7 +706,7 @@ class _RouterController {
   }
 
   getPage(url) {
-    return this._xhr({url: url, responseType: 'document'}).then((xhr) => {
+    return XhrUtils.request({url: url, responseType: 'document'}).then((xhr) => {
       return xhr.response;
     });
   }
@@ -795,7 +718,7 @@ class _RouterController {
   getRequestVerificationToken() {
     return this.getRouterUrl().then((url) => {
       return this.getPage(url+'/'+'html/home.html').then((doc) => {
-        let meta = doc.querySelectorAll("meta[name=csrf_token]");
+        let meta = doc.querySelectorAll('meta[name=csrf_token]');
         let requestVerificationToken;
         if (meta.length > 0) {
           requestVerificationToken = [];
@@ -823,7 +746,7 @@ class _RouterController {
         },
       }).then((pageResponse) => {
         if (pageResponse.type === 'xml') {
-          let xmlObject = this._parseXmlString(pageResponse.xml);
+          let xmlObject = XhrUtils.parseXmlString(pageResponse.xml);
           return this._processXmlResponse(xmlObject);
         } else if (pageResponse.type === 'error') {
           return Promise.reject(new RouterControllerError(pageResponse.error));
