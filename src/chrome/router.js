@@ -142,20 +142,24 @@ class _RouterController {
     });
   }
 
-  _xmlAjax(url) {
+  _xhr(options) {
+    options = Object.assign({
+      mimeType: null,
+      responseType: null
+    }, options);
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader('Accept', 'application/xml');
-      xhr.overrideMimeType('application/xml');
+      xhr.open('GET', options.url, true);
+      if (options.responseType) {
+        xhr.responseType = options.responseType;
+      }
+      if (options.mimeType) {
+        xhr.setRequestHeader('Accept', options.mimeType);
+        xhr.overrideMimeType(options.mimeType);
+      }
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 400) {
-          if (xhr.responseXML instanceof Document) {
-            resolve(xhr.responseXML);
-          } else {
-            reject(new RouterControllerError('xhr_invalid_xml',
-              'Expected XML to be instance of Document. Got: ' + xhr.responseXML));
-          }
+          resolve(xhr);
         } else {
           reject(new RouterControllerError('xhr_invalid_status', 'XHR status invalid; '+xhr.statusText));
         }
@@ -167,6 +171,17 @@ class _RouterController {
         reject(new RouterControllerError('xhr_error', 'Unknown XHR error.'));
       };
       xhr.send();
+    });
+  }
+
+  _xmlAjax(url) {
+    return this._xhr({url:url,mimeType: 'application/xml'}).then((xhr) => {
+      if (xhr.responseXML instanceof Document) {
+        return xhr.responseXML;
+      } else {
+        Promise.reject(new RouterControllerError('xhr_invalid_xml',
+          'Expected XML to be instance of Document. Got: ' + xhr.responseXML));
+      }
     });
   }
 
