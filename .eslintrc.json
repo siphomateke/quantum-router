@@ -6,11 +6,12 @@
   "env": {
     "browser": true,
     "node": true,
-    "jquery": true
+    "jquery": true,
+    "es6": true
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 6
+    "ecmaVersion": 8
   },
   "plugins": [
     "vue",
