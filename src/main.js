@@ -1,7 +1,7 @@
 /* global chrome*/
 import Vue from 'vue';
 import App from './App';
-import router from './router';
+import router from './vue-router';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
 import VsNotify from '@/components/vs-notify';
