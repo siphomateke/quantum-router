@@ -55,7 +55,8 @@ class _RouterController {
         if (!chrome.runtime.lastError) {
           resolve(r);
         } else {
-          reject(new RouterControllerError('chrome_runtime_message_error', chrome.runtime.lastError));
+          reject(new RouterControllerError(
+            'chrome_runtime_message_error', chrome.runtime.lastError));
         }
       });
     });
@@ -70,7 +71,8 @@ class _RouterController {
       if (tab) {
         return tab;
       } else {
-        return Promise.reject(new RouterControllerError('tabs_not_found', 'No matched tabs open'));
+        return Promise.reject(new RouterControllerError(
+          'tabs_not_found', 'No matched tabs open'));
       }
     });
   }
@@ -84,7 +86,8 @@ class _RouterController {
       if ('routerUrl' in items) {
         return items.routerUrl;
       } else {
-        return Promise.reject(new RouterControllerError('router_url_not_set', 'No router url set in storage'));
+        return Promise.reject(new RouterControllerError(
+          'router_url_not_set', 'No router url set in storage'));
       }
     });
   }
@@ -101,7 +104,9 @@ class _RouterController {
         if (!chrome.runtime.lastError) {
           resolve(r);
         } else {
-          reject(new RouterControllerError('chrome_tabs_message_error', 'tabId: '+id+', msg: '+chrome.runtime.lastError.message));
+          reject(new RouterControllerError(
+            'chrome_tabs_message_error',
+            'tabId: '+id+', msg: '+chrome.runtime.lastError.message));
         }
       });
     });
@@ -143,7 +148,8 @@ class _RouterController {
           if (this._isAjaxReturnOk(ret.data)) {
             resolve(ret.data);
           } else {
-            return Promise.reject(new RouterControllerError('xml_response_not_ok', ret));
+            return Promise.reject(new RouterControllerError(
+              'xml_response_not_ok', ret));
           }
         } else {
           resolve(ret.data);
@@ -161,7 +167,7 @@ class _RouterController {
    * @param {string} routerUrl
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   *                                 e.g 'response' would  expect a <response> tag
+   *                          e.g 'response' would  expect a <response> tag
    * @return {Promise}
    */
   _getAjaxDataDirect(routerUrl, data) {
@@ -170,7 +176,8 @@ class _RouterController {
       parsedUrl = new URL(routerUrl);
     } catch (e) {
       if (e instanceof TypeError) {
-        return Promise.reject(new RouterControllerError('invalid_router_url', 'Invalid router page url: '+routerUrl));
+        return Promise.reject(new RouterControllerError(
+          'invalid_router_url', 'Invalid router page url: '+routerUrl));
       } else {
         throw e;
       }
@@ -185,7 +192,7 @@ class _RouterController {
    *
    * @param {object} data
    * @param {string} data.url The url to get ajax data from
-   *                                 e.g 'response' would  expect a <response> tag
+   *                          e.g 'response' would  expect a <response> tag
    * @param {boolean} [data.responseMustBeOk]
    * @param {string} [routerUrl='']
    * @return {Promise<any>}
@@ -244,13 +251,16 @@ class _RouterController {
   }
 
   /**
-   * Sends a request for the router's global config to determine if there is a connection
+   * Sends a request for the router's global config
+   * to determine if there is a connection
    * @param {string} [routerUrl='']
    * @return {Promise}
    */
   ping(routerUrl='') {
     if (routerUrl) {
-      return this.getAjaxDataDirect({url: 'config/global/config.xml'}, routerUrl);
+      return this.getAjaxDataDirect({
+        url: 'config/global/config.xml',
+      }, routerUrl);
     } else {
       return this.getAjaxDataDirect({url: 'config/global/config.xml'});
     }
@@ -265,7 +275,8 @@ class _RouterController {
       if (this._isAjaxReturnOk(ret)) {
         return true;
       } else {
-        return Promise.reject(new RouterControllerError('ussd_release_fail'));
+        return Promise.reject(new RouterControllerError(
+          'ussd_release_fail'));
       }
     });
   }
@@ -290,7 +301,8 @@ class _RouterController {
           });
         } else if (err.code == 'ERROR_USSD_TIMEOUT') {
           this.releaseUssd();
-          return Promise.reject(new RouterControllerError('ussd_timeout'));
+          return Promise.reject(new RouterControllerError(
+            'ussd_timeout'));
         }
       } else {
         return Promise.reject(err);
@@ -499,7 +511,8 @@ class _RouterController {
    * @param {Message[]} list
    * @return {Promise<Message[]>}
    */
-  _getFullSmsListRecursive(options, smsListOptions, perPage, total, page=1, list) {
+  _getFullSmsListRecursive(
+    options, smsListOptions, perPage, total, page=1, list) {
     smsListOptions.perPage = perPage;
     smsListOptions.page = page;
     return this.getSmsList(smsListOptions).then((currentList) => {
@@ -706,7 +719,9 @@ class _RouterController {
   }
 
   getPage(url) {
-    return XhrUtils.request({url: url, responseType: 'document'}).then((xhr) => {
+    return XhrUtils.request({
+      url: url, responseType: 'document',
+    }).then((xhr) => {
       return xhr.response;
     });
   }
@@ -727,7 +742,9 @@ class _RouterController {
           }
           return requestVerificationToken;
         } else {
-          return this.getAjaxDataDirect({url: 'api/webserver/token'}).then((data) => {
+          return this.getAjaxDataDirect({
+            url: 'api/webserver/token',
+          }).then((data) => {
             return [data.token];
           });
         }
