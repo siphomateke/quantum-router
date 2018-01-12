@@ -53,24 +53,24 @@ export default {
 
   _recursiveXml2Object(xml) {
     if (xml.children.length > 0) {
-      let _obj = {};
+      let obj = {};
       Array.prototype.forEach.call(xml.children, (el) => {
-        let _childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
+        let childObj = (el.children.length > 0) ? this._recursiveXml2Object(el) : el.textContent;
         let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
           return child !== el;
         });
         // If there is more than one of these elements, then it's an array
         if (siblings.length > 0 && siblings[0].tagName == el.tagName) {
-          if (!(el.tagName in _obj)) {
-            _obj[el.tagName] = [];
+          if (!(el.tagName in obj)) {
+            obj[el.tagName] = [];
           }
-          _obj[el.tagName].push(_childObj);
+          obj[el.tagName].push(childObj);
           // Otherwise just store it normally
         } else {
-          _obj[el.tagName] = _childObj;
+          obj[el.tagName] = childObj;
         }
       });
-      return _obj;
+      return obj;
     } else {
       return xml.textContent;
     }
