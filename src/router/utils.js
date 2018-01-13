@@ -53,7 +53,7 @@ export function getRouterUrl() {
  * @param {object} data Data to send to the tab
  * @return {Promise}
  */
-export function _sendTabMessage(id, data) {
+function _sendTabMessage(id, data) {
   return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(id, data, (r) => {
       if (!chrome.runtime.lastError) {
@@ -79,7 +79,7 @@ export function sendTabMessage(data) {
   });
 }
 
-export function _sendPageMessage(data) {
+export function sendPageMessage(data) {
   return sendTabMessage({
     command: 'pageMessage',
     data: data,

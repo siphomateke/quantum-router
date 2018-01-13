@@ -44,7 +44,7 @@ export function parse(message) {
  */
 export function releaseUssd() {
   return ajax.getAjaxDataDirect({url: 'api/ussd/release'}).then((ret) => {
-    if (ajax._isAjaxReturnOk(ret)) {
+    if (ajax.isAjaxReturnOk(ret)) {
       return true;
     } else {
       return Promise.reject(new RouterControllerError(

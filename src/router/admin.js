@@ -54,7 +54,7 @@ function getRequestVerificationToken() {
 
 export function login() {
   return Utils.getStorage(['username', 'password']).then((items) => {
-    return routerUtils._sendPageMessage({
+    return routerUtils.sendPageMessage({
       type: 'command',
       command: 'login',
       credentials: {
@@ -64,7 +64,7 @@ export function login() {
     }).then((pageResponse) => {
       if (pageResponse.type === 'xml') {
         let xmlObject = ajax.parseXmlString(pageResponse.xml);
-        return ajax._processXmlResponse(xmlObject);
+        return ajax.processXmlResponse(xmlObject);
       } else if (pageResponse.type === 'error') {
         return Promise.reject(new RouterControllerError(pageResponse.error));
       }

@@ -102,11 +102,11 @@ function _getRouterApiErrorName(code) {
  * @param {boolean} responseMustBeOk
  * @return {Promise<any>}
  */
-export function _processXmlResponse(ret, responseMustBeOk=false) {
+export function processXmlResponse(ret, responseMustBeOk=false) {
   return new Promise((resolve, reject) => {
     if (ret.type !== 'error') {
       if (responseMustBeOk) {
-        if (_isAjaxReturnOk(ret.data)) {
+        if (isAjaxReturnOk(ret.data)) {
           resolve(ret.data);
         } else {
           return Promise.reject(new RouterControllerError(
@@ -145,7 +145,7 @@ function _getAjaxDataDirect(routerUrl, data) {
   }
   return getXml(parsedUrl.origin + '/' + data.url).then((xml) => {
     const ret = xml2object(xml);
-    return _processXmlResponse(ret, data.responseMustBeOk);
+    return processXmlResponse(ret, data.responseMustBeOk);
   });
 }
 
@@ -178,9 +178,9 @@ export function getAjaxDataDirect(data, routerUrl='') {
 export function getAjaxData(data) {
   data.type = 'command';
   data.command = 'getAjaxData';
-  return routerUtils._sendPageMessage(data).then((xml) => {
+  return routerUtils.sendPageMessage(data).then((xml) => {
     let ret = parseXmlString(xml);
-    return _processXmlResponse(ret, data.responseMustBeOk);
+    return processXmlResponse(ret, data.responseMustBeOk);
   });
 }
 
@@ -195,9 +195,9 @@ export function getAjaxData(data) {
 export function saveAjaxData(data) {
   data.type = 'command';
   data.command = 'saveAjaxData';
-  return routerUtils._sendPageMessage(data).then((xml) => {
+  return routerUtils.sendPageMessage(data).then((xml) => {
     let ret = parseXmlString(xml);
-    return _processXmlResponse(ret, data.responseMustBeOk);
+    return processXmlResponse(ret, data.responseMustBeOk);
   });
 }
 
@@ -207,6 +207,6 @@ export function saveAjaxData(data) {
  * @param   {object}  ret The AJAX return
  * @return {boolean} if the response is ok
  */
-export function _isAjaxReturnOk(ret) {
+export function isAjaxReturnOk(ret) {
   return ret.toLowerCase() === 'ok';
 }
