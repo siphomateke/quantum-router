@@ -1,4 +1,4 @@
-import {router} from '@/router';
+import router from '@/router';
 import moment from 'moment';
 
 export class Notification {

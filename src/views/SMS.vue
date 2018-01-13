@@ -25,7 +25,7 @@
 
 <script>
 import SmsBox from '@/components/sms/SmsBox.vue';
-import {router} from '@/router';
+import router from '@/router';
 import {modes} from '@/store';
 
 export default {
