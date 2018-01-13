@@ -97,6 +97,16 @@ function _getRouterApiErrorName(code) {
 }
 
 /**
+ * Checks if an ajax return is valid by checking if the response is 'ok'
+ * @private
+ * @param   {object}  ret The AJAX return
+ * @return {boolean} if the response is ok
+ */
+export function isAjaxReturnOk(ret) {
+  return ret.toLowerCase() === 'ok';
+}
+
+/**
  *
  * @param {*} ret
  * @param {boolean} responseMustBeOk
@@ -199,14 +209,4 @@ export function saveAjaxData(data) {
     let ret = parseXmlString(xml);
     return processXmlResponse(ret, data.responseMustBeOk);
   });
-}
-
-/**
- * Checks if an ajax return is valid by checking if the response is 'ok'
- * @private
- * @param   {object}  ret The AJAX return
- * @return {boolean} if the response is ok
- */
-export function isAjaxReturnOk(ret) {
-  return ret.toLowerCase() === 'ok';
 }
