@@ -52,3 +52,7 @@ export let apiErrorCodes = {
   'ussd_timeout',
   'ussd_release_fail',
 ];*/
+
+export function getRouterApiErrorName(code) {
+  return apiErrorCodes[code];
+}

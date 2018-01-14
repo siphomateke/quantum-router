@@ -3,7 +3,7 @@ import {
   RouterControllerError,
   RouterApiError,
   XhrError,
-  apiErrorCodes,
+  getRouterApiErrorName,
 } from './error';
 import * as routerUtils from './utils';
 
@@ -92,10 +92,6 @@ export function parseXmlString(xml) {
   return xml2object(xmlDocument);
 }
 
-function _getRouterApiErrorName(code) {
-  return apiErrorCodes[code];
-}
-
 /**
  * Checks if an ajax return is valid by checking if the response is 'ok'
  * @private
@@ -126,7 +122,7 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
         resolve(ret.data);
       }
     } else {
-      let errorName = _getRouterApiErrorName(ret.data.code);
+      let errorName = getRouterApiErrorName(ret.data.code);
       let message = errorName ? errorName : ret.data.code;
       message += ((ret.data.message) ? ' : ' + ret.data.message : '');
       reject(new RouterApiError(message));
