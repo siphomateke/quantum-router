@@ -1,17 +1,17 @@
 <template>
   <div class="page-content">
-    <template v-if="adminMode || true">
-    <b-tabs type="is-boxed" expanded>
-      <b-tab-item :label="this.$i18n('sms_box_inbox')">
-        <sms-box :box-type="boxTypes.INBOX"></sms-box>
-      </b-tab-item>
-      <b-tab-item :label="this.$i18n('sms_box_sent')">
-        <sms-box :box-type="boxTypes.SENT"></sms-box>
-      </b-tab-item>
-      <b-tab-item :label="this.$i18n('sms_box_draft')">
-        <sms-box :box-type="boxTypes.DRAFT"></sms-box>
-      </b-tab-item>
-    </b-tabs>
+    <template v-if="adminMode">
+      <b-tabs type="is-boxed" expanded>
+        <b-tab-item :label="this.$i18n('sms_box_inbox')">
+          <sms-box :box-type="boxTypes.INBOX"></sms-box>
+        </b-tab-item>
+        <b-tab-item :label="this.$i18n('sms_box_sent')">
+          <sms-box :box-type="boxTypes.SENT"></sms-box>
+        </b-tab-item>
+        <b-tab-item :label="this.$i18n('sms_box_draft')">
+          <sms-box :box-type="boxTypes.DRAFT"></sms-box>
+        </b-tab-item>
+      </b-tabs>
     </template>
     <template v-else>
       <div class="box">
@@ -27,6 +27,8 @@
 import SmsBox from '@/components/sms/SmsBox.vue';
 import router from '@/router';
 import {modes} from '@/store';
+
+// TODO: Check admin mode
 
 export default {
   components: {
