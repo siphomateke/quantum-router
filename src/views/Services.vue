@@ -75,7 +75,6 @@ export default {
   },
   mounted() {
     this.refresh();
-    router.ussd.releaseUssd();
   },
   methods: {
     ussdSelectedCommandChanged(command) {
@@ -91,6 +90,7 @@ export default {
         router.ussd.getUssdConfig().then((config) => {
           this.ussd.commands = config.USSD.General.Menu.MenuItem;
         });
+        router.ussd.releaseUssd();
       }
     },
     send() {
