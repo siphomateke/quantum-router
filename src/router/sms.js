@@ -232,9 +232,11 @@ export function getSmsList(options) {
       Ascending: options.sortOrder === 'desc' ? 0 : 1,
       UnreadPreferred: 0,
     },
-  }).then((_data) => {
-    if (_data.Count > 0) {
-      return _data.Messages.Message;
+  }).then((data) => {
+    if (data.Count > 1) {
+      return data.Messages.Message;
+    } else if (data.Count > 0) {
+      return [data.Messages.Message];
     } else {
       return [];
     }
