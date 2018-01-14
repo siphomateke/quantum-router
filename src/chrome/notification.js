@@ -1,4 +1,4 @@
-import {SmsUtils, SmsTypes} from '@/router';
+import router from '@/router';
 import moment from 'moment';
 
 export class Notification {
@@ -46,21 +46,21 @@ export class Notification {
   }
 
   static fromSms(sms) {
-    let parsed = SmsUtils.parse(sms.Content);
+    let parsed = router.sms.parse(sms.Content);
 
     let progress = null;
     if ('percent' in parsed
     && parsed.percent.length > 0
-    && parsed.type === SmsTypes.DATA_PERCENT) {
+    && parsed.type === router.sms.types.DATA_PERCENT) {
       progress = parsed.percent[0] / 100;
     }
 
     let message = '';
     switch (parsed.type) {
-    case SmsTypes.AD:
+    case router.sms.types.AD:
       message = '[[ ADVERTISEMENT  ]]';
       break;
-    case SmsTypes.DATA:
+    case router.sms.types.DATA:
       message = 'You have '
       + parsed.data[0].amount + parsed.data[0].unit
       + ' valid until ' + moment(parsed.expires[0]).format('Y-M-D H:mm:ss');

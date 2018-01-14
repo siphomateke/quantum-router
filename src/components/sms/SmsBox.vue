@@ -38,7 +38,7 @@
 import SmsList from '@/components/sms/SmsList.vue';
 import SmsAction from '@/components/sms/SmsAction.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
-import {RouterController, SmsUtils, SmsBoxTypes} from '@/router';
+import router from '@/router';
 import moment from 'moment';
 import {modes} from '@/store';
 import {Notification} from '@/chrome/notification.js';
@@ -89,7 +89,7 @@ export default {
     },
     async loadAsyncData() {
       this.loading = true;
-      RouterController.getSmsList({
+      router.sms.getSmsList({
         boxType: this.boxType,
         page: this.page,
         sortOrder: this.sortOrder,
@@ -103,18 +103,18 @@ export default {
         }
 
         this.list = [];
-        return RouterController.getSmsCount().then((smsData) => {
+        return router.sms.getSmsCount().then((smsData) => {
           let count = 0;
           switch (this.boxType) {
-            case SmsBoxTypes.INBOX:
-              count = smsData.LocalInbox;
-              break;
-            case SmsBoxTypes.SENT:
-              count = smsData.LocalOutbox;
-              break;
-            case SmsBoxTypes.DRAFT:
-              count = smsData.LocalDraft;
-              break;
+          case router.sms.boxTypes.INBOX:
+            count = smsData.LocalInbox;
+            break;
+          case router.sms.boxTypes.SENT:
+            count = smsData.LocalOutbox;
+            break;
+          case router.sms.boxTypes.DRAFT:
+            count = smsData.LocalDraft;
+            break;
           }
           this.total = parseInt(count);
 
@@ -143,23 +143,23 @@ export default {
       this.loadAsyncData();
     },
     parseMessage(message) {
-      return SmsUtils.parse(message);
+      return router.sms.parse(message);
     },
     newMessage() {
       this.showNewMessageDialog = true;
     },
     deleteMessages() {
-      let indices = this.checkedRows.map(row => row.index);
-      RouterController.deleteSms(indices);
+      let indices = this.checkedRows.map((row) => row.index);
+      router.sms.deleteSms(indices);
       // TODO: delete sms loading indicator
       this.refresh();
     },
     markMessagesAsRead() {
       // TODO: Mark sms as read indicator
-      let indices = this.checkedRows.map(row => row.index);
+      let indices = this.checkedRows.map((row) => row.index);
       for (let idx of indices) {
-        RouterController.setSmsAsRead(idx).then(() => {
-          let row = this.list.find(row => row.index === idx);
+        router.sms.setSmsAsRead(idx).then(() => {
+          let row = this.list.find((row) => row.index === idx);
           row.read = true;
         });
       }

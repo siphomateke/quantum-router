@@ -1,3 +1,4 @@
+'use strict';
 import ExtendableError from 'es6-error';
 
 export class RouterControllerError extends ExtendableError {
@@ -15,6 +16,25 @@ export class XhrError extends ExtendableError {
     this.code = code;
   }
 }
+
+export let apiErrorCodes = {
+  100002: 'ERROR_SYSTEM_NO_SUPPORT',
+  100003: 'ERROR_SYSTEM_NO_RIGHTS',
+  100004: 'ERROR_SYSTEM_BUSY',
+  108001: 'ERROR_LOGIN_USERNAME_WRONG',
+  108002: 'ERROR_LOGIN_PASSWORD_WRONG',
+  108003: 'ERROR_LOGIN_ALREADY_LOGIN',
+  108006: 'ERROR_LOGIN_USERNAME_PWD_WRONG',
+  108007: 'ERROR_LOGIN_USERNAME_PWD_ORERRUN',
+  120001: 'ERROR_VOICE_BUSY',
+  125001: 'ERROR_WRONG_TOKEN',
+  125002: 'ERROR_WRONG_SESSION',
+  125003: 'ERROR_WRONG_SESSION_TOKEN',
+  111019: 'ERROR_USSD_PROCESSING',
+  111020: 'ERROR_USSD_TIMEOUT',
+  113018: 'SMS_SYSTEM_BUSY',
+  113053: 'SMS_NOT_ENOUGH_SPACE',
+};
 
 /* const errors = [
   'xhr_error',

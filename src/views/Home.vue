@@ -28,7 +28,7 @@
 <script>
 import {modes} from '@/store';
 import LineChart from '@/components/charts/LineChart.js';
-import {RouterController} from '@/router';
+import router from '@/router';
 export default {
   name: 'Home',
   components: {
@@ -94,7 +94,7 @@ export default {
   mounted() {
     this.bus.$on('refresh', () => {
       if (!this.offline) {
-        RouterController.getTrafficStatistics().then((data) => {
+        router.utils.getTrafficStatistics().then((data) => {
           this.lineChartData = Object.assign({}, this.lineChartData);
 
           if (!this.usage) {
