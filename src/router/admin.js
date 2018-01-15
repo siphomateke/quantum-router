@@ -27,20 +27,20 @@ function getPage(url) {
 }
 
 /**
- * Gets a verification token required for making admin requests and logging in
+ * Gets verification tokens required for making admin requests and logging in
  * @return {Promise<string[]>}
  */
-function getRequestVerificationToken() {
+function getRequestVerificationTokens() {
   return routerUtils.getRouterUrl().then((url) => {
     return getPage(url+'/'+'html/home.html').then((doc) => {
       let meta = doc.querySelectorAll('meta[name=csrf_token]');
-      let requestVerificationToken;
+      let requestVerificationTokens;
       if (meta.length > 0) {
-        requestVerificationToken = [];
+        requestVerificationTokens = [];
         for (let i=0; i < meta.length; i++) {
-          requestVerificationToken.push(meta[i].content);
+          requestVerificationTokens.push(meta[i].content);
         }
-        return requestVerificationToken;
+        return requestVerificationTokens;
       } else {
         return ajax.getAjaxDataDirect({
           url: 'api/webserver/token',
