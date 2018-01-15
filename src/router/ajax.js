@@ -7,20 +7,45 @@ import {
 } from './error';
 import * as routerUtils from './utils';
 
-export function request(options) {
+/**
+ * @typedef xhrRequestOptions
+ * @property {string} url
+ * @property {string} [mimeType]
+ * @property {string} [responseType]
+ * @property {string} [method]
+ * @property {object} [data]
+ * @property {Object.<string, string>} [requestHeaders]
+ */
+
+/**
+ *
+ * @param {xhrRequestOptions} options
+ * @return {Promise<XMLHttpRequest>}
+ */
+export function xhrRequest(options) {
   options = Object.assign({
     mimeType: null,
     responseType: null,
+    method: 'GET',
+    data: null,
+    requestHeaders: null,
   }, options);
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', options.url, true);
+    xhr.open(options.method, options.url, true);
     if (options.responseType) {
       xhr.responseType = options.responseType;
     }
     if (options.mimeType) {
       xhr.setRequestHeader('Accept', options.mimeType);
       xhr.overrideMimeType(options.mimeType);
+    }
+    if (options.requestHeaders) {
+      for (let header in options.requestHeaders) {
+        if (Object.prototype.hasOwnProperty.call(options.requestHeaders, header)) {
+          xhr.setRequestHeader(header, options.requestHeaders[header]);
+        }
+      }
     }
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 400) {
@@ -35,12 +60,20 @@ export function request(options) {
     xhr.onerror = (e) => {
       reject(new XhrError('xhr_error', 'Unknown XHR error.'));
     };
-    xhr.send();
+    xhr.send(options.data);
   });
 }
 
-export function getXml(url) {
-  return request({url: url, mimeType: 'application/xml'}).then((xhr) => {
+/**
+ *
+ * @param {xhrRequestOptions} xhrOptions
+ * @return {Promise<Document>}
+ */
+export function getXml(xhrOptions) {
+  xhrOptions = Object.assign({
+    mimeType: 'application/xml',
+  }, xhrOptions);
+  return xhrRequest(xhrOptions).then((xhr) => {
     if (xhr.responseXML instanceof Document) {
       return xhr.responseXML;
     } else {
@@ -149,7 +182,7 @@ function _getAjaxDataDirect(routerUrl, data) {
       throw e;
     }
   }
-  return getXml(parsedUrl.origin + '/' + data.url).then((xml) => {
+  return getXml({url: parsedUrl.origin + '/' + data.url}).then((xml) => {
     const ret = xml2object(xml);
     return processXmlResponse(ret, data.responseMustBeOk);
   });
