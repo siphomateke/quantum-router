@@ -2,22 +2,38 @@
 
 A chrome extension that replaces the default Huawei router interface.
 
-The default router interface on a Huawei is outdated and difficult to use;
+### Important: This project is still very young. As of yet there are no releases.
+
+The default UI on a Huawei router is outdated and difficult to use;
 
 ![Screenshot of MTN router interface](img/mtn_router.png?raw=true)
 
-This extension aims to fix that by offering a sleeker and more modern alternative UI to the router;
+This extension aims to offer a sleeker and more modern alternative UI to the router while adding some new features;
 
 ![Screenshot of QuantumRouter interface](img/quantum_router.png?raw=true)
 
-## Current features
+![Screenshot of QuantumRouter USSD page](img/quantum_router_ussd.png?raw=true)
 
-## Planned features
+![Screenshot of QuantumRouter homepage](img/quantum_router_graph.png?raw=true)
 
-- [ ] change settings
-- [ ] sync usage data
-- [ ] live native notifications
-- [ ] graph usage data
+## Features
+
+- Manage SMS messages
+- Send USSD commands
+- Graph usage data (basic)
+
+## Planned New Features
+
+- Smart SMS analysis. E.g. automatic advert deletion
+- Task automation
+- Sync usage data with other computers
+- Live native notifications
+
+## Notable Missing Features
+
+- Change settings
+- Sending SMS messages
+- Statistics
 
 ## Build Setup
 
@@ -25,17 +41,15 @@ This extension aims to fix that by offering a sleeker and more modern alternativ
 # install dependencies
 npm install
 
-# serve with hot reload as chrome extension
+# watch .js and .vue files
 npm run dev
-
-# watch .js and .vue files to trigger npm run build
-npm run watch
 
 # build for production with minification
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Once you have built the project, open the extensions page (chrome://extensions/) and then enable developer mode.
+
+Press load unpacked extension and select the dist/ folder.
+
+If you encounter any bugs, which you almost certainly will, please report them on the [issues page](/nextgensparx/quantum-router/issues/).
