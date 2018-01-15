@@ -10,6 +10,8 @@
       :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-action>
     </div>
     <b-message type="is-info">
+      <!-- TODO: Improve the way checked rows are displayed.
+      Perhaps at the bottom of the screen -->
       <template v-if="checkedRows.length > 0">
         {{ this.$i18n('sms_checked_rows', checkedRows.length) }}
       </template>
