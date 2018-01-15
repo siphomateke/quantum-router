@@ -52,4 +52,4 @@ Once you have built the project, open the extensions page (chrome://extensions/)
 
 Press load unpacked extension and select the dist/ folder.
 
-If you encounter any bugs, which you almost certainly will, please report them on the [issues page](/nextgensparx/quantum-router/issues/).
+If you encounter any bugs, which you almost certainly will, please report them on the issues page.
