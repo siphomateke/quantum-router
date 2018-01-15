@@ -83,6 +83,11 @@ export function getXml(xhrOptions) {
   });
 }
 
+/**
+ *
+ * @param {Element} xml
+ * @return {object}
+ */
 function _recursiveXml2Object(xml) {
   if (xml.children.length > 0) {
     let obj = {};
@@ -108,6 +113,11 @@ function _recursiveXml2Object(xml) {
   }
 }
 
+/**
+ *
+ * @param {Document} xml
+ * @return {object}
+ */
 export function xml2object(xml) {
   let obj = {};
   obj.type = xml.documentElement.tagName;
@@ -170,6 +180,7 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
  *                          e.g 'response' would  expect a <response> tag
  * @return {Promise}
  */
+// TODO: Simplify JSDoc
 function _getAjaxDataDirect(routerUrl, data) {
   let parsedUrl = null;
   try {
@@ -197,6 +208,7 @@ function _getAjaxDataDirect(routerUrl, data) {
  * @param {string} [routerUrl='']
  * @return {Promise<any>}
  */
+// TODO: Simplify JSDoc
 export function getAjaxDataDirect(data, routerUrl='') {
   if (!routerUrl) {
     return routerUtils.getRouterUrl().then((_routerUrl) => {
