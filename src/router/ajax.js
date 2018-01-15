@@ -126,6 +126,17 @@ export function xml2object(xml) {
 }
 
 /**
+ *
+ * @param {Document} xml
+ * @param {boolean} responseMustBeOk
+ * @return {Promise<any>}
+ */
+export function getProcessedXml(xml, responseMustBeOk) {
+  const ret = xml2object(xml);
+  return processXmlResponse(ret, responseMustBeOk);
+}
+
+/**
  * Converts an xml string to an object
  * @param {string} xml
  * @return {object}
@@ -194,8 +205,7 @@ function _getAjaxDataDirect(routerUrl, data) {
     }
   }
   return getXml({url: parsedUrl.origin + '/' + data.url}).then((xml) => {
-    const ret = xml2object(xml);
-    return processXmlResponse(ret, data.responseMustBeOk);
+    return getProcessedXml(xml, data.responseMustBeOk);
   });
 }
 
