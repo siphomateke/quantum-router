@@ -13,6 +13,7 @@ export default {
     getLoginState: admin.getLoginState,
     isLoggedIn: admin.isLoggedIn,
     login: admin.login,
+    loginDirect: admin.loginDirect,
   },
   sms: {
     types: sms.types,

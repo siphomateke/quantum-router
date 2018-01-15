@@ -6,6 +6,7 @@ import {
   getRouterApiErrorName,
 } from './error';
 import * as routerUtils from './utils';
+import jxon from 'jxon';
 
 /**
  * @typedef xhrRequestOptions
@@ -259,5 +260,130 @@ export function saveAjaxData(data) {
   return routerUtils.sendPageMessage(data).then((xml) => {
     let ret = parseXmlString(xml);
     return processXmlResponse(ret, data.responseMustBeOk);
+  });
+}
+
+/**
+ * Gets a page
+ * @param {string} url
+ * @return {Promise<Document>}
+ */
+function getPage(url) {
+  return xhrRequest({
+    url: url, responseType: 'document',
+  }).then((xhr) => {
+    return xhr.response;
+  });
+}
+
+// TODO: Improve token storage
+export let tokens = null;
+
+/**
+ * Gets verification tokens required for making admin requests and logging in
+ * @return {Promise<string[]>}
+ */
+function getRequestVerificationTokens() {
+  return routerUtils.getRouterUrl().then((url) => {
+    return getPage(url+'/'+'html/home.html').then((doc) => {
+      let meta = doc.querySelectorAll('meta[name=csrf_token]');
+      let requestVerificationTokens;
+      if (meta.length > 0) {
+        requestVerificationTokens = [];
+        for (let i=0; i < meta.length; i++) {
+          requestVerificationTokens.push(meta[i].content);
+        }
+        return requestVerificationTokens;
+      } else {
+        return getAjaxDataDirect({
+          url: 'api/webserver/token',
+        }).then((data) => {
+          return [data.token];
+        });
+      }
+    });
+  });
+}
+
+export function refreshTokens() {
+  return getRequestVerificationTokens().then((_tokens) => {
+    tokens = _tokens;
+  });
+}
+
+/**
+ *
+ * @return {Promise<string[]>}
+ */
+export function getTokens() {
+  return new Promise((resolve, reject) => {
+    // TODO: Determine why removing resolve breaks this
+    if (tokens) {
+      return resolve(tokens);
+    } else {
+      return refreshTokens().then(() => {
+        return resolve(tokens);
+      });
+    }
+  });
+}
+
+export function updateTokens(newTokens) {
+  tokens = newTokens;
+}
+
+/**
+ *
+ * @param {object} obj
+ * @return {string}
+ */
+export function objectToXml(obj) {
+  return '<?xml version="1.0" encoding="UTF-8"?>'+jxon.jsToString(obj);
+}
+
+/**
+ *
+ * @param {object} data
+ * @param {string} data.url The url to get ajax data from
+ * @param {object} data.request The POST data to be sent as xml
+ * @param {boolean} [data.responseMustBeOk]
+ * @return {Promise<any>}
+ */
+export function saveAjaxDataDirect(data) {
+  return routerUtils.getRouterUrl().then((routerUrl) => {
+    let parsedUrl = null;
+    try {
+      parsedUrl = new URL(routerUrl);
+    } catch (e) {
+      if (e instanceof TypeError) {
+        return Promise.reject(new RouterControllerError(
+          'invalid_router_url', 'Invalid router page url: '+routerUrl));
+      } else {
+        throw e;
+      }
+    }
+    return getTokens().then((tokens) => {
+      tokens = Object.assign({}, tokens);
+      let headers = {};
+      // TODO: Add encryption and timing headers
+
+      if (tokens.length > 0) {
+        headers['__RequestVerificationToken'] = tokens[0];
+        tokens.splice(0, 1);
+        updateTokens(tokens);
+      }
+
+      // TODO: Include cookie in header
+
+      let xmlString = objectToXml({request: data.request});
+      return getXml({
+        url: parsedUrl.origin + '/' + data.url,
+        method: 'POST',
+        data: xmlString,
+        requestHeaders: headers,
+      }).then((xml) => {
+        return getProcessedXml(xml, data.responseMustBeOk);
+      });
+    });
   });
 }

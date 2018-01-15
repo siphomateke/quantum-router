@@ -3,6 +3,7 @@ import {RouterControllerError} from './error';
 import * as ajax from './ajax';
 import {Utils} from '@/chrome/core';
 import * as routerUtils from './utils';
+import shajs from 'sha.js';
 
 /**
  * @typedef StateLogin
@@ -34,36 +35,31 @@ export function isLoggedIn() {
   });
 }
 
-function getPage(url) {
-  return ajax.request({
-    url: url, responseType: 'document',
-  }).then((xhr) => {
-    return xhr.response;
-  });
+function sha256(str) {
+  return shajs('sha256').update(str).digest('hex');
 }
 
-/**
- * Gets verification tokens required for making admin requests and logging in
- * @return {Promise<string[]>}
- */
-function getRequestVerificationTokens() {
-  return routerUtils.getRouterUrl().then((url) => {
-    return getPage(url+'/'+'html/home.html').then((doc) => {
-      let meta = doc.querySelectorAll('meta[name=csrf_token]');
-      let requestVerificationTokens;
-      if (meta.length > 0) {
-        requestVerificationTokens = [];
-        for (let i=0; i < meta.length; i++) {
-          requestVerificationTokens.push(meta[i].content);
+export function loginDirect() {
+  return getLoginState().then((loginState) => {
+    return Utils.getStorage(['username', 'password']).then((storage) => {
+      return ajax.getTokens().then((tokens) => {
+        let processedPassword;
+        if (tokens.length > 0 && loginState.password_type === 4) {
+          processedPassword = btoa(sha256(storage.username +
+             btoa(sha256(storage.password)) + tokens[0]));
+        } else {
+          processedPassword = btoa(storage.password);
         }
-        return requestVerificationTokens;
-      } else {
-        return ajax.getAjaxDataDirect({
-          url: 'api/webserver/token',
-        }).then((data) => {
-          return [data.token];
+        return ajax.saveAjaxDataDirect({
+          url: 'api/user/login',
+          request: {
+            Username: storage.username,
+            Password: processedPassword,
+            password_type: loginState.password_type,
+          },
+          responseMustBeOk: true,
         });
-      }
+      });
     });
   });
 }
