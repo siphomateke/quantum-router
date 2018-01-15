@@ -4,13 +4,29 @@ import * as ajax from './ajax';
 import {Utils} from '@/chrome/core';
 import * as routerUtils from './utils';
 
+/**
+ * @typedef StateLogin
+ * @property {number} State
+ * @property {string} Username
+ * @property {number} password_type
+ */
+
+/**
+ * @return {Promise<StateLogin>}
+ */
 export function getLoginState() {
-  return ajax.getAjaxDataDirect({url: 'api/user/state-login'});
+  return ajax.getAjaxDataDirect({url: 'api/user/state-login'}).then((data) => {
+    return {
+      State: parseInt(data.State),
+      Username: data.Username,
+      password_type: parseInt(data.password_type),
+    };
+  });
 }
 
 export function isLoggedIn() {
   return getLoginState().then((ret) => {
-    if (parseInt(ret.State) === 0) {
+    if (ret.State === 0) {
       return true;
     } else {
       return false;
