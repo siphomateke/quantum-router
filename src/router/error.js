@@ -51,6 +51,7 @@ export let apiErrorCodes = {
   'xhr_timeout',
   'ussd_timeout',
   'ussd_release_fail',
+  'ajax_no_tokens'
 ];*/
 
 export function getRouterApiErrorName(code) {

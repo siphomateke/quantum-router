@@ -7,6 +7,8 @@ import {
 } from './error';
 import * as routerUtils from './utils';
 import jxon from 'jxon';
+import * as config from './config';
+import NodeRSA from 'node-rsa';
 
 /**
  * @typedef xhrRequestOptions
@@ -68,15 +70,15 @@ export function xhrRequest(options) {
 /**
  *
  * @param {xhrRequestOptions} xhrOptions
- * @return {Promise<Document>}
+ * @return {Promise<XMLHttpRequest>}
  */
-export function getXml(xhrOptions) {
+export function xhrRequestXml(xhrOptions) {
   xhrOptions = Object.assign({
     mimeType: 'application/xml',
   }, xhrOptions);
   return xhrRequest(xhrOptions).then((xhr) => {
     if (xhr.responseXML instanceof Document) {
-      return xhr.responseXML;
+      return xhr;
     } else {
       Promise.reject(new XhrError('xhr_invalid_xml',
         'Expected XML to be instance of Document. Got: ' + xhr.responseXML));
@@ -205,8 +207,17 @@ function _getAjaxDataDirect(routerUrl, data) {
       throw e;
     }
   }
-  return getXml({url: parsedUrl.origin + '/' + data.url}).then((xml) => {
-    return getProcessedXml(xml, data.responseMustBeOk);
+  return getTokens().then((tokens) => {
+    let headers = {};
+    if (tokens.length > 0) {
+      headers['__RequestVerificationToken'] = tokens[0];
+    }
+    return xhrRequestXml({
+      url: parsedUrl.origin + '/' + data.url,
+      requestHeaders: headers,
+    }).then((xhr) => {
+      return getProcessedXml(xhr.responseXML, data.responseMustBeOk);
+    });
   });
 }
 
@@ -341,15 +352,34 @@ export function objectToXml(obj) {
   return '<?xml version="1.0" encoding="UTF-8"?>'+jxon.jsToString(obj);
 }
 
+function doRSAEncrypt(str) {
+  if (str === '') {
+    return '';
+  }
+  return config.getPublicEncryptionKey().then((publicKey) => {
+    let key = new NodeRSA();
+    key.importKey({
+      n: new Buffer(publicKey.n),
+      e: parseInt(publicKey.e, 16),
+    }, 'components-public');
+    let output = key.encrypt(str, 'hex');
+    return output;
+  });
+}
+
 /**
  *
  * @param {object} data
  * @param {string} data.url The url to get ajax data from
  * @param {object} data.request The POST data to be sent as xml
  * @param {boolean} [data.responseMustBeOk]
+ * @param {boolean} [data.enc] Whether the request should be encrypted
+ * @param {boolean} [data.enp]
  * @return {Promise<any>}
  */
+// TODO: Simplify this by splitting up
 export function saveAjaxDataDirect(data) {
+  // TOOD: Shorten this by moving loging to getRouterUrl
   return routerUtils.getRouterUrl().then((routerUrl) => {
     let parsedUrl = null;
     try {
@@ -363,26 +393,60 @@ export function saveAjaxDataDirect(data) {
       }
     }
     return getTokens().then((tokens) => {
-      tokens = Object.assign({}, tokens);
-      let headers = {};
-      // TODO: Add encryption and timing headers
+      // get copy of tokens to work with
+      tokens = tokens.slice();
+      return config.getModuleSwitch().then((moduleSwitch) => {
+        let xmlString = objectToXml({request: data.request});
 
-      if (tokens.length > 0) {
-        headers['__RequestVerificationToken'] = tokens[0];
-        tokens.splice(0, 1);
-        updateTokens(tokens);
-      }
+        let headers = {};
 
-      // TODO: Include cookie in header
+        // TODO: Fix encryption
+        if (data.enc && moduleSwitch.encrypt_enabled) {
+          headers['encrypt_transmit'] = 'encrypt_transmit';
+          xmlString = doRSAEncrypt(xmlString);
+        }
 
-      let xmlString = objectToXml({request: data.request});
-      return getXml({
-        url: parsedUrl.origin + '/' + data.url,
-        method: 'POST',
-        data: xmlString,
-        requestHeaders: headers,
-      }).then((xml) => {
-        return getProcessedXml(xml, data.responseMustBeOk);
+        // TODO: Add 'part_encrypt_transmit' header using data.enpstring
+
+        if (tokens.length > 0) {
+          headers['__RequestVerificationToken'] = tokens[0];
+          tokens.splice(0, 1);
+          updateTokens(tokens);
+        }
+
+        // TODO: Include cookie in header
+
+        return xhrRequestXml({
+          url: parsedUrl.origin + '/' + data.url,
+          method: 'POST',
+          data: xmlString,
+          requestHeaders: headers,
+        }).then((xhr) => {
+          return getProcessedXml(xhr.responseXML, data.responseMustBeOk).then((ret) => {
+            if (data.url === 'api/user/login' && tokens.length > 0) {
+              // login success, empty token list
+              tokens = [];
+              updateTokens(tokens);
+            }
+            return ret;
+          }).then(() => {
+            if (data.url === 'api/user/login') {
+              // get new tokens after login
+              let token1 = xhr.getResponseHeader('__requestverificationtokenone');
+              let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
+              if (token1) {
+                tokens.push(token1);
+                if (token2) {
+                  tokens.push(token2);
+                }
+              } else {
+                return Promise.reject(
+                  new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
+              }
+              updateTokens(tokens);
+            }
+          });
+        });
       });
     });
   });

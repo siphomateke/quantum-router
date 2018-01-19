@@ -58,6 +58,7 @@ export function loginDirect() {
             password_type: loginState.password_type,
           },
           responseMustBeOk: true,
+          enc: false,
         });
       });
     });
