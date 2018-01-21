@@ -50,7 +50,7 @@ export function loginDirect() {
         } else {
           processedPassword = btoa(storage.password);
         }
-        return ajax.saveAjaxDataDirect({
+        return ajax.saveAjaxData({
           url: 'api/user/login',
           request: {
             Username: storage.username,

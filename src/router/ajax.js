@@ -258,23 +258,6 @@ export function getAjaxData(data) {
 }
 
 /**
- *
- * @param {object} data
- * @param {string} data.url The url to get ajax data from
- * @param {object} data.request
- * @param {boolean} [data.responseMustBeOk]
- * @return {Promise}
- */
-export function saveAjaxData(data) {
-  data.type = 'command';
-  data.command = 'saveAjaxData';
-  return routerUtils.sendPageMessage(data).then((xml) => {
-    let ret = parseXmlString(xml);
-    return processXmlResponse(ret, data.responseMustBeOk);
-  });
-}
-
-/**
  * Gets a page
  * @param {string} url
  * @return {Promise<Document>}
@@ -368,17 +351,21 @@ function doRSAEncrypt(str) {
 }
 
 /**
+ * @typedef SaveAjaxDataOptions
+ * @property {string} url The url to get ajax data from
+ * @property {object} request The POST data to be sent as xml
+ * @property {boolean} [responseMustBeOk]
+ * @property {boolean} [enc] Whether the request should be encrypted
+ * @property {boolean} [enp]
+ */
+
+/**
  *
- * @param {object} data
- * @param {string} data.url The url to get ajax data from
- * @param {object} data.request The POST data to be sent as xml
- * @param {boolean} [data.responseMustBeOk]
- * @param {boolean} [data.enc] Whether the request should be encrypted
- * @param {boolean} [data.enp]
+ * @param {SaveAjaxDataOptions} options
  * @return {Promise<any>}
  */
 // TODO: Simplify this by splitting up
-export function saveAjaxDataDirect(data) {
+function _saveAjaxDataDirect(options) {
   // TOOD: Shorten this by moving loging to getRouterUrl
   return routerUtils.getRouterUrl().then((routerUrl) => {
     let parsedUrl = null;
@@ -396,12 +383,12 @@ export function saveAjaxDataDirect(data) {
       // get copy of tokens to work with
       tokens = tokens.slice();
       return config.getModuleSwitch().then((moduleSwitch) => {
-        let xmlString = objectToXml({request: data.request});
+        let xmlString = objectToXml({request: options.request});
 
         let headers = {};
 
         // TODO: Fix encryption
-        if (data.enc && moduleSwitch.encrypt_enabled) {
+        if (options.enc && moduleSwitch.encrypt_enabled) {
           headers['encrypt_transmit'] = 'encrypt_transmit';
           xmlString = doRSAEncrypt(xmlString);
         }
@@ -417,20 +404,20 @@ export function saveAjaxDataDirect(data) {
         // TODO: Include cookie in header
 
         return xhrRequestXml({
-          url: parsedUrl.origin + '/' + data.url,
+          url: parsedUrl.origin + '/' + options.url,
           method: 'POST',
           data: xmlString,
           requestHeaders: headers,
         }).then((xhr) => {
-          return getProcessedXml(xhr.responseXML, data.responseMustBeOk).then((ret) => {
-            if (data.url === 'api/user/login' && tokens.length > 0) {
+          return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
+            if (options.url === 'api/user/login' && tokens.length > 0) {
               // login success, empty token list
               tokens = [];
               updateTokens(tokens);
             }
             return ret;
           }).then(() => {
-            if (data.url === 'api/user/login') {
+            if (options.url === 'api/user/login') {
               // get new tokens after login
               let token1 = xhr.getResponseHeader('__requestverificationtokenone');
               let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
@@ -450,4 +437,32 @@ export function saveAjaxDataDirect(data) {
       });
     });
   });
+}
+
+/**
+ *
+ * @param {SaveAjaxDataOptions} options
+ * @return {Promise}
+ */
+function _saveAjaxDataPage(options) {
+  options.type = 'command';
+  options.command = 'saveAjaxData';
+  return routerUtils.sendPageMessage(options).then((xml) => {
+    let ret = parseXmlString(xml);
+    return processXmlResponse(ret, options.responseMustBeOk);
+  });
+}
+
+/**
+ *
+ * @param {SaveAjaxDataOptions} options
+ * @param {boolean} [direct=true]
+ * @return {Promise}
+ */
+export function saveAjaxData(options, direct=true) {
+  if (direct) {
+    return _saveAjaxDataDirect(options);
+  } else {
+    return _saveAjaxDataPage(options);
+  }
 }
