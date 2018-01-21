@@ -243,17 +243,20 @@ export function getAjaxDataDirect(data, routerUrl='') {
 
 /**
  *
- * @param {object} data
- * @param {string} data.url The url to get ajax data from
- * @param {boolean} [data.responseMustBeOk]
+ * @param {object} options
+ * @param {string} options.url The url to get ajax data from
+ * @param {boolean} [options.responseMustBeOk]
  * @return {Promise}
  */
-export function getAjaxData(data) {
-  data.type = 'command';
-  data.command = 'getAjaxData';
-  return routerUtils.sendPageMessage(data).then((xml) => {
+export function getAjaxData(options) {
+  let message = {
+    type: 'command',
+    command: 'getAjaxData',
+    url: options.url,
+  };
+  return routerUtils.sendPageMessage(message).then((xml) => {
     let ret = parseXmlString(xml);
-    return processXmlResponse(ret, data.responseMustBeOk);
+    return processXmlResponse(ret, options.responseMustBeOk);
   });
 }
 
@@ -445,10 +448,14 @@ function _saveAjaxDataDirect(options) {
  * @return {Promise}
  */
 function _saveAjaxDataPage(options) {
-  options.type = 'command';
-  options.command = 'saveAjaxData';
-  options.options = {enc: options.enc, enp: options.enp};
-  return routerUtils.sendPageMessage(options).then((xml) => {
+  let message = {
+    type: 'command',
+    command: 'saveAjaxData',
+    url: options.url,
+    request: options.request,
+    options: {enc: options.enc, enp: options.enp},
+  };
+  return routerUtils.sendPageMessage(message).then((xml) => {
     let ret = parseXmlString(xml);
     return processXmlResponse(ret, options.responseMustBeOk);
   });
