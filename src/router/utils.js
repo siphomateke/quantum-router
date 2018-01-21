@@ -49,6 +49,26 @@ export function getRouterUrl() {
 
 /**
  *
+ * @param {string} url
+ * @return {URL}
+ */
+export function parseRouterUrl(url) {
+  let parsedUrl = null;
+  try {
+    parsedUrl = new URL(url);
+  } catch (e) {
+    if (e instanceof TypeError) {
+      throw new RouterControllerError(
+        'invalid_router_url', 'Invalid router page url: '+url);
+    } else {
+      throw e;
+    }
+  }
+  return parsedUrl;
+}
+
+/**
+ *
  * @param {number} id The id of the tab to send a message to
  * @param {object} data Data to send to the tab
  * @return {Promise}

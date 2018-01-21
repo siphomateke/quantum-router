@@ -199,17 +199,7 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
  * @return {Promise<any>}
  */
 function _getAjaxDataDirect(routerUrl, options) {
-  let parsedUrl = null;
-  try {
-    parsedUrl = new URL(routerUrl);
-  } catch (e) {
-    if (e instanceof TypeError) {
-      return Promise.reject(new RouterControllerError(
-        'invalid_router_url', 'Invalid router page url: '+routerUrl));
-    } else {
-      throw e;
-    }
-  }
+  let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
   return getTokens().then((tokens) => {
     let headers = {};
     if (tokens.length > 0) {
@@ -269,8 +259,9 @@ export let tokens = null;
  * @return {Promise<string[]>}
  */
 function getRequestVerificationTokens() {
-  return routerUtils.getRouterUrl().then((url) => {
-    return getPage(url+'/'+'html/home.html').then((doc) => {
+  return routerUtils.getRouterUrl().then((_url) => {
+    let url = routerUtils.parseRouterUrl(_url);
+    return getPage(url.origin+'/'+'html/home.html').then((doc) => {
       let meta = doc.querySelectorAll('meta[name=csrf_token]');
       let requestVerificationTokens;
       if (meta.length > 0) {
@@ -359,19 +350,8 @@ function doRSAEncrypt(str) {
 // FIXME: This does not work asynchronously.
 //        The token from the previous request is needed
 function _saveAjaxDataDirect(options) {
-  // TODO: Shorten this by moving loging to getRouterUrl
   return routerUtils.getRouterUrl().then((routerUrl) => {
-    let parsedUrl = null;
-    try {
-      parsedUrl = new URL(routerUrl);
-    } catch (e) {
-      if (e instanceof TypeError) {
-        return Promise.reject(new RouterControllerError(
-          'invalid_router_url', 'Invalid router page url: '+routerUrl));
-      } else {
-        throw e;
-      }
-    }
+    let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
     return getTokens().then((tokens) => {
       // get copy of tokens to work with
       tokens = tokens.slice();
