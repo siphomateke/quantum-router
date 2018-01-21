@@ -236,31 +236,19 @@ export default {
           if (newMode === modes.BASIC) {
             this.changeMode(newMode);
           } else if (newMode === modes.ADMIN) {
-            router.utils.getTab().then((tab) => {
-              return router.admin.isLoggedIn().then((loggedIn) => {
-                if (!loggedIn) {
-                  router.admin.login().then(() => {
-                    this.changeMode(newMode);
-                  }).catch((e) => {
-                    this.openConfirmDialog({
-                      message: this.$i18n('router_error_logging_in'),
-                      confirmText: this.$i18n('dialog_retry'),
-                      onConfirm: () => this.tryChangeMode(newMode),
-                    });
-                  });
-                } else {
+            return router.admin.isLoggedIn().then((loggedIn) => {
+              if (!loggedIn) {
+                router.admin.login().then(() => {
                   this.changeMode(newMode);
-                }
-              });
-            }).catch((e) => {
-              if (e instanceof RouterControllerError) {
-                if (e.code === 'tabs_not_found') {
+                }).catch((e) => {
                   this.openConfirmDialog({
-                    message: this.$i18n('router_error_no_admin'),
+                    message: this.$i18n('router_error_logging_in'),
                     confirmText: this.$i18n('dialog_retry'),
                     onConfirm: () => this.tryChangeMode(newMode),
                   });
-                }
+                });
+              } else {
+                this.changeMode(newMode);
               }
             });
           }
@@ -301,35 +289,21 @@ export default {
     checkMode() {
       this.loading = true;
       router.utils.ping().then(() => {
-        router.utils.getTab().then((tab) => {
-          return router.admin.isLoggedIn().then((loggedIn) => {
-            if (!loggedIn) {
-              router.admin.login().then(() => {
-                this.changeMode(modes.ADMIN);
-              }).catch((e) => {
-                this.openConfirmDialog({
-                  message: this.$i18n('router_error_logging_in'),
-                  confirmText: this.$i18n('dialog_retry'),
-                  cancelText: this.$i18n('dialog_switch_to_basic'),
-                  onConfirm: () => this.checkMode(),
-                  onCancel: () => this.changeMode(modes.BASIC),
-                });
-              });
-            } else {
+        return router.admin.isLoggedIn().then((loggedIn) => {
+          if (!loggedIn) {
+            router.admin.login().then(() => {
               this.changeMode(modes.ADMIN);
-            }
-          });
-        }).catch((e) => {
-          if (e instanceof RouterControllerError) {
-            if (e.code === 'tabs_not_found') {
+            }).catch((e) => {
               this.openConfirmDialog({
-                message: this.$i18n('router_error_no_admin'),
+                message: this.$i18n('router_error_logging_in'),
                 confirmText: this.$i18n('dialog_retry'),
                 cancelText: this.$i18n('dialog_switch_to_basic'),
                 onConfirm: () => this.checkMode(),
                 onCancel: () => this.changeMode(modes.BASIC),
               });
-            }
+            });
+          } else {
+            this.changeMode(modes.ADMIN);
           }
         });
       }).catch((e) => {
