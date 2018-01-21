@@ -356,8 +356,10 @@ function doRSAEncrypt(str) {
  * @return {Promise<any>}
  */
 // TODO: Simplify this by splitting up
+// FIXME: This does not work asynchronously.
+//        The token from the previous request is needed
 function _saveAjaxDataDirect(options) {
-  // TOOD: Shorten this by moving loging to getRouterUrl
+  // TODO: Shorten this by moving loging to getRouterUrl
   return routerUtils.getRouterUrl().then((routerUrl) => {
     let parsedUrl = null;
     try {
@@ -407,22 +409,24 @@ function _saveAjaxDataDirect(options) {
               updateTokens(tokens);
             }
             return ret;
-          }).then(() => {
-            if (options.url === 'api/user/login') {
-              // get new tokens after login
-              let token1 = xhr.getResponseHeader('__requestverificationtokenone');
-              let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
-              if (token1) {
-                tokens.push(token1);
-                if (token2) {
-                  tokens.push(token2);
-                }
-              } else {
-                return Promise.reject(
-                  new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
+          }).finally((ret) => {
+            // get new tokens
+            let token = xhr.getResponseHeader('__requestverificationtoken');
+            let token1 = xhr.getResponseHeader('__requestverificationtokenone');
+            let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
+            if (token1) {
+              tokens.push(token1);
+              if (token2) {
+                tokens.push(token2);
               }
-              updateTokens(tokens);
+            } else if (token) {
+              tokens.push(token);
+            } else {
+              return Promise.reject(
+                new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
             }
+            updateTokens(tokens);
+            return ret;
           });
         });
       });
