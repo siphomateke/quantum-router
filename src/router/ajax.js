@@ -374,8 +374,6 @@ function _saveAjaxDataDirect(options) {
           updateTokens(tokens);
         }
 
-        // TODO: Include cookie in header
-
         return xhrRequestXml({
           url: parsedUrl.origin + '/' + options.url,
           method: 'POST',
