@@ -43,7 +43,7 @@ export function parse(message) {
  * @return {Promise<boolean>}
  */
 export function releaseUssd() {
-  return ajax.getAjaxDataDirect({url: 'api/ussd/release'}).then((ret) => {
+  return ajax.getAjaxData({url: 'api/ussd/release'}).then((ret) => {
     if (ajax.isAjaxReturnOk(ret)) {
       return true;
     } else {
@@ -63,7 +63,7 @@ export function releaseUssd() {
  * @return {Promise<UssdResult>}
  */
 export function getUssdResult() {
-  return ajax.getAjaxDataDirect({
+  return ajax.getAjaxData({
     url: 'api/ussd/get',
   }).catch((err) => {
     if (err instanceof RouterApiError) {
@@ -140,7 +140,7 @@ export function getUssdConfig(postpaid=false) {
   let url = 'config/ussd/';
   url += postpaid ? 'postpaid' : 'prepaid';
   url += 'ussd.xml';
-  return ajax.getAjaxDataDirect({
+  return ajax.getAjaxData({
     url: url,
   });
 }

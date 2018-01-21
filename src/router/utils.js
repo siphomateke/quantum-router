@@ -94,11 +94,11 @@ export function sendPageMessage(data) {
  */
 export function ping(routerUrl='') {
   if (routerUrl) {
-    return ajax.getAjaxDataDirect({
+    return ajax.getAjaxData({
       url: 'config/global/config.xml',
     }, routerUrl);
   } else {
-    return ajax.getAjaxDataDirect({url: 'config/global/config.xml'});
+    return ajax.getAjaxData({url: 'config/global/config.xml'});
   }
 }
 
@@ -121,7 +121,7 @@ export function ping(routerUrl='') {
  * @return {Promise<TrafficStatistics>}
  */
 export function getTrafficStatistics() {
-  return ajax.getAjaxDataDirect({
+  return ajax.getAjaxData({
     url: 'api/monitoring/traffic-statistics',
   });
 }

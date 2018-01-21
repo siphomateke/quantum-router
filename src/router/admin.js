@@ -16,7 +16,7 @@ import shajs from 'sha.js';
  * @return {Promise<StateLogin>}
  */
 export function getLoginState() {
-  return ajax.getAjaxDataDirect({url: 'api/user/state-login'}).then((data) => {
+  return ajax.getAjaxData({url: 'api/user/state-login'}).then((data) => {
     return {
       State: parseInt(data.State),
       Username: data.Username,

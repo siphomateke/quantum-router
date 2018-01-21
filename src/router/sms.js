@@ -158,7 +158,7 @@ export function parse(message) {
  * @return {Promise<SmsConfig>}
  */
 export function getSmsConfig() {
-  return ajax.getAjaxDataDirect({
+  return ajax.getAjaxData({
     url: 'config/sms/config.xml',
   });
 }
@@ -185,7 +185,7 @@ export function getSmsConfig() {
  * @return {Promise<SmsCount>}
  */
 export async function getSmsCount() {
-  return ajax.getAjaxDataDirect({url: 'api/sms/sms-count'});
+  return ajax.getAjaxData({url: 'api/sms/sms-count'});
 }
 
 /**
@@ -402,7 +402,7 @@ export function saveSms(options) {
  * @return {Promise<SmsSendStatus>}
  */
 export function getSmsSendStatus() {
-  return ajax.getAjaxDataDirect({
+  return ajax.getAjaxData({
     url: 'api/sms/send-status',
   });
 }

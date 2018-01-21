@@ -71,7 +71,7 @@ let config = new RouterConfig();
   * @return {Promise<ConfigModuleSwitch>}
   */
 function _getModuleSwitch() {
-  return ajax.getAjaxDataDirect({url: 'api/global/module-switch'});
+  return ajax.getAjaxData({url: 'api/global/module-switch'});
 }
 
 /**
@@ -147,7 +147,7 @@ export function getModuleSwitch() {
  * @return {Promise<ApiWebserverPublicKey>}
  */
 function _getPublicEncryptionKey() {
-  return ajax.getAjaxDataDirect({url: 'api/webserver/publickey'});
+  return ajax.getAjaxData({url: 'api/webserver/publickey'});
 }
 
 export function getPublicEncryptionKey() {

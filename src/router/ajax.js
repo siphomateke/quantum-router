@@ -188,14 +188,17 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
 }
 
 /**
- * @param {string} routerUrl
- * @param {object} data
- * @param {string} data.url The url to get ajax data from
- *                          e.g 'response' would  expect a <response> tag
- * @return {Promise}
+ * @typedef GetAjaxDataOptions
+ * @property {string} url The url to get ajax data from
+ * @property {boolean} [responseMustBeOk]
  */
-// TODO: Simplify JSDoc
-function _getAjaxDataDirect(routerUrl, data) {
+
+/**
+ * @param {string} routerUrl
+ * @param {GetAjaxDataOptions} options
+ * @return {Promise<any>}
+ */
+function _getAjaxDataDirect(routerUrl, options) {
   let parsedUrl = null;
   try {
     parsedUrl = new URL(routerUrl);
@@ -213,51 +216,36 @@ function _getAjaxDataDirect(routerUrl, data) {
       headers['__RequestVerificationToken'] = tokens[0];
     }
     return xhrRequestXml({
-      url: parsedUrl.origin + '/' + data.url,
+      url: parsedUrl.origin + '/' + options.url,
       requestHeaders: headers,
     }).then((xhr) => {
-      return getProcessedXml(xhr.responseXML, data.responseMustBeOk);
+      return getProcessedXml(xhr.responseXML, options.responseMustBeOk);
     });
   });
 }
 
 /**
  *
- * @param {object} data
- * @param {string} data.url The url to get ajax data from
- *                          e.g 'response' would  expect a <response> tag
- * @param {boolean} [data.responseMustBeOk]
- * @param {string} [routerUrl='']
+ * @param {GetAjaxDataOptions} options
+ * @param {boolean} [direct=true]
  * @return {Promise<any>}
  */
-// TODO: Simplify JSDoc
-export function getAjaxDataDirect(data, routerUrl='') {
-  if (!routerUrl) {
-    return routerUtils.getRouterUrl().then((_routerUrl) => {
-      return _getAjaxDataDirect(_routerUrl, data);
+export function getAjaxData(options, direct=true) {
+  if (direct) {
+    return routerUtils.getRouterUrl().then((routerUrl) => {
+      return _getAjaxDataDirect(routerUrl, options);
     });
   } else {
-    return _getAjaxDataDirect(routerUrl, data);
+    let message = {
+      type: 'command',
+      command: 'getAjaxData',
+      url: options.url,
+    };
+    return routerUtils.sendPageMessage(message).then((xml) => {
+      let ret = parseXmlString(xml);
+      return processXmlResponse(ret, options.responseMustBeOk);
+    });
   }
-}
-
-/**
- *
- * @param {object} options
- * @param {string} options.url The url to get ajax data from
- * @param {boolean} [options.responseMustBeOk]
- * @return {Promise}
- */
-export function getAjaxData(options) {
-  let message = {
-    type: 'command',
-    command: 'getAjaxData',
-    url: options.url,
-  };
-  return routerUtils.sendPageMessage(message).then((xml) => {
-    let ret = parseXmlString(xml);
-    return processXmlResponse(ret, options.responseMustBeOk);
-  });
 }
 
 /**
@@ -292,7 +280,7 @@ function getRequestVerificationTokens() {
         }
         return requestVerificationTokens;
       } else {
-        return getAjaxDataDirect({
+        return getAjaxData({
           url: 'api/webserver/token',
         }).then((data) => {
           return [data.token];
