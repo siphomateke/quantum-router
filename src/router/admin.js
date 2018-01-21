@@ -39,7 +39,7 @@ function sha256(str) {
   return shajs('sha256').update(str).digest('hex');
 }
 
-export function loginDirect() {
+function loginDirect() {
   return getLoginState().then((loginState) => {
     return Utils.getStorage(['username', 'password']).then((storage) => {
       return ajax.getTokens().then((tokens) => {
@@ -65,7 +65,7 @@ export function loginDirect() {
   });
 }
 
-export function login() {
+function loginIndirect() {
   return Utils.getStorage(['username', 'password']).then((items) => {
     return routerUtils.sendPageMessage({
       type: 'command',
@@ -83,4 +83,12 @@ export function login() {
       }
     });
   });
+}
+
+export function login(direct=true) {
+  if (direct) {
+    return loginDirect();
+  } else {
+    return loginIndirect();
+  }
 }
