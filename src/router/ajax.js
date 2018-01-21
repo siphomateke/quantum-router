@@ -447,6 +447,7 @@ function _saveAjaxDataDirect(options) {
 function _saveAjaxDataPage(options) {
   options.type = 'command';
   options.command = 'saveAjaxData';
+  options.options = {enc: options.enc, enp: options.enp};
   return routerUtils.sendPageMessage(options).then((xml) => {
     let ret = parseXmlString(xml);
     return processXmlResponse(ret, options.responseMustBeOk);
