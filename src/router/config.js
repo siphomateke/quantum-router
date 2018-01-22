@@ -159,6 +159,6 @@ export function getPublicEncryptionKey() {
       return config.encryption.publicKey;
     });
   } else {
-    return config.encryption.publicKey;
+    return Promise.resolve(config.encryption.publicKey);
   }
 }
