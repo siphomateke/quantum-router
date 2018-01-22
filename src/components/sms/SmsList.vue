@@ -68,6 +68,9 @@ export default {
     };
   },
   watch: {
+    checkedRows(val) {
+      this.internalCheckedRows = val;
+    },
     internalCheckedRows(val) {
       this.$emit('update:checkedRows', val);
     },
