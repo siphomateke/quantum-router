@@ -2,6 +2,13 @@
   <div class='sms-box'>
     <br>
     <div class="field is-grouped">
+      <sms-action
+        :label="this.$i18n('sms_action_clear_checked')"
+        icon="times"
+        type="is-danger"
+        @click="clearChecked"
+        :disabled="this.checkedRows.length === 0">
+      </sms-action>
       <sms-action :label="this.$i18n('sms_action_new_message')" icon="plus" type="is-primary" @click="newMessage"></sms-action>
       <sms-action :label="this.$i18n('sms_action_delete')" icon="trash" type="is-danger"
       :disabled="this.checkedRows.length === 0" @click="deleteMessages"></sms-action>
@@ -175,6 +182,9 @@ export default {
           });
         }
       }
+    },
+    clearChecked() {
+      this.checkedRows = [];
     },
   },
 };

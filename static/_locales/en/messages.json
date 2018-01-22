@@ -38,6 +38,7 @@
   "sms_admin_only": {
     "message": "You must have administrator access to view SMS messages"
   },
+  "sms_action_clear_checked": {"message": "Clear checked"},
   "sms_action_new_message": {"message": "New message"},
   "sms_action_delete": {"message": "Delete"},
   "sms_action_import": {"message": "Import"},
