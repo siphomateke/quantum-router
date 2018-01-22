@@ -2,19 +2,19 @@
   <div class='sms-box'>
     <br>
     <div class="field is-grouped">
-      <sms-action
+      <sms-box-button
         :label="this.$i18n('sms_action_clear_checked')"
         icon="times"
         type="is-danger"
         @click="clearChecked"
         :disabled="this.checkedRows.length === 0">
-      </sms-action>
-      <sms-action :label="this.$i18n('sms_action_new_message')" icon="plus" type="is-primary" @click="newMessage"></sms-action>
-      <sms-action :label="this.$i18n('sms_action_delete')" icon="trash" type="is-danger"
-      :disabled="this.checkedRows.length === 0" @click="deleteMessages"></sms-action>
-      <sms-action :label="this.$i18n('sms_action_import')" icon="upload" :disabled="true"></sms-action>
-      <sms-action v-if="isInbox" :label="this.$i18n('sms_action_mark_as_read')"
-      :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-action>
+      </sms-box-button>
+      <sms-box-button :label="this.$i18n('sms_action_new_message')" icon="plus" type="is-primary" @click="newMessage"></sms-box-button>
+      <sms-box-button :label="this.$i18n('sms_action_delete')" icon="trash" type="is-danger"
+      :disabled="this.checkedRows.length === 0" @click="deleteMessages"></sms-box-button>
+      <sms-box-button :label="this.$i18n('sms_action_import')" icon="upload" :disabled="true"></sms-box-button>
+      <sms-box-button v-if="isInbox" :label="this.$i18n('sms_action_mark_as_read')"
+      :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-box-button>
     </div>
     <b-message type="is-info">
       <!-- TODO: Improve the way checked rows are displayed.
@@ -46,7 +46,7 @@
 
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
-import SmsAction from '@/components/sms/SmsAction.vue';
+import SmsBoxButton from '@/components/sms/SmsBoxButton.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
 import router from '@/router';
 import moment from 'moment';
@@ -57,7 +57,7 @@ export default {
   name: 'sms-box',
   components: {
     SmsList,
-    SmsAction,
+    SmsBoxButton,
     SmsDialog,
   },
   props: {

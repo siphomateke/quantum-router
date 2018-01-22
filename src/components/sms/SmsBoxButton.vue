@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'sms-action',
+  name: 'sms-box-button',
   props: {
     'type': String,
     'icon': String,
