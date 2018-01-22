@@ -18,7 +18,6 @@ export default {
     types: sms.types,
     boxTypes: sms.boxTypes,
     parse: sms.parse,
-    getSmsConfig: sms.getSmsConfig,
     getSmsCount: sms.getSmsCount,
     getSmsList: sms.getSmsList,
     getFullSmsList: sms.getFullSmsList,
