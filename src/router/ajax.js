@@ -9,6 +9,7 @@ import * as routerUtils from './utils';
 import jxon from 'jxon';
 import * as config from './config';
 import NodeRSA from 'node-rsa';
+import {Queue} from '@/chrome/core';
 
 /**
  * @typedef xhrRequestOptions
@@ -332,6 +333,8 @@ function doRSAEncrypt(str) {
   });
 }
 
+let ajaxQueue = new Queue();
+
 /**
  * @typedef SaveAjaxDataOptions
  * @property {string} url The url to get ajax data from
@@ -347,66 +350,72 @@ function doRSAEncrypt(str) {
  * @return {Promise<any>}
  */
 // TODO: Simplify this by splitting up
-// FIXME: This does not work asynchronously.
-//        The token from the previous request is needed
 function _saveAjaxDataDirect(options) {
-  return routerUtils.getRouterUrl().then((routerUrl) => {
-    let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
-    return getTokens().then((tokens) => {
-      // get copy of tokens to work with
-      tokens = tokens.slice();
-      return config.getModuleSwitch().then((moduleSwitch) => {
-        let xmlString = objectToXml({request: options.request});
+  return new Promise((resolve, reject) => {
+    ajaxQueue.add(() => {
+      return routerUtils.getRouterUrl().then((routerUrl) => {
+        let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
+        return getTokens().then((tokens) => {
+        // get copy of tokens to work with
+          tokens = tokens.slice();
+          return config.getModuleSwitch().then((moduleSwitch) => {
+            let xmlString = objectToXml({request: options.request});
 
-        let headers = {};
+            let headers = {};
 
-        // TODO: Fix encryption
-        if (options.enc && moduleSwitch.encrypt_enabled) {
-          headers['encrypt_transmit'] = 'encrypt_transmit';
-          xmlString = doRSAEncrypt(xmlString);
-        }
+            // TODO: Fix encryption
+            if (options.enc && moduleSwitch.encrypt_enabled) {
+              headers['encrypt_transmit'] = 'encrypt_transmit';
+              xmlString = doRSAEncrypt(xmlString);
+            }
 
-        // TODO: Add 'part_encrypt_transmit' header using data.enpstring
+            // TODO: Add 'part_encrypt_transmit' header using data.enpstring
 
-        if (tokens.length > 0) {
-          headers['__RequestVerificationToken'] = tokens[0];
-          tokens.splice(0, 1);
-          updateTokens(tokens);
-        }
-
-        return xhrRequestXml({
-          url: parsedUrl.origin + '/' + options.url,
-          method: 'POST',
-          data: xmlString,
-          requestHeaders: headers,
-        }).then((xhr) => {
-          return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
-            if (options.url === 'api/user/login' && tokens.length > 0) {
-              // login success, empty token list
-              tokens = [];
+            if (tokens.length > 0) {
+              headers['__RequestVerificationToken'] = tokens[0];
+              tokens.splice(0, 1);
               updateTokens(tokens);
             }
-            return ret;
-          }).finally((ret) => {
-            // get new tokens
-            let token = xhr.getResponseHeader('__requestverificationtoken');
-            let token1 = xhr.getResponseHeader('__requestverificationtokenone');
-            let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
-            if (token1) {
-              tokens.push(token1);
-              if (token2) {
-                tokens.push(token2);
-              }
-            } else if (token) {
-              tokens.push(token);
-            } else {
-              return Promise.reject(
-                new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
-            }
-            updateTokens(tokens);
-            return ret;
+
+            return xhrRequestXml({
+              url: parsedUrl.origin + '/' + options.url,
+              method: 'POST',
+              data: xmlString,
+              requestHeaders: headers,
+            }).then((xhr) => {
+              return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
+                if (options.url === 'api/user/login' && tokens.length > 0) {
+                // login success, empty token list
+                  tokens = [];
+                  updateTokens(tokens);
+                }
+                return ret;
+              }).finally((ret) => {
+              // get new tokens
+                let token = xhr.getResponseHeader('__requestverificationtoken');
+                let token1 = xhr.getResponseHeader('__requestverificationtokenone');
+                let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
+                if (token1) {
+                  tokens.push(token1);
+                  if (token2) {
+                    tokens.push(token2);
+                  }
+                } else if (token) {
+                  tokens.push(token);
+                } else {
+                  return Promise.reject(
+                    new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
+                }
+                updateTokens(tokens);
+                return ret;
+              });
+            });
           });
         });
+      }).then((ret) => {
+        resolve(ret);
+      }).catch((err) => {
+        reject(err);
       });
     });
   });

@@ -302,3 +302,44 @@ export class Utils {
     });
   }
 }
+
+/**
+ * A promise based queue
+ */
+export class Queue {
+  constructor() {
+    this.list = [];
+  }
+  /**
+   * Runs a particular item in the queue
+   * @param {number} idx
+   */
+  _runItem(idx) {
+    this.list[idx]().finally(() => {
+      this._onComplete();
+    });
+  }
+  /**
+   * Called when a promise in the queue is complete
+   */
+  _onComplete() {
+    // Remove the completed item from the queue
+    if (this.list.length > 0) {
+      this.list.splice(0, 1);
+    }
+    // If there are is another item in the queue, run it
+    if (this.list.length > 0) {
+      this._runItem(0);
+    }
+  }
+  /**
+   * Adds a new promise to the queue
+   * @param {function} func A function which returns a promise
+   */
+  add(func) {
+    this.list.push(func);
+    if (this.list.length === 1) {
+      this._runItem(0);
+    }
+  }
+}
