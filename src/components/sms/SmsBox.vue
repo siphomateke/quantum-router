@@ -6,7 +6,7 @@
       <sms-action :label="this.$i18n('sms_action_delete')" icon="trash" type="is-danger"
       :disabled="this.checkedRows.length === 0" @click="deleteMessages"></sms-action>
       <sms-action :label="this.$i18n('sms_action_import')" icon="upload" :disabled="true"></sms-action>
-      <sms-action :label="this.$i18n('sms_action_mark_as_read')"
+      <sms-action v-if="isInbox" :label="this.$i18n('sms_action_mark_as_read')"
       :disabled="this.checkedRows.length === 0" @click="markMessagesAsRead"></sms-action>
     </div>
     <b-message type="is-info">
@@ -27,6 +27,7 @@
     :page="page"
     :per-page="perPage"
     :sort-order="sortOrder"
+    :show-read-status="isInbox"
     @page-change="onPageChange"
     @sort="onSort">
     </sms-list>
@@ -73,6 +74,9 @@ export default {
     },
     adminMode() {
       return this.mode === modes.ADMIN;
+    },
+    isInbox() {
+      return this.boxType === router.sms.boxTypes.INBOX;
     },
   },
   watch: {
@@ -122,12 +126,17 @@ export default {
 
           for (let m of messages) {
             let parsed = this.parseMessage(m.Content);
+            let smsReadStatus = parseInt(m.Smstat);
+            let read = null;
+            if (smsReadStatus === 0 || smsReadStatus === 1) {
+              read = smsReadStatus === 1;
+            }
             this.list.push({
               index: parseInt(m.Index),
               number: m.Phone,
               date: m.Date,
               content: m.Content,
-              read: parseInt(m.Smstat) === 1,
+              read: read,
               parsed: parsed,
             });
           }
@@ -158,12 +167,13 @@ export default {
     },
     markMessagesAsRead() {
       // TODO: Mark sms as read indicator
-      let indices = this.checkedRows.map((row) => row.index);
-      for (let idx of indices) {
-        router.sms.setSmsAsRead(idx).then(() => {
-          let row = this.list.find((row) => row.index === idx);
-          row.read = true;
-        });
+      for (let checkedRow of this.checkedRows) {
+        if (this.isInbox && checkedRow.read === false) {
+          router.sms.setSmsAsRead(checkedRow.index).then(() => {
+            let row = this.list.find((row) => row.index === checkedRow.index);
+            row.read = true;
+          });
+        }
       }
     },
   },

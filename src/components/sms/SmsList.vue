@@ -23,7 +23,8 @@
     @sort="onSort">
       <template slot-scope="props">
           <b-table-column field="read">
-            <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
+            <b-icon v-if="typeof props.row.read === 'boolean' && showReadStatus"
+            :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
           </b-table-column>
           <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
           <b-table-column field="content" :label="$i18n('sms_message_content')">
@@ -59,6 +60,7 @@ export default {
     'per-page': Number,
     'sort-order': String,
     'page': Number,
+    'showReadStatus': Boolean,
   },
   data() {
     return {
