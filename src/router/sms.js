@@ -214,8 +214,13 @@ export function getSmsList(options) {
 }
 
 /**
+ * @typedef FilterSmsListOption
+ * @property {number} minDate
+ */
+
+/**
  *
- * @param {FullSmsListOptions} options
+ * @param {FilterSmsListOption} options
  * @param {Message[]} list
  * @return {Message[]}
  */
@@ -234,43 +239,55 @@ function _filterSmsList(options, list) {
 }
 
 /**
+ * @typedef FullSmsListOptions
+ * @property {number} total
+ * @property {number} [minDate]
+ * @property {FilterSmsListOption} [filter]
+ */
+
+/**
  *
  * @param {FullSmsListOptions} options
  * @param {SmsListOptions} smsListOptions
+ * @param {Message[]} list
  * @param {number} perPage
  * @param {number} total
  * @param {number} [page=1]
- * @param {Message[]} list
  * @return {Promise<Message[]>}
  */
 function _getFullSmsListRecursive(
-  options, smsListOptions, perPage, total, page=1, list) {
+  options, smsListOptions, list, perPage, total, page=1) {
   smsListOptions.perPage = perPage;
   smsListOptions.page = page;
   return getSmsList(smsListOptions).then((currentList) => {
     page++;
-    let filteredList = _filterSmsList(options, currentList);
-    // Add all messages to list
-    if (!list) {
-      list = filteredList;
+
+    if (options.filter) {
+      list = list.concat(_filterSmsList(options.filter, currentList));
     } else {
-      list = list.concat(filteredList);
+      list = list.concat(currentList);
     }
+
+    // If a minimum date is required and the order is descending,
+    if (options.minDate && smsListOptions.sortOrder === 'desc') {
+      let dateFilteredList = _filterSmsList({minDate: options.minDate}, currentList);
+      // If the date filtered list does not match the list then
+      // this is the last page we should check as anything later
+      // will be older than the minimum date
+      if (dateFilteredList.length !== currentList.length) {
+        return list;
+      }
+    }
+
     // If we have not reached the end of the messages
     if (((page - 1) * perPage) < total) {
       return _getFullSmsListRecursive(
-        options, smsListOptions, perPage, total, page, list);
+        options, smsListOptions, list, perPage, total, page);
     } else {
       return list;
     }
   });
 }
-
-/**
- * @typedef FullSmsListOptions
- * @property {number} total
- * @property {number} [minDate]
- */
 
 /**
  *
@@ -285,12 +302,17 @@ export function getFullSmsList(options, smsListOptions={}) {
 
   options = Object.assign({
     total: 0,
+    filter: null,
   }, options);
+
+  if (options.minDate && smsListOptions.sortOrder !== 'desc') {
+    throw new Error('Invalid arguments for getFullSmsList; If a minimum date is passed, then the sorting order must be descending.');
+  }
 
   if (options.total > 0) {
     return config.getSmsConfig().then((smsConfig) => {
       return _getFullSmsListRecursive(
-        options, smsListOptions, smsConfig.pagesize, options.total
+        options, smsListOptions, [], smsConfig.pagesize, options.total
       ).then((list) => {
         return list;
       });
