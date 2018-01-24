@@ -2,6 +2,7 @@
   <div class='sms-box'>
     <br>
     <div class="field is-grouped">
+      <!-- TODO: Make action buttons show loading progress -->
       <sms-box-button
         :label="this.$i18n('sms_action_clear_checked')"
         icon="times" type="is-danger"
@@ -201,7 +202,7 @@ export default {
             let row = this.list.find((row) => row.index === checkedRow.index);
             // Row could be undefined if the checked row is on another page
             if (row) {
-            row.read = true;
+              row.read = true;
             }
             successful += 1;
           }));
