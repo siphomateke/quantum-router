@@ -301,10 +301,12 @@ export function getTokens() {
   return new Promise((resolve, reject) => {
     // TODO: Determine why removing resolve breaks this
     if (tokens) {
-      return resolve(tokens);
+      resolve(tokens);
     } else {
       return refreshTokens().then(() => {
-        return resolve(tokens);
+        resolve(tokens);
+      }).catch((e) => {
+        reject(e);
       });
     }
   });
