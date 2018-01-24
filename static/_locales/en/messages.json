@@ -82,6 +82,21 @@
   "sms_dialog_action_send": {"message": "Send"},
   "sms_dialog_action_save": {"message": "Save as draft"},
   "sms_dialog_action_cancel": {"message": "Cancel"},
+  "sms_mark_read_partial_error":{
+    "message": "Error: Could only mark $SUCCESSFUL$/$TOTAL$ message(s) as read",
+    "description": "Shown when there is an eror marking sms as read",
+    "placeholders": {
+      "successful": {
+        "content": "$1",
+        "example": "15"
+      },
+      "total": {
+        "content": "$2",
+        "example": "20"
+      }
+    }
+  },
+  "sms_mark_read_error": {"message": "Error marking messages as read."},
 
   "services_ussd_command" : {
     "message": "USSD Command"

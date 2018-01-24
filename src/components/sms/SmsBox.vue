@@ -193,15 +193,39 @@ export default {
       this.refresh();
     },
     markMessagesAsRead() {
-      // TODO: Mark sms as read indicator
+      let promises = [];
+      let successful = 0;
       for (let checkedRow of this.checkedRows) {
         if (this.isInbox && checkedRow.read === false) {
-          router.sms.setSmsAsRead(checkedRow.index).then(() => {
+          promises.push(router.sms.setSmsAsRead(checkedRow.index).then(() => {
             let row = this.list.find((row) => row.index === checkedRow.index);
+            // Row could be undefined if the checked row is on another page
+            if (row) {
             row.read = true;
-          });
+            }
+            successful += 1;
+          }));
         }
       }
+      Promise.all(promises).then(() => {
+        this.$toast.open({
+          message: 'Marked '+successful+' message(s) as read',
+          type: 'is-success',
+        });
+      }).catch((e) => {
+        this.handleError(e);
+        if (successful > 0) {
+          this.$toast.open({
+            message: this.$i18n('sms_mark_read_partial_error', successful, this.checkedRows.length),
+            type: 'is-danger',
+          });
+        } else {
+          this.$toast.open({
+            message: this.$i18n('sms_mark_read_error'),
+            type: 'is-danger',
+          });
+        }
+      });
     },
     clearChecked() {
       this.checkedRows = [];
