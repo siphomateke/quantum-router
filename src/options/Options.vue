@@ -65,11 +65,11 @@ export default {
         router.utils.ping(this.routerUrl.value).then(() => {
           this.routerUrl.type = 'is-success';
           this.routerUrl.message = '';
-          return resolve(true);
+          resolve(true);
         }).catch(() => {
           this.routerUrl.type = 'is-danger';
           this.routerUrl.message = this.$i18n('options_error_ping');
-          return reject(false);
+          reject(false);
         }).finally(() => {
           this.pinging = false;
         });
@@ -91,7 +91,9 @@ export default {
     },
     onBlurRouterUrl(val) {
       this.formLoading = true;
-      this.testRouterUrl().finally(() => {
+      this.testRouterUrl().then(() => {
+        this.formLoading = false;
+      }).catch(() => {
         this.formLoading = false;
       });
     },
