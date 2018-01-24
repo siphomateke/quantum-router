@@ -4,7 +4,7 @@
     :label="'options_field_router_url' | $i18n"
     :type="routerUrl.type"
     :message="routerUrl.message">
-        <b-input v-model="routerUrl.value" type="url" :loading="pinging"></b-input>
+        <b-input v-model="routerUrl.value" type="url" :loading="pinging" @blur="onBlurRouterUrl"></b-input>
     </b-field>
     <b-field :label="'options_field_admin_username' | $i18n">
         <b-input v-model="username" type="text"></b-input>
@@ -65,35 +65,35 @@ export default {
         router.utils.ping(this.routerUrl.value).then(() => {
           this.routerUrl.type = 'is-success';
           this.routerUrl.message = '';
-          this.pinging = false;
           return resolve(true);
         }).catch(() => {
           this.routerUrl.type = 'is-danger';
           this.routerUrl.message = this.$i18n('options_error_ping');
-          this.pinging = false;
           return reject(false);
+        }).finally(() => {
+          this.pinging = false;
         });
       });
     },
     save() {
       if (this.$refs.form.checkValidity()) {
-        this.formLoading = true;
-        this.testRouterUrl().then(() => {
-          this.formLoading = false;
-          chrome.storage.sync.set({
-            routerUrl: this.routerUrl.value,
-            username: this.username,
-            password: this.password,
-          }, () => {
-            window.close();
-          });
-        }).catch(() => {
-          this.formLoading = false;
+        chrome.storage.sync.set({
+          routerUrl: this.routerUrl.value,
+          username: this.username,
+          password: this.password,
+        }, () => {
+          window.close();
         });
       }
     },
     cancel() {
       window.close();
+    },
+    onBlurRouterUrl(val) {
+      this.formLoading = true;
+      this.testRouterUrl().finally(() => {
+        this.formLoading = false;
+      });
     },
   },
 };
