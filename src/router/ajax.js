@@ -227,9 +227,9 @@ export function getAjaxData(options, direct=true) {
     if (options.routerUrl) {
       return _getAjaxDataDirect(options.routerUrl, options);
     } else {
-    return routerUtils.getRouterUrl().then((routerUrl) => {
-      return _getAjaxDataDirect(routerUrl, options);
-    });
+      return routerUtils.getRouterUrl().then((routerUrl) => {
+        return _getAjaxDataDirect(routerUrl, options);
+      });
     }
   } else {
     let message = {
