@@ -192,6 +192,7 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
  * @typedef GetAjaxDataOptions
  * @property {string} url The url to get ajax data from
  * @property {boolean} [responseMustBeOk]
+ * @property {string} [routerUrl] The url of the router. E.g. http://192.168.8.1
  */
 
 /**
@@ -223,9 +224,13 @@ function _getAjaxDataDirect(routerUrl, options) {
  */
 export function getAjaxData(options, direct=true) {
   if (direct) {
+    if (options.routerUrl) {
+      return _getAjaxDataDirect(options.routerUrl, options);
+    } else {
     return routerUtils.getRouterUrl().then((routerUrl) => {
       return _getAjaxDataDirect(routerUrl, options);
     });
+    }
   } else {
     let message = {
       type: 'command',

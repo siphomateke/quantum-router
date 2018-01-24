@@ -116,7 +116,8 @@ export function ping(routerUrl='') {
   if (routerUrl) {
     return ajax.getAjaxData({
       url: 'config/global/config.xml',
-    }, routerUrl);
+      routerUrl: routerUrl,
+    });
   } else {
     return ajax.getAjaxData({url: 'config/global/config.xml'});
   }
