@@ -241,7 +241,6 @@ function _filterSmsList(options, list) {
 /**
  * @typedef FullSmsListOptions
  * @property {number} total
- * @property {number} [minDate]
  * @property {FilterSmsListOption} [filter]
  */
 
@@ -268,9 +267,11 @@ function _getFullSmsListRecursive(
       list = list.concat(currentList);
     }
 
-    // If a minimum date is required and the order is descending,
-    if (options.minDate && smsListOptions.sortOrder === 'desc') {
-      let dateFilteredList = _filterSmsList({minDate: options.minDate}, currentList);
+    // If a minimum date is given and the order is descending
+    // then we can be efficient and stop queries once the date is
+    // larger than the minimum date
+    if (options.filter.minDate && smsListOptions.sortOrder === 'desc') {
+      let dateFilteredList = _filterSmsList({minDate: options.filter.minDate}, currentList);
       // If the date filtered list does not match the list then
       // this is the last page we should check as anything later
       // will be older than the minimum date
@@ -304,10 +305,6 @@ export function getFullSmsList(options, smsListOptions={}) {
     total: 0,
     filter: null,
   }, options);
-
-  if (options.minDate && smsListOptions.sortOrder !== 'desc') {
-    throw new Error('Invalid arguments for getFullSmsList; If a minimum date is passed, then the sorting order must be descending.');
-  }
 
   if (options.total > 0) {
     return config.getSmsConfig().then((smsConfig) => {

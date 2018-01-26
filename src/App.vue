@@ -176,9 +176,11 @@ export default {
           router.sms.getSmsCount().then((data) => {
             return router.sms.getFullSmsList({
               total: data.LocalInbox,
-              minDate: this.lastUpdatedNotifications
+              filter: {
+                minDate: this.lastUpdatedNotifications,
+              },
             }, {
-              sortOrder: 'desc'
+              sortOrder: 'desc',
             }).then((list) => {
               let newNotifications = [];
               for (let message of list) {
