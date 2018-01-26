@@ -50,7 +50,7 @@ import router, {RouterControllerError} from '@/router';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
-import NotificationsPopup from '@/components/notifications/NotificationsPopup';
+import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/chrome/notification.js';
 import moment from 'moment';
 
