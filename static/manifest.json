@@ -23,7 +23,6 @@
         "default_title": "Quantum Router"
     },
     "permissions": [
-        "contextMenus",
         "notifications",
         "downloads",
         "storage",
