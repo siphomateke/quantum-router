@@ -1,4 +1,3 @@
-/* global chrome*/
 import Vue from 'vue';
 import App from './App';
 import router from './vue-router';
@@ -8,14 +7,6 @@ import VsNotify from '@/components/vs-notify';
 import store from './store';
 import {modes} from '@/store';
 import i18n from '@/chrome/i18n.js';
-
-window.addEventListener('unload', () => {
-  chrome.runtime.sendMessage({
-    from: 'app',
-    type: 'loadEvent',
-    loadState: 'unload',
-  });
-});
 
 Vue.config.productionTip = false;
 

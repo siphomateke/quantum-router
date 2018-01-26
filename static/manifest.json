@@ -15,17 +15,6 @@
       "chrome_style": false,
       "page": "./options.html"
     },
-    "content_scripts": [{
-        "matches": [
-            "http://192.168.8.1/*"
-        ],
-        "js": [
-            "./js/manifest.js",
-            "./js/vendor.js",
-            "./js/content.js"
-        ],
-        "run_at": "document_end"
-    }],
     "background": {
         "page": "./background.html"
     },
@@ -34,8 +23,6 @@
         "default_title": "Quantum Router"
     },
     "permissions": [
-        "activeTab",
-        "tabs",
         "contextMenus",
         "notifications",
         "downloads",
