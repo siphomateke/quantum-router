@@ -12,10 +12,6 @@
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
 
-  "router_error_tabs_not_found":{
-    "message": "Could not find the router page. It must be open to carry out admin tasks such as changing the WiFi password.",
-    "description": "Error message displayed when the router page (usually 192.168.1.1) is not open."
-  },
   "router_error_no_admin" : {
     "message": "Failed to get administrator access to router. Please make sure the router page is open. If you have just re-installed the extension, try reloading the router page."
   },

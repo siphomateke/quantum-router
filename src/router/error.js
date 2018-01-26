@@ -42,16 +42,13 @@ export let apiErrorCodes = {
   'xhr_invalid_status',
   'xml_type_invalid',
   'xml_response_not_ok',
-  'tabs_not_found',
-  'chrome_runtime_message_error',
-  'chrome_tabs_message_error',
   'router_url_not_set',
-  'chrome_storage_error',
   'invalid_router_url',
   'xhr_timeout',
   'ussd_timeout',
   'ussd_release_fail',
   'ajax_no_tokens'
+  // TODO: Add error chrome storage error
 ];*/
 
 export function getRouterApiErrorName(code) {

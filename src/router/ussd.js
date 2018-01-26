@@ -1,6 +1,6 @@
 'use strict';
 import {RouterControllerError, RouterApiError} from './error';
-import {Utils} from '@/chrome/core';
+import * as utils from './utils';
 import * as ajax from './ajax';
 
 /**
@@ -68,7 +68,7 @@ export function getUssdResult() {
   }).catch((err) => {
     if (err instanceof RouterApiError) {
       if (err.code === 'ERROR_USSD_PROCESSING') {
-        return Utils.delay(1000).then(() => {
+        return utils.delay(1000).then(() => {
           return getUssdResult();
         });
       } else if (err.code == 'ERROR_USSD_TIMEOUT') {

@@ -5,11 +5,10 @@ import {
   XhrError,
   getRouterApiErrorName,
 } from './error';
-import * as routerUtils from './utils';
+import * as utils from './utils';
 import jxon from 'jxon';
-import * as config from './config';
+import config from './config';
 import NodeRSA from 'node-rsa';
-import {Queue} from '@/chrome/core';
 
 /**
  * @typedef xhrRequestOptions
@@ -200,8 +199,8 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
  * @param {GetAjaxDataOptions} options
  * @return {Promise<any>}
  */
-function _getAjaxDataDirect(routerUrl, options) {
-  let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
+function _getAjaxData(routerUrl, options) {
+  let parsedUrl = utils.parseRouterUrl(routerUrl);
   return getTokens().then((tokens) => {
     let headers = {};
     if (tokens.length > 0) {
@@ -219,28 +218,13 @@ function _getAjaxDataDirect(routerUrl, options) {
 /**
  *
  * @param {GetAjaxDataOptions} options
- * @param {boolean} [direct=true]
  * @return {Promise<any>}
  */
-export function getAjaxData(options, direct=true) {
-  if (direct) {
-    if (options.routerUrl) {
-      return _getAjaxDataDirect(options.routerUrl, options);
-    } else {
-      return routerUtils.getRouterUrl().then((routerUrl) => {
-        return _getAjaxDataDirect(routerUrl, options);
-      });
-    }
+export function getAjaxData(options) {
+  if (options.routerUrl) {
+    return _getAjaxData(options.routerUrl, options);
   } else {
-    let message = {
-      type: 'command',
-      command: 'getAjaxData',
-      url: options.url,
-    };
-    return routerUtils.sendPageMessage(message).then((xml) => {
-      let ret = parseXmlString(xml);
-      return processXmlResponse(ret, options.responseMustBeOk);
-    });
+    return _getAjaxData(config.getUrl(), options);
   }
 }
 
@@ -265,25 +249,23 @@ export let tokens = null;
  * @return {Promise<string[]>}
  */
 function getRequestVerificationTokens() {
-  return routerUtils.getRouterUrl().then((_url) => {
-    let url = routerUtils.parseRouterUrl(_url);
-    return getPage(url.origin+'/'+'html/home.html').then((doc) => {
-      let meta = doc.querySelectorAll('meta[name=csrf_token]');
-      let requestVerificationTokens;
-      if (meta.length > 0) {
-        requestVerificationTokens = [];
-        for (let i=0; i < meta.length; i++) {
-          requestVerificationTokens.push(meta[i].content);
-        }
-        return requestVerificationTokens;
-      } else {
-        return getAjaxData({
-          url: 'api/webserver/token',
-        }).then((data) => {
-          return [data.token];
-        });
+  let url = config.getParsedUrl();
+  return getPage(url.origin+'/'+'html/home.html').then((doc) => {
+    let meta = doc.querySelectorAll('meta[name=csrf_token]');
+    let requestVerificationTokens;
+    if (meta.length > 0) {
+      requestVerificationTokens = [];
+      for (let i=0; i < meta.length; i++) {
+        requestVerificationTokens.push(meta[i].content);
       }
-    });
+      return requestVerificationTokens;
+    } else {
+      return getAjaxData({
+        url: 'api/webserver/token',
+      }).then((data) => {
+        return [data.token];
+      });
+    }
   });
 }
 
@@ -340,7 +322,7 @@ function doRSAEncrypt(str) {
   });
 }
 
-let ajaxQueue = new Queue();
+let ajaxQueue = new utils.Queue();
 
 /**
  * @typedef SaveAjaxDataOptions
@@ -357,65 +339,63 @@ let ajaxQueue = new Queue();
  * @return {Promise<any>}
  */
 // TODO: Simplify this by splitting up
-function _saveAjaxDataDirect(options) {
+export function saveAjaxData(options) {
   return new Promise((resolve, reject) => {
     ajaxQueue.add(() => {
-      return routerUtils.getRouterUrl().then((routerUrl) => {
-        let parsedUrl = routerUtils.parseRouterUrl(routerUrl);
-        return getTokens().then((tokens) => {
-        // get copy of tokens to work with
-          tokens = tokens.slice();
-          return config.getModuleSwitch().then((moduleSwitch) => {
-            let xmlString = objectToXml({request: options.request});
+      let parsedUrl = config.getParsedUrl();
+      return getTokens().then((tokens) => {
+      // get copy of tokens to work with
+        tokens = tokens.slice();
+        return config.getModuleSwitch().then((moduleSwitch) => {
+          let xmlString = objectToXml({request: options.request});
 
-            let headers = {};
+          let headers = {};
 
-            // TODO: Fix encryption
-            if (options.enc && moduleSwitch.encrypt_enabled) {
-              headers['encrypt_transmit'] = 'encrypt_transmit';
-              xmlString = doRSAEncrypt(xmlString);
-            }
+          // TODO: Fix encryption
+          if (options.enc && moduleSwitch.encrypt_enabled) {
+            headers['encrypt_transmit'] = 'encrypt_transmit';
+            xmlString = doRSAEncrypt(xmlString);
+          }
 
-            // TODO: Add 'part_encrypt_transmit' header using data.enpstring
+          // TODO: Add 'part_encrypt_transmit' header using data.enpstring
 
-            if (tokens.length > 0) {
-              headers['__RequestVerificationToken'] = tokens[0];
-              tokens.splice(0, 1);
-              updateTokens(tokens);
-            }
+          if (tokens.length > 0) {
+            headers['__RequestVerificationToken'] = tokens[0];
+            tokens.splice(0, 1);
+            updateTokens(tokens);
+          }
 
-            return xhrRequestXml({
-              url: parsedUrl.origin + '/' + options.url,
-              method: 'POST',
-              data: xmlString,
-              requestHeaders: headers,
-            }).then((xhr) => {
-              return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
-                if (options.url === 'api/user/login' && tokens.length > 0) {
-                // login success, empty token list
-                  tokens = [];
-                  updateTokens(tokens);
-                }
-                return ret;
-              }).finally((ret) => {
-              // get new tokens
-                let token = xhr.getResponseHeader('__requestverificationtoken');
-                let token1 = xhr.getResponseHeader('__requestverificationtokenone');
-                let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
-                if (token1) {
-                  tokens.push(token1);
-                  if (token2) {
-                    tokens.push(token2);
-                  }
-                } else if (token) {
-                  tokens.push(token);
-                } else {
-                  return Promise.reject(
-                    new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
-                }
+          return xhrRequestXml({
+            url: parsedUrl.origin + '/' + options.url,
+            method: 'POST',
+            data: xmlString,
+            requestHeaders: headers,
+          }).then((xhr) => {
+            return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
+              if (options.url === 'api/user/login' && tokens.length > 0) {
+              // login success, empty token list
+                tokens = [];
                 updateTokens(tokens);
-                return ret;
-              });
+              }
+              return ret;
+            }).finally((ret) => {
+            // get new tokens
+              let token = xhr.getResponseHeader('__requestverificationtoken');
+              let token1 = xhr.getResponseHeader('__requestverificationtokenone');
+              let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
+              if (token1) {
+                tokens.push(token1);
+                if (token2) {
+                  tokens.push(token2);
+                }
+              } else if (token) {
+                tokens.push(token);
+              } else {
+                return Promise.reject(
+                  new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
+              }
+              updateTokens(tokens);
+              return ret;
             });
           });
         });
@@ -426,37 +406,4 @@ function _saveAjaxDataDirect(options) {
       });
     });
   });
-}
-
-/**
- *
- * @param {SaveAjaxDataOptions} options
- * @return {Promise}
- */
-function _saveAjaxDataPage(options) {
-  let message = {
-    type: 'command',
-    command: 'saveAjaxData',
-    url: options.url,
-    request: options.request,
-    options: {enc: options.enc, enp: options.enp},
-  };
-  return routerUtils.sendPageMessage(message).then((xml) => {
-    let ret = parseXmlString(xml);
-    return processXmlResponse(ret, options.responseMustBeOk);
-  });
-}
-
-/**
- *
- * @param {SaveAjaxDataOptions} options
- * @param {boolean} [direct=true]
- * @return {Promise}
- */
-export function saveAjaxData(options, direct=true) {
-  if (direct) {
-    return _saveAjaxDataDirect(options);
-  } else {
-    return _saveAjaxDataPage(options);
-  }
 }

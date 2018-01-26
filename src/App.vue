@@ -47,6 +47,7 @@ import ToolbarItem from '@/components/ToolbarItem.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
 import router, {RouterControllerError} from '@/router';
+import * as routerHelper from '@/chrome/routerHelper';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
@@ -59,9 +60,6 @@ Vue.mixin({
     handleError(err) {
       return new Promise((resolve, reject) => {
         let message = err.code+' : '+err.message;
-        if (err.code === 'tabs_not_found') {
-          message = this.$i18n('router_error_'+err.code);
-        }
         this.$toast.open({
           type: 'is-danger',
           message: 'Error: ' + message
@@ -152,23 +150,16 @@ export default {
     }
   },
   mounted() {
-    chrome.runtime.sendMessage({
-      from: 'app',
-      type: 'loadEvent',
-      loadState: 'load',
+    routerHelper.getRouterUrl().then((url) => {
+      router.config.setUrl(url);
+    }).then(() => {
+      return routerHelper.getLoginDetails().then((data) => {
+        router.config.setUsername(data.username);
+        router.config.setPassword(data.password);
+      });
+    }).then(() => {
+      this.checkMode();
     });
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.from === 'background' && request.type === 'routerContentLoadEvent') {
-        if (request.event === 'load') {
-          // TODO: update mode when router page is opened
-          // this.$toast.open('Connected to router page');
-          // this.checkMode();
-        } else if (request.event === 'unload') {
-          // this.checkMode();
-        }
-      }
-    });
-    this.checkMode();
     this.bus.$on('refresh', () => {
       if (this.mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
@@ -255,7 +246,7 @@ export default {
             });
           }
         }).catch((e) => {
-          return router.utils.getRouterUrl().then((url) => {
+          return routerHelper.getRouterUrl().then((url) => {
             this.openConfirmDialog({
               message: this.$i18n('connection_error', url),
               confirmText: this.$i18n('dialog_retry'),
@@ -309,7 +300,7 @@ export default {
           }
         });
       }).catch((e) => {
-        return router.utils.getRouterUrl().then((url) => {
+        return routerHelper.getRouterUrl().then((url) => {
           // TODO: Add option to redirect user to settings
           this.openConfirmDialog({
             message: this.$i18n('connection_error', url),

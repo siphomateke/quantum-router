@@ -1,8 +1,6 @@
 'use strict';
-import {RouterControllerError} from './error';
 import * as ajax from './ajax';
-import {Utils} from '@/chrome/core';
-import * as routerUtils from './utils';
+import config from './config';
 import shajs from 'sha.js';
 
 /**
@@ -39,56 +37,27 @@ function sha256(str) {
   return shajs('sha256').update(str).digest('hex');
 }
 
-function loginDirect() {
+export function login() {
   return getLoginState().then((loginState) => {
-    return Utils.getStorage(['username', 'password']).then((storage) => {
-      return ajax.getTokens().then((tokens) => {
-        let processedPassword;
-        if (tokens.length > 0 && loginState.password_type === 4) {
-          processedPassword = btoa(sha256(storage.username +
-             btoa(sha256(storage.password)) + tokens[0]));
-        } else {
-          processedPassword = btoa(storage.password);
-        }
-        return ajax.saveAjaxData({
-          url: 'api/user/login',
-          request: {
-            Username: storage.username,
-            Password: processedPassword,
-            password_type: loginState.password_type,
-          },
-          responseMustBeOk: true,
-          enc: false,
-        });
+    let loginDetails = config.getLoginDetails();
+    return ajax.getTokens().then((tokens) => {
+      let processedPassword;
+      if (tokens.length > 0 && loginState.password_type === 4) {
+        processedPassword = btoa(sha256(loginDetails.username +
+            btoa(sha256(loginDetails.password)) + tokens[0]));
+      } else {
+        processedPassword = btoa(loginDetails.password);
+      }
+      return ajax.saveAjaxData({
+        url: 'api/user/login',
+        request: {
+          Username: loginDetails.username,
+          Password: processedPassword,
+          password_type: loginState.password_type,
+        },
+        responseMustBeOk: true,
+        enc: false,
       });
     });
   });
-}
-
-function loginIndirect() {
-  return Utils.getStorage(['username', 'password']).then((items) => {
-    return routerUtils.sendPageMessage({
-      type: 'command',
-      command: 'login',
-      credentials: {
-        username: items.username,
-        password: items.password,
-      },
-    }).then((pageResponse) => {
-      if (pageResponse.type === 'xml') {
-        let xmlObject = ajax.parseXmlString(pageResponse.xml);
-        return ajax.processXmlResponse(xmlObject);
-      } else if (pageResponse.type === 'error') {
-        return Promise.reject(new RouterControllerError(pageResponse.error));
-      }
-    });
-  });
-}
-
-export function login(direct=true) {
-  if (direct) {
-    return loginDirect();
-  } else {
-    return loginIndirect();
-  }
 }

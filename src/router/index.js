@@ -1,10 +1,12 @@
 'use strict';
 import * as admin from './admin';
+import config from './config';
 import * as sms from './sms';
 import * as ussd from './ussd';
 import * as utils from './utils';
 import {RouterControllerError, RouterApiError, XhrError} from './error';
 
+// TODO: Make router instance based
 /**
  * Controls access to the router
  */
@@ -14,6 +16,7 @@ export default {
     isLoggedIn: admin.isLoggedIn,
     login: admin.login,
   },
+  config: config,
   sms: {
     types: sms.types,
     boxTypes: sms.boxTypes,
@@ -36,8 +39,6 @@ export default {
     getUssdConfig: ussd.getUssdConfig,
   },
   utils: {
-    getTab: utils.getTab,
-    getRouterUrl: utils.getRouterUrl,
     ping: utils.ping,
     getTrafficStatistics: utils.getTrafficStatistics,
   },

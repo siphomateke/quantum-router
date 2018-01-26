@@ -1,49 +1,56 @@
 'use strict';
 import {RouterControllerError} from './error';
-import {Utils} from '@/chrome/core';
 import * as ajax from './ajax';
-/* global chrome */
 
-export function sendRuntimeMessage(data) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(data, (r) => {
-      if (!chrome.runtime.lastError) {
-        resolve(r);
-      } else {
-        reject(new RouterControllerError(
-          'chrome_runtime_message_error', chrome.runtime.lastError));
-      }
+/**
+ * A promise based queue
+ */
+export class Queue {
+  constructor() {
+    this.list = [];
+  }
+  /**
+   * Runs a particular item in the queue
+   * @param {number} idx
+   */
+  _runItem(idx) {
+    this.list[idx]().finally(() => {
+      this._onComplete();
     });
-  });
-}
-
-export function getTab() {
-  return sendRuntimeMessage({
-    from: 'app',
-    type: 'get',
-    get: 'tab',
-  }).then((tab) => {
-    if (tab) {
-      return tab;
-    } else {
-      return Promise.reject(new RouterControllerError(
-        'tabs_not_found', 'No matched tabs open'));
+  }
+  /**
+   * Called when a promise in the queue is complete
+   */
+  _onComplete() {
+    // Remove the completed item from the queue
+    if (this.list.length > 0) {
+      this.list.splice(0, 1);
     }
-  });
+    // If there are is another item in the queue, run it
+    if (this.list.length > 0) {
+      this._runItem(0);
+    }
+  }
+  /**
+   * Adds a new promise to the queue
+   * @param {function} func A function which returns a promise
+   */
+  add(func) {
+    this.list.push(func);
+    if (this.list.length === 1) {
+      this._runItem(0);
+    }
+  }
 }
 
 /**
- * Gets the url of router page from chrome.storage
- * @return {Promise<string>}
+ * Promise version of setTimeout
+ * @param {number} t
+ * @return {Promise}
  */
-export function getRouterUrl() {
-  return Utils.getStorage('routerUrl').then((items) => {
-    if ('routerUrl' in items) {
-      return items.routerUrl;
-    } else {
-      return Promise.reject(new RouterControllerError(
-        'router_url_not_set', 'No router url set in storage'));
-    }
+export function delay(t) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, t);
   });
 }
 
@@ -65,45 +72,6 @@ export function parseRouterUrl(url) {
     }
   }
   return parsedUrl;
-}
-
-/**
- *
- * @param {number} id The id of the tab to send a message to
- * @param {object} data Data to send to the tab
- * @return {Promise}
- */
-function _sendTabMessage(id, data) {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.sendMessage(id, data, (r) => {
-      if (!chrome.runtime.lastError) {
-        resolve(r);
-      } else {
-        reject(new RouterControllerError(
-          'chrome_tabs_message_error',
-          'tabId: '+id+', msg: '+chrome.runtime.lastError.message));
-      }
-    });
-  });
-}
-
-/**
- * Sends a message to the router's interface tab
- * @param {object} data
- * @return {Promise}
- */
-export function sendTabMessage(data) {
-  return getTab().then((tab) => {
-    data.from = 'RouterController';
-    return _sendTabMessage(tab.id, data);
-  });
-}
-
-export function sendPageMessage(data) {
-  return sendTabMessage({
-    command: 'pageMessage',
-    data: data,
-  });
 }
 
 /**
