@@ -195,12 +195,17 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
  */
 
 /**
- * @param {string} routerUrl
+ *
  * @param {GetAjaxDataOptions} options
  * @return {Promise<any>}
  */
-function _getAjaxData(routerUrl, options) {
-  let parsedUrl = utils.parseRouterUrl(routerUrl);
+export function getAjaxData(options) {
+  let parsedUrl;
+  if (options.routerUrl) {
+    parsedUrl = utils.parseRouterUrl(options.routerUrl);
+  } else {
+    parsedUrl = config.getParsedUrl();
+  }
   return getTokens().then((tokens) => {
     let headers = {};
     if (tokens.length > 0) {
@@ -213,19 +218,6 @@ function _getAjaxData(routerUrl, options) {
       return getProcessedXml(xhr.responseXML, options.responseMustBeOk);
     });
   });
-}
-
-/**
- *
- * @param {GetAjaxDataOptions} options
- * @return {Promise<any>}
- */
-export function getAjaxData(options) {
-  if (options.routerUrl) {
-    return _getAjaxData(options.routerUrl, options);
-  } else {
-    return _getAjaxData(config.getUrl(), options);
-  }
 }
 
 /**
@@ -249,8 +241,7 @@ export let tokens = null;
  * @return {Promise<string[]>}
  */
 function getRequestVerificationTokens() {
-  let url = config.getParsedUrl();
-  return getPage(url.origin+'/'+'html/home.html').then((doc) => {
+  return getPage(config.getParsedUrl().origin+'/'+'html/home.html').then((doc) => {
     let meta = doc.querySelectorAll('meta[name=csrf_token]');
     let requestVerificationTokens;
     if (meta.length > 0) {
@@ -342,7 +333,6 @@ let ajaxQueue = new utils.Queue();
 export function saveAjaxData(options) {
   return new Promise((resolve, reject) => {
     ajaxQueue.add(() => {
-      let parsedUrl = config.getParsedUrl();
       return getTokens().then((tokens) => {
       // get copy of tokens to work with
         tokens = tokens.slice();
@@ -366,7 +356,7 @@ export function saveAjaxData(options) {
           }
 
           return xhrRequestXml({
-            url: parsedUrl.origin + '/' + options.url,
+            url: config.getParsedUrl().origin + '/' + options.url,
             method: 'POST',
             data: xmlString,
             requestHeaders: headers,

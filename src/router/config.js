@@ -7,6 +7,7 @@ class RouterConfig {
     this.username = null;
     this.password = null;
     this.url = null;
+    this.parsedUrl = null;
 
     this.module = null;
     /**
@@ -22,6 +23,7 @@ class RouterConfig {
 
   setUrl(url) {
     this.url = url;
+    this.parsedUrl = utils.parseRouterUrl(this.url);
   }
 
   setUsername(username) {
@@ -52,7 +54,7 @@ class RouterConfig {
   }
 
   getParsedUrl() {
-    return utils.parseRouterUrl(this.getUrl());
+    return this.parsedUrl;
   }
 
   // TODO: Add config checks and throw errors
