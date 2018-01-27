@@ -248,6 +248,50 @@ class RouterConfig {
       return Promise.resolve(this.sms);
     }
   }
+
+  /**
+   * @typedef UssdConfigMenuItem
+   * @property {string} Name
+   * @property {string} Command
+   */
+
+  /**
+   * @typedef UssdConfigMenu
+   * @property {UssdConfigMenuItem[]} MenuItem
+   */
+
+  /**
+   * @typedef UssdConfigGeneral
+   * @property {string} Action
+   * @property {string} Description
+   * @property {string} LimitText
+   * @property {UssdConfigMenu} Menu
+   * @property {string} Title
+   */
+
+  /**
+   * @typedef _UssdConfig
+   * @property {UssdConfigGeneral} General
+   */
+
+  /**
+   * @typedef UssdConfig
+   * @property {_UssdConfig} USSD
+   */
+
+  /**
+   * Get's USSD configuration. Includes USSD commands.
+   * @param {boolean} [postpaid=false] Whether to get the postpaid or prepaid config
+   * @return {Promise<UssdConfig>}
+   */
+  getUssdConfig(postpaid=false) {
+    let url = 'config/ussd/';
+    url += postpaid ? 'postpaid' : 'prepaid';
+    url += 'ussd.xml';
+    return ajax.getAjaxData({
+      url: url,
+    });
+  }
 }
 
 export default new RouterConfig();

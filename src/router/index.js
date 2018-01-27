@@ -36,7 +36,6 @@ export default {
     releaseUssd: ussd.releaseUssd,
     getUssdResult: ussd.getUssdResult,
     sendUssdCommand: ussd.sendUssdCommand,
-    getUssdConfig: ussd.getUssdConfig,
   },
   utils: {
     ping: utils.ping,

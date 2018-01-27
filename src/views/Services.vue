@@ -87,7 +87,7 @@ export default {
     },
     refresh() {
       if (this.$adminMode) {
-        router.ussd.getUssdConfig().then((config) => {
+        router.config.getUssdConfig().then((config) => {
           this.ussd.commands = config.USSD.General.Menu.MenuItem;
         });
         router.ussd.releaseUssd();
