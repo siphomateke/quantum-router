@@ -12,7 +12,7 @@ import * as ajax from './ajax';
  * @param {string} message
  * @return {Object.<string, string>}
  */
-function _getOptions(message) {
+function getOptions(message) {
   let foundOptions = message.match(/(^.|\n.)+\. (.+)/gi);
   let options = {};
   if (foundOptions) {
@@ -27,7 +27,7 @@ function _getOptions(message) {
 }
 
 export function parse(message) {
-  let options = _getOptions(message);
+  let options = getOptions(message);
   let content = message;
   if (options) {
     content = content.replace(/(^.|\n.)+\.((.|\n)+)/i, '');

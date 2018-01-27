@@ -91,11 +91,11 @@ export function xhrRequestXml(xhrOptions) {
  * @param {Element} xml
  * @return {object}
  */
-function _recursiveXml2Object(xml) {
+function recursiveXml2Object(xml) {
   if (xml.children.length > 0) {
     let obj = {};
     Array.prototype.forEach.call(xml.children, (el) => {
-      let childObj = (el.children.length > 0) ? _recursiveXml2Object(el) : el.textContent;
+      let childObj = (el.children.length > 0) ? recursiveXml2Object(el) : el.textContent;
       let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
         return child !== el;
       });
@@ -124,7 +124,7 @@ function _recursiveXml2Object(xml) {
 export function xml2object(xml) {
   let obj = {};
   obj.type = xml.documentElement.tagName;
-  obj.data = _recursiveXml2Object(xml.documentElement);
+  obj.data = recursiveXml2Object(xml.documentElement);
   return obj;
 }
 

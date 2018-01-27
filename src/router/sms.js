@@ -24,7 +24,7 @@ export let boxTypes = {
   DRAFT: 3,
 };
 
-function _arrayMatch(message, regExpMatch, mapFunc) {
+function arrayMatch(message, regExpMatch, mapFunc) {
   let data = message.match(regExpMatch);
   if (data) {
     return data.map(mapFunc);
@@ -42,29 +42,29 @@ function _arrayMatch(message, regExpMatch, mapFunc) {
  * @param {string} message
  * @return {SmsDataUsage[]}
  */
-function _getDataUsage(message) {
-  return _arrayMatch(message, /(\d*)(\.*)(\d*)( *)mb/gi, (element) => {
+function getDataUsage(message) {
+  return arrayMatch(message, /(\d*)(\.*)(\d*)( *)mb/gi, (element) => {
     return {
       amount: parseFloat(element.replace(/( *)mb/i, '')),
       unit: 'MB',
     };
   });
 }
-function _getExpiryDate(message) {
-  return _arrayMatch(
+function getExpiryDate(message) {
+  return arrayMatch(
     message, /(\d+)-(\d+)-(\d+) (\d{2}):(\d{2}):(\d{2})/g, (date) => {
       return moment(date);
     });
 }
-function _getMoney(message) {
-  return _arrayMatch(
+function getMoney(message) {
+  return arrayMatch(
     message, /(\d*)(\.*)(\d*)( *)kwacha/gi, (element) => {
       return parseFloat(element.replace(/( *)kwacha/i, ''));
     });
 }
 
-function _getPercent(message) {
-  return _arrayMatch(message, /\d+%/gi, (element) => {
+function getPercent(message) {
+  return arrayMatch(message, /\d+%/gi, (element) => {
     return parseFloat(element.replace(/%/, ''));
   });
 }
@@ -75,7 +75,7 @@ function _getPercent(message) {
  * @param {string} message
  * @return {types}
  */
-function _getType(info, message) {
+function getType(info, message) {
   let adPhrases = [
     'spaka',
     'bonus',
@@ -120,14 +120,14 @@ function _getType(info, message) {
 }
 export function parse(message) {
   let info = {
-    data: _getDataUsage(message),
-    expires: _getExpiryDate(message),
-    money: _getMoney(message),
-    percent: _getPercent(message),
+    data: getDataUsage(message),
+    expires: getExpiryDate(message),
+    money: getMoney(message),
+    percent: getPercent(message),
   };
 
   return Object.assign(info, {
-    type: _getType(info, message),
+    type: getType(info, message),
   });
 }
 
@@ -224,7 +224,7 @@ export function getSmsList(options) {
  * @param {Message[]} list
  * @return {Message[]}
  */
-function _filterSmsList(options, list) {
+function filterSmsList(options, list) {
   let filteredList = [];
   for (let message of list) {
     if (options.minDate) {
@@ -254,7 +254,7 @@ function _filterSmsList(options, list) {
  * @param {number} [page=1]
  * @return {Promise<Message[]>}
  */
-function _getFullSmsListRecursive(
+function getFullSmsListRecursive(
   options, smsListOptions, list, perPage, total, page=1) {
   smsListOptions.perPage = perPage;
   smsListOptions.page = page;
@@ -262,7 +262,7 @@ function _getFullSmsListRecursive(
     page++;
 
     if (options.filter) {
-      list = list.concat(_filterSmsList(options.filter, currentList));
+      list = list.concat(filterSmsList(options.filter, currentList));
     } else {
       list = list.concat(currentList);
     }
@@ -271,7 +271,7 @@ function _getFullSmsListRecursive(
     // then we can be efficient and stop queries once the date is
     // larger than the minimum date
     if (options.filter.minDate && smsListOptions.sortOrder === 'desc') {
-      let dateFilteredList = _filterSmsList({minDate: options.filter.minDate}, currentList);
+      let dateFilteredList = filterSmsList({minDate: options.filter.minDate}, currentList);
       // If the date filtered list does not match the list then
       // this is the last page we should check as anything later
       // will be older than the minimum date
@@ -282,7 +282,7 @@ function _getFullSmsListRecursive(
 
     // If we have not reached the end of the messages
     if (((page - 1) * perPage) < total) {
-      return _getFullSmsListRecursive(
+      return getFullSmsListRecursive(
         options, smsListOptions, list, perPage, total, page);
     } else {
       return list;
@@ -308,7 +308,7 @@ export function getFullSmsList(options, smsListOptions={}) {
 
   if (options.total > 0) {
     return config.getSmsConfig().then((smsConfig) => {
-      return _getFullSmsListRecursive(
+      return getFullSmsListRecursive(
         options, smsListOptions, [], smsConfig.pagesize, options.total
       ).then((list) => {
         return list;
