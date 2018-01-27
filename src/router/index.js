@@ -1,12 +1,11 @@
 'use strict';
 import * as admin from './admin';
-import config from './config';
+import * as config from './config';
 import * as sms from './sms';
 import * as ussd from './ussd';
 import * as utils from './utils';
 import {RouterControllerError, RouterApiError, XhrError} from './error';
 
-// TODO: Make router instance based
 /**
  * Controls access to the router
  */

@@ -1,7 +1,7 @@
 'use strict';
 import moment from 'moment';
 import * as ajax from './ajax';
-import config from './config';
+import * as config from './config';
 
 /**
  * @enum {string}

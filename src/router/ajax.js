@@ -7,7 +7,7 @@ import {
 } from './error';
 import * as utils from './utils';
 import jxon from 'jxon';
-import config from './config';
+import * as config from './config';
 import NodeRSA from 'node-rsa';
 
 /**

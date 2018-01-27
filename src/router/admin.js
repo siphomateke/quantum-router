@@ -1,6 +1,6 @@
 'use strict';
 import * as ajax from './ajax';
-import config from './config';
+import * as config from './config';
 import shajs from 'sha.js';
 
 /**

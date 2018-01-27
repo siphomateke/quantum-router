@@ -81,14 +81,10 @@ export function parseRouterUrl(url) {
  * @return {Promise}
  */
 export function ping(routerUrl='') {
-  if (routerUrl) {
-    return ajax.getAjaxData({
-      url: 'config/global/config.xml',
-      routerUrl: routerUrl,
-    });
-  } else {
-    return ajax.getAjaxData({url: 'config/global/config.xml'});
-  }
+  return ajax.getAjaxData({
+    url: 'config/global/config.xml',
+    routerUrl: routerUrl,
+  });
 }
 
 /**
