@@ -37,27 +37,25 @@ function sha256(str) {
   return shajs('sha256').update(str).digest('hex');
 }
 
-export function login() {
-  return getLoginState().then((loginState) => {
-    let loginDetails = config.getLoginDetails();
-    return ajax.getTokens().then((tokens) => {
-      let processedPassword;
-      if (tokens.length > 0 && loginState.password_type === 4) {
-        processedPassword = btoa(sha256(loginDetails.username +
-            btoa(sha256(loginDetails.password)) + tokens[0]));
-      } else {
-        processedPassword = btoa(loginDetails.password);
-      }
-      return ajax.saveAjaxData({
-        url: 'api/user/login',
-        request: {
-          Username: loginDetails.username,
-          Password: processedPassword,
-          password_type: loginState.password_type,
-        },
-        responseMustBeOk: true,
-        enc: false,
-      });
-    });
+export async function login() {
+  const loginState = await getLoginState();
+  const loginDetails = config.getLoginDetails();
+  const tokens = await ajax.getTokens();
+  let processedPassword;
+  if (tokens.length > 0 && loginState.password_type === 4) {
+    processedPassword = btoa(sha256(loginDetails.username +
+        btoa(sha256(loginDetails.password)) + tokens[0]));
+  } else {
+    processedPassword = btoa(loginDetails.password);
+  }
+  return ajax.saveAjaxData({
+    url: 'api/user/login',
+    request: {
+      Username: loginDetails.username,
+      Password: processedPassword,
+      password_type: loginState.password_type,
+    },
+    responseMustBeOk: true,
+    enc: false,
   });
 }

@@ -13,13 +13,13 @@ import * as ajax from './ajax';
  * @return {Object.<string, string>}
  */
 function getOptions(message) {
-  let foundOptions = message.match(/(^.|\n.)+\. (.+)/gi);
-  let options = {};
+  const foundOptions = message.match(/(^.|\n.)+\. (.+)/gi);
+  const options = {};
   if (foundOptions) {
     foundOptions.map((element) => {
-      let regExp = /((^.|\n.)+)\. /;
-      let match = regExp.exec(element);
-      let key = match[1].replace(/\n/, '');
+      const regExp = /((^.|\n.)+)\. /;
+      const match = regExp.exec(element);
+      const key = match[1].replace(/\n/, '');
       options[key] = element.replace(/(^.|\n.)+\. /i, '');
     });
   }
@@ -27,7 +27,7 @@ function getOptions(message) {
 }
 
 export function parse(message) {
-  let options = getOptions(message);
+  const options = getOptions(message);
   let content = message;
   if (options) {
     content = content.replace(/(^.|\n.)+\.((.|\n)+)/i, '');

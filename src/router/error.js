@@ -17,7 +17,7 @@ export class XhrError extends ExtendableError {
   }
 }
 
-export let apiErrorCodes = {
+export const apiErrorCodes = {
   100002: 'ERROR_SYSTEM_NO_SUPPORT',
   100003: 'ERROR_SYSTEM_NO_RIGHTS',
   100004: 'ERROR_SYSTEM_BUSY',

@@ -2,7 +2,7 @@
 import * as ajax from './ajax';
 import * as utils from './utils';
 
-let config = {
+const config = {
   username: null,
   password: null,
   url: null,
@@ -158,9 +158,9 @@ export function getParsedUrl() {
 export async function getModuleSwitch() {
   if (!config.module) {
     /** @type {ConfigModuleSwitch} */
-    let data = await ajax.getAjaxData({url: 'api/global/module-switch'});
+    const data = await ajax.getAjaxData({url: 'api/global/module-switch'});
     config.module = {};
-    for (let key in data) {
+    for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         config.module[key] = data[key] === '1';
       }
@@ -180,7 +180,7 @@ export async function getPublicEncryptionKey() {
     /**
      * @type {ApiWebserverPublicKey}
      */
-    let data = await ajax.getAjaxData({url: 'api/webserver/publickey'});
+    const data = await ajax.getAjaxData({url: 'api/webserver/publickey'});
     config.encryption.publicKey = {};
     config.encryption.publicKey.n = data.encpubkeyn;
     config.encryption.publicKey.e = data.encpubkeye;
@@ -216,9 +216,9 @@ export async function getPublicEncryptionKey() {
  */
 export async function getSmsConfig() {
   if (!config.sms) {
-    let data = await ajax.getAjaxData({url: 'config/sms/config.xml'});
+    const data = await ajax.getAjaxData({url: 'config/sms/config.xml'});
     config.sms = {};
-    for (let key in data) {
+    for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         config.sms[key] = parseInt(data[key]);
       }

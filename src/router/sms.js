@@ -6,7 +6,7 @@ import * as config from './config';
 /**
  * @enum {string}
  */
-export let types = {
+export const types = {
   RECHARGE: 'RECHARGE',
   DATA: 'DATA',
   DATA_PERCENT: 'DATA_PERCENT',
@@ -18,14 +18,14 @@ export let types = {
 /**
  * @enum {number}
  */
-export let boxTypes = {
+export const boxTypes = {
   INBOX: 1,
   SENT: 2,
   DRAFT: 3,
 };
 
 function arrayMatch(message, regExpMatch, mapFunc) {
-  let data = message.match(regExpMatch);
+  const data = message.match(regExpMatch);
   if (data) {
     return data.map(mapFunc);
   } else {
@@ -76,7 +76,7 @@ function getPercent(message) {
  * @return {types}
  */
 function getType(info, message) {
-  let adPhrases = [
+  const adPhrases = [
     'spaka',
     'bonus',
     'congratulations',
@@ -93,12 +93,12 @@ function getType(info, message) {
     'sport',
   ];
   let count = 0;
-  for (let phrase of adPhrases) {
+  for (const phrase of adPhrases) {
     if (message.toLowerCase().search(phrase) > -1) {
       count++;
     }
   }
-  let ml = message.toLowerCase();
+  const ml = message.toLowerCase();
   if (info.money.length >= 2 && ml.includes('recharged') && ml.includes('balance')) {
     return types.RECHARGE;
   }
@@ -119,7 +119,7 @@ function getType(info, message) {
   return types.AD;
 }
 export function parse(message) {
-  let info = {
+  const info = {
     data: getDataUsage(message),
     expires: getExpiryDate(message),
     money: getMoney(message),
@@ -185,14 +185,14 @@ export async function getSmsCount() {
  * @param {SmsListOptions} options Options
  * @return {Promise<Message[]>}
  */
-export function getSmsList(options) {
+export async function getSmsList(options) {
   options = Object.assign({
     page: 1,
     perPage: 20,
     boxType: 1,
     sortOrder: 'desc',
   }, options);
-  return ajax.saveAjaxData({
+  const data = await ajax.saveAjaxData({
     url: 'api/sms/sms-list',
     request: {
       PageIndex: options.page,
@@ -202,15 +202,14 @@ export function getSmsList(options) {
       Ascending: options.sortOrder === 'desc' ? 0 : 1,
       UnreadPreferred: 0,
     },
-  }).then((data) => {
-    if (data.Count > 1) {
-      return data.Messages.Message;
-    } else if (data.Count > 0) {
-      return [data.Messages.Message];
-    } else {
-      return [];
-    }
   });
+  if (data.Count > 1) {
+    return data.Messages.Message;
+  } else if (data.Count > 0) {
+    return [data.Messages.Message];
+  } else {
+    return [];
+  }
 }
 
 /**
@@ -225,8 +224,8 @@ export function getSmsList(options) {
  * @return {Message[]}
  */
 function filterSmsList(options, list) {
-  let filteredList = [];
-  for (let message of list) {
+  const filteredList = [];
+  for (const message of list) {
     if (options.minDate) {
       if (Date.parse(message.Date) > options.minDate) {
         filteredList.push(message);
@@ -254,40 +253,40 @@ function filterSmsList(options, list) {
  * @param {number} [page=1]
  * @return {Promise<Message[]>}
  */
-function getFullSmsListRecursive(
+// TODO: Test this
+async function getFullSmsListRecursive(
   options, smsListOptions, list, perPage, total, page=1) {
   smsListOptions.perPage = perPage;
   smsListOptions.page = page;
-  return getSmsList(smsListOptions).then((currentList) => {
-    page++;
+  const currentList = await getSmsList(smsListOptions);
+  page++;
 
-    if (options.filter) {
-      list = list.concat(filterSmsList(options.filter, currentList));
-    } else {
-      list = list.concat(currentList);
-    }
+  if (options.filter) {
+    list = list.concat(filterSmsList(options.filter, currentList));
+  } else {
+    list = list.concat(currentList);
+  }
 
-    // If a minimum date is given and the order is descending
-    // then we can be efficient and stop queries once the date is
-    // larger than the minimum date
-    if (options.filter.minDate && smsListOptions.sortOrder === 'desc') {
-      let dateFilteredList = filterSmsList({minDate: options.filter.minDate}, currentList);
-      // If the date filtered list does not match the list then
-      // this is the last page we should check as anything later
-      // will be older than the minimum date
-      if (dateFilteredList.length !== currentList.length) {
-        return list;
-      }
-    }
-
-    // If we have not reached the end of the messages
-    if (((page - 1) * perPage) < total) {
-      return getFullSmsListRecursive(
-        options, smsListOptions, list, perPage, total, page);
-    } else {
+  // If a minimum date is given and the order is descending
+  // then we can be efficient and stop queries once the date is
+  // larger than the minimum date
+  if (options.filter.minDate && smsListOptions.sortOrder === 'desc') {
+    const dateFilteredList = filterSmsList({minDate: options.filter.minDate}, currentList);
+    // If the date filtered list does not match the list then
+    // this is the last page we should check as anything later
+    // will be older than the minimum date
+    if (dateFilteredList.length !== currentList.length) {
       return list;
     }
-  });
+  }
+
+  // If we have not reached the end of the messages
+  if (((page - 1) * perPage) < total) {
+    return getFullSmsListRecursive(
+      options, smsListOptions, list, perPage, total, page);
+  } else {
+    return list;
+  }
 }
 
 /**
@@ -296,7 +295,7 @@ function getFullSmsListRecursive(
  * @param {SmsListOptions} [smsListOptions]
  * @return {Promise<Message[]>}
  */
-export function getFullSmsList(options, smsListOptions={}) {
+export async function getFullSmsList(options, smsListOptions={}) {
   smsListOptions = Object.assign({
     sortOrder: 'desc',
   }, smsListOptions);
@@ -307,15 +306,13 @@ export function getFullSmsList(options, smsListOptions={}) {
   }, options);
 
   if (options.total > 0) {
-    return config.getSmsConfig().then((smsConfig) => {
-      return getFullSmsListRecursive(
-        options, smsListOptions, [], smsConfig.pagesize, options.total
-      ).then((list) => {
-        return list;
-      });
-    });
+    const smsConfig = await config.getSmsConfig();
+    const list = await getFullSmsListRecursive(
+      options, smsListOptions, [], smsConfig.pagesize, options.total
+    );
+    return list;
   } else {
-    return Promise.resolve([]);
+    return [];
   }
 }
 
@@ -406,6 +403,7 @@ export function getSmsSendStatus() {
  * @param {SendSmsOptions} options
  * @return {Promise<SmsSendStatus>}
  */
+// TODO: Use async
 export function sendSms(options) {
   return ajax.saveAjaxData({
     url: 'api/sms/send-sms',
@@ -421,7 +419,7 @@ export function sendSms(options) {
  * @return {Promise<any>}
  */
 export function deleteSms(indices) {
-  let request = indices.map((i) => {
+  const request = indices.map((i) => {
     return {Index: i};
   });
   return ajax.saveAjaxData({

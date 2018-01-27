@@ -35,6 +35,12 @@
     ],
     "require-jsdoc": [
       "off"
+    ],
+    "prefer-const": [
+      "error"
+    ],
+    "no-return-await": [
+      "error"
     ]
   }
 }

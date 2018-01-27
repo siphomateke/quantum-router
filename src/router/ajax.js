@@ -34,7 +34,7 @@ export function xhrRequest(options) {
     requestHeaders: null,
   }, options);
   return new Promise((resolve, reject) => {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open(options.method, options.url, true);
     if (options.responseType) {
       xhr.responseType = options.responseType;
@@ -44,7 +44,7 @@ export function xhrRequest(options) {
       xhr.overrideMimeType(options.mimeType);
     }
     if (options.requestHeaders) {
-      for (let header in options.requestHeaders) {
+      for (const header in options.requestHeaders) {
         if (Object.prototype.hasOwnProperty.call(options.requestHeaders, header)) {
           xhr.setRequestHeader(header, options.requestHeaders[header]);
         }
@@ -93,10 +93,10 @@ export function xhrRequestXml(xhrOptions) {
  */
 function recursiveXml2Object(xml) {
   if (xml.children.length > 0) {
-    let obj = {};
+    const obj = {};
     Array.prototype.forEach.call(xml.children, (el) => {
-      let childObj = (el.children.length > 0) ? recursiveXml2Object(el) : el.textContent;
-      let siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
+      const childObj = (el.children.length > 0) ? recursiveXml2Object(el) : el.textContent;
+      const siblings = Array.prototype.filter.call(el.parentNode.children, function(child) {
         return child !== el;
       });
       // If there is more than one of these elements, then it's an array
@@ -122,7 +122,7 @@ function recursiveXml2Object(xml) {
  * @return {object}
  */
 export function xml2object(xml) {
-  let obj = {};
+  const obj = {};
   obj.type = xml.documentElement.tagName;
   obj.data = recursiveXml2Object(xml.documentElement);
   return obj;
@@ -145,7 +145,7 @@ export function getProcessedXml(xml, responseMustBeOk) {
  * @return {object}
  */
 export function parseXmlString(xml) {
-  let xmlDocument = new DOMParser().parseFromString(xml, 'application/xml');
+  const xmlDocument = new DOMParser().parseFromString(xml, 'application/xml');
   return xml2object(xmlDocument);
 }
 
@@ -179,7 +179,7 @@ export function processXmlResponse(ret, responseMustBeOk=false) {
         resolve(ret.data);
       }
     } else {
-      let errorName = getRouterApiErrorName(ret.data.code);
+      const errorName = getRouterApiErrorName(ret.data.code);
       let message = errorName ? errorName : ret.data.code;
       message += ((ret.data.message) ? ' : ' + ret.data.message : '');
       reject(new RouterApiError(message));
@@ -207,7 +207,7 @@ export function getAjaxData(options) {
     parsedUrl = config.getParsedUrl();
   }
   return getTokens().then((tokens) => {
-    let headers = {};
+    const headers = {};
     if (tokens.length > 0) {
       headers['__RequestVerificationToken'] = tokens[0];
     }
@@ -240,30 +240,25 @@ export let tokens = null;
  * Gets verification tokens required for making admin requests and logging in
  * @return {Promise<string[]>}
  */
-function getRequestVerificationTokens() {
-  return getPage(config.getParsedUrl().origin+'/'+'html/home.html').then((doc) => {
-    let meta = doc.querySelectorAll('meta[name=csrf_token]');
-    let requestVerificationTokens;
-    if (meta.length > 0) {
-      requestVerificationTokens = [];
-      for (let i=0; i < meta.length; i++) {
-        requestVerificationTokens.push(meta[i].content);
-      }
-      return requestVerificationTokens;
-    } else {
-      return getAjaxData({
-        url: 'api/webserver/token',
-      }).then((data) => {
-        return [data.token];
-      });
+async function getRequestVerificationTokens() {
+  const doc = await getPage(config.getParsedUrl().origin+'/'+'html/home.html');
+  const meta = doc.querySelectorAll('meta[name=csrf_token]');
+  let requestVerificationTokens;
+  if (meta.length > 0) {
+    requestVerificationTokens = [];
+    for (let i=0; i < meta.length; i++) {
+      requestVerificationTokens.push(meta[i].content);
     }
-  });
+    return requestVerificationTokens;
+  } else {
+    const data = await getAjaxData({url: 'api/webserver/token'});
+    return [data.token];
+  }
 }
 
-export function refreshTokens() {
-  return getRequestVerificationTokens().then((_tokens) => {
-    tokens = _tokens;
-  });
+export async function refreshTokens() {
+  const _tokens = await getRequestVerificationTokens();
+  tokens = _tokens;
 }
 
 /**
@@ -298,22 +293,20 @@ export function objectToXml(obj) {
   return '<?xml version="1.0" encoding="UTF-8"?>'+jxon.jsToString(obj);
 }
 
-function doRSAEncrypt(str) {
+async function doRSAEncrypt(str) {
   if (str === '') {
     return '';
   }
-  return config.getPublicEncryptionKey().then((publicKey) => {
-    let key = new NodeRSA();
-    key.importKey({
-      n: new Buffer(publicKey.n),
-      e: parseInt(publicKey.e, 16),
-    }, 'components-public');
-    let output = key.encrypt(str, 'hex');
-    return output;
-  });
+  const publicKey = await config.getPublicEncryptionKey();
+  const key = new NodeRSA();
+  key.importKey({
+    n: new Buffer(publicKey.n),
+    e: parseInt(publicKey.e, 16),
+  }, 'components-public');
+  return key.encrypt(str, 'hex');
 }
 
-let ajaxQueue = new utils.Queue();
+const ajaxQueue = new utils.Queue();
 
 /**
  * @typedef SaveAjaxDataOptions
@@ -332,68 +325,67 @@ let ajaxQueue = new utils.Queue();
 // TODO: Simplify this by splitting up
 export function saveAjaxData(options) {
   return new Promise((resolve, reject) => {
-    ajaxQueue.add(() => {
-      return getTokens().then((tokens) => {
-      // get copy of tokens to work with
+    ajaxQueue.add(async () => {
+      try {
+        // TODO: Make sure this is not replacing the global tokens var
+        let tokens = await getTokens();
+        // get copy of tokens to work with
         tokens = tokens.slice();
-        return config.getModuleSwitch().then((moduleSwitch) => {
-          let xmlString = objectToXml({request: options.request});
+        const moduleSwitch = await config.getModuleSwitch();
+        let xmlString = objectToXml({request: options.request});
 
-          let headers = {};
+        const headers = {};
 
-          // TODO: Fix encryption
-          if (options.enc && moduleSwitch.encrypt_enabled) {
-            headers['encrypt_transmit'] = 'encrypt_transmit';
-            xmlString = doRSAEncrypt(xmlString);
-          }
+        // TODO: Fix encryption
+        if (options.enc && moduleSwitch.encrypt_enabled) {
+          headers['encrypt_transmit'] = 'encrypt_transmit';
+          xmlString = await doRSAEncrypt(xmlString);
+        }
 
-          // TODO: Add 'part_encrypt_transmit' header using data.enpstring
+        // TODO: Add 'part_encrypt_transmit' header using data.enpstring
 
-          if (tokens.length > 0) {
-            headers['__RequestVerificationToken'] = tokens[0];
-            tokens.splice(0, 1);
+        if (tokens.length > 0) {
+          headers['__RequestVerificationToken'] = tokens[0];
+          tokens.splice(0, 1);
+          updateTokens(tokens);
+        }
+
+        const xhr = await xhrRequestXml({
+          url: config.getParsedUrl().origin + '/' + options.url,
+          method: 'POST',
+          data: xmlString,
+          requestHeaders: headers,
+        });
+        return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
+          if (options.url === 'api/user/login' && tokens.length > 0) {
+          // login success, empty token list
+            tokens = [];
             updateTokens(tokens);
           }
-
-          return xhrRequestXml({
-            url: config.getParsedUrl().origin + '/' + options.url,
-            method: 'POST',
-            data: xmlString,
-            requestHeaders: headers,
-          }).then((xhr) => {
-            return getProcessedXml(xhr.responseXML, options.responseMustBeOk).then((ret) => {
-              if (options.url === 'api/user/login' && tokens.length > 0) {
-              // login success, empty token list
-                tokens = [];
-                updateTokens(tokens);
-              }
-              return ret;
-            }).finally((ret) => {
-            // get new tokens
-              let token = xhr.getResponseHeader('__requestverificationtoken');
-              let token1 = xhr.getResponseHeader('__requestverificationtokenone');
-              let token2 = xhr.getResponseHeader('__requestverificationtokentwo');
-              if (token1) {
-                tokens.push(token1);
-                if (token2) {
-                  tokens.push(token2);
-                }
-              } else if (token) {
-                tokens.push(token);
-              } else {
-                return Promise.reject(
-                  new RouterControllerError('ajax_no_tokens', 'Can not get response token'));
-              }
-              updateTokens(tokens);
-              return ret;
-            });
-          });
+          // TODO: Make sure this works since no value is being returned
+          resolve(ret);
+        }).finally(() => {
+        // get new tokens
+          const token = xhr.getResponseHeader('__requestverificationtoken');
+          const token1 = xhr.getResponseHeader('__requestverificationtokenone');
+          const token2 = xhr.getResponseHeader('__requestverificationtokentwo');
+          if (token1) {
+            tokens.push(token1);
+            if (token2) {
+              tokens.push(token2);
+            }
+          } else if (token) {
+            tokens.push(token);
+          } else {
+            return Promise.reject(
+              new RouterControllerError(
+                'ajax_no_tokens', 'Can not get response token'));
+          }
+          updateTokens(tokens);
         });
-      }).then((ret) => {
-        resolve(ret);
-      }).catch((err) => {
+      } catch (err) {
         reject(err);
-      });
+      }
     });
   });
 }
