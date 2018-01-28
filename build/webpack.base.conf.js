@@ -1,6 +1,77 @@
-let utils = require('./utils');
-let config = require('../config');
-let vueLoaderConfig = require('./vue-loader.conf');
+const utils = require('./utils');
+const webpack = require('webpack');
+const config = require('../config');
+const vueLoaderConfig = require('./vue-loader.conf');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const plugins = [
+  // split vendor js into its own file
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: function(module, count) {
+      // any required modules inside node_modules are extracted to vendor
+      return (
+        module.resource &&
+        /\.js$/.test(module.resource) &&
+        module.resource.indexOf(
+          utils.resolve('node_modules')
+        ) === 0
+      );
+    },
+  }),
+  // extract webpack runtime and module manifest to its own file in order to
+  // prevent vendor hash from being updated whenever app bundle is updated
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'manifest',
+    chunks: ['vendor'],
+  }),
+  new CopyWebpackPlugin([{
+    from: utils.resolve('static'),
+    to: config.dev.assetsSubDirectory,
+    ignore: ['.*'],
+  }]),
+];
+
+const htmlWebpackPlugins = [
+  {
+    filename: 'index.html',
+    template: 'src/index.html',
+    chunks: ['manifest', 'vendor', 'app'],
+  },
+  {
+    filename: 'background.html',
+    template: 'src/background.html',
+    chunks: ['manifest', 'vendor', 'background'],
+  },
+  {
+    filename: 'options.html',
+    template: 'src/options/options.html',
+    chunks: ['manifest', 'vendor', 'options'],
+  },
+];
+
+for (const plugin of htmlWebpackPlugins) {
+  const pluginConfig = {
+    filename: plugin.filename,
+    template: utils.resolve(plugin.template),
+    chunks: plugin.chunks,
+    inject: true,
+  };
+  if (isProduction) {
+    Object.assign(pluginConfig, {
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+      },
+      chunksSortMode: 'dependency',
+    });
+  }
+  plugins.push(new HtmlWebpackPlugin(pluginConfig));
+}
 
 module.exports = {
   entry: {
@@ -65,4 +136,5 @@ module.exports = {
     },
     ],
   },
+  plugins,
 };

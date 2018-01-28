@@ -1,17 +1,14 @@
-let path = require('path');
-let utils = require('./utils');
-let webpack = require('webpack');
-let config = require('../config');
-let merge = require('webpack-merge');
-let baseWebpackConfig = require('./webpack.base.conf');
-let CopyWebpackPlugin = require('copy-webpack-plugin');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const utils = require('./utils');
+const webpack = require('webpack');
+const config = require('../config');
+const merge = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
-let env = config.build.env;
+const env = config.build.env;
 
-let webpackConfig = merge(baseWebpackConfig, {
+const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -46,79 +43,11 @@ let webpackConfig = merge(baseWebpackConfig, {
         safe: true,
       },
     }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: path.resolve(__dirname, '../src/index.html'),
-      inject: true,
-      chunks: ['manifest', 'vendor', 'app'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency',
-    }),
-    new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../dist/background.html'),
-      template: path.resolve(__dirname, '../src/background.html'),
-      inject: true,
-      chunks: ['manifest', 'vendor', 'background'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-      },
-      chunksSortMode: 'dependency',
-    }),
-    new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../dist/options.html'),
-      template: path.resolve(__dirname, '../src/options/options.html'),
-      inject: true,
-      chunks: ['manifest', 'vendor', 'options'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-      },
-      chunksSortMode: 'dependency',
-    }),
-    // split vendor js into its own file
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: function(module, count) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        );
-      },
-    }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      chunks: ['vendor'],
-    }),
-    // copy custom static assets
-    new CopyWebpackPlugin([{
-      from: path.resolve(__dirname, '../static'),
-      to: config.build.assetsSubDirectory,
-      ignore: ['.*'],
-    }]),
   ],
 });
 
 if (config.build.productionGzip) {
-  let CompressionWebpackPlugin = require('compression-webpack-plugin');
+  const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
@@ -136,7 +65,7 @@ if (config.build.productionGzip) {
 }
 
 if (config.build.bundleAnalyzerReport) {
-  let BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
   webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 }
 
