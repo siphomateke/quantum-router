@@ -94,7 +94,7 @@ export default {
   mounted() {
     this.bus.$on('refresh', () => {
       if (!this.offline) {
-        router.utils.getTrafficStatistics().then((data) => {
+        router.monitoring.getTrafficStatistics().then((data) => {
           this.lineChartData = Object.assign({}, this.lineChartData);
 
           if (!this.usage) {

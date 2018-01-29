@@ -3,6 +3,7 @@ import * as admin from './admin';
 import * as config from './config';
 import * as sms from './sms';
 import * as ussd from './ussd';
+import * as monitoring from './monitoring';
 import * as utils from './utils';
 import {RouterControllerError, RouterApiError, XhrError} from './error';
 
@@ -36,9 +37,11 @@ export default {
     getUssdResult: ussd.getUssdResult,
     sendUssdCommand: ussd.sendUssdCommand,
   },
+  monitoring: {
+    getTrafficStatistics: monitoring.getTrafficStatistics,
+  },
   utils: {
     ping: utils.ping,
-    getTrafficStatistics: utils.getTrafficStatistics,
   },
 };
 
