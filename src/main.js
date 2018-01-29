@@ -3,7 +3,6 @@ import App from './App';
 import router from './vue-router';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
-import VsNotify from '@/components/vs-notify';
 import store from './store';
 import {modes} from '@/store';
 import i18n from '@/chrome/i18n.js';
@@ -13,7 +12,6 @@ Vue.config.productionTip = false;
 Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });
-Vue.use(VsNotify);
 
 const bus = new Vue();
 Vue.mixin({
