@@ -253,7 +253,6 @@ function filterSmsList(options, list) {
  * @param {number} [page=1]
  * @return {Promise<Message[]>}
  */
-// TODO: Test this
 async function getFullSmsListRecursive(
   options, smsListOptions, list, perPage, total, page=1) {
   smsListOptions.perPage = perPage;
@@ -403,7 +402,6 @@ export function getSmsSendStatus() {
  * @param {SendSmsOptions} options
  * @return {Promise<SmsSendStatus>}
  */
-// TODO: Use async
 export function sendSms(options) {
   return ajax.saveAjaxData({
     url: 'api/sms/send-sms',
