@@ -46,7 +46,7 @@ export class Notification {
   }
 
   static fromSms(sms) {
-    let parsed = router.sms.parse(sms.Content);
+    const parsed = router.sms.parse(sms.Content);
 
     let progress = null;
     if ('percent' in parsed

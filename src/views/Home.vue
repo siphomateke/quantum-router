@@ -110,7 +110,7 @@ export default {
               this.lineChartData.datasets[0].data.splice(0, 1);
               console.log(this.lineChartData.datasets[0].data);
             }
-            let diff = this.usage.received - this.previousUsage.received;
+            const diff = this.usage.received - this.previousUsage.received;
             this.lineChartData.labels.push(Date.now());
             this.lineChartData.datasets[0].data.push(diff);
           }
@@ -122,7 +122,7 @@ export default {
   },
   filters: {
     round(num, precision) {
-      let factor = Math.pow(10, precision);
+      const factor = Math.pow(10, precision);
       return Math.round(num * factor) / factor;
     },
   },

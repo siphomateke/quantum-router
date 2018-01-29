@@ -97,7 +97,7 @@ export default {
       this.loading = true;
       this.error = '';
       router.ussd.sendUssdCommand(this.ussd.content).then((data) => {
-        let parsed = router.ussd.parse(data.content);
+        const parsed = router.ussd.parse(data.content);
         this.ussd.result = parsed.content;
         this.ussd.options = parsed.options;
         this.ussd.selectedCommand = '';

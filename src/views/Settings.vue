@@ -33,13 +33,13 @@ export default {
       // console.log(this.$route.name);  //should return object
       // console.log(this.$router); //should return id of URL param
       let children = [];
-      for (let route of this.$router.options.routes) {
+      for (const route of this.$router.options.routes) {
         if (this.$route.matched[0].name === route.name) {
           children = route.children;
           break;
         }
       }
-      for (let child of children) {
+      for (const child of children) {
         this.nav.push({name: child.name, label: child.label});
       }
     },

@@ -9,8 +9,8 @@ export default {
   },
   getters: {
     unreadNotifications(state) {
-      let list = [];
-      for (let n of state.all) {
+      const list = [];
+      for (const n of state.all) {
         if (n.read === false) {
           list.push(n);
         }
@@ -22,9 +22,9 @@ export default {
     loadNotifications({commit}) {
       return Utils.getStorage('notifications').then((items) => {
         commit(types.CLEAR_NOTIFICATIONS);
-        let notifications = [];
+        const notifications = [];
         if ('notifications' in items) {
-          for (let n of items.notifications) {
+          for (const n of items.notifications) {
             notifications.push(Notification.fromJSON(n));
           }
         }
@@ -66,7 +66,7 @@ export default {
       state.all[index] = notification;
     },
     [types.REMOVE_NOTIFICATION](state, notification) {
-      let index = state.all.indexOf(notification);
+      const index = state.all.indexOf(notification);
       state.all.splice(index, 1);
     },
   },
