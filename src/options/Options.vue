@@ -19,7 +19,7 @@
 
 <script>
 /* global chrome */
-import router from '@/router';
+import router from 'huawei-router-api/browser';
 import {Utils} from '@/chrome/core';
 
 export default {

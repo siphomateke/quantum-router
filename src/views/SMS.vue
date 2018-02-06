@@ -25,7 +25,7 @@
 
 <script>
 import SmsBox from '@/components/sms/SmsBox.vue';
-import router from '@/router';
+import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
 
 export default {

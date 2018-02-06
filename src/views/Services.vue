@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import router from '@/router';
+import router from 'huawei-router-api/browser';
 
 export default {
   data() {

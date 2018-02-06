@@ -1,4 +1,5 @@
-import {RouterControllerError} from '@/router/error';
+import router from 'huawei-router-api/browser';
+const {RouterControllerError} = router;
 import {Utils} from '@/chrome/core';
 
 /**

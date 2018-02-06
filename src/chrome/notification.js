@@ -1,4 +1,4 @@
-import router from '@/router';
+import router from 'huawei-router-api/browser';
 import moment from 'moment';
 
 export class Notification {

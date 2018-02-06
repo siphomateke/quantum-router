@@ -68,7 +68,7 @@ import SmsList from '@/components/sms/SmsList.vue';
 import SmsBoxButton from '@/components/sms/SmsBoxButton.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
 import ActionButton from '@/components/ActionButton.vue';
-import router from '@/router';
+import router from 'huawei-router-api/browser';
 import moment from 'moment';
 import {modes} from '@/store';
 import {Notification} from '@/chrome/notification.js';
