@@ -60,7 +60,12 @@ Vue.mixin({
   methods: {
     handleError(err) {
       return new Promise((resolve, reject) => {
-        let message = err.code+' : '+err.message;
+        let message;
+        if (err instanceof RouterControllerError) {
+          message = err.code+' : '+err.message;
+        } else {
+          message = err.message
+        }
         this.$toast.open({
           type: 'is-danger',
           message: 'Error: ' + message
