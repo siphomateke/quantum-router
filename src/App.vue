@@ -226,28 +226,28 @@ export default {
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
     },
-    async tryChangeMode(newMode) {
+    async prepChangeMode(newMode) {
       if (newMode === modes.BASIC || newMode === modes.ADMIN) {
-        this.loading = true;
         try {
           await router.utils.ping();
           if (newMode === modes.BASIC) {
-            this.changeMode(newMode);
+            return true;
           } else if (newMode === modes.ADMIN) {
             const loggedIn = await router.admin.isLoggedIn();
             if (!loggedIn) {
               try {
                 await router.admin.login();
-                this.changeMode(newMode);
+                return true;
               } catch(e) {
                 this.openConfirmDialog({
                   message: this.$i18n('router_error_logging_in'),
                   confirmText: this.$i18n('dialog_retry'),
                   onConfirm: () => this.tryChangeMode(newMode),
                 });
+                return false;
               }
             } else {
-              this.changeMode(newMode);
+              return true;
             }
           }
         } catch(e) {
@@ -258,6 +258,7 @@ export default {
               confirmText: this.$i18n('dialog_retry'),
               onConfirm: () => this.tryChangeMode(newMode),
             });
+            return false;
           } catch(e2) {
             this.openConfirmDialog({
               message: this.$i18n('missing_router_url_error'),
@@ -265,13 +266,23 @@ export default {
               // Go to settings page so user can set router url
               onConfirm: () => this.$router.push('extension-settings'),
             });
+            return false;
           }
+        }
+      } else {
+        return true;
+          }
+    },
+    async tryChangeMode(newMode) {
+      this.loading = true;
+      try {
+        const ready = await this.prepChangeMode(newMode);
+        if (ready) this.changeMode(newMode);
+      } catch (e) {
+        throw e;
         } finally {
           this.loading = false;
         }
-      } else {
-        this.changeMode(newMode);
-      }
     },
     changeMode(mode) {
       if (mode !== this.mode) {
