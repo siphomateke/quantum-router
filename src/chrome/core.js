@@ -44,4 +44,16 @@ export class Utils {
       });
     });
   }
+
+  static openOptionsPage() {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.openOptionsPage(() => {
+        if (!chrome.runtime.lastError) {
+          resolve();
+        } else {
+          reject(new Error(chrome.runtime.lastError));
+        }
+      });
+    });
+  }
 }
