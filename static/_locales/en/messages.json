@@ -38,7 +38,7 @@
   },
 
   "router_module_error_invalid_router_url": {
-    "message": "Invalid router url."
+    "message": "Invalid router URL."
   },
 
   "router_error_logging_in": {
@@ -53,7 +53,7 @@
     "message": "Failed to login to router. Make sure the username and password are correct."
   },
   "connection_error": {
-    "message": "Cannot connect to the router at <a href='$url$'>$url$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router url(<a href='$url$'>$url$</a>) is correct in the extension's settings.",
+    "message": "Cannot connect to the router at <a href='$URL$'>$URL$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='$URL$'>$URL$</a>) is correct in the extension's settings.",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -62,7 +62,7 @@
     }
   },
   "invalid_router_url_error": {
-    "message": "Invalid router url; $1. Please set a valid url in the extensions's options.",
+    "message": "Invalid router URL; $1. Please set a valid URL in the extensions's options.",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -71,7 +71,7 @@
     }
   },
   "empty_router_url_error": {
-    "message": "Router url is empty. Please set a valid url in the extension's options."
+    "message": "Router URL is empty. Please set a valid URL in the extension's options."
   },
 
   "sms_admin_only": {
@@ -83,7 +83,7 @@
   "sms_action_import": {"message": "Import"},
   "sms_action_mark_as_read": {"message": "Mark as read"},
   "sms_checked_rows": {
-    "message": "$count$ row(s) selected",
+    "message": "$COUNT$ row(s) selected",
     "description": "Shows the number of rows that have been selected",
     "placeholders": {
       "count": {
@@ -93,7 +93,7 @@
     }
   },
   "sms_message_count":{
-    "message": "Showing $count$ message(s)",
+    "message": "Showing $COUNT$ message(s)",
     "placeholders": {
       "count": {
         "content": "$1",
