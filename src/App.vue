@@ -162,7 +162,7 @@ export default {
     router.config.setUsername(data.username);
     router.config.setPassword(data.password);
 
-    this.checkMode();
+    this.tryChangeMode(modes.ADMIN);
 
     this.bus.$on('refresh', async () => {
       if (this.mode > modes.OFFLINE) {
@@ -283,52 +283,6 @@ export default {
       data.type = 'is-warning';
       data.hasIcon = true;
       this.$dialog.confirm(data);
-    },
-    async checkMode() {
-      this.loading = true;
-      try {
-        await router.utils.ping();
-        const loggedIn = await router.admin.isLoggedIn();
-        if (!loggedIn) {
-          try {
-            await router.admin.login();
-            this.changeMode(modes.ADMIN);
-          } catch (e) {
-            this.openConfirmDialog({
-              message: this.$i18n('router_error_logging_in'),
-              confirmText: this.$i18n('dialog_retry'),
-              cancelText: this.$i18n('dialog_switch_to_basic'),
-              onConfirm: () => this.checkMode(),
-              onCancel: () => this.changeMode(modes.BASIC),
-            });
-          }
-        } else {
-          this.changeMode(modes.ADMIN);
-        }
-      } catch (e) {
-        try {
-          const url = await routerHelper.getRouterUrl();
-          // TODO: Add option to redirect user to settings
-          this.openConfirmDialog({
-            message: this.$i18n('connection_error', url),
-            confirmText: this.$i18n('dialog_retry'),
-            cancelText: this.$i18n('dialog_go_offline'),
-            onConfirm: () => this.checkMode(),
-            onCancel: () => this.changeMode(modes.OFFLINE),
-          });
-        } catch(e2) {
-          this.openConfirmDialog({
-            message: this.$i18n('missing_router_url_error'),
-            confirmText: this.$i18n('dialog_open_settings'),
-            cancelText: this.$i18n('dialog_go_offline'),
-            // Go to settings page so user can set router url
-            onConfirm: () => this.$router.push('extension-settings'),
-            onCancel: () => this.changeMode(modes.OFFLINE),
-          });
-        }
-      } finally {
-        this.loading = false;
-      }
     },
     refresh() {
       this.bus.$emit('refresh');
