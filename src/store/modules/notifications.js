@@ -19,18 +19,17 @@ export default {
     },
   },
   actions: {
-    loadNotifications({commit}) {
-      return Utils.getStorage('notifications').then((items) => {
-        commit(types.CLEAR_NOTIFICATIONS);
-        const notifications = [];
-        if ('notifications' in items) {
-          for (const n of items.notifications) {
-            notifications.push(Notification.fromJSON(n));
-          }
+    async loadNotifications({commit}) {
+      const items = await Utils.getStorage('notifications');
+      commit(types.CLEAR_NOTIFICATIONS);
+      const notifications = [];
+      if ('notifications' in items) {
+        for (const n of items.notifications) {
+          notifications.push(Notification.fromJSON(n));
         }
-        commit(types.ADD_NOTIFICATIONS, notifications);
-        return notifications.length;
-      });
+      }
+      commit(types.ADD_NOTIFICATIONS, notifications);
+      return notifications.length;
     },
     // TODO: Evaluate better persistent storage methods
     saveNotifications({state}) {

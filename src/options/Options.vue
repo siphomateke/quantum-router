@@ -37,18 +37,17 @@ export default {
       formLoading: false,
     };
   },
-  mounted() {
-    Utils.getStorage(['routerUrl', 'username', 'password']).then((items) => {
-      if ('routerUrl' in items) {
-        this.routerUrl.value = items.routerUrl;
-      }
-      if ('username' in items) {
-        this.username = items.username;
-      }
-      if ('password' in items) {
-        this.password = items.password;
-      }
-    });
+  async mounted() {
+    const items = await Utils.getStorage(['routerUrl', 'username', 'password']);
+    if ('routerUrl' in items) {
+      this.routerUrl.value = items.routerUrl;
+    }
+    if ('username' in items) {
+      this.username = items.username;
+    }
+    if ('password' in items) {
+      this.password = items.password;
+    }
   },
   watch: {
     'routerUrl.value'() {
@@ -58,21 +57,22 @@ export default {
   },
   methods: {
     testRouterUrl() {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         this.routerUrl.type = '';
         this.routerUrl.message = '';
         this.pinging = true;
-        router.utils.ping(this.routerUrl.value).then(() => {
+        try {
+          await router.utils.ping(this.routerUrl.value);
           this.routerUrl.type = 'is-success';
           this.routerUrl.message = '';
           resolve(true);
-        }).catch(() => {
+        } catch (e) {
           this.routerUrl.type = 'is-danger';
           this.routerUrl.message = this.$i18n('options_error_ping');
           reject(false);
-        }).finally(() => {
+        } finally {
           this.pinging = false;
-        });
+        }
       });
     },
     save() {
@@ -89,13 +89,13 @@ export default {
     cancel() {
       window.close();
     },
-    onBlurRouterUrl(val) {
+    async onBlurRouterUrl(val) {
       this.formLoading = true;
-      this.testRouterUrl().then(() => {
+      try {
+        await this.testRouterUrl();
+      } finally {
         this.formLoading = false;
-      }).catch(() => {
-        this.formLoading = false;
-      });
+      }
     },
   },
 };

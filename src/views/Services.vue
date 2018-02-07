@@ -85,18 +85,21 @@ export default {
       this.ussd.selectedOption = value;
       this.ussd.content = this.ussd.selectedOption;
     },
-    refresh() {
+    async refresh() {
       if (this.$adminMode) {
-        router.config.getUssdConfig().then((config) => {
+        try {
+          const config = await router.config.getUssdConfig();
           this.ussd.commands = config.USSD.General.Menu.MenuItem;
-        });
-        router.ussd.releaseUssd();
+        } finally {
+          router.ussd.releaseUssd();
+        }
       }
     },
     send() {
       this.loading = true;
       this.error = '';
-      router.ussd.sendUssdCommand(this.ussd.content).then((data) => {
+      try {
+        const data = router.ussd.sendUssdCommand(this.ussd.content);
         const parsed = router.ussd.parse(data.content);
         this.ussd.result = parsed.content;
         this.ussd.options = parsed.options;
@@ -104,10 +107,10 @@ export default {
         this.ussd.selectedOption = null;
         this.ussd.content = '';
         this.loading = false;
-      }).catch((err) => {
-        this.error = err;
+      } catch (e) {
+        this.error = e;
         this.loading = false;
-      });
+      }
     },
   },
 };

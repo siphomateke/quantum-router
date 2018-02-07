@@ -155,60 +155,58 @@ export default {
       return this.$store.state.mode;
     }
   },
-  mounted() {
-    routerHelper.getRouterUrl().then((url) => {
-      router.config.setUrl(url);
-    }).then(() => {
-      return routerHelper.getLoginDetails().then((data) => {
-        router.config.setUsername(data.username);
-        router.config.setPassword(data.password);
-      });
-    }).then(() => {
-      this.checkMode();
-    });
-    this.bus.$on('refresh', () => {
+  async mounted() {
+    const url = await routerHelper.getRouterUrl();
+    router.config.setUrl(url);
+    const data = await routerHelper.getLoginDetails();
+    router.config.setUsername(data.username);
+    router.config.setPassword(data.password);
+
+    this.checkMode();
+
+    this.bus.$on('refresh', async () => {
       if (this.mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
-          router.sms.getSmsCount().then((data) => {
-            return router.sms.getFullSmsList({
+          try {
+            const data = await router.sms.getSmsCount();
+            const list = await router.sms.getFullSmsList({
               total: data.LocalInbox,
               filter: {
                 minDate: this.lastUpdatedNotifications,
               },
             }, {
               sortOrder: 'desc',
-            }).then((list) => {
-              let newNotifications = [];
-              for (let message of list) {
-                let exists = false;
-                let n = Notification.fromSms(message);
+            });
+            let newNotifications = [];
+            for (let message of list) {
+              let exists = false;
+              let n = Notification.fromSms(message);
 
-                // Check if this notification is new
-                for (let n2 of this.allNotifications) {
-                  if (n.date > n2.Date) {
+              // Check if this notification is new
+              for (let n2 of this.allNotifications) {
+                if (n.date > n2.Date) {
+                  break;
+                } else if (n.date === n2.Date) {
+                  if (n.id === n2.id) {
+                    exists = true;
                     break;
-                  } else if (n.date === n2.Date) {
-                    if (n.id === n2.id) {
-                      exists = true;
-                      break;
-                    }
                   }
                 }
-
-                if (!exists) {
-                  newNotifications.push(n);
-                }
               }
-              this.$store.dispatch('addNotifications', newNotifications);
 
-              this.lastUpdatedNotifications = Date.now();
-            });
-          }).catch((e) => {
+              if (!exists) {
+                newNotifications.push(n);
+              }
+            }
+            this.$store.dispatch('addNotifications', newNotifications);
+
+            this.lastUpdatedNotifications = Date.now();
+          } catch (e) {
             this.handleError(e);
-          }).finally(() => {
+          } finally {
             this.gettingSmsList = false;
-          });
+          }
         }
       }
     });
@@ -228,48 +226,49 @@ export default {
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
     },
-    tryChangeMode(newMode) {
+    async tryChangeMode(newMode) {
       if (newMode === modes.BASIC || newMode === modes.ADMIN) {
         this.loading = true;
-        router.utils.ping().then(() => {
+        try {
+          await router.utils.ping();
           if (newMode === modes.BASIC) {
             this.changeMode(newMode);
           } else if (newMode === modes.ADMIN) {
-            return router.admin.isLoggedIn().then((loggedIn) => {
-              if (!loggedIn) {
-                router.admin.login().then(() => {
-                  this.changeMode(newMode);
-                }).catch((e) => {
-                  this.openConfirmDialog({
-                    message: this.$i18n('router_error_logging_in'),
-                    confirmText: this.$i18n('dialog_retry'),
-                    onConfirm: () => this.tryChangeMode(newMode),
-                  });
-                });
-              } else {
+            const loggedIn = await router.admin.isLoggedIn();
+            if (!loggedIn) {
+              try {
+                await router.admin.login();
                 this.changeMode(newMode);
+              } catch(e) {
+                this.openConfirmDialog({
+                  message: this.$i18n('router_error_logging_in'),
+                  confirmText: this.$i18n('dialog_retry'),
+                  onConfirm: () => this.tryChangeMode(newMode),
+                });
               }
-            });
+            } else {
+              this.changeMode(newMode);
+            }
           }
-        }).catch((e) => {
-          return routerHelper.getRouterUrl().then((url) => {
+        } catch(e) {
+          try {
+            const url = await routerHelper.getRouterUrl();
             this.openConfirmDialog({
               message: this.$i18n('connection_error', url),
               confirmText: this.$i18n('dialog_retry'),
               onConfirm: () => this.tryChangeMode(newMode),
             });
-          }).catch((e2) => {
+          } catch(e2) {
             this.openConfirmDialog({
               message: this.$i18n('missing_router_url_error'),
               confirmText: this.$i18n('dialog_open_settings'),
               // Go to settings page so user can set router url
               onConfirm: () => this.$router.push('extension-settings'),
             });
-          });
-        }).then(() => {
-          // FIXME: loading stops before new tab loads
+          }
+        } finally {
           this.loading = false;
-        });
+        }
       } else {
         this.changeMode(newMode);
       }
@@ -285,28 +284,30 @@ export default {
       data.hasIcon = true;
       this.$dialog.confirm(data);
     },
-    checkMode() {
+    async checkMode() {
       this.loading = true;
-      router.utils.ping().then(() => {
-        return router.admin.isLoggedIn().then((loggedIn) => {
-          if (!loggedIn) {
-            router.admin.login().then(() => {
-              this.changeMode(modes.ADMIN);
-            }).catch((e) => {
-              this.openConfirmDialog({
-                message: this.$i18n('router_error_logging_in'),
-                confirmText: this.$i18n('dialog_retry'),
-                cancelText: this.$i18n('dialog_switch_to_basic'),
-                onConfirm: () => this.checkMode(),
-                onCancel: () => this.changeMode(modes.BASIC),
-              });
-            });
-          } else {
+      try {
+        await router.utils.ping();
+        const loggedIn = await router.admin.isLoggedIn();
+        if (!loggedIn) {
+          try {
+            await router.admin.login();
             this.changeMode(modes.ADMIN);
+          } catch (e) {
+            this.openConfirmDialog({
+              message: this.$i18n('router_error_logging_in'),
+              confirmText: this.$i18n('dialog_retry'),
+              cancelText: this.$i18n('dialog_switch_to_basic'),
+              onConfirm: () => this.checkMode(),
+              onCancel: () => this.changeMode(modes.BASIC),
+            });
           }
-        });
-      }).catch((e) => {
-        return routerHelper.getRouterUrl().then((url) => {
+        } else {
+          this.changeMode(modes.ADMIN);
+        }
+      } catch (e) {
+        try {
+          const url = await routerHelper.getRouterUrl();
           // TODO: Add option to redirect user to settings
           this.openConfirmDialog({
             message: this.$i18n('connection_error', url),
@@ -315,7 +316,7 @@ export default {
             onConfirm: () => this.checkMode(),
             onCancel: () => this.changeMode(modes.OFFLINE),
           });
-        }).catch((e2) => {
+        } catch(e2) {
           this.openConfirmDialog({
             message: this.$i18n('missing_router_url_error'),
             confirmText: this.$i18n('dialog_open_settings'),
@@ -324,10 +325,10 @@ export default {
             onConfirm: () => this.$router.push('extension-settings'),
             onCancel: () => this.changeMode(modes.OFFLINE),
           });
-        });
-      }).then(() => {
+        }
+      } finally {
         this.loading = false;
-      });
+      }
     },
     refresh() {
       this.bus.$emit('refresh');

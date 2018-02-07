@@ -123,12 +123,13 @@ export default {
     },
     async loadAsyncData() {
       this.loading = true;
-      router.sms.getSmsList({
-        boxType: this.boxType,
-        page: this.page,
-        sortOrder: this.sortOrder,
-        perPage: this.perPage,
-      }).then((_messages) => {
+      try {
+        const _messages = await router.sms.getSmsList({
+          boxType: this.boxType,
+          page: this.page,
+          sortOrder: this.sortOrder,
+          perPage: this.perPage,
+        });
         let messages = [];
         if (Array.isArray(_messages)) {
           messages = _messages;
@@ -137,41 +138,43 @@ export default {
         }
 
         this.list = [];
-        return router.sms.getSmsCount().then((smsData) => {
-          let count = 0;
-          switch (this.boxType) {
-          case router.sms.boxTypes.INBOX:
-            count = smsData.LocalInbox;
-            break;
-          case router.sms.boxTypes.SENT:
-            count = smsData.LocalOutbox;
-            break;
-          case router.sms.boxTypes.DRAFT:
-            count = smsData.LocalDraft;
-            break;
-          }
-          this.total = parseInt(count);
+        const smsData = await router.sms.getSmsCount();
+        let count = 0;
+        switch (this.boxType) {
+        case router.sms.boxTypes.INBOX:
+          count = smsData.LocalInbox;
+          break;
+        case router.sms.boxTypes.SENT:
+          count = smsData.LocalOutbox;
+          break;
+        case router.sms.boxTypes.DRAFT:
+          count = smsData.LocalDraft;
+          break;
+        }
+        this.total = parseInt(count);
 
-          for (let m of messages) {
-            let parsed = this.parseMessage(m.Content);
-            let smsReadStatus = parseInt(m.Smstat);
-            let read = null;
-            if (smsReadStatus === 0 || smsReadStatus === 1) {
-              read = smsReadStatus === 1;
-            }
-            this.list.push({
-              index: parseInt(m.Index),
-              number: m.Phone,
-              date: m.Date,
-              content: m.Content,
-              read: read,
-              parsed: parsed,
-            });
+        for (let m of messages) {
+          let parsed = this.parseMessage(m.Content);
+          let smsReadStatus = parseInt(m.Smstat);
+          let read = null;
+          if (smsReadStatus === 0 || smsReadStatus === 1) {
+            read = smsReadStatus === 1;
           }
-        });
-      }).then(() => {
+          this.list.push({
+            index: parseInt(m.Index),
+            number: m.Phone,
+            date: m.Date,
+            content: m.Content,
+            read: read,
+            parsed: parsed,
+          });
+        }
+      } catch (e) {
+        // TODO: Handle error
+        throw e;
+      } finally {
         this.loading = false;
-      });
+      }
     },
     onPageChange(page) {
       this.page = page;

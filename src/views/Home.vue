@@ -92,31 +92,29 @@ export default {
     },
   },
   mounted() {
-    this.bus.$on('refresh', () => {
+    this.bus.$on('refresh', async () => {
       if (!this.offline) {
-        router.monitoring.getTrafficStatistics().then((data) => {
-          this.lineChartData = Object.assign({}, this.lineChartData);
+        const data = await router.monitoring.getTrafficStatistics();
+        this.lineChartData = Object.assign({}, this.lineChartData);
 
-          if (!this.usage) {
-            this.usage = {};
+        if (!this.usage) {
+          this.usage = {};
+        }
+
+        this.usage.received = data.CurrentDownload / (1024 * 1024);
+        this.usage.sent = data.CurrentUpload/ (1024 * 1024);
+
+        if (this.previousUsage) {
+          if (this.lineChartData.datasets[0].data.length > 60) {
+            this.lineChartData.labels.splice(0, 1);
+            this.lineChartData.datasets[0].data.splice(0, 1);
           }
+          const diff = this.usage.received - this.previousUsage.received;
+          this.lineChartData.labels.push(Date.now());
+          this.lineChartData.datasets[0].data.push(diff);
+        }
 
-          this.usage.received = data.CurrentDownload / (1024 * 1024);
-          this.usage.sent = data.CurrentUpload/ (1024 * 1024);
-
-          if (this.previousUsage) {
-            if (this.lineChartData.datasets[0].data.length > 60) {
-              this.lineChartData.labels.splice(0, 1);
-              this.lineChartData.datasets[0].data.splice(0, 1);
-              console.log(this.lineChartData.datasets[0].data);
-            }
-            const diff = this.usage.received - this.previousUsage.received;
-            this.lineChartData.labels.push(Date.now());
-            this.lineChartData.datasets[0].data.push(diff);
-          }
-
-          this.previousUsage = Object.assign({}, this.usage);
-        });
+        this.previousUsage = Object.assign({}, this.usage);
       }
     });
   },
