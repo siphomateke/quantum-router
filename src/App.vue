@@ -47,7 +47,7 @@ import ToolbarItem from '@/components/ToolbarItem.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
 import router from 'huawei-router-api/browser';
-const {RouterControllerError} = router;
+const {RouterError} = router;
 import * as routerHelper from '@/chrome/routerHelper';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
@@ -61,7 +61,7 @@ Vue.mixin({
     handleError(err) {
       return new Promise((resolve, reject) => {
         let message;
-        if (err instanceof RouterControllerError) {
+        if (err instanceof RouterError) {
           message = err.code+' : '+err.message;
         } else {
           message = err.message

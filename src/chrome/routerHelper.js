@@ -1,5 +1,5 @@
 import router from 'huawei-router-api/browser';
-const {RouterControllerError} = router;
+const {RouterError} = router;
 import {Utils} from '@/chrome/core';
 
 /**
@@ -11,7 +11,7 @@ export async function getRouterUrl() {
   if ('routerUrl' in items) {
     return items.routerUrl;
   } else {
-    return Promise.reject(new RouterControllerError(
+    return Promise.reject(new RouterError(
       'router_url_not_set', 'No router url set in storage'));
   }
 }
