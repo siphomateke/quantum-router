@@ -56,24 +56,20 @@ export default {
     },
   },
   methods: {
-    testRouterUrl() {
-      return new Promise(async (resolve, reject) => {
-        this.routerUrl.type = '';
+    async testRotuerUrl() {
+      this.routerUrl.type = '';
+      this.routerUrl.message = '';
+      this.pinging = true;
+      try {
+        await router.utils.ping(this.routerUrl.value);
+        this.routerUrl.type = 'is-success';
         this.routerUrl.message = '';
-        this.pinging = true;
-        try {
-          await router.utils.ping(this.routerUrl.value);
-          this.routerUrl.type = 'is-success';
-          this.routerUrl.message = '';
-          resolve(true);
-        } catch (e) {
-          this.routerUrl.type = 'is-danger';
-          this.routerUrl.message = this.$i18n('options_error_ping');
-          reject(false);
-        } finally {
-          this.pinging = false;
-        }
-      });
+      } catch (e) {
+        this.routerUrl.type = 'is-danger';
+        this.routerUrl.message = this.$i18n('options_error_ping');
+      } finally {
+        this.pinging = false;
+      }
     },
     save() {
       if (this.$refs.form.checkValidity()) {
