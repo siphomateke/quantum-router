@@ -24,32 +24,32 @@
     "message": "Failed to login to router. Make sure the username and password are correct."
   },
 
-  "router_error_api_login_username_wrong": {
+  "router_module_error_api_login_username_wrong": {
     "message": "Incorrect username."
   },
-  "router_error_api_login_password_wrong": {
+  "router_module_error_api_login_password_wrong": {
     "message": "Incorrect password."
   },
-  "router_error_api_login_already_login": {
+  "router_module_error_api_login_already_login": {
     "message": "Already logged in."
   },
-  "router_error_api_login_username_pwd_wrong": {
+  "router_module_error_api_login_username_pwd_wrong": {
     "message": "Incorrect username or password."
   },
-  "router_error_api_login_username_pwd_orerrun": {
+  "router_module_error_api_login_username_pwd_orerrun": {
     "message": "Maximum login attempts reached. Please try again later."
   },
-  "router_error_api_wrong_session": {
+  "router_module_error_api_wrong_session": {
     "message": "Invalid session ID."
   },
-  "router_error_api_wrong_session_token": {
+  "router_module_error_api_wrong_session_token": {
     "message": "Invalid session token."
   },
-  "router_error_api_system_no_rights": {
+  "router_module_error_api_system_no_rights": {
     "message": "No administrative rights. Please login."
   },
 
-  "router_error_invalid_router_url": {
+  "router_module_error_invalid_router_url": {
     "message": "Invalid router url."
   },
 

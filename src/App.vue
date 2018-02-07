@@ -251,7 +251,7 @@ export default {
                     'api_login_username_pwd_orerrun',
                   ];
                   if (knownErrors.includes(e.code)) {
-                    let actualError = this.$i18n('router_error_'+e.code);
+                      let actualError = this.$i18n('router_module_error_'+e.code);
                     errorMessage = this.$i18n('router_error_logging_in', actualError);
                   }
                 }
