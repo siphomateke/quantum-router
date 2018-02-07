@@ -239,8 +239,24 @@ export default {
                 await router.admin.login();
                 return true;
               } catch(e) {
+                let errorMessage = this.$i18n('router_unknown_error_logging_in');
+                if (e instanceof RouterError) {
+                  if (e.code === 'api_login_already_login') {
+                    return true;
+                  }
+                  let knownErrors = [
+                    'api_login_username_wrong',
+                    'api_login_password_wrong',
+                    'api_login_username_pwd_wrong',
+                    'api_login_username_pwd_orerrun',
+                  ];
+                  if (knownErrors.includes(e.code)) {
+                    let actualError = this.$i18n('router_error_'+e.code);
+                    errorMessage = this.$i18n('router_error_logging_in', actualError);
+                  }
+                }
                 this.openConfirmDialog({
-                  message: this.$i18n('router_error_logging_in'),
+                  message: errorMessage,
                   confirmText: this.$i18n('dialog_retry'),
                   onConfirm: () => this.tryChangeMode(newMode),
                 });
@@ -271,7 +287,7 @@ export default {
         }
       } else {
         return true;
-          }
+      }
     },
     async tryChangeMode(newMode) {
       this.loading = true;
@@ -280,9 +296,9 @@ export default {
         if (ready) this.changeMode(newMode);
       } catch (e) {
         throw e;
-        } finally {
-          this.loading = false;
-        }
+      } finally {
+        this.loading = false;
+      }
     },
     changeMode(mode) {
       if (mode !== this.mode) {

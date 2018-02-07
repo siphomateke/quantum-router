@@ -12,12 +12,47 @@
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
 
-  "router_error_no_admin" : {
-    "message": "Failed to get administrator access to router. Please make sure the router page is open. If you have just re-installed the extension, try reloading the router page."
-  },
   "router_error_logging_in": {
+    "message": "Failed to login; $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "router_unknown_error_logging_in": {
     "message": "Failed to login to router. Make sure the username and password are correct."
   },
+
+  "router_error_api_login_username_wrong": {
+    "message": "Incorrect username."
+  },
+  "router_error_api_login_password_wrong": {
+    "message": "Incorrect password."
+  },
+  "router_error_api_login_already_login": {
+    "message": "Already logged in."
+  },
+  "router_error_api_login_username_pwd_wrong": {
+    "message": "Incorrect username or password."
+  },
+  "router_error_api_login_username_pwd_orerrun": {
+    "message": "Maximum login attempts reached. Please try again later."
+  },
+  "router_error_api_wrong_session": {
+    "message": "Invalid session ID."
+  },
+  "router_error_api_wrong_session_token": {
+    "message": "Invalid session token."
+  },
+  "router_error_api_system_no_rights": {
+    "message": "No administrative rights. Please login."
+  },
+
+  "router_error_invalid_router_url": {
+    "message": "Invalid router url."
+  },
+
   "connection_error": {
     "message": "Cannot connect to the router at <a href='$url$'>$url$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router url(<a href='$url$'>$url$</a>) is correct in the extension's settings.",
     "placeholders": {
