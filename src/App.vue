@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       refreshInterval: 1000,
       lastUpdatedNotifications: null,
       gettingSmsList: false,
@@ -231,51 +231,51 @@ export default {
     async prepChangeMode(newMode) {
       try {
         await this.updateConfig();
-      if (newMode === modes.BASIC || newMode === modes.ADMIN) {
-        try {
-          await router.utils.ping();
-          if (newMode === modes.BASIC) {
-            return true;
-          } else if (newMode === modes.ADMIN) {
-            const loggedIn = await router.admin.isLoggedIn();
-            if (!loggedIn) {
-              try {
-                await router.admin.login();
-                return true;
-              } catch(e) {
-                let errorMessage = this.$i18n('router_unknown_error_logging_in');
-                if (e instanceof RouterError) {
-                  if (e.code === 'api_login_already_login') {
-                    return true;
-                  }
-                  let knownErrors = [
-                    'api_login_username_wrong',
-                    'api_login_password_wrong',
-                    'api_login_username_pwd_wrong',
-                    'api_login_username_pwd_orerrun',
-                  ];
-                  if (knownErrors.includes(e.code)) {
-                      let actualError = this.$i18n('router_module_error_'+e.code);
-                    errorMessage = this.$i18n('router_error_logging_in', actualError);
-                  }
-                }
-                this.openConfirmDialog({
-                  message: errorMessage,
-                  confirmText: this.$i18n('dialog_retry'),
-                    onConfirm: () => {this.tryChangeMode(newMode)},
-                });
-                return false;
-              }
-            } else {
+        if (newMode === modes.BASIC || newMode === modes.ADMIN) {
+          try {
+            await router.utils.ping();
+            if (newMode === modes.BASIC) {
               return true;
+            } else if (newMode === modes.ADMIN) {
+              const loggedIn = await router.admin.isLoggedIn();
+              if (!loggedIn) {
+                try {
+                  await router.admin.login();
+                  return true;
+                } catch(e) {
+                  let errorMessage = this.$i18n('router_unknown_error_logging_in');
+                  if (e instanceof RouterError) {
+                    if (e.code === 'api_login_already_login') {
+                      return true;
+                    }
+                    let knownErrors = [
+                      'api_login_username_wrong',
+                      'api_login_password_wrong',
+                      'api_login_username_pwd_wrong',
+                      'api_login_username_pwd_orerrun',
+                    ];
+                    if (knownErrors.includes(e.code)) {
+                      let actualError = this.$i18n('router_module_error_'+e.code);
+                      errorMessage = this.$i18n('router_error_logging_in', actualError);
+                    }
+                  }
+                  this.openConfirmDialog({
+                    message: errorMessage,
+                    confirmText: this.$i18n('dialog_retry'),
+                    onConfirm: () => {this.tryChangeMode(newMode)},
+                  });
+                  return false;
+                }
+              } else {
+                return true;
+              }
             }
-          }
           } catch (e) {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
-            this.openConfirmDialog({
+              this.openConfirmDialog({
                 message: this.$i18n('connection_error', router.config.getUrl()),
-              confirmText: this.$i18n('dialog_retry'),
+                confirmText: this.$i18n('dialog_retry'),
                 onConfirm: () => {this.tryChangeMode(newMode)},
               });
               return false;
@@ -305,7 +305,7 @@ export default {
             });
             return false;
           }
-      } else {
+        } else {
           // TODO: Log unknown error. E.g http_request_error when trying to get loggedInState
         }
       }
