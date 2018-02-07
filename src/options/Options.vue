@@ -56,7 +56,7 @@ export default {
     },
   },
   methods: {
-    async testRotuerUrl() {
+    async testRouterUrl() {
       this.routerUrl.type = '';
       this.routerUrl.message = '';
       this.pinging = true;
