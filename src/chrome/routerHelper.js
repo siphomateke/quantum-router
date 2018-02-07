@@ -1,5 +1,5 @@
 import router from 'huawei-router-api/browser';
-const {RouterError} = router;
+const {RouterError} = router.errors;
 import {Utils} from '@/chrome/core';
 
 /**

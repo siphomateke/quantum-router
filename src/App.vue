@@ -47,7 +47,7 @@ import ToolbarItem from '@/components/ToolbarItem.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
 import router from 'huawei-router-api/browser';
-const {RouterError} = router;
+const {RouterError} = router.errors;
 import * as routerHelper from '@/chrome/routerHelper';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
