@@ -55,6 +55,7 @@ import * as types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/chrome/notification.js';
 import moment from 'moment';
+import {Utils} from '@/chrome/core';
 
 Vue.mixin({
   methods: {
@@ -156,12 +157,6 @@ export default {
     }
   },
   async mounted() {
-    const url = await routerHelper.getRouterUrl();
-    router.config.setUrl(url);
-    const data = await routerHelper.getLoginDetails();
-    router.config.setUsername(data.username);
-    router.config.setPassword(data.password);
-
     this.tryChangeMode(modes.ADMIN);
 
     this.bus.$on('refresh', async () => {
@@ -218,6 +213,13 @@ export default {
     }
   },
   methods: {
+    async updateConfig() {
+      const data = await routerHelper.getLoginDetails();
+      router.config.setUsername(data.username);
+      router.config.setPassword(data.password);
+      const url = await routerHelper.getRouterUrl();
+      router.config.setUrl(url);
+    },
     modeChanged(val, oldVal) {
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.$store.dispatch('loadNotifications');
@@ -227,6 +229,8 @@ export default {
       this.tryChangeMode(newMode);
     },
     async prepChangeMode(newMode) {
+      try {
+        await this.updateConfig();
       if (newMode === modes.BASIC || newMode === modes.ADMIN) {
         try {
           await router.utils.ping();
@@ -258,7 +262,7 @@ export default {
                 this.openConfirmDialog({
                   message: errorMessage,
                   confirmText: this.$i18n('dialog_retry'),
-                  onConfirm: () => this.tryChangeMode(newMode),
+                    onConfirm: () => {this.tryChangeMode(newMode)},
                 });
                 return false;
               }
@@ -266,27 +270,44 @@ export default {
               return true;
             }
           }
-        } catch(e) {
-          try {
-            const url = await routerHelper.getRouterUrl();
+          } catch (e) {
+            // Handle ping errors
+            if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
             this.openConfirmDialog({
-              message: this.$i18n('connection_error', url),
+                message: this.$i18n('connection_error', router.config.getUrl()),
               confirmText: this.$i18n('dialog_retry'),
-              onConfirm: () => this.tryChangeMode(newMode),
+                onConfirm: () => {this.tryChangeMode(newMode)},
+              });
+              return false;
+            } else {
+              throw e;
+            }
+          }
+        } else {
+          return true;
+        }
+      } catch (e) {
+        if (e instanceof RouterError && e.code === 'invalid_router_url') {
+          if (router.config.getUrl().length > 0) {
+            this.openConfirmDialog({
+              message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
+              confirmText: this.$i18n('dialog_open_settings'),
+              // TODO: call tryChangeMode after options have been saved
+              onConfirm: () => {Utils.openOptionsPage()},
             });
             return false;
-          } catch(e2) {
+          } else {
             this.openConfirmDialog({
-              message: this.$i18n('missing_router_url_error'),
+              message: this.$i18n('empty_router_url_error'),
               confirmText: this.$i18n('dialog_open_settings'),
-              // Go to settings page so user can set router url
-              onConfirm: () => this.$router.push('extension-settings'),
+              // TODO: call tryChangeMode after options have been saved
+              onConfirm: () => {Utils.openOptionsPage()},
             });
             return false;
           }
-        }
       } else {
-        return true;
+          // TODO: Log unknown error. E.g http_request_error when trying to get loggedInState
+        }
       }
     },
     async tryChangeMode(newMode) {

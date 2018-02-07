@@ -62,8 +62,17 @@
       }
     }
   },
-  "missing_router_url_error": {
-    "message": "Failed to retrieve router url. Make sure you have set it in settings."
+  "invalid_router_url_error": {
+    "message": "Invalid router url; $1. Please set a valid url in the extensions's options.",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "192.168.1.1"
+      }
+    }
+  },
+  "empty_router_url_error": {
+    "message": "Router url is empty. Please set a valid url in the extension's options."
   },
 
   "sms_admin_only": {
