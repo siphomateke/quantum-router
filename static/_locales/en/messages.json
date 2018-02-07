@@ -12,18 +12,6 @@
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
 
-  "router_error_logging_in": {
-    "message": "Failed to login; $ERROR$",
-    "placeholders": {
-      "error": {
-        "content": "$1"
-      }
-    }
-  },
-  "router_unknown_error_logging_in": {
-    "message": "Failed to login to router. Make sure the username and password are correct."
-  },
-
   "router_module_error_api_login_username_wrong": {
     "message": "Incorrect username."
   },
@@ -53,6 +41,17 @@
     "message": "Invalid router url."
   },
 
+  "router_error_logging_in": {
+    "message": "Failed to login; $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "router_unknown_error_logging_in": {
+    "message": "Failed to login to router. Make sure the username and password are correct."
+  },
   "connection_error": {
     "message": "Cannot connect to the router at <a href='$url$'>$url$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router url(<a href='$url$'>$url$</a>) is correct in the extension's settings.",
     "placeholders": {
