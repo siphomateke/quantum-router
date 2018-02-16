@@ -173,12 +173,12 @@ export default {
               sortOrder: 'desc',
             });
             let newNotifications = [];
-            for (let message of list) {
+            for (const message of list) {
               let exists = false;
               let n = Notification.fromSms(message);
 
               // Check if this notification is new
-              for (let n2 of this.allNotifications) {
+              for (const n2 of this.allNotifications) {
                 if (n.date > n2.Date) {
                   break;
                 } else if (n.date === n2.Date) {

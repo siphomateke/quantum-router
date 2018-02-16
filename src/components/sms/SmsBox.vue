@@ -153,9 +153,9 @@ export default {
         }
         this.total = parseInt(count);
 
-        for (let m of messages) {
-          let parsed = this.parseMessage(m.Content);
-          let smsReadStatus = parseInt(m.Smstat);
+        for (const m of messages) {
+          const parsed = this.parseMessage(m.Content);
+          const smsReadStatus = parseInt(m.Smstat);
           let read = null;
           if (smsReadStatus === 0 || smsReadStatus === 1) {
             read = smsReadStatus === 1;
@@ -191,18 +191,18 @@ export default {
       this.showNewMessageDialog = true;
     },
     deleteMessages() {
-      let indices = this.checkedRows.map((row) => row.index);
+      const indices = this.checkedRows.map(row => row.index);
       router.sms.deleteSms(indices);
       // TODO: delete sms loading indicator
       this.refresh();
     },
     markMessagesAsRead() {
-      let promises = [];
+      const promises = [];
       let successful = 0;
-      for (let checkedRow of this.checkedRows) {
+      for (const checkedRow of this.checkedRows) {
         if (this.isInbox && checkedRow.read === false) {
           promises.push(router.sms.setSmsAsRead(checkedRow.index).then(() => {
-            let row = this.list.find((row) => row.index === checkedRow.index);
+            const row = this.list.find(row => row.index === checkedRow.index);
             // Row could be undefined if the checked row is on another page
             if (row) {
               row.read = true;
@@ -216,7 +216,7 @@ export default {
           message: 'Marked '+successful+' message(s) as read',
           type: 'is-success',
         });
-      }).catch((e) => {
+      }).catch(e => {
         this.handleError(e);
         if (successful > 0) {
           this.$toast.open({

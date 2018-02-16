@@ -6,7 +6,7 @@ chrome.storage.sync.get({
   routerUrl: 'http://192.168.1.1',
   username: '',
   password: '',
-}, (data) => {
+}, data => {
   chrome.storage.sync.set(data);
 });
 

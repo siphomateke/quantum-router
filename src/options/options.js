@@ -27,6 +27,6 @@ Vue.mixin({
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: (h) => h(Options),
+  render: h => h(Options),
 });
 

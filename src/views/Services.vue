@@ -156,7 +156,7 @@ export default {
       if (this.ussdResultRequest) {
         this.ussdResultRequest.cancel();
       }
-    }
+    },
   },
 };
 </script>

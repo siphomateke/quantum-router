@@ -56,5 +56,5 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 export const events = {
   addListener(name, callback) {
     emitter.on(name, callback);
-  }
-}
+  },
+};

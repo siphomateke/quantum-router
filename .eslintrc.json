@@ -41,6 +41,10 @@
     ],
     "no-return-await": [
       "error"
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
     ]
   }
 }
