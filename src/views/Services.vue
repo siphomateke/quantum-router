@@ -95,11 +95,11 @@ export default {
         }
       }
     },
-    send() {
+    async send() {
       this.loading = true;
       this.error = '';
       try {
-        const data = router.ussd.sendUssdCommand(this.ussd.content);
+        const data = await router.ussd.sendUssdCommand(this.ussd.content);
         const parsed = router.ussd.parse(data.content);
         this.ussd.result = parsed.content;
         this.ussd.options = parsed.options;
@@ -108,7 +108,7 @@ export default {
         this.ussd.content = '';
         this.loading = false;
       } catch (e) {
-        this.error = e;
+        this.error = e.message;
         this.loading = false;
       }
     },
