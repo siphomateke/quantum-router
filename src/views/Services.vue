@@ -103,10 +103,15 @@ export default {
         }
       }
     },
-    resetResult() {
+    resetCommandResult() {
       this.ussd.result = '';
       this.ussd.options = [];
       this.ussd.selectedOption = null;
+    },
+    addMessage(message) {
+      const parsed = router.ussd.parse(message);
+      this.ussd.result = parsed.content;
+      this.ussd.options = parsed.options;
     },
     async _send() {
       try {
@@ -117,9 +122,7 @@ export default {
         const data = await this.ussdResultRequest.send();
         this.ussdResultRequest = null;
         if (this.cancelling) return;
-        const parsed = router.ussd.parse(data.content);
-        this.ussd.result = parsed.content;
-        this.ussd.options = parsed.options;
+        this.addMessage(data.content);
         this.ussd.selectedCommand = '';
         this.ussd.content = '';
       } catch (e) {
@@ -133,7 +136,7 @@ export default {
     async send() {
       this.loading = true;
       this.error = '';
-      this.resetResult();
+      this.resetCommandResult();
       await this._send();
       if (this.cancelling) {
         await router.ussd.releaseUssd();
