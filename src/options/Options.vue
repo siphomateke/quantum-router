@@ -79,6 +79,10 @@ export default {
           password: this.password,
         }, () => {
           window.close();
+          chrome.runtime.sendMessage({
+            from: 'options',
+            status: 'saved',
+          });
         });
       }
     },

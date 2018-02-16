@@ -1,6 +1,7 @@
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import {Utils} from '@/chrome/core';
+import {EventEmitter} from 'events';
 
 /**
  * Gets the url of router page from chrome.storage
@@ -37,5 +38,23 @@ export async function getLoginDetails() {
     // TODO: Make this error more detailed and not use 'Error' object
     return Promise.reject(new Error(
       'username or password is not set in storage'));
+  }
+}
+
+export function openOptionsPage() {
+  return Utils.openOptionsPage();
+}
+
+export const emitter = new EventEmitter();
+
+chrome.runtime.onMessage.addListener((message, sender) => {
+  if (message.from === 'options' && message.status === 'saved') {
+    emitter.emit('optionsSaved');
+  }
+});
+
+export const events = {
+  addListener(name, callback) {
+    emitter.on(name, callback);
   }
 }

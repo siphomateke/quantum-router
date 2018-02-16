@@ -55,7 +55,6 @@ import * as types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/chrome/notification.js';
 import moment from 'moment';
-import {Utils} from '@/chrome/core';
 
 Vue.mixin({
   methods: {
@@ -205,6 +204,9 @@ export default {
         }
       }
     });
+    routerHelper.events.addListener('optionsSaved', () => {
+      this.tryChangeMode(modes.ADMIN);
+    });
     this.refresh();
   },
   watch: {
@@ -292,16 +294,14 @@ export default {
             this.openConfirmDialog({
               message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
               confirmText: this.$i18n('dialog_open_settings'),
-              // TODO: call tryChangeMode after options have been saved
-              onConfirm: () => {Utils.openOptionsPage()},
+              onConfirm: () => {routerHelper.openOptionsPage()},
             });
             return false;
           } else {
             this.openConfirmDialog({
               message: this.$i18n('empty_router_url_error'),
               confirmText: this.$i18n('dialog_open_settings'),
-              // TODO: call tryChangeMode after options have been saved
-              onConfirm: () => {Utils.openOptionsPage()},
+              onConfirm: () => {routerHelper.openOptionsPage()},
             });
             return false;
           }
