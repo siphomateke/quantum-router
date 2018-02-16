@@ -74,9 +74,14 @@ export default {
     '$mode'() {
       this.refresh();
     },
-    ussd(value) {
-      if (value !== this.ussd.selectedCommand && this.ussd.selectedCommand.length > 0) {
+    ['ussd.content'](value) {
+      if (value !== this.ussd.selectedCommand && value.length > 0) {
+        // if value is in ussd commands
+        if (this.ussd.commands.filter(c => c.Command === value).length > 0) {
+          this.ussd.selectedCommand = value;
+        } else {
         this.ussd.selectedCommand = '';
+      }
       }
     },
   },
@@ -86,7 +91,9 @@ export default {
   methods: {
     ussdSelectedCommandChanged(command) {
       this.ussd.selectedCommand = command;
+      if (command.length > 0) {
       this.ussd.content = this.ussd.selectedCommand;
+      }
     },
     ussdSelectedOptionChanged(value) {
       this.ussd.selectedOption = value;
