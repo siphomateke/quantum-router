@@ -30,7 +30,11 @@
     <button @click="send"
     class="button is-primary"
     :class="{'is-loading': loading}"
-    :disabled="ussd.content.length === 0">{{ 'services_ussd_send' | $i18n }}</button>
+    :disabled="ussd.content.length === 0">{{ 'generic_send' | $i18n }}</button>
+    <button @click="cancel"
+    class="button is-danger"
+    v-show="loading"
+    :disabled="cancelling">{{ 'generic_cancel' | $i18n }}</button>
   </form>
   <template v-else>
     <b-message type="is-info" has-icon>
@@ -42,6 +46,7 @@
 
 <script>
 import router from 'huawei-router-api/browser';
+const {RouterError} = router.errors;
 
 export default {
   data() {
@@ -56,6 +61,8 @@ export default {
       },
       loading: false,
       error: '',
+      cancelling: false,
+      ussdResultRequest: null,
     };
   },
   computed: {
@@ -88,6 +95,7 @@ export default {
     async refresh() {
       if (this.$adminMode) {
         try {
+          // TODO: Show when this is loading
           const config = await router.config.getUssdConfig();
           this.ussd.commands = config.USSD.General.Menu.MenuItem;
         } finally {
@@ -95,23 +103,50 @@ export default {
         }
       }
     },
-    async send() {
-      this.loading = true;
-      this.error = '';
+    resetResult() {
+      this.ussd.result = '';
+      this.ussd.options = [];
+      this.ussd.selectedOption = null;
+    },
+    async _send() {
       try {
-        const data = await router.ussd.sendUssdCommand(this.ussd.content);
+        await router.ussd.sendUssdCommand(this.ussd.content);
+        if (this.cancelling) return;
+        // Store reference to request so it can be cancelled
+        this.ussdResultRequest = new router.ussd.UssdResultRequest();
+        const data = await this.ussdResultRequest.send();
+        this.ussdResultRequest = null;
+        if (this.cancelling) return;
         const parsed = router.ussd.parse(data.content);
         this.ussd.result = parsed.content;
         this.ussd.options = parsed.options;
         this.ussd.selectedCommand = '';
-        this.ussd.selectedOption = null;
         this.ussd.content = '';
-        this.loading = false;
       } catch (e) {
-        this.error = e.message;
-        this.loading = false;
+        if (e instanceof RouterError && e.code === 'ussd_cancelled') {
+          return;
+        } else {
+          this.error = e.message;
+        }
       }
     },
+    async send() {
+      this.loading = true;
+      this.error = '';
+      this.resetResult();
+      await this._send();
+      if (this.cancelling) {
+        await router.ussd.releaseUssd();
+      }
+      this.cancelling = false;
+      this.loading = false;
+    },
+    cancel() {
+      this.cancelling = true;
+      if (this.ussdResultRequest) {
+        this.ussdResultRequest.cancel();
+      }
+    }
   },
 };
 </script>
