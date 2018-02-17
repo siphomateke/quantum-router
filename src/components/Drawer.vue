@@ -3,25 +3,16 @@
   <div>
     <div class="main">
       <div class="header drawer-item">{{ title }}</div>
-      <drawer-item v-for="item in items" :key="item.id"
-      :link="item.link"
-      :icon="item.icon"
-      :label="item.label"
-      ></drawer-item>
+      <slot></slot>
     </div>
   </div>
 </aside>
 </template>
 
 <script>
-import DrawerItem from '@/components/DrawerItem.vue';
 export default {
-  components: {
-    'drawer-item': DrawerItem,
-  },
   props: {
     title: String,
-    items: Array,
   },
 };
 </script>

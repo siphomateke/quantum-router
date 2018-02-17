@@ -2,7 +2,28 @@
   <div id="app">
     <b-loading :active.sync="loading" :canCancel="false"></b-loading>
     <div class="app-wrapper columns is-gapless">
-      <app-drawer :title="drawer.title" :items="drawer.items" class="column is-2"></app-drawer>
+      <drawer title="Quantum Router" class="column is-2">
+        <drawer-item
+        link="home"
+        icon="home"
+        :label="this.$i18n('menu_home')"></drawer-item>
+        <drawer-item
+        link="sms"
+        icon="comment"
+        :label="this.$i18n('menu_sms')"></drawer-item>
+        <drawer-item
+        link="statistics"
+        icon="pie-chart"
+        :label="this.$i18n('menu_statistics')"></drawer-item>
+        <drawer-item
+        link="services"
+        icon="terminal"
+        :label="this.$i18n('menu_services')"></drawer-item>
+        <drawer-item
+        link="settings"
+        icon="cog"
+        :label="this.$i18n('menu_settings')"></drawer-item>
+      </drawer>
       <div class="column">
         <q-toolbar>
           <template slot="toolbar-start">
@@ -41,6 +62,7 @@
 /* global chrome */
 import Vue from 'vue';
 import Drawer from '@/components/Drawer.vue';
+import DrawerItem from '@/components/DrawerItem.vue';
 import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/Toolbar.vue';
 import ToolbarItem from '@/components/ToolbarItem.vue';
@@ -79,7 +101,8 @@ Vue.mixin({
 export default {
   name: 'app',
   components: {
-    'app-drawer': Drawer,
+    'drawer': Drawer,
+    'drawer-item': DrawerItem,
     'b-navbar': Navbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
@@ -93,35 +116,6 @@ export default {
       refreshInterval: 1000,
       lastUpdatedNotifications: null,
       gettingSmsList: false,
-      drawer: {
-        title: 'Quantum Router',
-        items: [{
-          link: 'home',
-          label: this.$i18n('menu_home'),
-          icon: 'home',
-        },
-        {
-          link: 'sms',
-          label: this.$i18n('menu_sms'),
-          icon: 'comment',
-        },
-        {
-          link: 'statistics',
-          label: this.$i18n('menu_statistics'),
-          icon: 'pie-chart',
-        },
-        {
-          link: 'services',
-          label: this.$i18n('menu_services'),
-          icon: 'terminal',
-        },
-        {
-          link: 'settings',
-          label: this.$i18n('menu_settings'),
-          icon: 'cog',
-        },
-        ],
-      },
     };
   },
   computed: {
