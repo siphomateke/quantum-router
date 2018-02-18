@@ -1,39 +1,51 @@
 <template>
-  <div class='sms-box'>
-    <br>
-    <div class="field is-grouped">
-      <!-- TODO: Make action buttons show loading progress -->
-      <sms-box-button
-        :label="this.$i18n('sms_action_clear_checked')"
-        icon="times" type="is-danger"
-        @click="clearChecked"
-        :disabled="this.checkedRows.length === 0">
-      </sms-box-button>
+  <div class="sms-box">
+    <div class="level is-mobile">
+      <div class="level-left">
+        <!-- TODO: Make action buttons show loading progress -->
+        <b-field grouped>
+          <b-field>
+            <sms-box-button
+              :label="this.$i18n('sms_action_clear_checked')"
+              icon="times" type="is-danger"
+              @click="clearChecked"
+              :disabled="checkedRows.length === 0">
+            </sms-box-button>
+          </b-field>
 
-      <action-button
-        :label="this.$i18n('sms_action_new_message')"
-        icon="plus" type="is-primary"
-        @click="newMessage">
-      </action-button>
+          <b-field>
+            <action-button
+              icon="trash"
+              :disabled="checkedRows.length === 0"
+              @click="deleteMessages">
+            </action-button>
+            <action-button v-if="isInbox"
+              :label="this.$i18n('sms_action_mark_as_read')"
+              :disabled="checkedRows.length === 0"
+              @click="markMessagesAsRead">
+            </action-button>
+          </b-field>
+        </b-field>
+      </div>
 
-      <action-button
-        :label="this.$i18n('sms_action_delete')"
-        icon="trash" type="is-danger"
-        :disabled="this.checkedRows.length === 0"
-        @click="deleteMessages">
-      </action-button>
-
-      <action-button
-        :label="this.$i18n('sms_action_import')"
-        icon="upload"
-        :disabled="true">
-      </action-button>
-
-      <action-button v-if="isInbox"
-        :label="this.$i18n('sms_action_mark_as_read')"
-        :disabled="this.checkedRows.length === 0"
-        @click="markMessagesAsRead">
-      </action-button>
+      <div class="level-right">
+        <b-field grouped>
+          <b-field>
+          <action-button
+            :label="this.$i18n('sms_action_new_message')"
+            icon="plus" type="is-primary"
+            @click="newMessage">
+          </action-button>
+          </b-field>
+          <b-field>
+          <action-button
+            :label="this.$i18n('sms_action_import')"
+            icon="upload"
+            :disabled="true">
+          </action-button>
+        </b-field>
+        </b-field>
+      </div>
     </div>
     <b-message type="is-info">
       <!-- TODO: Improve the way checked rows are displayed.
@@ -237,3 +249,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .sms-list {
+    .table td {
+      vertical-align: middle;
+    }
+  }
+</style>
