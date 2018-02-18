@@ -104,7 +104,7 @@ export default {
         try {
           // TODO: Show when this is loading
           const config = await router.config.getUssdConfig();
-          this.ussd.commands = config.USSD.General.Menu.MenuItem;
+          this.ussd.commands = config.General.Menu.MenuItem;
         } finally {
           router.ussd.releaseUssd();
         }
