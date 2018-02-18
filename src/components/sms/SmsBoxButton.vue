@@ -2,7 +2,7 @@
   <div class='control'>
     <button class="button" :class="type" @click="click" :disabled="disabled">
       <b-icon v-if="icon" :icon="icon"></b-icon>
-      <span>{{label}}</span>
+      <span v-if="label">{{label}}</span>
     </button>
   </div>
 </template>
