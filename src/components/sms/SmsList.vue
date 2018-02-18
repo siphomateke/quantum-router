@@ -42,6 +42,10 @@
           </template>
         </section>
       </template>
+
+      <template slot="bottom-left" v-if="total > 1">
+        <span>{{ pageInfo }}</span>
+      </template>
     </b-table>
   </div>
 </template>
@@ -66,6 +70,17 @@ export default {
     return {
       internalCheckedRows: this.checkedRows,
     };
+  },
+  computed: {
+    pageInfo() {
+      const first = ((this.page-1)*this.perPage)+1;
+      const last = (((this.page-1)*this.perPage)+this.perPage)+1;
+      if (last > this.total) {
+        return this.$i18n('sms_first_to_last', first, this.total);
+      } else {
+        return this.$i18n('sms_first_to_last_of_total', first, last, this.total);
+      }
+    },
   },
   watch: {
     checkedRows(val) {

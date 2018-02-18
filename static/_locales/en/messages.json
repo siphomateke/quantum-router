@@ -85,22 +85,35 @@
   "sms_action_delete": {"message": "Delete"},
   "sms_action_import": {"message": "Import"},
   "sms_action_mark_as_read": {"message": "Mark as read"},
-  "sms_checked_rows": {
-    "message": "$COUNT$ row(s) selected",
-    "description": "Shows the number of rows that have been selected",
+  "sms_first_to_last": {
+    "message": "$FIRST$ - $LAST$",
+    "description": "Shows which sms messages are currently being displayed.",
     "placeholders": {
-      "count": {
+      "first": {
         "content": "$1",
+        "example": "1"
+      },
+      "last": {
+        "content": "$2",
         "example": "20"
       }
     }
   },
-  "sms_message_count":{
-    "message": "Showing $COUNT$ message(s)",
+  "sms_first_to_last_of_total": {
+    "message": "$FIRST$ - $LAST$ of $TOTAL$",
+    "description": "Shows which sms messages are currently being displayed including the total.",
     "placeholders": {
-      "count": {
+      "first": {
         "content": "$1",
+        "example": "1"
+      },
+      "last": {
+        "content": "$2",
         "example": "20"
+      },
+      "total": {
+        "content": "$3",
+        "example": "100"
       }
     }
   },

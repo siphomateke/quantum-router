@@ -31,32 +31,22 @@
       <div class="level-right">
         <b-field grouped>
           <b-field>
-          <action-button
-            :label="this.$i18n('sms_action_new_message')"
-            icon="plus" type="is-primary"
-            @click="newMessage">
-          </action-button>
+            <action-button
+              :label="this.$i18n('sms_action_new_message')"
+              icon="plus" type="is-primary"
+              @click="newMessage">
+            </action-button>
           </b-field>
           <b-field>
-          <action-button
-            :label="this.$i18n('sms_action_import')"
-            icon="upload"
-            :disabled="true">
-          </action-button>
-        </b-field>
+            <action-button
+              :label="this.$i18n('sms_action_import')"
+              icon="upload"
+              :disabled="true">
+            </action-button>
+          </b-field>
         </b-field>
       </div>
     </div>
-    <b-message type="is-info">
-      <!-- TODO: Improve the way checked rows are displayed.
-      Perhaps at the bottom of the screen -->
-      <template v-if="checkedRows.length > 0">
-        {{ this.$i18n('sms_checked_rows', checkedRows.length) }}
-      </template>
-      <template v-else>
-        {{ this.$i18n('sms_message_count', list.length) }}
-      </template>
-    </b-message>
     <sms-list
     :list="list"
     :loading="loading"
