@@ -19,7 +19,7 @@
       <b-tabs type="is-boxed" expanded @change="changedTab">
         <b-tab-item
           v-for="(tab, idx) in tabs" :key="idx"
-          :label="tab.label">
+          :label="tab.label+tab.status">
 
           <sms-box
             :bus="buses[idx]"
@@ -64,17 +64,14 @@ export default {
       {boxType: boxTypes.SENT, label: this.$i18n('sms_box_sent')},
       {boxType: boxTypes.DRAFT, label: this.$i18n('sms_box_draft')},
     ];
-    const tabData = {};
     const buses = [];
     for (let i=0; i<tabs.length; i++) {
-      tabData[i] = {
-        checkedRows: [],
-      };
+      tabs[i].status = '';
+      tabs[i].checkedRows = [];
       buses[i] = new Vue();
     }
     return {
       tabs,
-      tabData,
       currentTab: 0,
       buses,
       bus: new Vue(),
@@ -96,8 +93,16 @@ export default {
 
     this.bus.$on('sms-actions:new', this.newMessage);
     this.bus.$on('sms-actions:import', this.import);
+
+    // TODO: Add global refresh event for when admin mode is available
+    if (this.mode === modes.ADMIN) {
+      this.refreshAdmin();
+    }
   },
   computed: {
+    mode() {
+      return this.$store.state.mode;
+    },
     boxTypes() {
       return router.sms.boxTypes;
     },
@@ -105,16 +110,23 @@ export default {
       return this.tabs[this.currentTab].boxType;
     },
     adminMode() {
-      return this.$store.state.mode === modes.ADMIN;
+      return this.mode === modes.ADMIN;
     },
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
     },
     checkedRows() {
-      return this.tabData[this.currentTab].checkedRows;
+      return this.tabs[this.currentTab].checkedRows;
     },
     currentBus() {
       return this.buses[this.currentTab];
+    },
+  },
+  watch: {
+    mode() {
+      if (this.mode === modes.ADMIN) {
+        this.refreshAdmin();
+      }
     },
   },
   methods: {
@@ -122,7 +134,21 @@ export default {
       this.currentTab = idx;
     },
     updateCheckedRows(val, idx) {
-      this.tabData[idx].checkedRows = val;
+      this.tabs[idx].checkedRows = val;
+    },
+    getTabIndexByBoxType(type) {
+      return this.tabs.findIndex(tab => tab.boxType === type);
+    },
+    getTabByBoxType(type) {
+      return this.tabs[this.getTabIndexByBoxType(type)];
+    },
+    async refreshAdmin() {
+      // TODO: Refresh every once in a while
+      const smsData = await router.sms.getSmsCount();
+      const separator = '\xa0 | \xa0';
+      this.getTabByBoxType(boxTypes.INBOX).status = separator+smsData.LocalInbox;
+      this.getTabByBoxType(boxTypes.SENT).status = separator+smsData.LocalOutbox;
+      this.getTabByBoxType(boxTypes.DRAFT).status = separator+smsData.LocalDraft;
     },
     newMessage() {
       this.showNewMessageDialog = true;
