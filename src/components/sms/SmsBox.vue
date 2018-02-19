@@ -56,6 +56,7 @@
     :per-page="perPage"
     :sort-order="sortOrder"
     :show-read-status="isInbox"
+    :show-type="isInbox"
     @page-change="onPageChange"
     @sort="onSort">
     </sms-list>
