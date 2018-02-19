@@ -58,6 +58,7 @@ export default {
         selectedCommand: '',
         options: [],
         selectedOption: null,
+        // TODO: Add extra fields depending on selected command
       },
       loading: false,
       error: '',
@@ -74,14 +75,9 @@ export default {
     '$mode'() {
       this.refresh();
     },
-    ['ussd.content'](value) {
-      if (value !== this.ussd.selectedCommand && value.length > 0) {
-        // if value is in ussd commands
-        if (this.ussd.commands.filter(c => c.Command === value).length > 0) {
-          this.ussd.selectedCommand = value;
-        } else {
-        this.ussd.selectedCommand = '';
-      }
+    ['ussd.selectedCommand'](val) {
+      if (val.length === 0) {
+        this.ussd.content = '';
       }
     },
   },
@@ -92,7 +88,7 @@ export default {
     ussdSelectedCommandChanged(command) {
       this.ussd.selectedCommand = command;
       if (command.length > 0) {
-      this.ussd.content = this.ussd.selectedCommand;
+        this.ussd.content = this.ussd.selectedCommand;
       }
     },
     ussdSelectedOptionChanged(value) {
@@ -141,6 +137,7 @@ export default {
       }
     },
     async send() {
+      // TODO: release USSD if selectedCommand has changed
       this.loading = true;
       this.error = '';
       this.resetCommandResult();
