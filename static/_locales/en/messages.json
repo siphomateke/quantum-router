@@ -124,6 +124,7 @@
   "sms_box_inbox": {"message": "Inbox"},
   "sms_box_sent": {"message": "Outbox"},
   "sms_box_draft": {"message": "Drafts"},
+  "sms_message_type": {"message": "Type"},
   "sms_message_number": {"message": "Number"},
   "sms_message_content": {"message": "Content"},
   "sms_message_date": {"message": "Date"},

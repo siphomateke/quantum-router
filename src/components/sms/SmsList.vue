@@ -26,7 +26,7 @@
             v-if="typeof props.row.read === 'boolean' && showReadStatus">
             <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
           </b-table-column>
-          <b-table-column field="type" label="Type"
+          <b-table-column field="type" :label="$i18n('sms_message_type')"
             v-if="showType">
             <b-icon :icon="getTypeIcon(props.row.parsed.type)"></b-icon>
           </b-table-column>
