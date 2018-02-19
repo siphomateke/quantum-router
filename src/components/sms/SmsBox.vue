@@ -1,91 +1,34 @@
 <template>
   <div class="sms-box">
-    <div class="level is-mobile">
-      <div class="level-left">
-        <!-- TODO: Make action buttons show loading progress -->
-        <b-field grouped>
-          <b-field>
-            <sms-box-button
-              :label="this.$i18n('sms_action_clear_checked')"
-              icon="times" type="is-danger"
-              @click="clearChecked"
-              :disabled="checkedRows.length === 0">
-            </sms-box-button>
-          </b-field>
-
-          <b-field>
-            <action-button
-              icon="trash"
-              :disabled="checkedRows.length === 0"
-              @click="deleteMessages">
-            </action-button>
-            <action-button v-if="isInbox"
-              :label="this.$i18n('sms_action_mark_as_read')"
-              :disabled="checkedRows.length === 0"
-              @click="markMessagesAsRead">
-            </action-button>
-          </b-field>
-        </b-field>
-      </div>
-
-      <div class="level-right">
-        <b-field grouped>
-          <b-field>
-            <action-button
-              :label="this.$i18n('sms_action_new_message')"
-              icon="plus" type="is-primary"
-              @click="newMessage">
-            </action-button>
-          </b-field>
-          <b-field>
-            <action-button
-              :label="this.$i18n('sms_action_import')"
-              icon="upload"
-              :disabled="true">
-            </action-button>
-          </b-field>
-        </b-field>
-      </div>
-    </div>
     <sms-list
-    :list="list"
-    :loading="loading"
-    :checked-rows.sync="checkedRows"
-    :total="total"
-    :page="page"
-    :per-page="perPage"
-    :sort-order="sortOrder"
-    :show-read-status="isInbox"
-    :show-type="isInbox"
-    @page-change="onPageChange"
-    @sort="onSort">
+      :list="list"
+      :loading="loading"
+      :checked-rows.sync="checkedRows"
+      :total="total"
+      :page="page"
+      :per-page="perPage"
+      :sort-order="sortOrder"
+      :show-read-status="isInbox"
+      :show-type="isInbox"
+      @page-change="onPageChange"
+      @sort="onSort">
     </sms-list>
-    <b-modal :active.sync="showNewMessageDialog" has-modal-card>
-      <sms-dialog></sms-dialog>
-    </b-modal>
   </div>
 </template>
 
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
-import SmsBoxButton from '@/components/sms/SmsBoxButton.vue';
-import SmsDialog from '@/components/sms/SmsDialog.vue';
-import ActionButton from '@/components/ActionButton.vue';
 import router from 'huawei-router-api/browser';
-import moment from 'moment';
 import {modes} from '@/store';
-import {Notification} from '@/chrome/notification.js';
 
 export default {
   name: 'sms-box',
   components: {
     SmsList,
-    SmsBoxButton,
-    SmsDialog,
-    ActionButton,
   },
   props: {
     'box-type': Number,
+    'bus': Object,
   },
   data() {
     return {
@@ -96,7 +39,6 @@ export default {
       perPage: 20,
       list: [],
       checkedRows: [],
-      showNewMessageDialog: false,
     };
   },
   computed: {
@@ -114,9 +56,15 @@ export default {
     mode() {
       this.refresh();
     },
+    checkedRows(val) {
+      this.$emit('update:checked-rows', val);
+    },
   },
   mounted() {
     this.refresh();
+    this.bus.$on('sms-actions:clear-checked', this.clearChecked);
+    this.bus.$on('sms-actions:delete', this.deleteMessages);
+    this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
     refresh() {
@@ -190,9 +138,6 @@ export default {
     parseMessage(message) {
       return router.sms.parse(message);
     },
-    newMessage() {
-      this.showNewMessageDialog = true;
-    },
     deleteMessages() {
       const indices = this.checkedRows.map(row => row.index);
       router.sms.deleteSms(indices);
@@ -223,7 +168,9 @@ export default {
         this.handleError(e);
         if (successful > 0) {
           this.$toast.open({
-            message: this.$i18n('sms_mark_read_partial_error', successful, this.checkedRows.length),
+            message: this.$i18n(
+              'sms_mark_read_partial_error',
+              successful, this.checkedRows.length),
             type: 'is-danger',
           });
         } else {
