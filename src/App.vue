@@ -152,7 +152,7 @@ export default {
   async mounted() {
     this.tryChangeMode(modes.ADMIN);
 
-    this.bus.$on('refresh', async () => {
+    this.globalBus.$on('refresh', async () => {
       if (this.mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
@@ -161,6 +161,8 @@ export default {
             const list = await router.sms.getFullSmsList({
               total: data.LocalInbox,
               filter: {
+                // FIXME: This doesn't work since the time the messages is received
+                // does not match up with the time in the message
                 minDate: this.lastUpdatedNotifications,
               },
             }, {
@@ -327,7 +329,7 @@ export default {
       this.$dialog.confirm(data);
     },
     refresh() {
-      this.bus.$emit('refresh');
+      this.globalBus.$emit('refresh');
       setTimeout(this.refresh, this.refreshInterval);
     },
   },

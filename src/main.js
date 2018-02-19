@@ -17,7 +17,7 @@ const bus = new Vue();
 Vue.mixin({
   data: function() {
     return {
-      bus,
+      globalBus: bus,
     };
   },
   methods: {
