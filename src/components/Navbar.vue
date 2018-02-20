@@ -44,8 +44,7 @@
   };
 </script>
 
-<style lang="scss">
-  @import '~styles/vars.scss';
+<style lang="scss" scoped>
   .navbar{
     z-index: 2;
   }

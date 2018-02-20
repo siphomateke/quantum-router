@@ -27,8 +27,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '~styles/vars.scss';
-
   .notification-popup{
     .popup-card{
       .popup-card-head{

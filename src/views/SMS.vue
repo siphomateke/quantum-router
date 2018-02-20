@@ -160,7 +160,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
   .sms-action-wrapper{
     padding: 1rem;
   }
