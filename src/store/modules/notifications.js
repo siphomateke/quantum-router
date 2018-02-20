@@ -1,7 +1,7 @@
+/* global browser */
+
 import * as types from '@/store/mutation_types.js';
 import {Notification} from '@/chrome/notification.js';
-import {Utils} from '@/chrome/core';
-/* global chrome*/
 
 export default {
   state: {
@@ -20,7 +20,7 @@ export default {
   },
   actions: {
     async loadNotifications({commit}) {
-      const items = await Utils.getStorage('notifications');
+      const items = await browser.storage.sync.get('notifications');
       commit(types.CLEAR_NOTIFICATIONS);
       const notifications = [];
       if ('notifications' in items) {
@@ -33,16 +33,8 @@ export default {
     },
     // TODO: Evaluate better persistent storage methods
     saveNotifications({state}) {
-      return new Promise((resolve, reject) => {
-        chrome.storage.sync.set({
-          notifications: state.all,
-        }, () => {
-          if (!chrome.runtime.lastError) {
-            resolve();
-          } else {
-            reject(chrome.runtime.lastError);
-          }
-        });
+      return browser.storage.sync.set({
+        notifications: state.all,
       });
     },
     addNotifications({commit, dispatch}, notifications) {

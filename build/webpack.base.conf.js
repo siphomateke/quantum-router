@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isBrowser = process.env.TARGET === 'browser';
+const browserType = process.env.BROWSER;
 
 const plugins = [
   // split vendor js into its own file
@@ -31,9 +33,25 @@ const plugins = [
   new CopyWebpackPlugin([{
     from: utils.resolve('static'),
     to: config.dev.assetsSubDirectory,
-    ignore: ['.*'],
+    ignore: ['.*', '*manifest.json'],
   }]),
+  new webpack.ProvidePlugin({
+    'browser': 'webextension-polyfill',
+  }),
 ];
+
+if (isBrowser) {
+  let manifest = '';
+  if (browserType == 'chrome') {
+    manifest = 'chrome-manifest.json';
+  } else {
+    manifest = 'browser-manifest.json';
+  }
+  plugins.push(new CopyWebpackPlugin([{
+    from: utils.resolve('static/'+manifest),
+    to: config.dev.assetsSubDirectory+'manifest.json',
+  }]));
+}
 
 const htmlWebpackPlugins = [
   {
@@ -133,6 +151,11 @@ module.exports = {
         limit: 10000,
         name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
       },
+    },
+    // Required until https://github.com/mozilla/webextension-polyfill/pull/86 is merged
+    {
+      test: require.resolve('webextension-polyfill'),
+      use: 'imports-loader?browser=>undefined',
     },
     ],
   },

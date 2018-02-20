@@ -1,6 +1,6 @@
 # Quantum Router
 
-A chrome extension that replaces the default Huawei router interface.
+An extension that replaces the default Huawei router interface.
 
 ### Important: This project is still very young. As of yet there are no releases.
 
@@ -42,14 +42,24 @@ This extension aims to offer a sleeker and more modern alternative UI to the rou
 npm install
 
 # watch .js and .vue files
-npm run dev
+npm run dev # firefox, edge
+npm run dev-chrome # chrome, opera
 
 # build for production with minification
-npm run build
+npm run build # firefox, edge
+npm run build-chrome # chrome, opera
 ```
 
-Once you have built the project, open the extensions page (chrome://extensions/) and then enable developer mode.
+To use in Chrome: open `chrome://extensions`, enable developer mode, press load unpacked extension and select `dist/manifest.json`.
 
-Press load unpacked extension and select the dist/ folder.
+To use in Firefox: generate a random GUID and add the following to `static/browser-manifest.json`:
+```json
+"applications": {
+  "gecko": {
+    "id": "{YOUR_GUID}"
+  }
+},
+```
+Then open `about:debugging`, press load temporary addon and select `dist/manifest.json`.
 
 If you encounter any bugs, which you almost certainly will, please report them on the issues page.

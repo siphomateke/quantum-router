@@ -59,7 +59,6 @@
 </template>
 
 <script>
-/* global chrome */
 import Vue from 'vue';
 import Drawer from '@/components/Drawer.vue';
 import DrawerItem from '@/components/DrawerItem.vue';

@@ -1,26 +1,26 @@
 {
     "manifest_version": 2,
     "name": "Quantum Router",
-    "short_name": "QuantumRouter",
-    "author": "Sipho Mateke",
-    "version": "0.0.1",
+    "short_name": "Q Router",
+    "author": "nextgensparx",
+    "version": "0.1.0",
     "default_locale": "en",
-    "description": "Redesigns router admin pages for the 21st century.",
+    "description": "Redesigns Huawei router admin pages for the 21st century.",
     "icons": {
         "16" : "./icons/icon128.png",
         "48" : "./icons/icon128.png",
         "128" : "./icons/icon128.png"
     },
     "options_ui": {
-      "chrome_style": false,
-      "page": "./options.html"
+        "browser_style": false,
+        "page": "./options.html"
     },
     "background": {
         "page": "./background.html"
     },
     "browser_action": {
         "default_icon": "./icons/icon128.png",
-        "default_title": "Quantum Router"
+        "default_title": "Open Quantum Router"
     },
     "permissions": [
         "notifications",

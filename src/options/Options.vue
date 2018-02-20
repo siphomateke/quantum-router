@@ -18,9 +18,8 @@
 </template>
 
 <script>
-/* global chrome */
+/* global browser */
 import router from 'huawei-router-api/browser';
-import {Utils} from '@/chrome/core';
 
 export default {
   name: 'app',
@@ -38,7 +37,7 @@ export default {
     };
   },
   async mounted() {
-    const items = await Utils.getStorage(['routerUrl', 'username', 'password']);
+    const items = await browser.storage.sync.get(['routerUrl', 'username', 'password']);
     if ('routerUrl' in items) {
       this.routerUrl.value = items.routerUrl;
     }
@@ -73,13 +72,13 @@ export default {
     },
     save() {
       if (this.$refs.form.checkValidity()) {
-        chrome.storage.sync.set({
+        browser.storage.sync.set({
           routerUrl: this.routerUrl.value,
           username: this.username,
           password: this.password,
-        }, () => {
+        }).then(() => {
           window.close();
-          chrome.runtime.sendMessage({
+          browser.runtime.sendMessage({
             from: 'options',
             status: 'saved',
           });

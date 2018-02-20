@@ -1,4 +1,3 @@
-/* global chrome*/
 import Vue from 'vue';
 import Options from './Options.vue';
 import Buefy from 'buefy';
