@@ -14,7 +14,6 @@
     "buefy": "^0.6.2",
     "chart.js": "^2.7.1",
     "font-awesome": "^4.7.0",
-    "huawei-router-api": "github:nextgensparx/huawei-router-api",
     "moment": "^2.19.2",
     "vue": "^2.5.13",
     "vue-chartjs": "^2.8.7",

@@ -37,6 +37,12 @@ This extension aims to offer a sleeker and more modern alternative UI to the rou
 
 ## Build Setup
 
+Until I publish `huawei-router-api` to NPM, building this is a bit of a pain. You will need to download [huawei-router-api](https://github.com/nextgensparx/huawei-router-api/) and add it as a dependency;
+
+```bash
+npm i /path/to/huawei-router-api
+```
+
 ``` bash
 # install dependencies
 npm install
