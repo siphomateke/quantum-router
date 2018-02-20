@@ -1,5 +1,4 @@
 /* global browser */
-
 import * as types from '@/store/mutation_types.js';
 import {Notification} from '@/browser/notification.js';
 
