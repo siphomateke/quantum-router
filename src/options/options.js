@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Options from './Options.vue';
 import Buefy from 'buefy';
-import i18n from '@/chrome/i18n.js';
+import i18n from '@/browser/i18n.js';
 
 Vue.config.productionTip = false;
 

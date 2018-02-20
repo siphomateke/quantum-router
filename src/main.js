@@ -5,7 +5,7 @@ import Vuex from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import {modes} from '@/store';
-import i18n from '@/chrome/i18n.js';
+import i18n from '@/browser/i18n.js';
 
 Vue.config.productionTip = false;
 

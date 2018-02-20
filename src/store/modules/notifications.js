@@ -1,7 +1,7 @@
 /* global browser */
 
 import * as types from '@/store/mutation_types.js';
-import {Notification} from '@/chrome/notification.js';
+import {Notification} from '@/browser/notification.js';
 
 export default {
   state: {

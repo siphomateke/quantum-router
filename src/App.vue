@@ -69,12 +69,12 @@ import DropdownItem from '@/components/DropdownItem.vue';
 import DropdownSelect from '@/components/DropdownSelect.vue';
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
-import * as routerHelper from '@/chrome/routerHelper';
+import * as routerHelper from '@/browser/routerHelper';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
-import {Notification} from '@/chrome/notification.js';
+import {Notification} from '@/browser/notification.js';
 import moment from 'moment';
 
 Vue.mixin({

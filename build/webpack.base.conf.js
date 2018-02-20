@@ -94,7 +94,7 @@ for (const plugin of htmlWebpackPlugins) {
 module.exports = {
   entry: {
     'app': utils.resolve('src/main.js'),
-    'background': utils.resolve('src/chrome/background.js'),
+    'background': utils.resolve('src/browser/background.js'),
     'options': utils.resolve('src/options/options.js'),
   },
   output: {
