@@ -24,6 +24,9 @@
 </template>
 
 <script>
+/**
+ * Used for creating new sms messages and editing drafts
+ */
 export default {
   name: 'sms-dialog',
   data() {
@@ -34,10 +37,10 @@ export default {
   },
   methods: {
     send() {
-      this.$emit('send', this.numbers, this.content);
+      this.$emit('send', {numbers: this.numbers, content: this.content});
     },
     save() {
-      this.$emit('save', this.numbers, this.content);
+      this.$emit('save', {numbers: this.numbers, content: this.content});
     },
     cancel() {
       this.$parent.close();
