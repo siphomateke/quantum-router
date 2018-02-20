@@ -1,5 +1,4 @@
-'use strict';
-/* global browser*/
+/* global browser */
 
 // Set default settings
 browser.storage.sync.get({
