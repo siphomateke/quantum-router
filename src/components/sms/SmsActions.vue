@@ -4,13 +4,13 @@
       <!-- TODO: Make action buttons show loading progress -->
       <b-field grouped>
         <b-field>
-          <sms-box-button
+          <action-button
             v-if="isVisible('clearChecked')"
             :disabled="isDisabled('clearChecked')"
             :label="this.$i18n('sms_action_clear_checked')"
             icon="times" type="is-danger"
             @click="clearChecked">
-          </sms-box-button>
+          </action-button>
         </b-field>
 
         <b-field>
@@ -56,12 +56,10 @@
 </template>
 
 <script>
-import SmsBoxButton from '@/components/sms/SmsBoxButton.vue';
 import ActionButton from '@/components/ActionButton.vue';
 
 export default {
   components: {
-    SmsBoxButton,
     ActionButton,
   },
   props: {
