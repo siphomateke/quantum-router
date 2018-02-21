@@ -3,6 +3,7 @@
     "name": "Quantum Router",
     "short_name": "Q Router",
     "author": "nextgensparx",
+    "homepage_url": "https://github.com/nextgensparx/quantum-router",
     "version": "0.1.0",
     "default_locale": "en",
     "description": "Redesigns Huawei router admin pages for the 21st century.",
