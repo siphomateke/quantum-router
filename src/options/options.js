@@ -5,7 +5,6 @@ import i18n from '@/browser/i18n.js';
 
 Vue.config.productionTip = false;
 
-// FIXME: Buefy icons not showing
 Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });

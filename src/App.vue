@@ -336,14 +336,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~styles/vars";
-
-// Import Bulma and Buefy styles
-@import "~bulma";
-@import "~buefy/src/scss/buefy";
-@import "~styles/bulma-extensions";
-
-@import "~font-awesome/css/font-awesome.min.css";
+@import "~styles/global-base";
 
 body {
   background: $page-background-color;
