@@ -1,6 +1,15 @@
 {
   "generic_send": {"message": "Send"},
   "generic_cancel": {"message": "Cancel"},
+  "generic_error": {
+    "message": "Error: $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Could not connect to router"
+      }
+    }
+  },
 
   "menu_home":{"message": "Home"},
   "menu_sms":{"message": "SMS"},
@@ -193,12 +202,11 @@
     "message": "Save",
     "description": "Save button on the extension options page."
   },
-  "options_button_cancel": {
-    "message": "Cancel",
-    "description": "Cancel button on the extension options page."
-  },
   "options_error_ping": {
     "message": "Cannot connect to specified URL.",
     "description": "Error message displayed when a connection to the router URL can't be established. Used on the extension options page."
+  },
+  "options_save_success": {
+    "message": "Saved changes"
   }
 }
