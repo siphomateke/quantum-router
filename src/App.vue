@@ -206,13 +206,13 @@ export default {
       console.log(val);
       switch (val) {
         case modes.ADMIN:
-          this.globalBus.$emit('refresh:admin');
+          this.globalBus.$emit('mode-change:admin');
           break;
         case modes.BASIC:
-          this.globalBus.$emit('refresh:basic');
+          this.globalBus.$emit('mode-change:basic');
           break;
         case modes.OFFLINE:
-          this.globalBus.$emit('refresh:offline');
+          this.globalBus.$emit('mode-change:offline');
           break;
       }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {

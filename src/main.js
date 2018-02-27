@@ -18,9 +18,9 @@ const bus = new Vue();
 Global events
 
 refresh
-refresh:admin
-refresh:basic
-refresh:offline
+mode-change:admin
+mode-change:basic
+mode-change:offline
 */
 Vue.mixin({
   data: function() {

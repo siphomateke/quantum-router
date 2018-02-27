@@ -66,7 +66,7 @@ export default {
     if (this.$adminMode) {
       this.refreshAdmin();
     }
-    this.globalBus.$on('refresh:admin', this.refreshAdmin);
+    this.globalBus.$on('mode-change:admin', this.refreshAdmin);
     this.bus.$on('sms-actions:clear-checked', this.clearChecked);
     this.bus.$on('sms-actions:delete', this.deleteMessages);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);

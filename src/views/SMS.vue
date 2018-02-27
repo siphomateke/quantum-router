@@ -110,7 +110,7 @@ export default {
     if (this.$adminMode) {
       this.refreshAdmin();
     }
-    this.globalBus.$on('refresh:admin', this.refreshAdmin);
+    this.globalBus.$on('mode-change:admin', this.refreshAdmin);
   },
   computed: {
     boxTypes() {
