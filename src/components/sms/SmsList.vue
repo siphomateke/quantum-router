@@ -24,11 +24,14 @@
       <template slot-scope="props">
         <b-table-column field="read"
           v-if="typeof props.row.read === 'boolean' && showReadStatus">
-          <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
+          <b-icon :title="$i18n(props.row.read ? 'sms_read' : 'sms_unread')" :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
         </b-table-column>
         <b-table-column field="type" :label="$i18n('sms_message_type')"
           v-if="showType">
-          <b-icon :icon="getTypeIcon(props.row.parsed.type)"></b-icon>
+          <b-icon
+            :title="getTypeTooltip(props.row.parsed.type)"
+            :icon="getTypeIcon(props.row.parsed.type)">
+          </b-icon>
         </b-table-column>
         <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
         <b-table-column field="content" :label="$i18n('sms_message_content')">
@@ -136,6 +139,27 @@ export default {
       default:
         return '';
       }
+    },
+    getTypeTooltipCode(type) {
+      switch (type) {
+      case types.RECHARGE:
+        return 'recharge';
+      case types.DATA:
+        return 'data';
+      case types.DATA_PERCENT:
+        return 'data_percent';
+      case types.ACTIVATED:
+        return 'activated';
+      case types.DEPLETED:
+        return 'depleted';
+      case types.AD:
+        return 'ad';
+      default:
+        return '';
+      }
+    },
+    getTypeTooltip(type) {
+      return this.$i18n('sms_types_'+this.getTypeTooltipCode(type));
     },
     formatDate(date) {
       return moment(date).format('Y-M-D H:mm:ss');

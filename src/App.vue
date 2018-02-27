@@ -27,7 +27,7 @@
       <div class="column">
         <q-toolbar>
           <template slot="toolbar-start">
-            <q-toolbar-item icon="bolt" :color="modeColor" ref="modeToolbarItem">
+            <q-toolbar-item :title="$i18n('change_mode_tooltip')" icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
                 <q-dropdown-select :value="mode" @input="userChangedMode">
                   <q-dropdown-item :value="modes.OFFLINE">{{ 'mode_offline' | $i18n }}</q-dropdown-item>
@@ -38,7 +38,7 @@
             </q-toolbar-item>
           </template>
           <template slot="toolbar-end">
-            <q-toolbar-item icon="bell" :badge="unreadNotifications.length" :badge-visible="unreadNotifications.length > 0"
+            <q-toolbar-item :title="$i18n('notifications_tooltip')" icon="bell" :badge="unreadNotifications.length" :badge-visible="unreadNotifications.length > 0"
               position="is-bottom-left" class="notification-dropdown" :mobile-modal="false">
               <template slot="dropdown">
                 <b-dropdown-item custom paddingless>

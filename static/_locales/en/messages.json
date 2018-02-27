@@ -20,7 +20,9 @@
   "mode_offline":{"message": "Offline"},
   "mode_basic":{"message": "Basic"},
   "mode_admin":{"message": "Admin"},
+  "change_mode_tooltip": {"message": "Change mode"},
 
+  "notifications_tooltip": {"message": "Notifications"},
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
 
@@ -166,6 +168,16 @@
     }
   },
   "sms_mark_read_error": {"message": "Error marking messages as read."},
+
+  "sms_types_recharge": {"message": "Recharge"},
+  "sms_types_data": {"message": "Data remaining"},
+  "sms_types_data_percent": {"message": "Percentage data used"},
+  "sms_types_activated": {"message": "Activated"},
+  "sms_types_depleted": {"message": "Depleted"},
+  "sms_types_ad": {"message": "Advert"},
+
+  "sms_read": {"message": "Read", "description": "Show when an sms message has been read"},
+  "sms_unread": {"message": "Unread", "description": "Show when an sms message has not been read"},
 
   "services_ussd_command" : {
     "message": "USSD Command"

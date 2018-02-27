@@ -18,6 +18,7 @@
             v-if="isVisible('delete')"
             :disabled="isDisabled('delete')"
             icon="trash"
+            :title="this.$i18n('sms_action_delete')"
             @click="deleteMessages">
           </action-button>
           <action-button
