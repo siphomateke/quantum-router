@@ -10,8 +10,10 @@
       :sort-order="sortOrder"
       :show-read-status="isInbox"
       :show-type="isInbox"
+      :show-edit-button="isDraft"
       @page-change="onPageChange"
-      @sort="onSort">
+      @sort="onSort"
+      @edit="editMessage">
     </sms-list>
   </div>
 </template>
@@ -56,6 +58,9 @@ export default {
     },
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
+    },
+    isDraft() {
+      return this.boxType === router.sms.boxTypes.DRAFT;
     },
   },
   watch: {
@@ -189,6 +194,9 @@ export default {
     },
     clearChecked() {
       this.checkedRows = [];
+    },
+    editMessage(index) {
+      this.$emit('edit', this.list[index]);
     },
   },
 };
