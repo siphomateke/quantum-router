@@ -67,6 +67,7 @@ export default {
       this.refreshAdmin();
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$on('refresh:sms', this.refresh);
     this.bus.$on('sms-actions:clear-checked', this.clearChecked);
     this.bus.$on('sms-actions:delete', this.deleteMessages);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
@@ -75,6 +76,15 @@ export default {
     refreshAdmin() {
       this.loadAsyncData();
     },
+    refresh(box) {
+      if (box && box !== this.boxType) {
+        return;
+      }
+      if (this.$adminMode) {
+        this.refreshAdmin();
+      }
+    },
+    // TODO: Update checked rows and handle any currently running tasks on refresh
     async loadAsyncData() {
       this.loading = true;
       try {

@@ -111,6 +111,7 @@ export default {
       this.refreshAdmin();
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$on('refresh:sms', this.refresh);
   },
   computed: {
     boxTypes() {
@@ -150,15 +151,22 @@ export default {
       this.getTabByBoxType(boxTypes.SENT).status = separator+smsData.LocalOutbox;
       this.getTabByBoxType(boxTypes.DRAFT).status = separator+smsData.LocalDraft;
     },
+    refresh() {
+      if (this.$adminMode) {
+        this.refreshAdmin();
+      }
+    },
 
     /* SMS dialog */
     smsDialogClose() {
       this.$refs['smsDialogModal'].close();
     },
     smsDialogSave() {
+      this.globalBus.$emit('refresh:sms', boxTypes.DRAFT);
       this.smsDialogClose();
     },
     smsDialogSend() {
+      this.globalBus.$emit('refresh:sms', boxTypes.DRAFT);
       this.smsDialogClose();
     },
     newMessage() {

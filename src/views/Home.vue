@@ -92,7 +92,7 @@ export default {
     },
   },
   mounted() {
-    this.globalBus.$on('refresh', async () => {
+    this.globalBus.$on('refresh:graph', async () => {
       if (!this.offline) {
         const data = await router.monitoring.getTrafficStatistics();
         this.lineChartData = Object.assign({}, this.lineChartData);

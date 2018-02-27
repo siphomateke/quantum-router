@@ -112,7 +112,9 @@ export default {
   data() {
     return {
       loading: false,
-      refreshInterval: 1000,
+      refreshIntervals: {
+        'basic': 1000
+      },
       lastUpdatedNotifications: null,
       gettingSmsList: false,
     };
@@ -148,7 +150,14 @@ export default {
   async mounted() {
     this.tryChangeMode(modes.ADMIN);
 
-    this.globalBus.$on('refresh', async () => {
+    this.startRefreshCycle();
+
+    this.globalBus.$on('refresh:basic', () => {
+      this.globalBus.$emit('refresh:graph');
+      this.globalBus.$emit('refresh:notifications');
+    });
+
+    this.globalBus.$on('refresh:notifications', async () => {
       if (this.$mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
@@ -199,7 +208,6 @@ export default {
     routerHelper.events.addListener('optionsSaved', () => {
       this.tryChangeMode(modes.ADMIN);
     });
-    this.refresh();
   },
   watch: {
     ['$mode'](val, oldVal) {
@@ -328,10 +336,18 @@ export default {
       data.hasIcon = true;
       this.$dialog.confirm(data);
     },
-    refresh() {
-      this.globalBus.$emit('refresh');
-      setTimeout(this.refresh, this.refreshInterval);
-    },
+    startRefreshCycle() {
+      for (const name in this.refreshIntervals) {
+        if (this.refreshIntervals.hasOwnProperty(name)) {
+          const interval = this.refreshIntervals[name];
+          const func = () => {
+            this.globalBus.$emit('refresh:'+name);
+            setTimeout(func, interval);
+          };
+          func();
+        }
+      }
+    }
   },
 };
 </script>
