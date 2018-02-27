@@ -14,6 +14,14 @@ Vue.use(Buefy, {
 });
 
 const bus = new Vue();
+/*
+Global events
+
+refresh
+refresh:admin
+refresh:basic
+refresh:offline
+*/
 Vue.mixin({
   data: function() {
     return {

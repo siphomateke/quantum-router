@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     offline() {
-      return !(this.$store.state.mode > modes.OFFLINE);
+      return !(this.$mode > modes.OFFLINE);
     },
   },
   mounted() {

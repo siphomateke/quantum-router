@@ -50,12 +50,6 @@ export default {
     };
   },
   computed: {
-    mode() {
-      return this.$store.state.mode;
-    },
-    adminMode() {
-      return this.mode === modes.ADMIN;
-    },
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
     },
@@ -64,24 +58,22 @@ export default {
     },
   },
   watch: {
-    mode() {
-      this.refresh();
-    },
     checkedRows(val) {
       this.$emit('update:checked-rows', val);
     },
   },
   mounted() {
-    this.refresh();
+    if (this.$adminMode) {
+      this.refreshAdmin();
+    }
+    this.globalBus.$on('refresh:admin', this.refreshAdmin);
     this.bus.$on('sms-actions:clear-checked', this.clearChecked);
     this.bus.$on('sms-actions:delete', this.deleteMessages);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
-    refresh() {
-      if (this.adminMode) {
-        this.loadAsyncData();
-      }
+    refreshAdmin() {
+      this.loadAsyncData();
     },
     async loadAsyncData() {
       this.loading = true;

@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <template v-if="adminMode">
+    <template v-if="$adminMode">
       <div class="sms-action-wrapper">
         <sms-actions
           :bus="bus"
@@ -107,23 +107,17 @@ export default {
     this.bus.$on('sms-actions:new', this.newMessage);
     this.bus.$on('sms-actions:import', this.import);
 
-    // TODO: Add global refresh event for when admin mode is available
-    if (this.mode === modes.ADMIN) {
+    if (this.$adminMode) {
       this.refreshAdmin();
     }
+    this.globalBus.$on('refresh:admin', this.refreshAdmin);
   },
   computed: {
-    mode() {
-      return this.$store.state.mode;
-    },
     boxTypes() {
       return router.sms.boxTypes;
     },
     boxType() {
       return this.tabs[this.currentTab].boxType;
-    },
-    adminMode() {
-      return this.mode === modes.ADMIN;
     },
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
@@ -133,13 +127,6 @@ export default {
     },
     currentBus() {
       return this.buses[this.currentTab];
-    },
-  },
-  watch: {
-    mode() {
-      if (this.mode === modes.ADMIN) {
-        this.refreshAdmin();
-      }
     },
   },
   methods: {

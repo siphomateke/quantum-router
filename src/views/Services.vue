@@ -72,9 +72,6 @@ export default {
     },
   },
   watch: {
-    '$mode'() {
-      this.refresh();
-    },
     ['ussd.selectedCommand'](val) {
       if (val.length === 0) {
         this.ussd.content = '';
@@ -82,7 +79,10 @@ export default {
     },
   },
   mounted() {
-    this.refresh();
+    if (this.$adminMode) {
+      this.refreshAdmin();
+    }
+    this.globalBus.$on('refresh:admin', this.refreshAdmin);
   },
   methods: {
     ussdSelectedCommandChanged(command) {
@@ -95,15 +95,13 @@ export default {
       this.ussd.selectedOption = value;
       this.ussd.content = this.ussd.selectedOption;
     },
-    async refresh() {
-      if (this.$adminMode) {
-        try {
-          // TODO: Show when this is loading
-          const config = await router.config.getUssdConfig();
-          this.ussd.commands = config.General.Menu.MenuItem;
-        } finally {
-          router.ussd.releaseUssd();
-        }
+    async refreshAdmin() {
+      try {
+        // TODO: Show when this is loading
+        const config = await router.config.getUssdConfig();
+        this.ussd.commands = config.General.Menu.MenuItem;
+      } finally {
+        router.ussd.releaseUssd();
       }
     },
     resetCommandResult() {

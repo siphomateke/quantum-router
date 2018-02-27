@@ -29,7 +29,7 @@
           <template slot="toolbar-start">
             <q-toolbar-item :title="$i18n('change_mode_tooltip')" icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
-                <q-dropdown-select :value="mode" @input="userChangedMode">
+                <q-dropdown-select :value="$mode" @input="userChangedMode">
                   <q-dropdown-item :value="modes.OFFLINE">{{ 'mode_offline' | $i18n }}</q-dropdown-item>
                   <q-dropdown-item :value="modes.BASIC">{{ 'mode_basic' | $i18n }}</q-dropdown-item>
                   <q-dropdown-item :value="modes.ADMIN">{{ 'mode_admin' | $i18n }}</q-dropdown-item>
@@ -132,7 +132,7 @@ export default {
       return modes;
     },
     modeColor() {
-      switch (this.mode) {
+      switch (this.$mode) {
         case modes.OFFLINE: {
           return '#f00';
         }
@@ -144,15 +144,12 @@ export default {
         }
       }
     },
-    mode() {
-      return this.$store.state.mode;
-    }
   },
   async mounted() {
     this.tryChangeMode(modes.ADMIN);
 
     this.globalBus.$on('refresh', async () => {
-      if (this.mode > modes.OFFLINE) {
+      if (this.$mode > modes.OFFLINE) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
           try {
@@ -205,8 +202,22 @@ export default {
     this.refresh();
   },
   watch: {
-    mode(val, oldVal) {
-      this.modeChanged(val, oldVal);
+    ['$mode'](val, oldVal) {
+      console.log(val);
+      switch (val) {
+        case modes.ADMIN:
+          this.globalBus.$emit('refresh:admin');
+          break;
+        case modes.BASIC:
+          this.globalBus.$emit('refresh:basic');
+          break;
+        case modes.OFFLINE:
+          this.globalBus.$emit('refresh:offline');
+          break;
+      }
+      if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
+        this.$store.dispatch('loadNotifications');
+      }
     }
   },
   methods: {
@@ -216,11 +227,6 @@ export default {
       router.config.setPassword(data.password);
       const url = await routerHelper.getRouterUrl();
       router.config.setUrl(url);
-    },
-    modeChanged(val, oldVal) {
-      if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
-        this.$store.dispatch('loadNotifications');
-      }
     },
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
@@ -234,33 +240,33 @@ export default {
             if (newMode === modes.BASIC) {
               return true;
             } else if (newMode === modes.ADMIN) {
-                try {
-                  await router.admin.login();
-                  return true;
-                } catch(e) {
-                  let errorMessage = this.$i18n('router_unknown_error_logging_in');
-                  if (e instanceof RouterError) {
-                    if (e.code === 'api_login_already_login') {
-                      return true;
-                    }
-                    let knownErrors = [
-                      'api_login_username_wrong',
-                      'api_login_password_wrong',
-                      'api_login_username_pwd_wrong',
-                      'api_login_username_pwd_orerrun',
-                    ];
-                    if (knownErrors.includes(e.code)) {
-                      let actualError = this.$i18n('router_module_error_'+e.code);
-                      errorMessage = this.$i18n('router_error_logging_in', actualError);
-                    }
+              try {
+                await router.admin.login();
+                return true;
+              } catch(e) {
+                let errorMessage = this.$i18n('router_unknown_error_logging_in');
+                if (e instanceof RouterError) {
+                  if (e.code === 'api_login_already_login') {
+                    return true;
                   }
-                  this.openConfirmDialog({
-                    message: errorMessage,
-                    confirmText: this.$i18n('dialog_retry'),
-                    onConfirm: () => {this.tryChangeMode(newMode)},
-                  });
-                  return false;
+                  let knownErrors = [
+                    'api_login_username_wrong',
+                    'api_login_password_wrong',
+                    'api_login_username_pwd_wrong',
+                    'api_login_username_pwd_orerrun',
+                  ];
+                  if (knownErrors.includes(e.code)) {
+                    let actualError = this.$i18n('router_module_error_'+e.code);
+                    errorMessage = this.$i18n('router_error_logging_in', actualError);
+                  }
                 }
+                this.openConfirmDialog({
+                  message: errorMessage,
+                  confirmText: this.$i18n('dialog_retry'),
+                  onConfirm: () => {this.tryChangeMode(newMode)},
+                });
+                return false;
+              }
             }
           } catch (e) {
             // Handle ping errors
@@ -312,7 +318,7 @@ export default {
       }
     },
     changeMode(mode) {
-      if (mode !== this.mode) {
+      if (mode !== this.$mode) {
         this.$store.commit(types.MODE, mode);
         this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
       }
