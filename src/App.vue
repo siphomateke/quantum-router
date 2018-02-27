@@ -211,7 +211,6 @@ export default {
   },
   watch: {
     ['$mode'](val, oldVal) {
-      console.log(val);
       switch (val) {
         case modes.ADMIN:
           this.globalBus.$emit('mode-change:admin');
