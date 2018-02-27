@@ -22,21 +22,29 @@
     :default-sort="['date', sortOrder]"
     @sort="onSort">
       <template slot-scope="props">
-          <b-table-column field="read"
-            v-if="typeof props.row.read === 'boolean' && showReadStatus">
-            <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
-          </b-table-column>
-          <b-table-column field="type" :label="$i18n('sms_message_type')"
-            v-if="showType">
-            <b-icon :icon="getTypeIcon(props.row.parsed.type)"></b-icon>
-          </b-table-column>
-          <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
-          <b-table-column field="content" :label="$i18n('sms_message_content')">
-            <div class="content">{{ props.row.content }}</div>
-          </b-table-column>
-          <b-table-column field="date" :label="$i18n('sms_message_date')" sortable centered>
-            <span style="white-space:nowrap;">{{ formatDate(props.row.date) }}</span>
-          </b-table-column>
+        <b-table-column field="read"
+          v-if="typeof props.row.read === 'boolean' && showReadStatus">
+          <b-icon :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
+        </b-table-column>
+        <b-table-column field="type" :label="$i18n('sms_message_type')"
+          v-if="showType">
+          <b-icon :icon="getTypeIcon(props.row.parsed.type)"></b-icon>
+        </b-table-column>
+        <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
+        <b-table-column field="content" :label="$i18n('sms_message_content')">
+          <div class="content">{{ props.row.content }}</div>
+        </b-table-column>
+        <b-table-column field="date" :label="$i18n('sms_message_date')" sortable centered>
+          <span style="white-space:nowrap;">{{ formatDate(props.row.date) }}</span>
+        </b-table-column>
+        <td v-if="showEditButton" class="edit-button-column">
+          <button
+            class="button"
+            @click="editMessage(props.index)"
+            :title="$i18n('sms_edit_tooltip')">
+              <b-icon icon="edit"></b-icon>
+          </button>
+        </td>
       </template>
 
       <template slot="empty">
@@ -72,8 +80,18 @@ export default {
     'per-page': Number,
     'sort-order': String,
     'page': Number,
-    'showReadStatus': Boolean,
-    'showType': Boolean,
+    'showReadStatus': {
+      type: Boolean,
+      default: false,
+    },
+    'showType': {
+      type: Boolean,
+      default: false,
+    },
+    'showEditButton': {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -128,6 +146,15 @@ export default {
     onSort(field, order) {
       this.$emit('sort', order);
     },
+    editMessage(index) {
+      this.$emit('edit', index);
+    },
   },
 };
 </script>
+
+<style lang="scss">
+.edit-button-column{
+  text-align: right;
+}
+</style>

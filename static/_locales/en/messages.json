@@ -130,6 +130,10 @@
     "message": "There are no SMSs",
     "description": "Displayed when there are no messages"
   },
+  "sms_edit_tooltip": {
+    "message": "Edit message",
+    "description": "Tooltip shown on the sms message edit button"
+  },
   "sms_box_inbox": {"message": "Inbox"},
   "sms_box_sent": {"message": "Outbox"},
   "sms_box_draft": {"message": "Drafts"},
