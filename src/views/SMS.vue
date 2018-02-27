@@ -25,11 +25,19 @@
             :bus="buses[idx]"
             :box-type="tab.boxType"
             @update:checked-rows="val => updateCheckedRows(val, idx)"
+            @edit="editMessage"
           ></sms-box>
         </b-tab-item>
       </b-tabs>
-      <b-modal :active.sync="showNewMessageDialog" has-modal-card>
-        <sms-dialog></sms-dialog>
+      <b-modal ref="smsDialogModal" :active.sync="showSmsDialog" has-modal-card>
+        <sms-dialog
+          :index.sync="dialog.index"
+          :numbers.sync="dialog.numbers"
+          :content.sync="dialog.content"
+          @save="smsDialogSave"
+          @send="smsDialogSend"
+          @cancel="smsDialogClose"
+        ></sms-dialog>
       </b-modal>
     </template>
     <template v-else>
@@ -75,7 +83,12 @@ export default {
       currentTab: 0,
       buses,
       bus: new Vue(),
-      showNewMessageDialog: false,
+      showSmsDialog: false,
+      dialog: {
+        index: -1,
+        numbers: [],
+        content: '',
+      },
     };
   },
   mounted() {
@@ -150,9 +163,30 @@ export default {
       this.getTabByBoxType(boxTypes.SENT).status = separator+smsData.LocalOutbox;
       this.getTabByBoxType(boxTypes.DRAFT).status = separator+smsData.LocalDraft;
     },
-    newMessage() {
-      this.showNewMessageDialog = true;
+
+    /* SMS dialog */
+    smsDialogClose() {
+      this.$refs['smsDialogModal'].close();
     },
+    smsDialogSave() {
+      this.smsDialogClose();
+    },
+    smsDialogSend() {
+      this.smsDialogClose();
+    },
+    newMessage() {
+      this.dialog.index = -1;
+      this.dialog.numbers = [];
+      this.dialog.content = '';
+      this.showSmsDialog = true;
+    },
+    editMessage(message) {
+      this.dialog.index = message.index;
+      this.dialog.numbers = message.number.split(';');
+      this.dialog.content = message.content;
+      this.showSmsDialog = true;
+    },
+
     import() {
       // TODO: Implement import
     },

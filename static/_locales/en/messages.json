@@ -212,5 +212,10 @@
   },
   "options_save_success": {
     "message": "Saved changes"
+  },
+
+  "validation_tag_input_number": {
+    "message": "Please only enter numbers.",
+    "description": "Error message shown when a non-number is inputted in a tag input where only numbers are allowed."
   }
 }

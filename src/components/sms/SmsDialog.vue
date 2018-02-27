@@ -4,16 +4,22 @@
     <p class="modal-card-title">{{ 'sms_dialog_title' | $i18n }}</p>
   </header>
   <section class="modal-card-body">
-    <b-field :label="this.$i18n('sms_dialog_field_numbers')">
-      <b-taginput
-        v-model="numbers"
-        icon="phone"
-        :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
-      </b-taginput>
-    </b-field>
-    <b-field :label="this.$i18n('sms_dialog_field_content')">
-      <b-input type="textarea" v-model="content"></b-input>
-    </b-field>
+    <form ref="form" v-on:submit.prevent>
+      <b-field
+        :label="this.$i18n('sms_dialog_field_numbers')"
+        :type="fields.numbers.type"
+        :message="fields.numbers.message">
+          <b-taginput
+            v-model="internalNumbers"
+            @input="validateNumbers"
+            icon="phone"
+            :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
+          </b-taginput>
+      </b-field>
+      <b-field :label="this.$i18n('sms_dialog_field_content')">
+        <b-input type="textarea" v-model="internalContent"></b-input>
+      </b-field>
+    </form>
   </section>
   <footer class="modal-card-foot">
     <button class="button is-primary" @click="send">{{ 'sms_dialog_action_send' | $i18n }}</button>
@@ -24,26 +30,88 @@
 </template>
 
 <script>
+import router from 'huawei-router-api/browser';
+
 /**
- * Used for creating new sms messages and editing drafts
+ * Used for creating, editing and sending sms messages
  */
 export default {
   name: 'sms-dialog',
+  props: {
+    'index': Number,
+    'numbers': Array,
+    'content': String,
+  },
   data() {
     return {
-      numbers: [],
-      content: '',
+      internalNumbers: this.numbers,
+      internalContent: this.content,
+      fields: {
+        numbers: {
+          type: '',
+          message: '',
+        },
+      },
     };
   },
-  methods: {
-    send() {
-      this.$emit('send', {numbers: this.numbers, content: this.content});
+  watch: {
+    numbers(val) {
+      this.internalNumbers = val;
     },
-    save() {
-      this.$emit('save', {numbers: this.numbers, content: this.content});
+    content(val) {
+      this.internalContent = val;
+    },
+    internalNumbers(val) {
+      this.$emit('update:numbers', val);
+    },
+    internalContent(val) {
+      this.$emit('update:content', val);
+    },
+  },
+  methods: {
+    validateNumbers() {
+      let valid = true;
+      for (const number of this.internalNumbers) {
+        if (isNaN(number)) {
+          valid = false;
+          this.fields.numbers.type = 'is-danger';
+          this.fields.numbers.message = this.$i18n('validation_tag_input_number');
+          break;
+        }
+      }
+      if (valid) {
+        this.fields.numbers.type = '';
+        this.fields.numbers.message = '';
+      }
+      return valid;
+    },
+    isValid() {
+      return this.$refs.form.checkValidity() && this.validateNumbers();
+    },
+    // TODO: Show send and save status, and allow cancelling. Requires task runner to be implemented
+    async send() {
+      if (this.isValid()) {
+        // TODO: Handle errors
+        await router.sms.sendSms({
+          numbers: this.numbers,
+          content: this.content,
+        });
+        this.$emit('send');
+      }
+    },
+    async save() {
+      if (this.isValid()) {
+        // TODO: Handle errors
+        await router.sms.saveSms({
+          index: this.index,
+          numbers: this.numbers,
+          content: this.content,
+        });
+        this.$emit('save');
+      }
     },
     cancel() {
-      this.$parent.close();
+      this.$emit('cancel');
     },
   },
 };
