@@ -234,8 +234,6 @@ export default {
             if (newMode === modes.BASIC) {
               return true;
             } else if (newMode === modes.ADMIN) {
-              const loggedIn = await router.admin.isLoggedIn();
-              if (!loggedIn) {
                 try {
                   await router.admin.login();
                   return true;
@@ -263,9 +261,6 @@ export default {
                   });
                   return false;
                 }
-              } else {
-                return true;
-              }
             }
           } catch (e) {
             // Handle ping errors
