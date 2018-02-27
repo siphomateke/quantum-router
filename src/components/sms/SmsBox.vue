@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
@@ -28,7 +29,12 @@ export default {
   },
   props: {
     'box-type': Number,
-    'bus': Object,
+    'bus': {
+      type: Object,
+      validator(val) {
+        return val instanceof Vue;
+      },
+    },
   },
   data() {
     return {

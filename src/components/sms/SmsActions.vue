@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import ActionButton from '@/components/ActionButton.vue';
 
 export default {
@@ -66,7 +67,12 @@ export default {
     'checked-rows': Array,
     'disabled': Object,
     'hidden': Object,
-    'bus': Object,
+    'bus': {
+      type: Object,
+      validator(val) {
+        return val instanceof Vue;
+      },
+    },
   },
   methods: {
     isVisible(name) {
