@@ -13,7 +13,8 @@
         <b-input v-model="password" type="password" password-reveal></b-input>
     </b-field>
     <button @click="save" class="button is-primary" :class="{'is-loading': formLoading}">{{ 'options_button_save' | $i18n}}</button>
-    <button @click="cancel" class="button">{{ 'options_button_cancel' | $i18n}}</button>
+    <hr v-if="message.visible">
+    <b-message :active="message.visible" :type="message.type">{{ message.content }}</b-message>
   </form>
 </template>
 
@@ -34,6 +35,12 @@ export default {
       password: '',
       pinging: false,
       formLoading: false,
+      message: {
+        type: '',
+        visible: false,
+        content: '',
+        timer: null,
+      },
     };
   },
   async mounted() {
@@ -70,23 +77,34 @@ export default {
         this.pinging = false;
       }
     },
-    save() {
+    async save() {
       if (this.$refs.form.checkValidity()) {
-        browser.storage.sync.set({
-          routerUrl: this.routerUrl.value,
-          username: this.username,
-          password: this.password,
-        }).then(() => {
-          window.close();
+        try {
+          await browser.storage.sync.set({
+            routerUrl: this.routerUrl.value,
+            username: this.username,
+            password: this.password,
+          });
+          this.showMessage(this.$i18n('options_save_success'), 'is-success');
           browser.runtime.sendMessage({
             from: 'options',
             status: 'saved',
           });
-        });
+        } catch (e) {
+          this.showMessage(this.$i18n('generic_error', e.message), 'is-danger');
+        }
       }
     },
-    cancel() {
-      window.close();
+    showMessage(message, type, timer=5000) {
+      clearTimeout(this.message.timer);
+      this.message.type = type;
+      this.message.content = message;
+      this.message.visible = true;
+      this.message.timer = setTimeout(() => {
+        this.message.type = '';
+        this.message.content = '';
+        this.message.visible = false;
+      }, timer);
     },
     async onBlurRouterUrl(val) {
       this.formLoading = true;
