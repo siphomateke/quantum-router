@@ -146,6 +146,9 @@ export default {
             parsed: parsed,
           });
         }
+        // If selection is ever possible on more than one page, this will have to go;
+        // all checkedRows' indecies should be checked to see if they still exist instead
+        this.clearSelection();
       } catch (e) {
         // TODO: Handle error
         throw e;
@@ -164,10 +167,11 @@ export default {
     parseMessage(message) {
       return router.sms.parse(message);
     },
-    deleteMessages() {
+    async deleteMessages() {
       const indices = this.checkedRows.map(row => row.index);
-      router.sms.deleteSms(indices);
+      await router.sms.deleteSms(indices);
       // TODO: delete sms loading indicator
+      this.clearSelection();
       this.refresh();
     },
     markMessagesAsRead() {
