@@ -106,7 +106,7 @@ export default {
     'disabled': Object,
     'hidden': Object,
     'selectionState': {
-      type: Number,
+      type: String,
       default: selectionStates.NONE,
       validator(val) {
         return Object.values(selectionStates).includes(val);
