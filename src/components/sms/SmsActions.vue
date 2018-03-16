@@ -3,14 +3,34 @@
     <div class="level-left">
       <!-- TODO: Make action buttons show loading progress -->
       <b-field grouped>
-        <b-field>
-          <action-button
-            v-if="isVisible('clearChecked')"
-            :disabled="isDisabled('clearChecked')"
-            :label="this.$i18n('sms_action_clear_checked')"
-            icon="times" type="is-danger"
-            @click="clearChecked">
-          </action-button>
+        <b-field :title="this.$i18n('sms_action_select_tooltip')">
+          <p class="control">
+            <button class="button" @click="toggleSelection">
+              <b-icon :icon="selectionState === selectionStates.NONE ? 'square-o' : 'check-square-o'"></b-icon>
+            </button>
+          </p>
+          <p class="control">
+            <b-dropdown>
+              <button class="button" slot="trigger">
+                <b-icon icon="caret-down"></b-icon>
+              </button>
+              <b-dropdown-item
+                v-for="selector in selectors"
+                :key="selector"
+                @click="changeSelection(selector)">
+                 {{ 'sms_action_select_'+selector | $i18n }}
+              </b-dropdown-item>
+              <b-dropdown-item separator></b-dropdown-item>
+              <b-dropdown-item custom><b>{{ 'sms_action_select_dropdown_types_group' | $i18n }}</b></b-dropdown-item>
+              <b-dropdown-item
+                v-for="smsType in smsTypes"
+                :key="smsType"
+                @click="changeSelection(smsType)">
+                  <b-icon :icon="getSmsTypeIcon(smsType)"></b-icon>
+                  <span style="padding-left:0.5em;">{{ getSmsTypeName(smsType) }}</span>
+              </b-dropdown-item>
+            </b-dropdown>
+          </p>
         </b-field>
 
         <b-field>
@@ -59,15 +79,39 @@
 <script>
 import Vue from 'vue';
 import ActionButton from '@/components/ActionButton.vue';
+import smsTypeMixin from '@/mixins/smsType';
+import router from 'huawei-router-api/browser';
+import {selectors, selectionStates} from './select';
 
+const smsTypes = router.sms.types;
+
+/**
+ * Events
+ *
+ * delete
+ * mark-as-read
+ * new
+ * import
+ * select-all
+ * clear-selection
+ * select {read, type}
+ */
 export default {
   components: {
     ActionButton,
   },
+  mixins: [smsTypeMixin],
   props: {
     'checked-rows': Array,
     'disabled': Object,
     'hidden': Object,
+    'selectionState': {
+      type: Number,
+      default: selectionStates.NONE,
+      validator(val) {
+        return Object.values(selectionStates).includes(val);
+      },
+    },
     'bus': {
       type: Object,
       validator(val) {
@@ -75,15 +119,19 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      smsTypes,
+      selectors,
+      selectionStates,
+    };
+  },
   methods: {
     isVisible(name) {
       return !this.hidden[name];
     },
     isDisabled(name) {
       return this.disabled[name];
-    },
-    clearChecked() {
-      this.bus.$emit('sms-actions:clear-checked');
     },
     deleteMessages() {
       this.bus.$emit('sms-actions:delete');
@@ -96,6 +144,33 @@ export default {
     },
     importClick() {
       this.bus.$emit('sms-actions:import');
+    },
+    // Possible issue: this isn't run on mount
+    toggleSelection() {
+      if (this.selectionState !== selectionStates.NONE) {
+        this.changeSelection(selectors.NONE);
+      } else {
+        this.changeSelection(selectors.ALL);
+      }
+    },
+    changeSelection(selector) {
+      switch (selector) {
+      case selectors.ALL:
+        this.bus.$emit('sms-actions:select-all');
+        break;
+      case selectors.NONE:
+        this.bus.$emit('sms-actions:clear-selection');
+        break;
+      case selectors.READ:
+        this.bus.$emit('sms-actions:select', {read: true});
+        break;
+      case selectors.UNREAD:
+        this.bus.$emit('sms-actions:select', {read: false});
+        break;
+      }
+      if (Object.values(smsTypes).includes(selector)) {
+        this.bus.$emit('sms-actions:select', {type: selector});
+      }
     },
   },
 };

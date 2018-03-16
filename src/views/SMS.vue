@@ -9,11 +9,11 @@
             'markAsRead': !isInbox,
           }"
           :disabled="{
-            'clearChecked': checkedRows.length === 0,
             'delete': checkedRows.length === 0,
             'markAsRead': checkedRows.length === 0,
             'import': true,
-          }">
+          }"
+          :selection-state="selectionState">
         </sms-actions>
       </div>
       <b-tabs type="is-boxed" expanded @change="changedTab">
@@ -25,6 +25,7 @@
             :bus="buses[idx]"
             :box-type="tab.boxType"
             @update:checked-rows="val => updateCheckedRows(val, idx)"
+            @update:selection-state="val => updateSelectionState(val, idx)"
             @edit="editMessage"
           ></sms-box>
         </b-tab-item>
@@ -53,6 +54,7 @@
 <script>
 import Vue from 'vue';
 import SmsActions from '@/components/sms/SmsActions.vue';
+import {selectionStates} from '@/components/sms/select';
 import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
 import router from 'huawei-router-api/browser';
@@ -76,6 +78,7 @@ export default {
     for (let i=0; i<tabs.length; i++) {
       tabs[i].status = '';
       tabs[i].checkedRows = [];
+      tabs[i].selectionState = selectionStates.NONE;
       buses[i] = new Vue();
     }
     return {
@@ -94,7 +97,9 @@ export default {
   mounted() {
     // Redirect these events to the active tab
     const eventsToRedirect = [
-      'sms-actions:clear-checked',
+      'sms-actions:clear-selection',
+      'sms-actions:select-all',
+      'sms-actions:select',
       'sms-actions:delete',
       'sms-actions:mark-as-read',
     ];
@@ -126,6 +131,9 @@ export default {
     checkedRows() {
       return this.tabs[this.currentTab].checkedRows;
     },
+    selectionState() {
+      return this.tabs[this.currentTab].selectionState;
+    },
     currentBus() {
       return this.buses[this.currentTab];
     },
@@ -136,6 +144,9 @@ export default {
     },
     updateCheckedRows(val, idx) {
       this.tabs[idx].checkedRows = val;
+    },
+    updateSelectionState(val, idx) {
+      this.tabs[idx].selectionState = val;
     },
     getTabIndexByBoxType(type) {
       return this.tabs.findIndex(tab => tab.boxType === type);

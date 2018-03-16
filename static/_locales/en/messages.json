@@ -91,11 +91,19 @@
   "sms_admin_only": {
     "message": "You must have administrator access to view SMS messages"
   },
-  "sms_action_clear_checked": {"message": "Clear checked"},
   "sms_action_new_message": {"message": "New message"},
   "sms_action_delete": {"message": "Delete"},
   "sms_action_import": {"message": "Import"},
   "sms_action_mark_as_read": {"message": "Mark as read"},
+  "sms_action_select_tooltip": {"message": "Select"},
+  "sms_action_select_dropdown_types_group": {
+    "message": "SMS Types",
+    "description": "Label given to the SMS types group in the dropdown used to select SMS messages."
+  },
+  "sms_action_select_none": {"message": "None"},
+  "sms_action_select_all": {"message": "All"},
+  "sms_action_select_read": {"message": "Read"},
+  "sms_action_select_unread": {"message": "Unread"},
   "sms_first_to_last": {
     "message": "$FIRST$ - $LAST$",
     "description": "Shows which sms messages are currently being displayed.",

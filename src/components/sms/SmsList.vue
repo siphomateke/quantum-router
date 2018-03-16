@@ -29,8 +29,8 @@
         <b-table-column field="type" :label="$i18n('sms_message_type')"
           v-if="showType">
           <b-icon
-            :title="getTypeTooltip(props.row.parsed.type)"
-            :icon="getTypeIcon(props.row.parsed.type)">
+            :title="getSmsTypeName(props.row.parsed.type)"
+            :icon="getSmsTypeIcon(props.row.parsed.type)">
           </b-icon>
         </b-table-column>
         <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
@@ -67,11 +67,10 @@
 
 <script>
 import moment from 'moment';
-import router from 'huawei-router-api/browser';
-
-const types = router.sms.types;
+import smsTypeMixin from '@/mixins/smsType';
 
 export default {
+  mixins: [smsTypeMixin],
   props: {
     'list': Array,
     'checked-rows': Array,
@@ -121,46 +120,6 @@ export default {
     },
   },
   methods: {
-    // TODO: Add icon customization to settings
-    getTypeIcon(type) {
-      switch (type) {
-      case types.RECHARGE:
-        return 'bolt';
-      case types.DATA:
-        return 'area-chart';
-      case types.DATA_PERCENT:
-        return 'pie-chart';
-      case types.ACTIVATED:
-        return 'lightbulb-o';
-      case types.DEPLETED:
-        return 'exclamation';
-      case types.AD:
-        return 'bullhorn';
-      default:
-        return '';
-      }
-    },
-    getTypeTooltipCode(type) {
-      switch (type) {
-      case types.RECHARGE:
-        return 'recharge';
-      case types.DATA:
-        return 'data';
-      case types.DATA_PERCENT:
-        return 'data_percent';
-      case types.ACTIVATED:
-        return 'activated';
-      case types.DEPLETED:
-        return 'depleted';
-      case types.AD:
-        return 'ad';
-      default:
-        return '';
-      }
-    },
-    getTypeTooltip(type) {
-      return this.$i18n('sms_types_'+this.getTypeTooltipCode(type));
-    },
     formatDate(date) {
       return moment(date).format('Y-M-D H:mm:ss');
     },

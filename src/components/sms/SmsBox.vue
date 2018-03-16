@@ -21,6 +21,7 @@
 <script>
 import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
+import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
 
@@ -60,6 +61,16 @@ export default {
   watch: {
     checkedRows(val) {
       this.$emit('update:checked-rows', val);
+
+      let selectionState;
+      if (val.length === this.list.length) {
+        selectionState = selectionStates.ALL;
+      } else if (val.length > 0) {
+        selectionState = selectionStates.SOME;
+      } else {
+        selectionState = selectionStates.NONE;
+      }
+      this.$emit('update:selection-state', selectionState);
     },
   },
   mounted() {
@@ -68,7 +79,9 @@ export default {
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
     this.globalBus.$on('refresh:sms', this.refresh);
-    this.bus.$on('sms-actions:clear-checked', this.clearChecked);
+    this.bus.$on('sms-actions:clear-selection', this.clearSelection);
+    this.bus.$on('sms-actions:select-all', this.selectAll);
+    this.bus.$on('sms-actions:select', this.select);
     this.bus.$on('sms-actions:delete', this.deleteMessages);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
@@ -194,8 +207,36 @@ export default {
         }
       });
     },
-    clearChecked() {
+    clearSelection() {
       this.checkedRows = [];
+    },
+    selectAll() {
+      // TODO: Decide if this should actually select all messages on all pages asynchronously
+      this.checkedRows = this.list.slice();
+    },
+    select(selector) {
+      this.clearSelection();
+      // TODO: Improve selector validation
+      const validSelectorKeys = ['type', 'read'];
+      let validSelector = false;
+      for (const key of validSelectorKeys) {
+        if (key in selector) {
+          validSelector = true;
+          break;
+        }
+      }
+      if (validSelector) {
+        for (const m of this.list) {
+          let match = true;
+          if ('type' in selector && selector.type !== m.parsed.type) {
+            match = false;
+          }
+          if ('read' in selector && selector.read !== m.read) {
+            match = false;
+          }
+          if (match) this.checkedRows.push(m);
+        }
+      }
     },
     editMessage(index) {
       this.$emit('edit', this.list[index]);
