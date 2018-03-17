@@ -58,7 +58,7 @@
             v-if="isVisible('new')"
             :disabled="isDisabled('new')"
             :label="this.$i18n('sms_action_new_message')"
-            icon="plus" type="is-primary"
+            icon="plus"
             @click="newMessage">
           </action-button>
         </b-field>
