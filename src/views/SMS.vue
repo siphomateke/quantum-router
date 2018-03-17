@@ -11,7 +11,7 @@
           :disabled="{
             'delete': checkedRows.length === 0,
             'markAsRead': checkedRows.length === 0,
-            'import': true,
+            'import': !importEnabled,
           }"
           :selection-state="selectionState">
         </sms-actions>
@@ -92,6 +92,7 @@ export default {
         numbers: [],
         content: '',
       },
+      importEnabled: false,
     };
   },
   mounted() {
@@ -161,6 +162,8 @@ export default {
       this.getTabByBoxType(boxTypes.INBOX).status = separator+smsData.LocalInbox;
       this.getTabByBoxType(boxTypes.SENT).status = separator+smsData.LocalOutbox;
       this.getTabByBoxType(boxTypes.DRAFT).status = separator+smsData.LocalDraft;
+
+      this.checkImport();
     },
     refresh() {
       if (this.$adminMode) {
@@ -193,6 +196,11 @@ export default {
       this.showSmsDialog = true;
     },
 
+    async checkImport() {
+      const smsConfig = await router.config.getSmsConfig();
+      this.importEnabled = smsConfig.import_enabled;
+      return this.importEnabled;
+    },
     import() {
       // TODO: Implement import
     },
