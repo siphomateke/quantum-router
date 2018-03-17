@@ -172,7 +172,7 @@ export default {
       await router.sms.deleteSms(indices);
       // TODO: delete sms loading indicator
       this.clearSelection();
-      this.refresh();
+      this.globalBus.$emit('refresh:sms');
     },
     markMessagesAsRead() {
       const promises = [];
