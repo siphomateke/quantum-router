@@ -120,9 +120,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      unreadNotifications: 'unreadNotifications'
-    }),
+    ...mapGetters([
+      'unreadNotifications',
+      'smsCount',
+    ]),
     allNotifications() {
       return this.$store.state.notifications.all;
     },
@@ -162,9 +163,9 @@ export default {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
           try {
-            const data = await router.sms.getSmsCount();
+            await this.$store.dispatch('getSmsCount');
             const list = await router.sms.getFullSmsList({
-              total: data.LocalInbox,
+              total: this.smsCount.LocalInbox,
               filter: {
                 // FIXME: This doesn't work since the time the messages is received
                 // does not match up with the time in the message

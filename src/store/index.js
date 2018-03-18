@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import settings from '@/store/modules/settings.js';
 import notifications from '@/store/modules/notifications.js';
+import sms from '@/store/modules/sms.js';
 import * as types from '@/store/mutation_types.js';
 
 export const modes = {
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   modules: {
     settings,
     notifications,
+    sms,
   },
   state: {
     mode: modes.OFFLINE,

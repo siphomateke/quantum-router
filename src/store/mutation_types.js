@@ -1,7 +1,11 @@
 export const MODE = 'MODE';
 export const SETTINGS = 'SETTINGS';
 
+// notifications
 export const ADD_NOTIFICATIONS = 'ADD_NOTIFICATIONS';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
 export const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
+
+// sms
+export const SET_SMS_COUNT = 'SET_SMS_COUNT';

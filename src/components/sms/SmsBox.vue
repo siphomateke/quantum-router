@@ -24,6 +24,7 @@ import SmsList from '@/components/sms/SmsList.vue';
 import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
+import {mapGetters} from 'vuex';
 
 export default {
   name: 'sms-box',
@@ -51,6 +52,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['smsCount']),
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
     },
@@ -115,17 +117,17 @@ export default {
         }
 
         this.list = [];
-        const smsData = await router.sms.getSmsCount();
+        await this.$store.dispatch('getSmsCount');
         let count = 0;
         switch (this.boxType) {
         case router.sms.boxTypes.INBOX:
-          count = smsData.LocalInbox;
+          count = this.smsCount.LocalInbox;
           break;
         case router.sms.boxTypes.SENT:
-          count = smsData.LocalOutbox;
+          count = this.smsCount.LocalOutbox;
           break;
         case router.sms.boxTypes.DRAFT:
-          count = smsData.LocalDraft;
+          count = this.smsCount.LocalDraft;
           break;
         }
         this.total = parseInt(count);

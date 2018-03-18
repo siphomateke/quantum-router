@@ -59,6 +59,7 @@ import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/SmsDialog.vue';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
+import {mapGetters} from 'vuex';
 
 const boxTypes = router.sms.boxTypes;
 
@@ -120,6 +121,7 @@ export default {
     this.globalBus.$on('refresh:sms', this.refresh);
   },
   computed: {
+    ...mapGetters(['smsCount']),
     boxTypes() {
       return router.sms.boxTypes;
     },
@@ -157,11 +159,11 @@ export default {
     },
     async refreshAdmin() {
       // TODO: Refresh every once in a while
-      const smsData = await router.sms.getSmsCount();
+      await this.$store.dispatch('getSmsCount');
       const separator = '\xa0 | \xa0';
-      this.getTabByBoxType(boxTypes.INBOX).status = separator+smsData.LocalInbox;
-      this.getTabByBoxType(boxTypes.SENT).status = separator+smsData.LocalOutbox;
-      this.getTabByBoxType(boxTypes.DRAFT).status = separator+smsData.LocalDraft;
+      this.getTabByBoxType(boxTypes.INBOX).status = separator+this.smsCount.LocalInbox;
+      this.getTabByBoxType(boxTypes.SENT).status = separator+this.smsCount.LocalOutbox;
+      this.getTabByBoxType(boxTypes.DRAFT).status = separator+this.smsCount.LocalDraft;
 
       this.checkImport();
     },
