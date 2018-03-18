@@ -179,6 +179,52 @@
     }
   },
   "sms_mark_read_error": {"message": "Error marking messages as read."},
+  "sms_import_confirm": {
+    "message": "Are you sure you want to import $COUNT$ message(s) from the SIM card?",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "13"
+      }
+    }
+  },
+  "sms_import_warning_not_enough_space": {
+    "message": "Only $AVAILABLE$ message(s) out of $COUNT$ will be imported due to lack of space.",
+    "placeholders": {
+      "available": {
+        "content": "$1",
+        "example": "5"
+      },
+      "count": {
+        "content": "$2",
+        "example": "13"
+      }
+    }
+  },
+  "sms_import_error_not_enough_space": {"message": "Not enough space to import messages."},
+  "sms_import_error_generic": {"message": "Failed to import messages."},
+  "sms_import_success": {
+    "message": "Imported $SUCCESS$ message(s) successfully.",
+    "placeholders": {
+      "success": {
+        "content": "$1",
+        "example": "15"
+      }
+    }
+  },
+  "sms_import_complete": {
+    "message": "Imported $SUCCESS$ message(s) successfully. Failed to import $FAIL$ message(s).",
+    "placeholders": {
+      "success": {
+        "content": "$1",
+        "example": "15"
+      },
+      "fail": {
+        "content": "$2",
+        "example": "20"
+      }
+    }
+  },
 
   "sms_types_recharge": {"message": "Recharge"},
   "sms_types_data": {"message": "Data remaining"},
