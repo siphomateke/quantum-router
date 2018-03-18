@@ -1,5 +1,8 @@
 {
   "generic_send": {"message": "Send"},
+  "generic_yes": {"message": "Yes"},
+  "generic_no": {"message": "No"},
+  "generic_ok": {"message": "OK"},
   "generic_cancel": {"message": "Cancel"},
   "generic_error": {
     "message": "Error: $ERROR$",
