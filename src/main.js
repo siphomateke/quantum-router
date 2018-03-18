@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './vue-router';
-import Vuex from 'vuex';
+import {mapGetters} from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import {modes} from '@/store';
@@ -43,12 +43,10 @@ Vue.mixin({
     },
   },
   computed: {
-    $mode() {
-      return this.$store.state.mode;
-    },
-    $adminMode() {
-      return this.$mode === modes.ADMIN;
-    },
+    ...mapGetters({
+      $mode: 'mode',
+      $adminMode: 'adminMode',
+    }),
   },
 });
 
