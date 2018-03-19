@@ -197,7 +197,7 @@ export default {
           type: 'is-success',
         });
       }).catch(e => {
-        this.handleError(e);
+        this.$error(e);
         if (successful > 0) {
           this.$toast.open({
             message: this.$i18n(
