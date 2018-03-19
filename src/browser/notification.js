@@ -72,7 +72,7 @@ export class Notification {
     return new Notification({
       title: 'SMS from '+sms.Phone,
       message: message,
-      date: Date.parse(sms.Date),
+      date: moment(sms.Date).valueOf(),
       read: parseInt(sms.Smstat) === 1,
       progress: progress,
       metadata: parsed,
