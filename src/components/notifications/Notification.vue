@@ -42,9 +42,9 @@ export default {
     time() {
       if (this._date) {
         const duration = moment.duration(Date.now() - this.date);
-        if (duration.minutes() <= 5) {
+        if (duration.asMinutes() <= 30) {
           return this._date.fromNow();
-        } else if (duration.days() < 1) {
+        } else if (duration.asDays() < 1) {
           return this._date.format('HH:mm');
         } else {
           return this._date.format('Y-M-D HH:mm');
