@@ -1,9 +1,9 @@
 <template>
   <form style="padding:1em;" ref="form" v-on:submit.prevent>
     <b-field
-    :label="'options_field_router_url' | $i18n"
-    :type="routerUrl.type"
-    :message="routerUrl.message">
+      :label="'options_field_router_url' | $i18n"
+      :type="routerUrl.type"
+      :message="routerUrl.message">
         <b-input v-model="routerUrl.value" type="url" :loading="pinging" @blur="onBlurRouterUrl"></b-input>
     </b-field>
     <b-field :label="'options_field_admin_username' | $i18n">
