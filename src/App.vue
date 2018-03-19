@@ -231,9 +231,9 @@ export default {
 
               // Check if this notification is new
               for (const n2 of this.allNotifications) {
-                if (n.date > n2.Date) {
+                if (n.date > n2.date) {
                   break;
-                } else if (n.date === n2.Date) {
+                } else if (n.date === n2.date) {
                   if (n.id === n2.id) {
                     exists = true;
                     break;
