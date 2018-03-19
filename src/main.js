@@ -17,6 +17,7 @@ const bus = new Vue();
 /*
 Global events
 
+refresh:second
 refresh:basic
 refresh:sms(boxType)
 refresh:notifications

@@ -88,7 +88,55 @@ import {Notification} from '@/browser/notification.js';
 import moment from 'moment';
 
 Vue.mixin({
+  data() {
+    return {
+      refreshIntervals: {
+        'second': 1000,
+        'basic': 1000
+      },
+      currentTime: null
+    }
+  },
+  mounted() {
+    this.startRefreshCycle();
+
+    this.globalBus.$on('refresh:second', () => {
+      this.currentTime = Date.now();
+    });
+
+    this.globalBus.$on('refresh:basic', () => {
+      this.globalBus.$emit('refresh:graph');
+      this.globalBus.$emit('refresh:notifications');
+    });
+  },
+  watch: {
+    ['$mode'](val, oldVal) {
+      switch (val) {
+        case modes.ADMIN:
+          this.globalBus.$emit('mode-change:admin');
+          break;
+        case modes.BASIC:
+          this.globalBus.$emit('mode-change:basic');
+          break;
+        case modes.OFFLINE:
+          this.globalBus.$emit('mode-change:offline');
+          break;
+      }
+    }
+  },
   methods: {
+    startRefreshCycle() {
+      for (const name in this.refreshIntervals) {
+        if (this.refreshIntervals.hasOwnProperty(name)) {
+          const interval = this.refreshIntervals[name];
+          const func = () => {
+            this.globalBus.$emit('refresh:'+name);
+            setTimeout(func, interval);
+          };
+          func();
+        }
+      }
+    },
     $error(e) {
       let unknown = false;
       if (e instanceof RouterError) {
@@ -164,9 +212,6 @@ export default {
   data() {
     return {
       loading: false,
-      refreshIntervals: {
-        'basic': 1000
-      },
       lastUpdatedNotifications: null,
       gettingSmsList: false,
     };
@@ -200,13 +245,6 @@ export default {
   },
   async mounted() {
     this.tryChangeMode(modes.ADMIN);
-
-    this.startRefreshCycle();
-
-    this.globalBus.$on('refresh:basic', () => {
-      this.globalBus.$emit('refresh:graph');
-      this.globalBus.$emit('refresh:notifications');
-    });
 
     this.globalBus.$on('refresh:notifications', async () => {
       if (this.$adminMode) {
@@ -253,17 +291,6 @@ export default {
   },
   watch: {
     ['$mode'](val, oldVal) {
-      switch (val) {
-        case modes.ADMIN:
-          this.globalBus.$emit('mode-change:admin');
-          break;
-        case modes.BASIC:
-          this.globalBus.$emit('mode-change:basic');
-          break;
-        case modes.OFFLINE:
-          this.globalBus.$emit('mode-change:offline');
-          break;
-      }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.$store.dispatch('loadNotifications');
       }
@@ -366,18 +393,6 @@ export default {
       data.type = 'warning';
       this.$dialogConfirm(data);
     },
-    startRefreshCycle() {
-      for (const name in this.refreshIntervals) {
-        if (this.refreshIntervals.hasOwnProperty(name)) {
-          const interval = this.refreshIntervals[name];
-          const func = () => {
-            this.globalBus.$emit('refresh:'+name);
-            setTimeout(func, interval);
-          };
-          func();
-        }
-      }
-    }
   },
 };
 </script>
