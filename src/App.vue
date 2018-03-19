@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <dialogs :bus="globalBus"></dialogs>
     <b-loading :active.sync="loading" :canCancel="false"></b-loading>
     <div class="app-wrapper columns is-gapless">
       <drawer title="Quantum Router" class="column is-2">
@@ -68,6 +69,7 @@
 
 <script>
 import Vue from 'vue';
+import DialogManager from '@/components/dialogs/DialogManager.vue';
 import Drawer from '@/components/Drawer.vue';
 import DrawerItem from '@/components/DrawerItem.vue';
 import Navbar from '@/components/Navbar.vue';
@@ -88,11 +90,36 @@ import moment from 'moment';
 Vue.mixin({
   methods: {
     $error(e) {
-      const adminError = ['api_wrong_session', 'api_wrong_session_token', 'api_voice_busy', 'api_system_no_rights'];
-      if (e instanceof RouterError && adminError.includes(e.code)) {
-        const previousMode = this.$mode;
-        this.changeMode(modes.BASIC);
+      let unknown = false;
+      if (e instanceof RouterError) {
+        const adminError = ['api_wrong_session', 'api_wrong_session_token', 'api_voice_busy', 'api_system_no_rights'];
+        if (adminError.includes(e.code)) {
+          this.changeMode(modes.BASIC);
+        } else if (router.errors.isErrorInCategory(e.code, 'connection')) {
+          this.changeMode(modes.OFFLINE);
+        } else if (e.code === 'invalid_router_url') {
+          if (router.config.getUrl().length > 0) {
+            this.warningDialog({
+              message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
+              confirmText: this.$i18n('dialog_open_settings'),
+              onConfirm: () => {routerHelper.openOptionsPage()},
+              category: 'admin',
+            });
+          } else {
+            this.warningDialog({
+              message: this.$i18n('empty_router_url_error'),
+              confirmText: this.$i18n('dialog_open_settings'),
+              onConfirm: () => {routerHelper.openOptionsPage()},
+              category: 'admin',
+            });
+          }
+        } else {
+          unknown = true;
+        }
       } else {
+        unknown = true;
+      }
+      if (unknown) {
         let message;
         if (e instanceof RouterError) {
           message = e.code+' : '+e.message;
@@ -106,12 +133,25 @@ Vue.mixin({
       }
       // TODO: log errors
     },
+    $dialogClose(category) {
+      this.globalBus.$emit('close-dialogs', category);
+    },
+    $dialogAlert(data) {
+      this.globalBus.$emit('open-alert-dialog', data);
+    },
+    $dialogConfirm(data) {
+      this.globalBus.$emit('open-confirm-dialog', data);
+    },
+    $dialogPrompt(data) {
+      this.globalBus.$emit('open-prompt-dialog', data);
+    },
   },
 });
 
 export default {
   name: 'app',
   components: {
+    'dialogs': DialogManager,
     'drawer': Drawer,
     'drawer-item': DrawerItem,
     'b-navbar': Navbar,
@@ -280,10 +320,11 @@ export default {
                 } else {
                   this.$error(e);
                 }
-                this.openConfirmDialog({
+                this.warningDialog({
                   message: errorMessage,
                   confirmText: this.$i18n('dialog_retry'),
                   onConfirm: () => {this.tryChangeMode(newMode)},
+                  category: 'admin',
                 });
                 return false;
               }
@@ -291,10 +332,11 @@ export default {
           } catch (e) {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
-              this.openConfirmDialog({
+              this.warningDialog({
                 message: this.$i18n('connection_error', router.config.getUrl()),
                 confirmText: this.$i18n('dialog_retry'),
                 onConfirm: () => {this.tryChangeMode(newMode)},
+                category: 'admin',
               });
               return false;
             } else {
@@ -305,28 +347,14 @@ export default {
           return true;
         }
       } catch (e) {
-        if (e instanceof RouterError && e.code === 'invalid_router_url') {
-          if (router.config.getUrl().length > 0) {
-            this.openConfirmDialog({
-              message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
-              confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {routerHelper.openOptionsPage()},
-            });
-            return false;
-          } else {
-            this.openConfirmDialog({
-              message: this.$i18n('empty_router_url_error'),
-              confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {routerHelper.openOptionsPage()},
-            });
-            return false;
-          }
-        } else {
-          // TODO: Log unknown error. E.g http_request_error when trying to get loggedInState
-        }
+        this.$error(e);
+        return false;
       }
     },
     async tryChangeMode(newMode) {
+      if (newMode === modes.ADMIN) {
+        this.$dialogClose('admin');
+      }
       this.loading = true;
       try {
         const ready = await this.prepChangeMode(newMode);
@@ -343,10 +371,9 @@ export default {
         this.$toast.open(this.$i18n('changed_mode_to', this.$i18n('mode_'+this.modeNames[mode])));
       }
     },
-    openConfirmDialog(data) {
-      data.type = 'is-warning';
-      data.hasIcon = true;
-      this.$dialog.confirm(data);
+    warningDialog(data) {
+      data.type = 'warning';
+      this.$dialogConfirm(data);
     },
     startRefreshCycle() {
       for (const name in this.refreshIntervals) {

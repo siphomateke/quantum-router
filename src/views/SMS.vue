@@ -227,20 +227,16 @@ export default {
             this.$toast.open(this.$i18n('sms_import_complete', 0, 0));
             break;
           case 'sms_not_enough_space':
-            this.$dialog.alert({
-              type: 'is-danger',
-              hasIcon: true,
+            this.$dialogAlert({
+              type: 'danger',
               message: this.$i18n('sms_import_error_not_enough_space'),
-              confirmText: this.$i18n('generic_ok'),
             });
             break;
           case 'sms_import_invalid_response':
             // Generic unknown error
-            this.$dialog.alert({
-              type: 'is-danger',
-              hasIcon: true,
+            this.$dialogAlert({
+              type: 'danger',
               message: this.$i18n('sms_import_error_generic'),
-              confirmText: this.$i18n('generic_ok'),
             });
             throw e;
           default:
@@ -254,20 +250,17 @@ export default {
     async importClicked() {
       await this.$store.dispatch('getSmsCount');
       // Ask user if they want to import messages
-      this.$dialog.confirm({
+      this.$dialogConfirm({
         message: this.$i18n('sms_import_confirm', this.smsCount.SimTotal),
         confirmText: this.$i18n('generic_yes'),
-        cancelText: this.$i18n('generic_cancel'),
         onConfirm: () => {
           // If there is space for some but not all messages to be imported, inform user
           const available = this.smsCount.LocalMax - this.smsCount.LocalTotal;
           const toImport = this.smsCount.SimTotal;
           if (available > 0 && toImport > available) {
-            this.$dialog.alert({
+            this.$dialogAlert({
               message: this.$i18n('sms_import_warning_not_enough_space', available, toImport),
-              type: 'is-warning',
-              hasIcon: true,
-              confirmText: this.$i18n('generic_ok'),
+              type: 'warning',
               onConfirm: this.import,
             });
           } else {
