@@ -216,11 +216,6 @@ export default {
             await this.$store.dispatch('getSmsCount');
             const list = await router.sms.getFullSmsList({
               total: this.smsCount.LocalInbox,
-              filter: {
-                // FIXME: This doesn't work since the time the messages is received
-                // does not match up with the time in the message
-                minDate: this.lastUpdatedNotifications,
-              },
             }, {
               sortOrder: 'desc',
             });
@@ -231,13 +226,9 @@ export default {
 
               // Check if this notification is new
               for (const n2 of this.allNotifications) {
-                if (n.date > n2.date) {
+                if (n.id === n2.id) {
+                  exists = true;
                   break;
-                } else if (n.date === n2.date) {
-                  if (n.id === n2.id) {
-                    exists = true;
-                    break;
-                  }
                 }
               }
 
