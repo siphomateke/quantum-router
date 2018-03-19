@@ -79,20 +79,24 @@ import moment from 'moment';
 
 Vue.mixin({
   methods: {
-    handleError(err) {
-      return new Promise((resolve, reject) => {
+    $error(e) {
+      const adminError = ['api_wrong_session', 'api_wrong_session_token', 'api_voice_busy', 'api_system_no_rights'];
+      if (e instanceof RouterError && adminError.includes(e.code)) {
+        const previousMode = this.$mode;
+        this.changeMode(modes.BASIC);
+      } else {
         let message;
-        if (err instanceof RouterError) {
-          message = err.code+' : '+err.message;
+        if (e instanceof RouterError) {
+          message = e.code+' : '+e.message;
         } else {
-          message = err.message
+          message = e.message
         }
         this.$toast.open({
           type: 'is-danger',
           message: 'Error: ' + message
         });
-        reject();
-      });
+      }
+      // TODO: log errors
     },
   },
 });
@@ -198,7 +202,7 @@ export default {
 
             this.lastUpdatedNotifications = Date.now();
           } catch (e) {
-            this.handleError(e);
+            this.$error(e);
           } finally {
             this.gettingSmsList = false;
           }
@@ -266,6 +270,8 @@ export default {
                     let actualError = this.$i18n('router_module_error_'+e.code);
                     errorMessage = this.$i18n('router_error_logging_in', actualError);
                   }
+                } else {
+                  this.$error(e);
                 }
                 this.openConfirmDialog({
                   message: errorMessage,
