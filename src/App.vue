@@ -162,7 +162,7 @@ export default {
     });
 
     this.globalBus.$on('refresh:notifications', async () => {
-      if (this.$mode > modes.OFFLINE) {
+      if (this.$adminMode) {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
           try {
