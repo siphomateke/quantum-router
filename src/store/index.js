@@ -11,7 +11,7 @@ export const modes = {
   ADMIN: 2,
 };
 
-const modeNames = {};
+export const modeNames = {};
 
 modeNames[modes.OFFLINE] = 'offline';
 modeNames[modes.BASIC] = 'basic';

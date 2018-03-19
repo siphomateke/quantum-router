@@ -30,9 +30,12 @@
             <q-toolbar-item :title="$i18n('change_mode_tooltip')" icon="bolt" :color="modeColor" ref="modeToolbarItem">
               <template slot="dropdown">
                 <q-dropdown-select :value="$mode" @input="userChangedMode">
-                  <q-dropdown-item :value="modes.OFFLINE">{{ 'mode_offline' | $i18n }}</q-dropdown-item>
-                  <q-dropdown-item :value="modes.BASIC">{{ 'mode_basic' | $i18n }}</q-dropdown-item>
-                  <q-dropdown-item :value="modes.ADMIN">{{ 'mode_admin' | $i18n }}</q-dropdown-item>
+                  <q-dropdown-item
+                    v-for="mode in modes"
+                    :key="mode"
+                    :value="mode">
+                   {{ 'mode_'+modeNames[mode] | $i18n }}
+                  </q-dropdown-item>
                 </q-dropdown-select>
               </template>
             </q-toolbar-item>
@@ -70,7 +73,7 @@ import DropdownSelect from '@/components/DropdownSelect.vue';
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
-import {modes} from '@/store';
+import {modes, modeNames} from '@/store';
 import {mapGetters} from 'vuex';
 import * as types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
@@ -134,9 +137,8 @@ export default {
       return this.allNotifications.length===0 && this.gettingSmsList;
     },
     // needed to send imported modes to html
-    modes() {
-      return modes;
-    },
+    modes: () => modes,
+    modeNames: () => modeNames,
     modeColor() {
       switch (this.$mode) {
         case modes.OFFLINE: {
