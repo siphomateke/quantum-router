@@ -4,25 +4,30 @@
     <div class="app-wrapper columns is-gapless">
       <drawer title="Quantum Router" class="column is-2">
         <drawer-item
-        link="home"
-        icon="home"
-        :label="this.$i18n('menu_home')"></drawer-item>
+          link="home"
+          icon="home"
+          :label="this.$i18n('menu_home')">
+        </drawer-item>
         <drawer-item
-        link="sms"
-        icon="comment"
-        :label="this.$i18n('menu_sms')"></drawer-item>
+          link="sms"
+          icon="comment"
+          :label="this.$i18n('menu_sms')">
+        </drawer-item>
         <drawer-item
-        link="statistics"
-        icon="pie-chart"
-        :label="this.$i18n('menu_statistics')"></drawer-item>
+          link="statistics"
+          icon="pie-chart"
+          :label="this.$i18n('menu_statistics')">
+        </drawer-item>
         <drawer-item
-        link="services"
-        icon="terminal"
-        :label="this.$i18n('menu_services')"></drawer-item>
+          link="services"
+          icon="terminal"
+          :label="this.$i18n('menu_services')">
+        </drawer-item>
         <drawer-item
-        link="settings"
-        icon="cog"
-        :label="this.$i18n('menu_settings')"></drawer-item>
+          link="settings"
+          icon="cog"
+          :label="this.$i18n('menu_settings')">
+        </drawer-item>
       </drawer>
       <div class="column">
         <q-toolbar>
