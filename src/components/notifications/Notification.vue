@@ -1,7 +1,7 @@
 <template>
 <div class="q-notification">
   <span class="q-title">{{ title }}</span>
-  <span class="q-subtitle">{{ dateFromNow }}</span>
+  <span class="q-subtitle">{{ time }}</span>
   <div class="q-message">{{ message }}</div>
   <progress v-if="progress" class="progress is-primary is-small" :value="progress" max="1">{{progress * 100}}%</progress>
 </div>
@@ -39,11 +39,18 @@ export default {
     },
   },
   computed: {
-    dateFromNow() {
-      if (this.date) {
-        return this._date.fromNow();
+    time() {
+      if (this._date) {
+        const duration = moment.duration(Date.now() - this.date);
+        if (duration.minutes() <= 5) {
+          return this._date.fromNow();
+        } else if (duration.days() < 1) {
+          return this._date.format('HH:mm');
+        } else {
+          return this._date.format('Y-M-D HH:mm');
+        }
       } else {
-        return false;
+        return null;
       }
     },
   },
