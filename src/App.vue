@@ -340,7 +340,7 @@ export default {
     changeMode(mode) {
       if (mode !== this.$mode) {
         this.$store.commit(types.MODE, mode);
-        this.$toast.open('Changed mode to: '+this.modeName);
+        this.$toast.open(this.$i18n('changed_mode_to', this.$i18n('mode_'+this.modeNames[mode])));
       }
     },
     openConfirmDialog(data) {

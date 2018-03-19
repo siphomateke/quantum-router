@@ -24,6 +24,15 @@
   "mode_basic":{"message": "Basic"},
   "mode_admin":{"message": "Admin"},
   "change_mode_tooltip": {"message": "Change mode"},
+  "changed_mode_to": {
+    "message": "Changed mode to: $MODE$",
+    "placeholders": {
+      "mode": {
+        "content": "$1",
+        "example": "Admin"
+      }
+    }
+  },
 
   "notifications_tooltip": {"message": "Notifications"},
   "notifications_title":{"message": "Notifications"},
