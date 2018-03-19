@@ -61,9 +61,10 @@ export class Notification {
       message = '[[ ADVERTISEMENT  ]]';
       break;
     case router.sms.types.DATA:
-      message = 'You have '
-      + parsed.data[0].amount + parsed.data[0].unit
-      + ' valid until ' + moment(parsed.expires[0]).format('Y-M-D HH:mm:ss');
+      message = 'You have ' + parsed.data[0].amount + parsed.data[0].unit;
+      if (parsed.expires[0]) {
+        message += ' valid until ' + moment(parsed.expires[0]).format('Y-M-D HH:mm:ss');
+      }
       break;
     default:
       message = sms.Content;
