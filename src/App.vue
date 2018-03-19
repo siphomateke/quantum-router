@@ -121,12 +121,11 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'allNotifications',
       'unreadNotifications',
       'smsCount',
+      'modeName',
     ]),
-    allNotifications() {
-      return this.$store.state.notifications.all;
-    },
     loadingNotifications() {
       return this.allNotifications.length===0 && this.gettingSmsList;
     },
@@ -328,7 +327,7 @@ export default {
     changeMode(mode) {
       if (mode !== this.$mode) {
         this.$store.commit(types.MODE, mode);
-        this.$toast.open('Changed mode to: '+this.$store.getters.modeName);
+        this.$toast.open('Changed mode to: '+this.modeName);
       }
     },
     openConfirmDialog(data) {

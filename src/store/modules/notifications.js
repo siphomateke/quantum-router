@@ -7,6 +7,7 @@ export default {
     all: [],
   },
   getters: {
+    allNotifications: state => state.all,
     unreadNotifications(state) {
       const list = [];
       for (const n of state.all) {
