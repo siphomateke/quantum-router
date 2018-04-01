@@ -42,7 +42,7 @@
         </b-table-column>
         <td v-if="showEditButton" class="edit-button-column">
           <button
-            class="button"
+            class="button is-primary"
             @click="editMessage(props.index)"
             :title="$i18n('sms_edit_tooltip')">
               <b-icon icon="edit"></b-icon>
