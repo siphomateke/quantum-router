@@ -1,35 +1,34 @@
 <template>
-<div class="modal-card">
-  <header class="modal-card-head">
-    <p class="modal-card-title">{{ 'sms_dialog_title' | $i18n }}</p>
-  </header>
-  <section class="modal-card-body">
-    <form ref="form" v-on:submit.prevent>
-      <b-field
-        :label="this.$i18n('sms_dialog_field_numbers')"
-        :type="fields.numbers.type"
-        :message="fields.numbers.message">
-          <b-taginput
-            v-model="internalNumbers"
-            @input="validateNumbers"
-            icon="phone"
-            :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
-          </b-taginput>
-      </b-field>
-      <b-field :label="this.$i18n('sms_dialog_field_content')">
-        <b-input type="textarea" v-model="internalContent"></b-input>
-      </b-field>
-    </form>
-  </section>
-  <footer class="modal-card-foot">
-    <button class="button is-primary" @click="send">{{ 'sms_dialog_action_send' | $i18n }}</button>
-    <button class="button" @click="save">{{ 'sms_dialog_action_save' | $i18n }}</button>
-    <button class="button" @click="cancel">{{ 'sms_dialog_action_cancel' | $i18n }}</button>
-  </footer>
-</div>
+<q-dialog
+  :title="this.$i18n('sms_dialog_title')"
+  :confirm-text="this.$i18n('sms_dialog_action_send')"
+  @confirm="send"
+  @cancel="cancel"
+  >
+  <form ref="form" v-on:submit.prevent>
+    <b-field
+      :label="this.$i18n('sms_dialog_field_numbers')"
+      :type="fields.numbers.type"
+      :message="fields.numbers.message">
+        <b-taginput
+          v-model="internalNumbers"
+          @input="validateNumbers"
+          icon="phone"
+          :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
+        </b-taginput>
+    </b-field>
+    <b-field :label="this.$i18n('sms_dialog_field_content')">
+      <b-input type="textarea" v-model="internalContent"></b-input>
+    </b-field>
+  </form>
+  <template slot="buttons">
+    <button class="button" @click="save">{{ this.$i18n('sms_dialog_action_save') }}</button>
+  </template>
+</q-dialog>
 </template>
 
 <script>
+import Dialog from '@/components/dialogs/Dialog.vue';
 import router from 'huawei-router-api/browser';
 
 /**
@@ -37,6 +36,9 @@ import router from 'huawei-router-api/browser';
  */
 export default {
   name: 'sms-dialog',
+  components: {
+    [Dialog.name]: Dialog,
+  },
   props: {
     'index': Number,
     'numbers': Array,
