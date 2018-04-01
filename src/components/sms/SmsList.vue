@@ -8,16 +8,16 @@
     :loading="loading"
     :mobile-cards="true"
     :checked-rows.sync="internalCheckedRows"
-    checkable
+    :checkable="checkable"
 
-    paginated
-    backend-pagination
+    :paginated="paginated"
+    :backend-pagination="backendPagination"
     :total="total"
     :current-page="page"
     :per-page="perPage"
     @page-change="onPageChange"
 
-    backend-sorting
+    :backend-sorting="backendSorting"
     :default-sort-direction="sortOrder"
     :default-sort="['date', sortOrder]"
     @sort="onSort">
@@ -73,6 +73,10 @@ export default {
   mixins: [smsTypeMixin],
   props: {
     'list': Array,
+    'checkable': {
+      type: Boolean,
+      default: false,
+    },
     'checked-rows': Array,
     'loading': {
       type: Boolean,
@@ -80,7 +84,19 @@ export default {
     },
     'total': Number,
     'per-page': Number,
+    'backend-sorting': {
+      type: Boolean,
+      default: false,
+    },
     'sort-order': String,
+    'paginated': {
+      type: Boolean,
+      default: false,
+    },
+    'backend-pagination': {
+      type: Boolean,
+      default: false,
+    },
     'page': Number,
     'showReadStatus': {
       type: Boolean,
