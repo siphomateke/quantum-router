@@ -1,5 +1,5 @@
 <template>
-  <div class="level is-mobile">
+  <div class="level">
     <div class="level-left">
       <!-- TODO: Make action buttons show loading progress -->
       <b-field grouped>
