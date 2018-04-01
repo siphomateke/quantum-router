@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return moment(date).format('Y-M-D H:mm:ss');
+      return moment(date).format('Y-M-D HH:mm:ss');
     },
     onPageChange(page) {
       this.$emit('page-change', page);
