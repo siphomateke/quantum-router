@@ -18,8 +18,12 @@
       </div>
       <b-tabs type="is-boxed" expanded @change="changedTab">
         <b-tab-item
-          v-for="(tab, idx) in tabs" :key="idx"
-          :label="tab.label+tab.status">
+          v-for="(tab, idx) in tabs" :key="idx">
+
+          <template slot="header">
+            <b-icon :icon="tab.icon" size="is-small"/>
+            <span>{{ tab.label }} <b-tag rounded>{{tab.count}}</b-tag></span>
+          </template>
 
           <sms-box
             :bus="buses[idx]"
@@ -71,13 +75,13 @@ export default {
   },
   data() {
     const tabs = [
-      {boxType: boxTypes.INBOX, label: this.$i18n('sms_box_inbox')},
-      {boxType: boxTypes.SENT, label: this.$i18n('sms_box_sent')},
-      {boxType: boxTypes.DRAFT, label: this.$i18n('sms_box_draft')},
+      {boxType: boxTypes.INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox'},
+      {boxType: boxTypes.SENT, label: this.$i18n('sms_box_sent'), icon: 'send'},
+      {boxType: boxTypes.DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file'},
     ];
     const buses = [];
     for (let i=0; i<tabs.length; i++) {
-      tabs[i].status = '';
+      tabs[i].count = '';
       tabs[i].checkedRows = [];
       tabs[i].selectionState = selectionStates.NONE;
       buses[i] = new Vue();
@@ -160,10 +164,9 @@ export default {
     async refreshAdmin() {
       // TODO: Refresh every once in a while
       await this.$store.dispatch('getSmsCount');
-      const separator = '\xa0 | \xa0';
-      this.getTabByBoxType(boxTypes.INBOX).status = separator+this.smsCount.LocalInbox;
-      this.getTabByBoxType(boxTypes.SENT).status = separator+this.smsCount.LocalOutbox;
-      this.getTabByBoxType(boxTypes.DRAFT).status = separator+this.smsCount.LocalDraft;
+      this.getTabByBoxType(boxTypes.INBOX).count = this.smsCount.LocalInbox;
+      this.getTabByBoxType(boxTypes.SENT).count = this.smsCount.LocalOutbox;
+      this.getTabByBoxType(boxTypes.DRAFT).count = this.smsCount.LocalDraft;
 
       this.checkImport();
     },
