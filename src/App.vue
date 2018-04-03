@@ -72,7 +72,6 @@ import Vue from 'vue';
 import DialogManager from '@/components/dialogs/DialogManager.vue';
 import Drawer from '@/components/drawer/Drawer.vue';
 import DrawerItem from '@/components/drawer/DrawerItem.vue';
-import Navbar from '@/components/Navbar.vue';
 import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
@@ -154,7 +153,6 @@ export default {
     'dialogs': DialogManager,
     'drawer': Drawer,
     'drawer-item': DrawerItem,
-    'b-navbar': Navbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
     'q-dropdown-item': DropdownItem,
