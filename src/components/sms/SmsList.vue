@@ -3,18 +3,20 @@
     <div class="level" v-if="paginated && pageCount > 1">
       <div class="level-left">
         <div class="level-item" v-if="showGoToPage">
-          <b-field grouped>
-            <b-input
-              ref="goToPageInput"
-              type="number"
-              :min="1"
-              :max="pageCount"
-              v-model="goToPageNumber">
-            </b-input>
-            <p class="control">
-              <button class="button is-primary" @click="goToPage">Go</button>
-            </p>
-          </b-field>
+          <form v-on:submit.prevent="goToPage">
+            <b-field grouped>
+              <b-input
+                ref="goToPageInput"
+                type="number"
+                :min="1"
+                :max="pageCount"
+                v-model="goToPageNumber">
+              </b-input>
+              <p class="control">
+                <button type="submit" class="button is-primary">Go</button>
+              </p>
+            </b-field>
+          </form>
         </div>
       </div>
       <div class="level-right">
