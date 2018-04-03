@@ -72,44 +72,44 @@ import smsTypeMixin from '@/mixins/smsType';
 export default {
   mixins: [smsTypeMixin],
   props: {
-    'list': Array,
-    'checkable': {
+    list: Array,
+    checkable: {
       type: Boolean,
       default: false,
     },
-    'checked-rows': Array,
-    'loading': {
+    checkedRows: Array,
+    loading: {
       type: Boolean,
       default: false,
     },
-    'total': Number,
-    'per-page': Number,
-    'backend-sorting': {
+    total: Number,
+    perPage: Number,
+    backendSorting: {
       type: Boolean,
       default: false,
     },
-    'sort-order': {
+    sortOrder: {
       type: String,
       default: 'desc',
     },
-    'paginated': {
+    paginated: {
       type: Boolean,
       default: false,
     },
-    'backend-pagination': {
+    backendPagination: {
       type: Boolean,
       default: false,
     },
-    'page': Number,
-    'showReadStatus': {
+    page: Number,
+    showReadStatus: {
       type: Boolean,
       default: false,
     },
-    'showType': {
+    showType: {
       type: Boolean,
       default: false,
     },
-    'showEditButton': {
+    showEditButton: {
       type: Boolean,
       default: false,
     },

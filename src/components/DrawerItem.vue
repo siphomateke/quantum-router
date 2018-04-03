@@ -8,9 +8,9 @@
 <script>
   export default {
     props: {
-      'link': String,
-      'icon': String,
-      'label': String,
+      link: String,
+      icon: String,
+      label: String,
     },
 };
 </script>

@@ -15,11 +15,11 @@
 export default {
   name: 'action-button',
   props: {
-    'type': String,
-    'icon': String,
-    'label': String,
-    'disabled': Boolean,
-    'loading': Boolean,
+    type: String,
+    icon: String,
+    label: String,
+    disabled: Boolean,
+    loading: Boolean,
   },
   methods: {
     click(...args) {

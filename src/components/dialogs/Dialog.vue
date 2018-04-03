@@ -48,26 +48,26 @@ import i18n from '@/browser/i18n.js';
 export default {
   name: 'q-dialog',
   props: {
-    'title': String,
-    'type': {
+    title: String,
+    type: {
       type: String,
       default: 'is-primary',
     },
-    'hasIcon': Boolean,
-    'icon': String,
-    'confirmText': {
+    hasIcon: Boolean,
+    icon: String,
+    confirmText: {
       type: String,
       default: () => {
         return i18n.getMessage('generic_ok');
       },
     },
-    'cancelText': {
+    cancelText: {
       type: String,
       default: () => {
         return i18n.getMessage('generic_cancel');
       },
     },
-    'canCancel': {
+    canCancel: {
       type: Boolean,
       default: true,
     },

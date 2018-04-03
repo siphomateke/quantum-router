@@ -102,17 +102,17 @@ export default {
   },
   mixins: [smsTypeMixin],
   props: {
-    'checked-rows': Array,
-    'disabled': Object,
-    'hidden': Object,
-    'selectionState': {
+    checkedRows: Array,
+    disabled: Object,
+    hidden: Object,
+    selectionState: {
       type: String,
       default: selectionStates.NONE,
       validator(val) {
         return Object.values(selectionStates).includes(val);
       },
     },
-    'bus': {
+    bus: {
       type: Object,
       validator(val) {
         return val instanceof Vue;

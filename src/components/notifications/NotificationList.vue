@@ -33,8 +33,8 @@ export default {
     'notification': Notification,
   },
   props: {
-    'list': Array,
-    'loading': Boolean,
+    list: Array,
+    loading: Boolean,
   },
 };
 </script>

@@ -7,9 +7,7 @@
 <script>
 export default {
   name: 'q-dropdown-select',
-  props: {
-    'value': {},
-  },
+  props: ['value'],
   data() {
     return {
       selected: null,

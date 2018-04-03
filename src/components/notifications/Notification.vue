@@ -12,11 +12,11 @@ import moment from 'moment';
 export default {
   name: 'q-notification',
   props: {
-    'title': String,
-    'message': String,
-    'date': Number,
-    'read': Boolean,
-    'progress': Number,
+    title: String,
+    message: String,
+    date: Number,
+    read: Boolean,
+    progress: Number,
   },
   data() {
     return {

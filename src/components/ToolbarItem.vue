@@ -25,22 +25,22 @@
   export default {
     name: 'q-toolbar-item',
     props: {
-      'icon': String,
-      'label': String,
-      'isActive': {
+      icon: String,
+      label: String,
+      isActive: {
         type: Boolean,
         default: false,
       },
-      'link': String,
-      'badgeVisible': {
+      link: String,
+      badgeVisible: {
         type: Boolean,
         default: false,
       },
-      'badge': [Number, String],
-      'color': String,
-      'value': {},
-      'position': String,
-      'mobileModal': Boolean,
+      badge: [Number, String],
+      color: String,
+      value: {},
+      position: String,
+      mobileModal: Boolean,
     },
     methods: {
       checkSlot(slotName) {

@@ -37,8 +37,8 @@ export default {
     SmsList,
   },
   props: {
-    'box-type': Number,
-    'bus': {
+    boxType: Number,
+    bus: {
       type: Object,
       validator(val) {
         return val instanceof Vue;

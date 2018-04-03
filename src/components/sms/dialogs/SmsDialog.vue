@@ -40,9 +40,9 @@ export default {
     [Dialog.name]: Dialog,
   },
   props: {
-    'index': Number,
-    'numbers': Array,
-    'content': String,
+    index: Number,
+    numbers: Array,
+    content: String,
   },
   data() {
     return {

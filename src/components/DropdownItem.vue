@@ -9,9 +9,7 @@
 <script>
 export default {
   name: 'q-dropdown-item',
-  props: {
-    'value': {},
-  },
+  props: ['value'],
   methods: {
     click() {
       this.$parent.selectItem(this.value);

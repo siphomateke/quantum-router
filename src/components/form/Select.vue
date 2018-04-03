@@ -20,12 +20,12 @@
       };
     },
     props: {
-      'label': String,
-      'value': {
+      label: String,
+      value: {
         type: [String, Number, Boolean, Object, Array, Function],
         default: null,
       },
-      'options': {
+      options: {
         type: Array,
         default: [],
       },

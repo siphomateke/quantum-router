@@ -5,7 +5,7 @@ import Vue from 'vue';
 
 export default {
   props: {
-    'bus': {
+    bus: {
       type: Object,
       validator(val) {
         return val instanceof Vue;
