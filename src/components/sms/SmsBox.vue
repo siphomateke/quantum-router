@@ -126,7 +126,7 @@ export default {
           messages.push(_messages);
         }
 
-        this.list = [];
+        const list = [];
         await this.$store.dispatch('getSmsCount');
         let count = 0;
         switch (this.boxType) {
@@ -149,7 +149,7 @@ export default {
           if (smsReadStatus === 0 || smsReadStatus === 1) {
             read = smsReadStatus === 1;
           }
-          this.list.push({
+          list.push({
             index: parseInt(m.Index),
             number: m.Phone,
             date: m.Date,
@@ -158,6 +158,7 @@ export default {
             parsed: parsed,
           });
         }
+        this.list = list.slice();
         // NOTE: If selection is ever possible on more than one page, this will have to go;
         // all checkedRows' indecies should be checked to see if they still exist instead
         this.clearSelection();
