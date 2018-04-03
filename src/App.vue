@@ -70,13 +70,13 @@
 <script>
 import Vue from 'vue';
 import DialogManager from '@/components/dialogs/DialogManager.vue';
-import Drawer from '@/components/Drawer.vue';
-import DrawerItem from '@/components/DrawerItem.vue';
+import Drawer from '@/components/drawer/Drawer.vue';
+import DrawerItem from '@/components/drawer/DrawerItem.vue';
 import Navbar from '@/components/Navbar.vue';
-import Toolbar from '@/components/Toolbar.vue';
-import ToolbarItem from '@/components/ToolbarItem.vue';
-import DropdownItem from '@/components/DropdownItem.vue';
-import DropdownSelect from '@/components/DropdownSelect.vue';
+import Toolbar from '@/components/toolbar/Toolbar.vue';
+import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
+import DropdownItem from '@/components/dropdown/DropdownItem.vue';
+import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
