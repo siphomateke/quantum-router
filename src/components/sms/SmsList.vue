@@ -1,5 +1,15 @@
 <template>
   <div class="sms-list">
+    <div class="level" v-if="paginated && pageCount > 1">
+      <div class="level-right">
+        <div class="level-item" v-if="showTopPagination">
+          <b-pagination
+            :total="internalTotal"
+            :per-page="perPage"
+            :current.sync="internalPage"/>
+        </div>
+      </div>
+    </div>
     <b-table
     :data="list"
     :bordered="false"
@@ -13,9 +23,8 @@
     :paginated="paginated"
     :backend-pagination="backendPagination"
     :total="total"
-    :current-page="page"
+    :current-page.sync="internalPage"
     :per-page="perPage"
-    @page-change="onPageChange"
 
     :backend-sorting="backendSorting"
     :default-sort-direction="sortOrder"
@@ -58,7 +67,7 @@
         </section>
       </template>
 
-      <template slot="bottom-left" v-if="total > 1">
+      <template slot="bottom-left" v-if="internalTotal > 1">
         <span>{{ pageInfo }}</span>
       </template>
     </b-table>
@@ -82,8 +91,14 @@ export default {
       type: Boolean,
       default: false,
     },
-    total: Number,
-    perPage: Number,
+    total: {
+      type: Number,
+      default: 0,
+    },
+    perPage: {
+      type: Number,
+      default: 20,
+    },
     backendSorting: {
       type: Boolean,
       default: false,
@@ -100,7 +115,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    page: Number,
+    page: {
+      type: Number,
+      default: 1,
+    },
     showReadStatus: {
       type: Boolean,
       default: false,
@@ -113,20 +131,37 @@ export default {
       type: Boolean,
       default: false,
     },
+    showTopPagination: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      internalPage: this.page,
       internalCheckedRows: this.checkedRows,
     };
   },
   computed: {
     pageInfo() {
-      const first = ((this.page-1)*this.perPage)+1;
-      const last = (((this.page-1)*this.perPage)+this.perPage)+1;
-      if (last > this.total) {
-        return this.$i18n('sms_first_to_last', first, this.total);
+      const first = ((this.internalPage-1)*this.perPage)+1;
+      const last = (((this.internalPage-1)*this.perPage)+this.perPage)+1;
+      if (last > this.internalTotal) {
+        return this.$i18n('sms_first_to_last', first, this.internalTotal);
       } else {
-        return this.$i18n('sms_first_to_last_of_total', first, last, this.total);
+        return this.$i18n('sms_first_to_last_of_total', first, last, this.internalTotal);
+      }
+    },
+    internalTotal() {
+      return this.backendPagination ? this.total : this.list.length;
+    },
+    pageCount() {
+      if (!this.paginated) return 0;
+
+      if (!isNaN(this.internalTotal) && !isNaN(this.perPage)) {
+        return Math.ceil(this.internalTotal / this.perPage);
+      } else {
+        return 0;
       }
     },
   },
@@ -137,13 +172,17 @@ export default {
     internalCheckedRows(val) {
       this.$emit('update:checkedRows', val);
     },
+    page(value) {
+      this.internalPage = value;
+    },
+    internalPage(value) {
+      this.$emit('update:page', value);
+      this.$emit('page-change', value);
+    },
   },
   methods: {
     formatDate(date) {
       return moment(date).format('Y-M-D HH:mm:ss');
-    },
-    onPageChange(page) {
-      this.$emit('page-change', page);
     },
     onSort(field, order) {
       this.$emit('sort', order);

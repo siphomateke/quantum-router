@@ -6,10 +6,11 @@
       :checkable="true"
       :checked-rows.sync="checkedRows"
       :total="total"
-      :paginated="true"
-      :page="page"
+      :paginated="pageCount > 1"
+      :page.sync="page"
       :per-page="perPage"
       :backend-pagination="true"
+      :show-top-pagination="true"
       :backend-sorting="true"
       :sort-order="sortOrder"
       :show-read-status="isInbox"
@@ -64,6 +65,9 @@ export default {
     isDraft() {
       return this.boxType === router.sms.boxTypes.DRAFT;
     },
+    pageCount() {
+      return Math.ceil(this.total / this.perPage);
+    }
   },
   watch: {
     checkedRows(val) {
@@ -164,7 +168,6 @@ export default {
       }
     },
     onPageChange(page) {
-      this.page = page;
       this.loadAsyncData();
     },
     onSort(order) {
