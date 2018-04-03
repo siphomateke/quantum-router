@@ -29,6 +29,7 @@ import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
+import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
 
 export default {
   name: 'sms-box',
@@ -88,7 +89,7 @@ export default {
     this.bus.$on('sms-actions:clear-selection', this.clearSelection);
     this.bus.$on('sms-actions:select-all', this.selectAll);
     this.bus.$on('sms-actions:select', this.select);
-    this.bus.$on('sms-actions:delete', this.deleteMessages);
+    this.bus.$on('sms-actions:delete', this.deleteMessagesConfirm);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
@@ -152,7 +153,7 @@ export default {
             parsed: parsed,
           });
         }
-        // If selection is ever possible on more than one page, this will have to go;
+        // NOTE: If selection is ever possible on more than one page, this will have to go;
         // all checkedRows' indecies should be checked to see if they still exist instead
         this.clearSelection();
       } catch (e) {
@@ -179,6 +180,19 @@ export default {
       // TODO: delete sms loading indicator
       this.clearSelection();
       this.globalBus.$emit('refresh:sms');
+    },
+    deleteMessagesConfirm() {
+      let self = this;
+      this.$modal.open({
+        parent: this,
+        component: DeleteSmsDialog,
+        props: {
+          list: this.checkedRows,
+        },
+        events: {
+          confirm: self.deleteMessages
+        },
+      });
     },
     markMessagesAsRead() {
       const promises = [];

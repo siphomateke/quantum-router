@@ -187,6 +187,17 @@
     }
   },
   "sms_mark_read_error": {"message": "Error marking messages as read."},
+  "sms_delete_confirm_hide_messages": {"message": "Hide messages"},
+  "sms_delete_confirm_show_messages": {"message": "Show messages"},
+  "sms_delete_confirm": {
+    "message": "Are you sure you want to delete $COUNT$ message(s)?",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "13"
+      }
+    }
+  },
   "sms_import_confirm": {
     "message": "Are you sure you want to import $COUNT$ message(s) from the SIM card?",
     "placeholders": {

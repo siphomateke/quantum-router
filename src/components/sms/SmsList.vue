@@ -88,7 +88,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    'sort-order': String,
+    'sort-order': {
+      type: String,
+      default: 'desc',
+    },
     'paginated': {
       type: Boolean,
       default: false,

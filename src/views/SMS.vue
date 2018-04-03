@@ -56,7 +56,7 @@ import Vue from 'vue';
 import SmsActions from '@/components/sms/SmsActions.vue';
 import {selectionStates} from '@/components/sms/select';
 import SmsBox from '@/components/sms/SmsBox.vue';
-import SmsDialog from '@/components/sms/SmsDialog.vue';
+import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
 import {mapGetters} from 'vuex';
