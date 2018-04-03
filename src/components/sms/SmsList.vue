@@ -1,6 +1,22 @@
 <template>
   <div class="sms-list">
     <div class="level" v-if="paginated && pageCount > 1">
+      <div class="level-left">
+        <div class="level-item" v-if="showGoToPage">
+          <b-field grouped>
+            <b-input
+              ref="goToPageInput"
+              type="number"
+              :min="1"
+              :max="pageCount"
+              v-model="goToPageNumber">
+            </b-input>
+            <p class="control">
+              <button class="button is-primary" @click="goToPage">Go</button>
+            </p>
+          </b-field>
+        </div>
+      </div>
       <div class="level-right">
         <div class="level-item" v-if="showTopPagination">
           <b-pagination
@@ -135,11 +151,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    showGoToPage: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       internalPage: this.page,
       internalCheckedRows: this.checkedRows,
+      goToPageNumber: '',
     };
   },
   computed: {
@@ -183,6 +204,13 @@ export default {
   methods: {
     formatDate(date) {
       return moment(date).format('Y-M-D HH:mm:ss');
+    },
+    goToPage() {
+      const page = this.goToPageNumber;
+      if (this.$refs.goToPageInput.checkHtml5Validity()) {
+        this.internalPage = parseInt(page, 10);
+        this.goToPageNumber = '';
+      }
     },
     onSort(field, order) {
       this.$emit('sort', order);

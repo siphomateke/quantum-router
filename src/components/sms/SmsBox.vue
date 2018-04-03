@@ -11,6 +11,7 @@
       :per-page="perPage"
       :backend-pagination="true"
       :show-top-pagination="true"
+      :show-go-to-page="true"
       :backend-sorting="true"
       :sort-order="sortOrder"
       :show-read-status="isInbox"
