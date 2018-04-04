@@ -17,8 +17,37 @@
           :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
         </b-taginput>
     </b-field>
-    <b-field :label="this.$i18n('sms_dialog_field_content')">
-      <b-input type="textarea" v-model="internalContent"></b-input>
+    <b-field
+      :label="this.$i18n('sms_dialog_field_content')"
+      :addons="false">
+      <b-input
+        type="textarea"
+        v-model="internalContent"
+        :maxlength="sms7bitMaxSize"
+        :has-counter="false">
+      </b-input>
+      <small class="help">
+        <span>
+          <span
+            class="help-cursor"
+            :title="this.$i18n('sms_dialog_character_count')">
+            {{ internalContent.length }}
+          </span>
+          {{' / '}}
+          <span
+            class="help-cursor"
+            :title="this.$i18n('sms_dialog_character_count_max')">
+            {{ sms7bitMaxSize }}
+          </span>
+        </span>
+        <span class="counter help-cursor">
+          <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">{{ counterText.remaining }}</span>
+          <span :title="this.$i18n('sms_dialog_message_count')">({{ counterText.numberOfMessages }})</span>
+          <span :title="this.$i18n('sms_dialog_segment_help', normalMax, longMax)">
+            <b-icon icon="question-circle"></b-icon>
+          </span>
+        </span>
+      </small>
     </b-field>
   </form>
   <template slot="buttons">
@@ -54,7 +83,27 @@ export default {
           message: '',
         },
       },
+      // TODO: Figure these out from the API
+      normalMax: 160,
+      longMax: 153,
+      sms7bitMaxSize: 612,
     };
+  },
+  computed: {
+    counterText() {
+      // TODO: Support non english character encodings
+      const length = this.internalContent.length;
+      let remaining = null;
+      let numberOfMessages = null;
+      if (length <= this.normalMax) {
+        remaining = this.normalMax - length;
+        numberOfMessages = 1;
+      } else {
+        numberOfMessages = Math.ceil(length / this.longMax);
+        remaining = (numberOfMessages * this.longMax) - length;
+      }
+      return {remaining, numberOfMessages};
+    },
   },
   watch: {
     numbers(val) {
@@ -118,3 +167,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .counter {
+    float: right;
+  }
+</style>

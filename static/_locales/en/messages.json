@@ -170,6 +170,24 @@
     "description": "Placeholder value for sms dialog numbers field"
   },
   "sms_dialog_field_content": {"message": "Content"},
+  "sms_dialog_character_count": {"message": "Number of characters in this message."},
+  "sms_dialog_character_count_max": {"message": "The maximum number of characters per message."},
+  "sms_dialog_segment_help": {
+    "message": "SMS messages are split up into multiple segments of $LONG_MAX$ characters if they exceed $NORMAL_MAX$ characters.",
+    "description": "Explains how SMS concatenation works to the user.",
+    "placeholders": {
+      "normal_max": {
+        "content": "$1",
+        "example": "160"
+      },
+      "long_max": {
+        "content": "$2",
+        "example": "153"
+      }
+    }
+  },
+  "sms_dialog_remaining_characters_in_segment": {"message": "The number of characters remaining in this segment."},
+  "sms_dialog_message_count": {"message": "The number of segments this message will be split up into. In most cases, you will be billed for each segment."},
   "sms_dialog_action_send": {"message": "Send"},
   "sms_dialog_action_save": {"message": "Save as draft"},
   "sms_mark_read_partial_error":{

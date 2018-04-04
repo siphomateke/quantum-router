@@ -412,4 +412,9 @@ body {
   border: solid 1px rgba(10,10,10,0.2);
   padding: 0;
 }
+
+// TODO: Give this a better name and put it in a better place
+.help-cursor {
+  cursor: help;
+}
 </style>
