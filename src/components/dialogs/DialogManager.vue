@@ -36,7 +36,9 @@ export default {
       if (['warning', 'info', 'danger', 'success'].includes(data.type) && !('hasIcon' in data)) {
         data.hasIcon = true;
       }
-      data.type = 'is-'+data.type;
+      if (data.type) {
+        data.type = 'is-'+data.type;
+      }
       const defaults = {};
       defaults.confirmText = this.$i18n('generic_ok');
       defaults.cancelText = this.$i18n('generic_cancel');
