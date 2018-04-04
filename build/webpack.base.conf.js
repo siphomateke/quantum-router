@@ -57,7 +57,7 @@ const htmlWebpackPlugins = [
   {
     filename: 'index.html',
     template: 'src/index.html',
-    chunks: ['manifest', 'vendor', 'app'],
+    chunks: ['manifest', 'vendor', 'app', 'preload'],
   },
   {
     filename: 'background.html',
@@ -96,6 +96,7 @@ module.exports = {
     'app': utils.resolve('src/main.js'),
     'background': utils.resolve('src/browser/background.js'),
     'options': utils.resolve('src/options/options.js'),
+    'preload': utils.resolve('src/styles/preload.scss'),
   },
   output: {
     path: config.build.assetsRoot,
