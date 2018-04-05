@@ -30,7 +30,7 @@ import SmsList from '@/components/sms/SmsList.vue';
 import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
 
 export default {
@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['smsCount']),
+    ...mapGetters({smsCount: 'sms/count'}),
     isInbox() {
       return this.boxType === router.sms.boxTypes.INBOX;
     },
@@ -98,6 +98,9 @@ export default {
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
+    ...mapActions({
+      getSmsCount: 'sms/getCount'
+    }),
     refreshAdmin() {
       this.loadAsyncData();
     },
@@ -127,7 +130,7 @@ export default {
         }
 
         const list = [];
-        await this.$store.dispatch('getSmsCount');
+        await this.getSmsCount();
         let count = 0;
         switch (this.boxType) {
         case router.sms.boxTypes.INBOX:

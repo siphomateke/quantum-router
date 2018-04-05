@@ -1,11 +1,14 @@
-export const MODE = 'MODE';
-export const SETTINGS = 'SETTINGS';
+import {types as notifications} from './modules/notifications';
+import {types as sms} from './modules/sms';
+import {types as settings} from './modules/settings';
 
-// notifications
-export const ADD_NOTIFICATIONS = 'ADD_NOTIFICATIONS';
-export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
-export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
-export const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
+const types = {
+  global: {
+    MODE: 'MODE',
+  },
+  notifications,
+  sms,
+  settings,
+};
 
-// sms
-export const SET_SMS_COUNT = 'SET_SMS_COUNT';
+export default types;

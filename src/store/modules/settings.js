@@ -1,8 +1,16 @@
-import * as types from '@/store/mutation_types.js';
+export const types = {
+  SET: 'SET',
+};
 
 export default {
+  namespaced: true,
+  actions: {
+    set({commit}, payload) {
+      commit(types.SET, payload);
+    },
+  },
   mutations: {
-    [types.SETTINGS](state, payload) {
+    [types.SET](state, payload) {
       state[payload.domain] = payload.data;
     },
   },

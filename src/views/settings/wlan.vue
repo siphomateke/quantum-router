@@ -77,7 +77,7 @@
 
 <script>
 import Select from '@/components/form/Select';
-import * as types from '@/store/mutation_types.js';
+import {mapActions} from 'vuex';
 export default {
   name: 'SettingsWlan',
   data() {
@@ -116,12 +116,16 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit(types.SETTINGS, {
+    // FIXME: Make this work
+    this.setSetting({
       domain: 'wlan',
       data: this.settings,
     });
   },
   methods: {
+    ...mapActions('settings', {
+      setSetting: 'set'
+    }),
     getStatusString: status => {
       return status ? 'On' : 'Off';
     },

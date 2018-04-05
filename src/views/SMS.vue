@@ -63,7 +63,7 @@ import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
 import router from 'huawei-router-api/browser';
 import {modes} from '@/store';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 const boxTypes = router.sms.boxTypes;
 
@@ -125,7 +125,7 @@ export default {
     this.globalBus.$on('refresh:sms', this.refresh);
   },
   computed: {
-    ...mapGetters(['smsCount']),
+    ...mapGetters({smsCount: 'sms/count'}),
     boxTypes() {
       return router.sms.boxTypes;
     },
@@ -146,6 +146,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      getSmsCount: 'sms/getCount'
+    }),
     changedTab(idx) {
       this.currentTab = idx;
     },
@@ -163,7 +166,7 @@ export default {
     },
     async refreshAdmin() {
       // TODO: Refresh every once in a while
-      await this.$store.dispatch('getSmsCount');
+      await this.getSmsCount();
       this.getTabByBoxType(boxTypes.INBOX).count = this.smsCount.LocalInbox;
       this.getTabByBoxType(boxTypes.SENT).count = this.smsCount.LocalOutbox;
       this.getTabByBoxType(boxTypes.DRAFT).count = this.smsCount.LocalDraft;
@@ -251,7 +254,7 @@ export default {
       }
     },
     async importClicked() {
-      await this.$store.dispatch('getSmsCount');
+      await this.getSmsCount();
       // Ask user if they want to import messages
       this.$dialogConfirm({
         message: this.$i18n('sms_import_confirm', this.smsCount.SimTotal),

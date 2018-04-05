@@ -80,8 +80,8 @@ import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
-import {mapGetters} from 'vuex';
-import * as types from '@/store/mutation_types.js';
+import {mapGetters, mapActions} from 'vuex';
+import types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/browser/notification.js';
 import moment from 'moment';
@@ -173,11 +173,13 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'allNotifications',
-      'unreadNotifications',
-      'smsCount',
       'modeName',
     ]),
+    ...mapGetters({
+      allNotifications: 'notifications/all',
+      unreadNotifications: 'notifications/unread',
+      smsCount: 'sms/count',
+    }),
     loadingNotifications() {
       return this.allNotifications.length===0 && this.gettingSmsList;
     },
@@ -217,7 +219,7 @@ export default {
         if (!this.gettingSmsList) {
           this.gettingSmsList = true;
           try {
-            await this.$store.dispatch('getSmsCount');
+            await this.getSmsCount();
             const list = await router.sms.getFullSmsList({
               total: this.smsCount.LocalInbox,
             }, {
@@ -240,7 +242,7 @@ export default {
                 newNotifications.push(n);
               }
             }
-            this.$store.dispatch('addNotifications', newNotifications);
+            this.addNotifications(newNotifications);
 
             this.lastUpdatedNotifications = Date.now();
           } catch (e) {
@@ -269,11 +271,17 @@ export default {
           break;
       }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
-        this.$store.dispatch('loadNotifications');
+        this.loadNotifications();
       }
     }
   },
   methods: {
+    ...mapActions({
+      setMode: 'setMode',
+      addNotifications: 'notifications/add',
+      loadNotifications: 'notifications/load',
+      getSmsCount: 'sms/getCount',
+    }),
     startRefreshCycle() {
       for (const name in this.refreshIntervals) {
         if (this.refreshIntervals.hasOwnProperty(name)) {
@@ -374,7 +382,7 @@ export default {
     },
     changeMode(mode) {
       if (mode !== this.$mode) {
-        this.$store.commit(types.MODE, mode);
+        this.setMode(mode);
         this.$toast.open(this.$i18n('changed_mode_to', this.$i18n('mode_'+this.modeNames[mode])));
       }
     },

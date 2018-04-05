@@ -1,14 +1,21 @@
 /* global browser */
-import * as types from '@/store/mutation_types.js';
 import {Notification} from '@/browser/notification.js';
 
+export const types = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE',
+  UPDATE: 'UPDATE',
+  CLEAR: 'CLEAR',
+};
+
 export default {
+  namespaced: true,
   state: {
     all: [],
   },
   getters: {
-    allNotifications: state => state.all,
-    unreadNotifications(state) {
+    all: state => state.all,
+    unread(state) {
       const list = [];
       for (const n of state.all) {
         if (n.read === false) {
@@ -19,44 +26,44 @@ export default {
     },
   },
   actions: {
-    async loadNotifications({commit}) {
+    async load({commit}) {
       const items = await browser.storage.sync.get('notifications');
-      commit(types.CLEAR_NOTIFICATIONS);
+      commit(types.CLEAR);
       const notifications = [];
       if ('notifications' in items) {
         for (const n of items.notifications) {
           notifications.push(Notification.fromJSON(n));
         }
       }
-      commit(types.ADD_NOTIFICATIONS, notifications);
+      commit(types.ADD, notifications);
       return notifications.length;
     },
     // TODO: Evaluate better persistent storage methods
-    saveNotifications({state}) {
+    save({state}) {
       return browser.storage.sync.set({
         notifications: state.all,
       });
     },
-    addNotifications({commit, dispatch}, notifications) {
-      commit(types.ADD_NOTIFICATIONS, notifications);
-      // dispatch('saveNotifications');
+    add({commit, dispatch}, notifications) {
+      commit(types.ADD, notifications);
+      // dispatch('save');
     },
-    removeNotification({commit, dispatch}, notification) {
-      commit(types.REMOVE_NOTIFICATION, notification);
-      // dispatch('saveNotifications');
+    remove({commit, dispatch}, notification) {
+      commit(types.REMOVE, notification);
+      // dispatch('save');
     },
   },
   mutations: {
-    [types.CLEAR_NOTIFICATIONS](state) {
+    [types.CLEAR](state) {
       state.all = [];
     },
-    [types.ADD_NOTIFICATIONS](state, notifications) {
+    [types.ADD](state, notifications) {
       state.all = state.all.concat(notifications);
     },
-    [types.UPDATE_NOTIFICATION](state, {index, notification}) {
+    [types.UPDATE](state, {index, notification}) {
       state.all[index] = notification;
     },
-    [types.REMOVE_NOTIFICATION](state, notification) {
+    [types.REMOVE](state, notification) {
       const index = state.all.indexOf(notification);
       state.all.splice(index, 1);
     },

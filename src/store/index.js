@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import settings from '@/store/modules/settings.js';
 import notifications from '@/store/modules/notifications.js';
 import sms from '@/store/modules/sms.js';
-import * as types from '@/store/mutation_types.js';
+import types from '@/store/mutation_types.js';
 
 export const modes = {
   OFFLINE: 0,
@@ -32,8 +32,13 @@ export default new Vuex.Store({
     modeName: state => modeNames[state.mode],
     adminMode: state => state.mode === modes.ADMIN,
   },
+  actions: {
+    setMode({commit}, mode) {
+      commit(types.global.MODE, mode);
+    },
+  },
   mutations: {
-    [types.MODE](state, mode) {
+    [types.global.MODE](state, mode) {
       state.mode = mode;
     },
   },
