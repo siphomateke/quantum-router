@@ -1,7 +1,7 @@
 <template>
 <div class="q-notification">
   <span class="q-title">{{ title }}</span>
-  <span class="q-subtitle">{{ time }}</span>
+  <span class="q-subtitle"><time :datetime="machineDate">{{ time }}</time></span>
   <div class="q-message">{{ message }}</div>
   <progress v-if="progress" class="progress is-primary is-small" :value="progress" max="1">{{progress * 100}}%</progress>
 </div>
@@ -39,6 +39,9 @@ export default {
     },
   },
   computed: {
+    machineDate() {
+      return moment(this.date).format('Y-M-D HH:mm:ss');
+    },
     time() {
       if (this._date) {
         const duration = moment.duration(this.currentTime - this.date);

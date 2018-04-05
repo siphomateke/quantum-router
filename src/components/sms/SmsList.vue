@@ -65,7 +65,7 @@
           <div class="content">{{ props.row.content }}</div>
         </b-table-column>
         <b-table-column field="date" :label="$i18n('sms_message_date')" sortable centered>
-          <span style="white-space:nowrap;">{{ formatDate(props.row.date) }}</span>
+          <time style="white-space:nowrap;" :datetime="props.row.date">{{ formatDate(props.row.date) }}</time>
         </b-table-column>
         <td v-if="showEditButton" class="edit-button-column">
           <button
