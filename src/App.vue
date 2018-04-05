@@ -80,7 +80,7 @@ import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
-import {mapGetters, mapActions} from 'vuex';
+import {mapState, mapGetters, mapActions} from 'vuex';
 import types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/browser/notification.js';
@@ -172,13 +172,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'modeName',
-    ]),
+    ...mapState({
+      allNotifications: state => state.notifications.all,
+      smsCount: state => state.sms.count,
+    }),
     ...mapGetters({
-      allNotifications: 'notifications/all',
+      modeName: 'modeName',
       unreadNotifications: 'notifications/unread',
-      smsCount: 'sms/count',
     }),
     loadingNotifications() {
       return this.allNotifications.length===0 && this.gettingSmsList;

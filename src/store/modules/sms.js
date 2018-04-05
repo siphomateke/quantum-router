@@ -15,9 +15,6 @@ export default {
       commit(types.SET_COUNT, smsCount);
     },
   },
-  getters: {
-    count: state => state.count,
-  },
   mutations: {
     [types.SET_COUNT](state, count) {
       state.count = count;

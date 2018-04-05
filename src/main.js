@@ -44,8 +44,10 @@ Vue.mixin({
     },
   },
   computed: {
+    ...mapState({
+      $mode: state => state.mode,
+    }),
     ...mapGetters({
-      $mode: 'mode',
       $adminMode: 'adminMode',
     }),
   },

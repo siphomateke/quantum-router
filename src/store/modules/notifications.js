@@ -14,7 +14,6 @@ export default {
     all: [],
   },
   getters: {
-    all: state => state.all,
     unread(state) {
       const list = [];
       for (const n of state.all) {

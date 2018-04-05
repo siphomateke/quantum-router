@@ -28,7 +28,6 @@ export default new Vuex.Store({
     mode: modes.OFFLINE,
   },
   getters: {
-    mode: state => state.mode,
     modeName: state => modeNames[state.mode],
     adminMode: state => state.mode === modes.ADMIN,
   },
