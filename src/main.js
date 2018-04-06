@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './vue-router';
-import {mapGetters} from 'vuex';
+import {mapState, mapGetters} from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import {modes} from '@/store';
