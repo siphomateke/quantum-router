@@ -251,18 +251,12 @@ const actions = {
       commit(types.SET_LOADING, {box, value: true});
       dispatch('getCountLenient');
       try {
-        const _messages = await router.sms.getSmsList({
+        let messages = await router.sms.getSmsList({
           boxType: mapBoxTypeToRouterBoxType[box],
           page,
           sortOrder: boxItem.sortOrder,
           perPage: boxItem.perPage,
         });
-        let messages = [];
-        if (Array.isArray(_messages)) {
-          messages = _messages;
-        } else {
-          messages.push(_messages);
-        }
 
         // Don't add message if it exists
         messages = messages.filter(m => {
