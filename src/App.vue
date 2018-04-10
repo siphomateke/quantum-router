@@ -80,6 +80,7 @@ import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
+import {boxTypes} from '@/store/modules/sms';
 import {mapState, mapGetters, mapActions} from 'vuex';
 import types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
@@ -174,7 +175,7 @@ export default {
   computed: {
     ...mapState({
       allNotifications: state => state.notifications.all,
-      smsCount: state => state.sms.count,
+      boxes: state => state.sms.boxes,
     }),
     ...mapGetters({
       modeName: 'modeName',
@@ -221,7 +222,7 @@ export default {
           try {
             await this.getSmsCount();
             const list = await router.sms.getFullSmsList({
-              total: this.smsCount.LocalInbox,
+              total: this.boxes[boxTypes.LOCAL_INBOX].count,
             }, {
               sortOrder: 'desc',
             });

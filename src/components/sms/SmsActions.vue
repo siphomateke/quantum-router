@@ -93,7 +93,7 @@ const smsTypes = router.sms.types;
  * new
  * import
  * select-all
- * clear-selection
+ * clear-selection TODO: Decide if this event should be renamed to match store
  * select {read, type}
  */
 export default {
