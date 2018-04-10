@@ -39,7 +39,7 @@ export default {
     SmsList,
   },
   props: {
-    boxType: Number,
+    boxType: {},
     bus: {
       type: Object,
       validator(val) {
