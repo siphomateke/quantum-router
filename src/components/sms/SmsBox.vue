@@ -1,13 +1,14 @@
 <template>
   <div class="sms-box">
     <sms-list
-      :list="list"
+      :list="messages"
       :loading="loading"
       :checkable="true"
-      :checked-rows.sync="checkedRows"
-      :total="total"
+      :checked-rows="checkedRows"
+      @update:checkedRows="updateCheckedRows"
+      :total="count"
       :paginated="pageCount > 1"
-      :page.sync="page"
+      :page="page"
       :per-page="perPage"
       :backend-pagination="true"
       :show-top-pagination="true"
@@ -27,8 +28,8 @@
 <script>
 import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
-import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
+import {boxTypes} from '@/store/modules/sms';
 import {modes} from '@/store';
 import {mapState, mapActions} from 'vuex';
 import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
@@ -47,43 +48,50 @@ export default {
       },
     },
   },
-  data() {
-    return {
-      total: 0,
-      loading: false,
-      sortOrder: 'desc',
-      page: 1,
-      perPage: 20,
-      list: [],
-      checkedRows: [],
-    };
-  },
   computed: {
-    ...mapState({smsCount: state => state.sms.count}),
+    ...mapState({
+      boxes: state => state.sms.boxes,
+      allMessages: state => state.sms.messages,
+    }),
+    box() {
+      return this.boxes[this.boxType];
+    },
+    loading() {
+      return this.box.loading;
+    },
+    count() {
+      return this.box.count;
+    },
+    sortOrder() {
+      return this.box.sortOrder;
+    },
+    perPage() {
+      return this.box.perPage;
+    },
+    page() {
+      return this.box.page;
+    },
+    messages() {
+      if (this.page in this.box.messages) {
+        return this.box.messages[this.page].map(index => this.allMessages[index]);
+      }
+      return [];
+    },
+    selected() {
+      return this.box.selected;
+    },
+    checkedRows() {
+      return this.selected.map(index => this.allMessages[index]);
+    },
     isInbox() {
-      return this.boxType === router.sms.boxTypes.INBOX;
+      return this.boxType === boxTypes.LOCAL_INBOX;
     },
     isDraft() {
-      return this.boxType === router.sms.boxTypes.DRAFT;
+      return this.boxType === boxTypes.LOCAL_DRAFT;
     },
     pageCount() {
-      return Math.ceil(this.total / this.perPage);
+      return Math.ceil(this.count / this.perPage);
     }
-  },
-  watch: {
-    checkedRows(val) {
-      this.$emit('update:checked-rows', val);
-
-      let selectionState;
-      if (val.length === this.list.length) {
-        selectionState = selectionStates.ALL;
-      } else if (val.length > 0) {
-        selectionState = selectionStates.SOME;
-      } else {
-        selectionState = selectionStates.NONE;
-      }
-      this.$emit('update:selection-state', selectionState);
-    },
   },
   mounted() {
     if (this.$adminMode) {
@@ -91,7 +99,7 @@ export default {
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
     this.globalBus.$on('refresh:sms', this.refresh);
-    this.bus.$on('sms-actions:clear-selection', this.clearSelection);
+    this.bus.$on('sms-actions:clear-selection', this.clearSelected);
     this.bus.$on('sms-actions:select-all', this.selectAll);
     this.bus.$on('sms-actions:select', this.select);
     this.bus.$on('sms-actions:delete', this.deleteMessagesConfirm);
@@ -99,10 +107,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      getSmsCount: 'sms/getCount'
+      clearSelected: 'sms/clearSelected',
     }),
+    async dispatch(name, payload={}) {
+      payload.box = this.boxType;
+      await this.$store.dispatch(name, payload);
+    },
     refreshAdmin() {
-      this.loadAsyncData();
+      // TODO: Update checked rows and handle any currently running tasks on refresh
+      this.$store.dispatch('sms/getMessages', this.boxType);
     },
     refresh(box) {
       if (box && box !== this.boxType) {
@@ -112,82 +125,23 @@ export default {
         this.refreshAdmin();
       }
     },
-    // TODO: Update checked rows and handle any currently running tasks on refresh
-    async loadAsyncData() {
-      this.loading = true;
-      try {
-        const _messages = await router.sms.getSmsList({
-          boxType: this.boxType,
-          page: this.page,
-          sortOrder: this.sortOrder,
-          perPage: this.perPage,
-        });
-        let messages = [];
-        if (Array.isArray(_messages)) {
-          messages = _messages;
-        } else {
-          messages.push(_messages);
-        }
-
-        const list = [];
-        await this.getSmsCount();
-        let count = 0;
-        switch (this.boxType) {
-        case router.sms.boxTypes.INBOX:
-          count = this.smsCount.LocalInbox;
-          break;
-        case router.sms.boxTypes.SENT:
-          count = this.smsCount.LocalOutbox;
-          break;
-        case router.sms.boxTypes.DRAFT:
-          count = this.smsCount.LocalDraft;
-          break;
-        }
-        this.total = parseInt(count);
-
-        for (const m of messages) {
-          const parsed = this.parseMessage(m.Content);
-          const smsReadStatus = parseInt(m.Smstat);
-          let read = null;
-          if (smsReadStatus === 0 || smsReadStatus === 1) {
-            read = smsReadStatus === 1;
-          }
-          list.push({
-            index: parseInt(m.Index),
-            number: m.Phone,
-            date: m.Date,
-            content: m.Content,
-            read: read,
-            parsed: parsed,
-          });
-        }
-        this.list = list.slice();
-        // NOTE: If selection is ever possible on more than one page, this will have to go;
-        // all checkedRows' indecies should be checked to see if they still exist instead
-        this.clearSelection();
-      } catch (e) {
-        // TODO: Handle error
-        throw e;
-      } finally {
-        this.loading = false;
-      }
+    updateCheckedRows(rows) {
+      this.dispatch('sms/setSelected', {
+        indices: rows.map(row => row.index),
+      });
     },
     onPageChange(page) {
-      this.loadAsyncData();
+      this.dispatch('sms/setPage', {value: page});
     },
     onSort(order) {
-      this.sortOrder = order;
-      this.loadAsyncData();
-    },
-    parseMessage(message) {
-      return router.sms.parse(message);
+      this.dispatch('sms/setSortOrder', {value: order});
     },
     async deleteMessages() {
-      const indices = this.checkedRows.map(row => row.index);
-      await router.sms.deleteSms(indices);
+      // TODO: Use Vuex
+      /* await router.sms.deleteSms(this.selected);
       // TODO: delete sms loading indicator
-      this.clearSelection();
-      this.globalBus.$emit('refresh:sms');
+      this.clearSelected();
+      this.globalBus.$emit('refresh:sms'); */
     },
     deleteMessagesConfirm() {
       let self = this;
@@ -203,12 +157,13 @@ export default {
       });
     },
     markMessagesAsRead() {
-      const promises = [];
+      // TODO: Use Vuex
+      /* const promises = [];
       let successful = 0;
       for (const checkedRow of this.checkedRows) {
         if (this.isInbox && checkedRow.read === false) {
           promises.push(router.sms.setSmsAsRead(checkedRow.index).then(() => {
-            const row = this.list.find(row => row.index === checkedRow.index);
+            const row = this.messages.find(row => row.index === checkedRow.index);
             // Row could be undefined if the checked row is on another page
             if (row) {
               row.read = true;
@@ -228,7 +183,7 @@ export default {
           this.$toast.open({
             message: this.$i18n(
               'sms_mark_read_partial_error',
-              successful, this.checkedRows.length),
+              successful, this.selected.length),
             type: 'is-danger',
           });
         } else {
@@ -237,17 +192,17 @@ export default {
             type: 'is-danger',
           });
         }
-      });
-    },
-    clearSelection() {
-      this.checkedRows = [];
+      }); */
     },
     selectAll() {
       // TODO: Decide if this should actually select all messages on all pages asynchronously
-      this.checkedRows = this.list.slice();
+      this.dispatch('sms/setSelected', {
+        indices: this.messages.map(row => row.index),
+      });
     },
     select(selector) {
-      this.clearSelection();
+      // TODO: Use Vuex
+      /* this.clearSelected();
       // TODO: Improve selector validation
       const validSelectorKeys = ['type', 'read'];
       let validSelector = false;
@@ -258,7 +213,7 @@ export default {
         }
       }
       if (validSelector) {
-        for (const m of this.list) {
+        for (const m of this.messages) {
           let match = true;
           if ('type' in selector && selector.type !== m.parsed.type) {
             match = false;
@@ -266,12 +221,16 @@ export default {
           if ('read' in selector && selector.read !== m.read) {
             match = false;
           }
-          if (match) this.checkedRows.push(m);
+          if (match) {
+            this.dispatch('sms/addToSelected', {
+              index: m.index,
+            });
+          }
         }
-      }
+      } */
     },
     editMessage(index) {
-      this.$emit('edit', this.list[index]);
+      this.$emit('edit', this.messages[index]);
     },
   },
 };
