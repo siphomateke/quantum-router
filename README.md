@@ -32,7 +32,6 @@ This extension aims to offer a sleeker and more modern alternative UI to the rou
 ## Notable Missing Features
 
 - Change settings
-- Sending SMS messages
 - Statistics
 
 ## Building
