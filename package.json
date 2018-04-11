@@ -2,7 +2,10 @@
   "name": "quantum",
   "version": "1.0.0",
   "description": "An extension that replaces the default Huawei router interface",
-  "author": "nextgensparx <siphomateke@gmail.com>",
+  "author": {
+    "name": "nextgensparx",
+    "email": "siphomateke@gmail.com"
+  },
   "private": true,
   "scripts": {
     "devtools": "node ./node_modules/.bin/vue-devtools",
