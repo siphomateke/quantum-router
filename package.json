@@ -10,8 +10,8 @@
   "scripts": {
     "devtools": "node ./node_modules/.bin/vue-devtools",
     "dev-browser": "cross-env TARGET=browser node build/dev-server-browser.js",
-    "dev": "npm run dev-browser-basic",
-    "dev-chrome": "cross-env BROWSER=chrome npm run dev-browser-basic",
+    "dev": "npm run dev-browser",
+    "dev-chrome": "cross-env BROWSER=chrome npm run dev-browser",
     "build": "cross-env TARGET=browser node build/build.js",
     "build-chrome": "cross-env TARGET=browser BROWSER=chrome node build/build.js"
   },
