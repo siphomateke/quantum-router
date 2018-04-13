@@ -2,13 +2,18 @@
   "name": "quantum",
   "version": "1.0.0",
   "description": "An extension that replaces the default Huawei router interface",
-  "author": "nextgensparx <siphomateke@gmail.com>",
+  "author": {
+    "name": "nextgensparx",
+    "email": "siphomateke@gmail.com"
+  },
   "private": true,
   "scripts": {
-    "dev-chrome": "cross-env TARGET=browser BROWSER=chrome node build/dev-server-browser.js",
-    "dev": "cross-env TARGET=browser node build/dev-server-browser.js",
-    "build-chrome": "cross-env TARGET=browser BROWSER=chrome node build/build.js",
-    "build": "cross-env TARGET=browser node build/build.js"
+    "devtools": "node ./node_modules/.bin/vue-devtools",
+    "dev-browser": "cross-env TARGET=browser node build/dev-server-browser.js",
+    "dev": "npm run dev-browser",
+    "dev-chrome": "cross-env BROWSER=chrome npm run dev-browser",
+    "build": "cross-env TARGET=browser node build/build.js",
+    "build-chrome": "cross-env TARGET=browser BROWSER=chrome node build/build.js"
   },
   "dependencies": {
     "buefy": "^0.6.5",
@@ -23,6 +28,7 @@
     "webextension-polyfill": "^0.2.1"
   },
   "devDependencies": {
+    "@vue/devtools": "^1.1.0",
     "autoprefixer": "^7.1.6",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.1.1",

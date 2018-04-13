@@ -158,7 +158,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getSmsCount: 'sms/getCount'
+      getSmsCount: 'sms/getCount',
     }),
     changedTab(idx) {
       this.currentTab = idx;

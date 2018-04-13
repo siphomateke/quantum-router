@@ -91,7 +91,7 @@ export default {
     },
     pageCount() {
       return Math.ceil(this.count / this.perPage);
-    }
+    },
   },
   mounted() {
     if (this.$adminMode) {
@@ -144,7 +144,7 @@ export default {
       this.globalBus.$emit('refresh:sms'); */
     },
     deleteMessagesConfirm() {
-      let self = this;
+      const self = this;
       this.$modal.open({
         parent: this,
         component: DeleteSmsDialog,
@@ -152,7 +152,7 @@ export default {
           list: this.checkedRows,
         },
         events: {
-          confirm: self.deleteMessages
+          confirm: self.deleteMessages,
         },
       });
     },

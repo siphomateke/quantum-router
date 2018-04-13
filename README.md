@@ -32,10 +32,9 @@ This extension aims to offer a sleeker and more modern alternative UI to the rou
 ## Notable Missing Features
 
 - Change settings
-- Sending SMS messages
 - Statistics
 
-## Build Setup
+## Building
 
 Until I publish `huawei-router-api` to NPM, building this is a bit of a pain. You will need to download [huawei-router-api](https://github.com/nextgensparx/huawei-router-api/) and add it as a dependency;
 
@@ -50,6 +49,8 @@ npm install
 # watch .js and .vue files
 npm run dev # firefox, edge
 npm run dev-chrome # chrome, opera
+
+npm run devtools # Runs vue-devtools
 
 # build for production with minification
 npm run build # firefox, edge
@@ -67,5 +68,24 @@ To use in Firefox: generate a random GUID and add the following to `static/brows
 },
 ```
 Then open `about:debugging`, press load temporary addon and select `dist/manifest.json`.
+
+### Note ###
+When building for production, remove the following:
+
+_src/index.html_
+```html
+<script src="http://localhost:8098"></script>
+```
+
+_src/main.js_
+```js
+import devtools from '@vue/devtools';
+
+// ...
+
+if (process.env.NODE_ENV !== 'development') {
+  devtools.connect();
+}
+```
 
 If you encounter any bugs, which you almost certainly will, please report them on the issues page.
