@@ -62,12 +62,12 @@ const mapBoxTypeToRouterBoxType = {
 function generateBox() {
   return {
     /**
-     * Object containing page numbers as keys and arrays of message indices as values
+     * Object containing page numbers as keys and arrays of message IDs as values
      * @type {Object.<string, number[]>}
      */
     messages: {},
     /**
-     * Array of selected messages indices
+     * Array of selected messages IDs
      * @type {number[]}
      */
     selected: [],
@@ -161,15 +161,15 @@ const mutations = {
   },
   [types.SET_LOADING]: boxMutation.set('loading'),
   [types.ADD_MESSAGE](state, message) {
-    Vue.set(state.messages, message.index, message);
+    Vue.set(state.messages, message.id, message);
   },
-  [types.ADD_MESSAGE_TO_BOX](state, {box, page, index}) {
+  [types.ADD_MESSAGE_TO_BOX](state, {box, page, id}) {
     const messages = state.boxes[box].messages;
     // Add page if it doesn't exist
     if (!(page in messages)) {
       Vue.set(messages, page, []);
     }
-    messages[page].push(index);
+    messages[page].push(id);
   },
   [types.SET_PAGE]: boxMutation.set('page'),
   [types.SET_SORT_ORDER]: boxMutation.set('sortOrder'),
@@ -178,22 +178,22 @@ const mutations = {
     // TODO: Auto-expire messages after a certain amount of time
     const boxItem = state.boxes[box];
     for (const messages of Object.values(boxItem.messages)) {
-      for (const index of messages) {
-        delete state.messages[index];
+      for (const id of messages) {
+        delete state.messages[id];
       }
     }
     boxItem.messages = {};
   },
-  [types.ADD_TO_SELECTED](state, {box, index}) {
-    state.boxes[box].selected.push(index);
+  [types.ADD_TO_SELECTED](state, {box, id}) {
+    state.boxes[box].selected.push(id);
   },
-  [types.SET_SELECTED](state, {box, indices}) {
+  [types.SET_SELECTED](state, {box, ids}) {
     const currentValue = state.boxes[box].selected;
     // Only mutate if value has changed.
     // This is to prevent infinite loops due to vue not being able
     // detect if an array has changed in watch functions.
-    if (arraysEqual(indices, currentValue)) {
-      state.boxes[box].selected = indices;
+    if (arraysEqual(ids, currentValue)) {
+      state.boxes[box].selected = ids;
     }
   },
   [types.CLEAR_SELECTED](state, box) {
@@ -241,7 +241,7 @@ const actions = {
   },
   addMessage({commit}, {box, page, message}) {
     commit(types.ADD_MESSAGE, message);
-    commit(types.ADD_MESSAGE_TO_BOX, {box, page, index: message.index});
+    commit(types.ADD_MESSAGE_TO_BOX, {box, page, id: message.id});
   },
   async getMessages({state, commit, dispatch}, box) {
     const boxItem = state.boxes[box];
@@ -278,7 +278,7 @@ const actions = {
             box,
             page,
             message: {
-              index: parseInt(m.Index, 10),
+              id: parseInt(m.Index, 10),
               number: m.Phone,
               date: m.Date,
               content: m.Content,
@@ -294,7 +294,7 @@ const actions = {
         commit(types.SET_LOADING, {box, value: false});
       }
       // NOTE: If selection is ever possible on more than one page, this will have to go;
-      // all checkedRows' indices should be checked to see if they still exist instead
+      // all checkedRows' IDs should be checked to see if they still exist instead
       commit(types.CLEAR_SELECTED, box);
     }
   },

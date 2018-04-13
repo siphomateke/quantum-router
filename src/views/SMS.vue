@@ -34,7 +34,7 @@
       </b-tabs>
       <b-modal ref="smsDialogModal" :active.sync="showSmsDialog" has-modal-card>
         <sms-dialog
-          :index.sync="dialog.index"
+          :id.sync="dialog.id"
           :numbers.sync="dialog.numbers"
           :content.sync="dialog.content"
           @save="smsDialogSave"
@@ -88,7 +88,7 @@ export default {
       bus: new Vue(),
       showSmsDialog: false,
       dialog: {
-        index: -1,
+        id: -1,
         numbers: [],
         content: '',
       },
@@ -187,13 +187,13 @@ export default {
       this.smsDialogClose();
     },
     newMessage() {
-      this.dialog.index = -1;
+      this.dialog.id = -1;
       this.dialog.numbers = [];
       this.dialog.content = '';
       this.showSmsDialog = true;
     },
     editMessage(message) {
-      this.dialog.index = message.index;
+      this.dialog.id = message.id;
       this.dialog.numbers = message.number.split(';');
       this.dialog.content = message.content;
       this.showSmsDialog = true;

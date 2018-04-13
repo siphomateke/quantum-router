@@ -69,7 +69,7 @@ export default {
     [Dialog.name]: Dialog,
   },
   props: {
-    index: Number,
+    id: Number,
     numbers: Array,
     content: String,
   },
@@ -154,7 +154,7 @@ export default {
       if (this.isValid()) {
         // TODO: Handle errors
         await router.sms.saveSms({
-          index: this.index,
+          index: this.id,
           numbers: this.numbers,
           content: this.content,
         });

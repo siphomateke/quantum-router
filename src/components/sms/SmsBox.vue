@@ -73,7 +73,7 @@ export default {
     },
     messages() {
       if (this.page in this.box.messages) {
-        return this.box.messages[this.page].map(index => this.allMessages[index]);
+        return this.box.messages[this.page].map(id => this.allMessages[id]);
       }
       return [];
     },
@@ -81,7 +81,7 @@ export default {
       return this.box.selected;
     },
     checkedRows() {
-      return this.selected.map(index => this.allMessages[index]);
+      return this.selected.map(id => this.allMessages[id]);
     },
     isInbox() {
       return this.boxType === boxTypes.LOCAL_INBOX;
@@ -127,7 +127,7 @@ export default {
     },
     updateCheckedRows(rows) {
       this.dispatch('sms/setSelected', {
-        indices: rows.map(row => row.index),
+        ids: rows.map(row => row.id),
       });
     },
     onPageChange(page) {
@@ -162,8 +162,8 @@ export default {
       let successful = 0;
       for (const checkedRow of this.checkedRows) {
         if (this.isInbox && checkedRow.read === false) {
-          promises.push(router.sms.setSmsAsRead(checkedRow.index).then(() => {
-            const row = this.messages.find(row => row.index === checkedRow.index);
+          promises.push(router.sms.setSmsAsRead(checkedRow.id).then(() => {
+            const row = this.messages.find(row => row.id === checkedRow.id);
             // Row could be undefined if the checked row is on another page
             if (row) {
               row.read = true;
@@ -197,7 +197,7 @@ export default {
     selectAll() {
       // TODO: Decide if this should actually select all messages on all pages asynchronously
       this.dispatch('sms/setSelected', {
-        indices: this.messages.map(row => row.index),
+        ids: this.messages.map(row => row.id),
       });
     },
     select(selector) {
@@ -223,7 +223,7 @@ export default {
           }
           if (match) {
             this.dispatch('sms/addToSelected', {
-              index: m.index,
+              id: m.id,
             });
           }
         }
