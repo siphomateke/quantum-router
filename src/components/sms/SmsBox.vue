@@ -29,7 +29,6 @@ import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
 import {selectionStates} from '@/components/sms/select';
 import router from 'huawei-router-api/browser';
-import {modes} from '@/store';
 import {mapState, mapActions} from 'vuex';
 import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
 
@@ -68,7 +67,7 @@ export default {
     },
     pageCount() {
       return Math.ceil(this.total / this.perPage);
-    }
+    },
   },
   watch: {
     checkedRows(val) {
@@ -99,7 +98,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getSmsCount: 'sms/getCount'
+      getSmsCount: 'sms/getCount',
     }),
     refreshAdmin() {
       this.loadAsyncData();
@@ -190,7 +189,7 @@ export default {
       this.globalBus.$emit('refresh:sms');
     },
     deleteMessagesConfirm() {
-      let self = this;
+      const self = this;
       this.$modal.open({
         parent: this,
         component: DeleteSmsDialog,
@@ -198,7 +197,7 @@ export default {
           list: this.checkedRows,
         },
         events: {
-          confirm: self.deleteMessages
+          confirm: self.deleteMessages,
         },
       });
     },

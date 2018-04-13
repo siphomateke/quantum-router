@@ -81,10 +81,8 @@ const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
 import {mapState, mapGetters, mapActions} from 'vuex';
-import types from '@/store/mutation_types.js';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/browser/notification.js';
-import moment from 'moment';
 
 Vue.mixin({
   methods: {
@@ -101,14 +99,18 @@ Vue.mixin({
             this.warningDialog({
               message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
               confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {routerHelper.openOptionsPage()},
+              onConfirm: () => {
+                routerHelper.openOptionsPage();
+              },
               category: 'admin',
             });
           } else {
             this.warningDialog({
               message: this.$i18n('empty_router_url_error'),
               confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {routerHelper.openOptionsPage()},
+              onConfirm: () => {
+                routerHelper.openOptionsPage();
+              },
               category: 'admin',
             });
           }
@@ -123,11 +125,11 @@ Vue.mixin({
         if (e instanceof RouterError) {
           message = e.code+' : '+e.message;
         } else {
-          message = e.message
+          message = e.message;
         }
         this.$toast.open({
           type: 'is-danger',
-          message: 'Error: ' + message
+          message: 'Error: ' + message,
         });
       }
       // TODO: log errors
@@ -157,14 +159,14 @@ export default {
     'q-toolbar-item': ToolbarItem,
     'q-dropdown-item': DropdownItem,
     'q-dropdown-select': DropdownSelect,
-    'q-notifications-popup': NotificationsPopup
+    'q-notifications-popup': NotificationsPopup,
   },
   data() {
     return {
       loading: false,
       refreshIntervals: {
         'second': 1000,
-        'basic': 1000
+        'basic': 1000,
       },
       currentTime: null,
       lastUpdatedNotifications: null,
@@ -225,10 +227,10 @@ export default {
             }, {
               sortOrder: 'desc',
             });
-            let newNotifications = [];
+            const newNotifications = [];
             for (const message of list) {
               let exists = false;
-              let n = Notification.fromSms(message);
+              const n = Notification.fromSms(message);
 
               // Check if this notification is new
               for (const n2 of this.allNotifications) {
@@ -273,7 +275,7 @@ export default {
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.loadNotifications();
       }
-    }
+  },
   },
   methods: {
     ...mapActions({
@@ -316,20 +318,20 @@ export default {
               try {
                 await router.admin.login();
                 return true;
-              } catch(e) {
+              } catch (e) {
                 let errorMessage = this.$i18n('router_unknown_error_logging_in');
                 if (e instanceof RouterError) {
                   if (e.code === 'api_login_already_login') {
                     return true;
                   }
-                  let knownErrors = [
+                  const knownErrors = [
                     'api_login_username_wrong',
                     'api_login_password_wrong',
                     'api_login_username_pwd_wrong',
                     'api_login_username_pwd_orerrun',
                   ];
                   if (knownErrors.includes(e.code)) {
-                    let actualError = this.$i18n('router_module_error_'+e.code);
+                    const actualError = this.$i18n('router_module_error_'+e.code);
                     errorMessage = this.$i18n('router_error_logging_in', actualError);
                   }
                 } else {
@@ -338,7 +340,9 @@ export default {
                 this.warningDialog({
                   message: errorMessage,
                   confirmText: this.$i18n('dialog_retry'),
-                  onConfirm: () => {this.tryChangeMode(newMode)},
+                  onConfirm: () => {
+                    this.tryChangeMode(newMode);
+                  },
                   category: 'admin',
                 });
                 return false;
@@ -350,7 +354,9 @@ export default {
               this.warningDialog({
                 message: this.$i18n('connection_error', router.config.getUrl()),
                 confirmText: this.$i18n('dialog_retry'),
-                onConfirm: () => {this.tryChangeMode(newMode)},
+                onConfirm: () => {
+                  this.tryChangeMode(newMode);
+                },
                 category: 'admin',
               });
               return false;

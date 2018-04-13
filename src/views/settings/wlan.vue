@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     ...mapActions('settings', {
-      setSetting: 'set'
+      setSetting: 'set',
     }),
     getStatusString: status => {
       return status ? 'On' : 'Off';
