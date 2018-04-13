@@ -174,7 +174,7 @@ const mutations = {
   [types.SET_PAGE]: boxMutation.set('page'),
   [types.SET_SORT_ORDER]: boxMutation.set('sortOrder'),
   [types.SET_PER_PAGE]: boxMutation.set('perPage'),
-  [types.RESET_MESSAGES](state, box) {
+  [types.RESET_MESSAGES](state, {box}) {
     // TODO: Auto-expire messages after a certain amount of time
     const boxItem = state.boxes[box];
     for (const messages of Object.values(boxItem.messages)) {
@@ -196,7 +196,7 @@ const mutations = {
       state.boxes[box].selected = ids;
     }
   },
-  [types.CLEAR_SELECTED](state, box) {
+  [types.CLEAR_SELECTED](state, {box}) {
     state.boxes[box].selected = [];
   },
   [types.SET_LOCAL_MAX](state, max) {
@@ -243,7 +243,7 @@ const actions = {
     commit(types.ADD_MESSAGE, message);
     commit(types.ADD_MESSAGE_TO_BOX, {box, page, id: message.id});
   },
-  async getMessages({state, commit, dispatch}, box) {
+  async getMessages({state, commit, dispatch}, {box}) {
     const boxItem = state.boxes[box];
     const page = boxItem.page;
     // Only get new messages if current page hasn't been retrieved before
@@ -295,22 +295,22 @@ const actions = {
       }
       // NOTE: If selection is ever possible on more than one page, this will have to go;
       // all checkedRows' IDs should be checked to see if they still exist instead
-      commit(types.CLEAR_SELECTED, box);
+      commit(types.CLEAR_SELECTED, {box});
     }
   },
   setPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PAGE, {box, value});
-    dispatch('getMessages', box);
+    dispatch('getMessages', {box});
   },
   setSortOrder({state, commit, dispatch}, {box, value}) {
     commit(types.SET_SORT_ORDER, {box, value});
-    commit(types.RESET_MESSAGES, box);
-    dispatch('getMessages', box);
+    commit(types.RESET_MESSAGES, {box});
+    dispatch('getMessages', {box});
   },
   setPerPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PER_PAGE, {box, value});
-    commit(types.RESET_MESSAGES, box);
-    dispatch('getMessages', box);
+    commit(types.RESET_MESSAGES, {box});
+    dispatch('getMessages', {box});
   },
   addToSelected({commit}, payload) {
     commit(types.ADD_TO_SELECTED, payload);

@@ -115,7 +115,7 @@ export default {
     },
     refreshAdmin() {
       // TODO: Update checked rows and handle any currently running tasks on refresh
-      this.$store.dispatch('sms/getMessages', this.boxType);
+      this.dispatch('sms/getMessages');
     },
     refresh(box) {
       if (box && box !== this.boxType) {
