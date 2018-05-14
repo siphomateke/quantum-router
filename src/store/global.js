@@ -180,14 +180,9 @@ export default {
         dispatch('dialog/closeCategory', 'admin');
       }
       commit(types.SET_LOADING, true);
-      try {
-        const ready = await dispatch('prepChangeMode', newMode);
-        if (ready) dispatch('changeMode', newMode);
-      } catch (e) {
-        throw e;
-      } finally {
-        commit(types.SET_LOADING, false);
-      }
+      const ready = await dispatch('prepChangeMode', newMode);
+      if (ready) dispatch('changeMode', newMode);
+      commit(types.SET_LOADING, false);
     },
   },
 };
