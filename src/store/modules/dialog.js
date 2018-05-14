@@ -79,5 +79,9 @@ export default {
     prompt({dispatch}, data) {
       dispatch('open', {type: 'prompt', data});
     },
+    warning({dispatch}, data) {
+      data.type = 'warning';
+      dispatch('confirm', data);
+    },
   },
 };

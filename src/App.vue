@@ -83,71 +83,7 @@ import {mapState, mapGetters, mapActions} from 'vuex';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import {Notification} from '@/browser/notification.js';
 
-Vue.mixin({
-  methods: {
-    $error(e) {
-      let unknown = false;
-      if (e instanceof RouterError) {
-        const adminError = ['api_wrong_session', 'api_wrong_session_token', 'api_voice_busy', 'api_system_no_rights'];
-        if (adminError.includes(e.code)) {
-          this.changeMode(modes.BASIC);
-        } else if (router.errors.isErrorInCategory(e.code, 'connection')) {
-          this.changeMode(modes.OFFLINE);
-        } else if (e.code === 'invalid_router_url') {
-          if (router.config.getUrl().length > 0) {
-            this.warningDialog({
-              message: this.$i18n('invalid_router_url_error', router.config.getUrl()),
-              confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {
-                routerHelper.openOptionsPage();
-              },
-              category: 'admin',
-            });
-          } else {
-            this.warningDialog({
-              message: this.$i18n('empty_router_url_error'),
-              confirmText: this.$i18n('dialog_open_settings'),
-              onConfirm: () => {
-                routerHelper.openOptionsPage();
-              },
-              category: 'admin',
-            });
-          }
-        } else {
-          unknown = true;
-        }
-      } else {
-        unknown = true;
-      }
-      if (unknown) {
-        let message;
-        if (e instanceof RouterError) {
-          message = e.code+' : '+e.message;
-        } else {
-          message = e.message;
-        }
-        this.$toast.open({
-          type: 'is-danger',
-          message: 'Error: ' + message,
-        });
-      }
-      // TODO: log errors
-    },
-    $dialogClose(category) {
-      this.$store.dispatch('dialog/closeCategory', category);
-    },
-    $dialogAlert(data) {
-      this.$store.dispatch('dialog/alert', data);
-    },
-    $dialogConfirm(data) {
-      this.$store.dispatch('dialog/confirm', data);
-    },
-    $dialogPrompt(data) {
-      this.$store.dispatch('dialog/prompt', data);
-    },
-  },
-});
-
+// TODO: Finish moving to Vuex
 export default {
   name: 'app',
   components: {
@@ -161,7 +97,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       refreshIntervals: {
         'second': 1000,
         'basic': 1000,
@@ -173,6 +108,7 @@ export default {
   },
   computed: {
     ...mapState({
+      loading: state => state.loading,
       allNotifications: state => state.notifications.all,
       boxes: state => state.sms.boxes,
     }),
@@ -246,7 +182,7 @@ export default {
 
             this.lastUpdatedNotifications = Date.now();
           } catch (e) {
-            this.$error(e);
+            this.$store.dispatch('handleError', e);
           } finally {
             this.gettingSmsList = false;
           }
@@ -278,6 +214,7 @@ export default {
   methods: {
     ...mapActions({
       setMode: 'setMode',
+      tryChangeMode: 'tryChangeMode',
       addNotifications: 'notifications/add',
       loadNotifications: 'notifications/load',
       getSmsCount: 'sms/getCount',
@@ -294,105 +231,8 @@ export default {
         }
       }
     },
-    async updateConfig() {
-      const data = await routerHelper.getLoginDetails();
-      router.config.setUsername(data.username);
-      router.config.setPassword(data.password);
-      const url = await routerHelper.getRouterUrl();
-      router.config.setUrl(url);
-    },
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
-    },
-    async prepChangeMode(newMode) {
-      try {
-        await this.updateConfig();
-        if (newMode === modes.BASIC || newMode === modes.ADMIN) {
-          try {
-            await router.utils.ping();
-            if (newMode === modes.BASIC) {
-              return true;
-            } else if (newMode === modes.ADMIN) {
-              try {
-                await router.admin.login();
-                return true;
-              } catch (e) {
-                let errorMessage = this.$i18n('router_unknown_error_logging_in');
-                if (e instanceof RouterError) {
-                  if (e.code === 'api_login_already_login') {
-                    return true;
-                  }
-                  const knownErrors = [
-                    'api_login_username_wrong',
-                    'api_login_password_wrong',
-                    'api_login_username_pwd_wrong',
-                    'api_login_username_pwd_orerrun',
-                  ];
-                  if (knownErrors.includes(e.code)) {
-                    const actualError = this.$i18n('router_module_error_'+e.code);
-                    errorMessage = this.$i18n('router_error_logging_in', actualError);
-                  }
-                } else {
-                  this.$error(e);
-                }
-                this.warningDialog({
-                  message: errorMessage,
-                  confirmText: this.$i18n('dialog_retry'),
-                  onConfirm: () => {
-                    this.tryChangeMode(newMode);
-                  },
-                  category: 'admin',
-                });
-                return false;
-              }
-            }
-          } catch (e) {
-            // Handle ping errors
-            if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
-              this.warningDialog({
-                message: this.$i18n('connection_error', router.config.getUrl()),
-                confirmText: this.$i18n('dialog_retry'),
-                onConfirm: () => {
-                  this.tryChangeMode(newMode);
-                },
-                category: 'admin',
-              });
-              return false;
-            } else {
-              throw e;
-            }
-          }
-        } else {
-          return true;
-        }
-      } catch (e) {
-        this.$error(e);
-        return false;
-      }
-    },
-    async tryChangeMode(newMode) {
-      if (newMode === modes.ADMIN) {
-        this.$dialogClose('admin');
-      }
-      this.loading = true;
-      try {
-        const ready = await this.prepChangeMode(newMode);
-        if (ready) this.changeMode(newMode);
-      } catch (e) {
-        throw e;
-      } finally {
-        this.loading = false;
-      }
-    },
-    changeMode(mode) {
-      if (mode !== this.$mode) {
-        this.setMode(mode);
-        this.$toast.open(this.$i18n('changed_mode_to', this.$i18n('mode_'+this.modeNames[mode])));
-      }
-    },
-    warningDialog(data) {
-      data.type = 'warning';
-      this.$dialogConfirm(data);
     },
   },
 };

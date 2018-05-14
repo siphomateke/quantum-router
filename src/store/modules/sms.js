@@ -362,8 +362,7 @@ const actions = {
         type: 'is-success',
       });
     }).catch(e => {
-      // FIXME: Figure out how to use dialogs in Vuex
-      // this.$error(e);
+      this.$store.dispatch('handleError', e);
       if (successful > 0) {
         Toast.open({
           message: this.$i18n(
