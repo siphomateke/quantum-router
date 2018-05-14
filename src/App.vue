@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <dialogs :bus="globalBus"></dialogs>
     <b-loading :active.sync="loading" :canCancel="false"></b-loading>
     <div class="app-wrapper columns is-gapless">
       <drawer title="Quantum Router" class="column is-2">
@@ -69,7 +68,6 @@
 
 <script>
 import Vue from 'vue';
-import DialogManager from '@/components/dialogs/DialogManager.vue';
 import Drawer from '@/components/drawer/Drawer.vue';
 import DrawerItem from '@/components/drawer/DrawerItem.vue';
 import Toolbar from '@/components/toolbar/Toolbar.vue';
@@ -136,16 +134,16 @@ Vue.mixin({
       // TODO: log errors
     },
     $dialogClose(category) {
-      this.globalBus.$emit('close-dialogs', category);
+      this.$store.dispatch('dialog/closeCategory', category);
     },
     $dialogAlert(data) {
-      this.globalBus.$emit('open-alert-dialog', data);
+      this.$store.dispatch('dialog/alert', data);
     },
     $dialogConfirm(data) {
-      this.globalBus.$emit('open-confirm-dialog', data);
+      this.$store.dispatch('dialog/confirm', data);
     },
     $dialogPrompt(data) {
-      this.globalBus.$emit('open-prompt-dialog', data);
+      this.$store.dispatch('dialog/prompt', data);
     },
   },
 });
@@ -153,7 +151,6 @@ Vue.mixin({
 export default {
   name: 'app',
   components: {
-    'dialogs': DialogManager,
     'drawer': Drawer,
     'drawer-item': DrawerItem,
     'q-toolbar': Toolbar,

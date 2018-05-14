@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import settings from '@/store/modules/settings.js';
 import notifications from '@/store/modules/notifications.js';
 import sms from '@/store/modules/sms.js';
+import dialog from '@/store/modules/dialog.js';
 import types from '@/store/mutation_types.js';
 
 export const modes = {
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     settings,
     notifications,
     sms,
+    dialog,
   },
   state: {
     mode: modes.OFFLINE,
