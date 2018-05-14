@@ -312,6 +312,10 @@ const actions = {
       commit(types.CLEAR_SELECTED, {box});
     }
   },
+  refresh({commit, dispatch}, {box}) {
+    commit(types.RESET_MESSAGES, {box});
+    dispatch('getMessages', {box});
+  },
   setPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PAGE, {box, value});
     dispatch('getMessages', {box});

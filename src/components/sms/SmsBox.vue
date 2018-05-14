@@ -110,7 +110,7 @@ export default {
     },
     refreshAdmin() {
       // TODO: Update checked rows and handle any currently running tasks on refresh
-      this.dispatch('sms/getMessages');
+      this.dispatch('sms/refresh');
     },
     refresh(box) {
       if (box && box !== this.boxType) {
