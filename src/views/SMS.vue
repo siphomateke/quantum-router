@@ -60,9 +60,7 @@ import {selectionStates} from '@/components/sms/select';
 import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
 import router from 'huawei-router-api/browser';
-import {modes} from '@/store';
 import {mapState, mapGetters, mapActions} from 'vuex';
-
 import {boxTypes} from '@/store/modules/sms';
 
 export default {
