@@ -28,10 +28,8 @@
 <script>
 import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
-import router from 'huawei-router-api/browser';
 import {boxTypes} from '@/store/modules/sms';
-import {modes} from '@/store';
-import {mapState, mapActions} from 'vuex';
+import {mapState} from 'vuex';
 import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
 
 export default {
@@ -106,9 +104,6 @@ export default {
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
-    ...mapActions({
-      clearSelected: 'sms/clearSelected',
-    }),
     async dispatch(name, payload={}) {
       payload.box = this.boxType;
       await this.$store.dispatch(name, payload);
@@ -137,13 +132,11 @@ export default {
       this.dispatch('sms/setSortOrder', {value: order});
     },
     async deleteMessages() {
-      // TODO: Use Vuex
-      /* await router.sms.deleteSms(this.selected);
-      // TODO: delete sms loading indicator
-      this.clearSelected();
-      this.globalBus.$emit('refresh:sms'); */
+      await this.dispatch('sms/deleteSelectedMessages');
+      this.globalBus.$emit('refresh:sms');
     },
     deleteMessagesConfirm() {
+      // TODO: Consider moving to Vuex
       const self = this;
       this.$modal.open({
         parent: this,
@@ -157,77 +150,17 @@ export default {
       });
     },
     markMessagesAsRead() {
-      // TODO: Use Vuex
-      /* const promises = [];
-      let successful = 0;
-      for (const checkedRow of this.checkedRows) {
-        if (this.isInbox && checkedRow.read === false) {
-          promises.push(router.sms.setSmsAsRead(checkedRow.id).then(() => {
-            const row = this.messages.find(row => row.id === checkedRow.id);
-            // Row could be undefined if the checked row is on another page
-            if (row) {
-              row.read = true;
-            }
-            successful += 1;
-          }));
-        }
-      }
-      Promise.all(promises).then(() => {
-        this.$toast.open({
-          message: 'Marked '+successful+' message(s) as read',
-          type: 'is-success',
-        });
-      }).catch(e => {
-        this.$error(e);
-        if (successful > 0) {
-          this.$toast.open({
-            message: this.$i18n(
-              'sms_mark_read_partial_error',
-              successful, this.selected.length),
-            type: 'is-danger',
-          });
-        } else {
-          this.$toast.open({
-            message: this.$i18n('sms_mark_read_error'),
-            type: 'is-danger',
-          });
-        }
-      }); */
+      this.dispatch('sms/markSelectedMessagesAsRead');
     },
     selectAll() {
       // TODO: Decide if this should actually select all messages on all pages asynchronously
-      this.dispatch('sms/setSelected', {
-        ids: this.messages.map(row => row.id),
-      });
+      this.dispatch('sms/selectAll');
     },
     select(selector) {
-      // TODO: Use Vuex
-      /* this.clearSelected();
-      // TODO: Improve selector validation
-      const validSelectorKeys = ['type', 'read'];
-      let validSelector = false;
-      for (const key of validSelectorKeys) {
-        if (key in selector) {
-          validSelector = true;
-          break;
-        }
-      }
-      if (validSelector) {
-        for (const m of this.messages) {
-          let match = true;
-          if ('type' in selector && selector.type !== m.parsed.type) {
-            match = false;
-          }
-          if ('read' in selector && selector.read !== m.read) {
-            match = false;
-          }
-          if (match) {
-            this.dispatch('sms/addToSelected', {
-              id: m.id,
-            });
-          }
-        }
-      } */
+      this.dispatch('sms/select', {selector});
+    },
+    clearSelected() {
+      this.dispatch('sms/clearSelected');
     },
     editMessage(index) {
       this.$emit('edit', this.messages[index]);

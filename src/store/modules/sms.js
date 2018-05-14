@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {Toast} from 'buefy';
 import router from 'huawei-router-api/browser';
 
 const routerBoxTypes = router.sms.boxTypes;
@@ -12,6 +13,7 @@ export const types = {
   SET_LOADING: 'SET_LOADING',
   ADD_MESSAGE: 'ADD_MESSAGE',
   ADD_MESSAGE_TO_BOX: 'ADD_MESSAGE_TO_BOX',
+  SET_MESSAGE_READ: 'SET_MESSAGE_READ',
   RESET_MESSAGES: 'RESET_MESSAGES',
   SET_PAGE: 'SET_PAGE',
   SET_SORT_ORDER: 'SET_SORT_ORDER',
@@ -139,6 +141,13 @@ const getters = {
     boxTypes.SIM_SENT,
     boxTypes.SIM_DRAFT,
   ]),
+  getVisibleMessagesIds: state => box => {
+    const boxItem = state.boxes[box];
+    return boxItem.messages[boxItem.page];
+  },
+  isInbox: state => box => {
+    return box === boxTypes.LOCAL_INBOX;
+  },
 };
 
 const boxMutation = {
@@ -154,6 +163,8 @@ function arraysEqual(arr1, arr2) {
   return arr1.join(',') !== arr2.join(',');
 }
 
+// TODO: Decide whether to use 'value' in payloads
+// or the name of the property being mutated
 const mutations = {
   [types.SET_COUNT]: boxMutation.set('count'),
   [types.SET_COUNT_LAST_UPDATED](state, time) {
@@ -170,6 +181,9 @@ const mutations = {
       Vue.set(messages, page, []);
     }
     messages[page].push(id);
+  },
+  [types.SET_MESSAGE_READ](state, {id, value}) {
+    state.messages[id].read = value;
   },
   [types.SET_PAGE]: boxMutation.set('page'),
   [types.SET_SORT_ORDER]: boxMutation.set('sortOrder'),
@@ -318,8 +332,90 @@ const actions = {
   setSelected({commit}, payload) {
     commit(types.SET_SELECTED, payload);
   },
+  selectAll({getters, commit}, {box}) {
+    commit(types.SET_SELECTED, {box, ids: getters.getVisibleMessagesIds(box)});
+  },
   clearSelected({commit}, payload) {
     commit(types.CLEAR_SELECTED, payload);
+  },
+  markMessagesAsRead({state, getters, commit}, {box, ids}) {
+    const promises = [];
+    let successful = 0;
+    if (getters.isInbox(box)) {
+      for (const id of ids) {
+        const message = state.messages[id];
+        if (message.read === false) {
+          promises.push(router.sms.setSmsAsRead(id).then(() => {
+            commit(types.SET_MESSAGE_READ, {id, value: true});
+            successful += 1;
+          }));
+        }
+      }
+    }
+    Promise.all(promises).then(() => {
+      Toast.open({
+        message: 'Marked '+successful+' message(s) as read',
+        type: 'is-success',
+      });
+    }).catch(e => {
+      // FIXME: Figure out how to use dialogs in Vuex
+      // this.$error(e);
+      if (successful > 0) {
+        Toast.open({
+          message: this.$i18n(
+            'sms_mark_read_partial_error',
+            successful, this.selected.length),
+          type: 'is-danger',
+        });
+      } else {
+        Toast.open({
+          message: this.$i18n('sms_mark_read_error'),
+          type: 'is-danger',
+        });
+      }
+    });
+  },
+  markSelectedMessagesAsRead({state, dispatch}, {box}) {
+    dispatch('markMessagesAsRead', {box, ids: state.boxes[box].selected});
+  },
+  select({commit, dispatch}, {box, selector}) {
+    commit(types.CLEAR_SELECTED, {box});
+    // TODO: Improve selector validation
+    const validSelectorKeys = ['type', 'read'];
+    let validSelector = false;
+    for (const key of validSelectorKeys) {
+      if (key in selector) {
+        validSelector = true;
+        break;
+      }
+    }
+    if (validSelector) {
+      const boxItem = state.boxes[box];
+      for (const id of boxItem.messages[boxItem.page]) {
+        const message = state.messages[id];
+        let match = true;
+        if ('type' in selector && selector.type !== message.parsed.type) {
+          match = false;
+        }
+        if ('read' in selector && selector.read !== message.read) {
+          match = false;
+        }
+        if (match) {
+          dispatch('addToSelected', {
+            box,
+            id: message.id,
+          });
+        }
+      }
+    }
+  },
+  async deleteMessages({commit}, {box, ids}) {
+    await router.sms.deleteSms(ids);
+    // TODO: delete sms loading indicator
+    commit(types.CLEAR_SELECTED, {box});
+  },
+  async deleteSelectedMessages({state, dispatch}, {box}) {
+    await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
   },
 };
 
