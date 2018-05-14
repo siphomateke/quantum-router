@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {Toast} from 'buefy';
 import router from 'huawei-router-api/browser';
+import i18n from '@/browser/i18n.js';
 
 const routerBoxTypes = router.sms.boxTypes;
 
@@ -342,7 +343,7 @@ const actions = {
   clearSelected({commit}, payload) {
     commit(types.CLEAR_SELECTED, payload);
   },
-  markMessagesAsRead({state, getters, commit}, {box, ids}) {
+  markMessagesAsRead({state, getters, commit, dispatch}, {box, ids}) {
     const promises = [];
     let successful = 0;
     if (getters.isInbox(box)) {
@@ -362,17 +363,17 @@ const actions = {
         type: 'is-success',
       });
     }).catch(e => {
-      this.$store.dispatch('handleError', e);
+      dispatch('handleError', e);
       if (successful > 0) {
         Toast.open({
-          message: this.$i18n(
+          message: i18n.getMessage(
             'sms_mark_read_partial_error',
-            successful, this.selected.length),
+            successful, ids.length),
           type: 'is-danger',
         });
       } else {
         Toast.open({
-          message: this.$i18n('sms_mark_read_error'),
+          message: i18n.getMessage('sms_mark_read_error'),
           type: 'is-danger',
         });
       }
