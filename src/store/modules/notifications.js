@@ -24,6 +24,21 @@ export default {
       return list;
     },
   },
+  mutations: {
+    [types.CLEAR](state) {
+      state.all = [];
+    },
+    [types.ADD](state, notifications) {
+      state.all = state.all.concat(notifications);
+    },
+    [types.UPDATE](state, {index, notification}) {
+      state.all[index] = notification;
+    },
+    [types.REMOVE](state, notification) {
+      const index = state.all.indexOf(notification);
+      state.all.splice(index, 1);
+    },
+  },
   actions: {
     async load({commit}) {
       const items = await browser.storage.sync.get('notifications');
@@ -50,21 +65,6 @@ export default {
     remove({commit, dispatch}, notification) {
       commit(types.REMOVE, notification);
       // dispatch('save');
-    },
-  },
-  mutations: {
-    [types.CLEAR](state) {
-      state.all = [];
-    },
-    [types.ADD](state, notifications) {
-      state.all = state.all.concat(notifications);
-    },
-    [types.UPDATE](state, {index, notification}) {
-      state.all[index] = notification;
-    },
-    [types.REMOVE](state, notification) {
-      const index = state.all.indexOf(notification);
-      state.all.splice(index, 1);
     },
   },
 };

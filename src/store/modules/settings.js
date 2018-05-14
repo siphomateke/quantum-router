@@ -4,14 +4,14 @@ export const types = {
 
 export default {
   namespaced: true,
-  actions: {
-    set({commit}, payload) {
-      commit(types.SET, payload);
-    },
-  },
   mutations: {
     [types.SET](state, payload) {
       state[payload.domain] = payload.data;
+    },
+  },
+  actions: {
+    set({commit}, payload) {
+      commit(types.SET, payload);
     },
   },
 };

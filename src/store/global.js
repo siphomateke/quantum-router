@@ -22,14 +22,14 @@ export default {
     modeName: state => modeNames[state.mode],
     adminMode: state => state.mode === modes.ADMIN,
   },
-  actions: {
-    setMode({commit}, mode) {
-      commit(types.MODE, mode);
-    },
-  },
   mutations: {
     [types.MODE](state, mode) {
       state.mode = mode;
+    },
+  },
+  actions: {
+    setMode({commit}, mode) {
+      commit(types.MODE, mode);
     },
   },
 };
