@@ -44,7 +44,7 @@ export default {
     },
     time() {
       if (this._date) {
-        const duration = moment.duration(this.currentTime - this.date);
+        const duration = moment.duration(Date.now() - this.date);
         if (duration.asMinutes() <= 30) {
           return this._date.fromNow();
         } else if (duration.asDays() < 1) {

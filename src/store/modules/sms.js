@@ -24,6 +24,7 @@ export const types = {
   SET_SELECTED: 'SET_SELECTED',
   ADD_TO_SELECTED: 'ADD_TO_SELECTED',
   CLEAR_SELECTED: 'CLEAR_SELECTED',
+  SET_GETTING_SMS_LIST: 'SET_GETTING_SMS_LIST',
 };
 
 export const boxTypes = {
@@ -110,6 +111,7 @@ const state = {
   messages: {},
   countLastUpdated: null,
   smsCountTimeout: 5000, // TODO: Move this to settings
+  gettingSmsList: false,
 };
 
 for (const boxType of Object.values(boxTypes)) {
@@ -219,6 +221,9 @@ const mutations = {
   },
   [types.SET_SIM_MAX](state, max) {
     state.sim.max = max;
+  },
+  [types.SET_GETTING_SMS_LIST](state, value) {
+    state.gettingSmsList = value;
   },
 };
 
@@ -420,6 +425,9 @@ const actions = {
   },
   async deleteSelectedMessages({state, dispatch}, {box}) {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
+  },
+  setGettingSmsList({commit}, value) {
+    commit(types.SET_GETTING_SMS_LIST, value);
   },
 };
 

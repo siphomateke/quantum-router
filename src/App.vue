@@ -74,14 +74,10 @@ import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
-import router from 'huawei-router-api/browser';
-const {RouterError} = router.errors;
 import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
-import {boxTypes} from '@/store/modules/sms';
 import {mapState, mapGetters, mapActions} from 'vuex';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
-import {Notification} from '@/browser/notification.js';
 
 // TODO: Finish moving to Vuex
 export default {
@@ -98,12 +94,8 @@ export default {
   data() {
     return {
       refreshIntervals: {
-        'second': 1000,
         'basic': 1000,
       },
-      currentTime: null,
-      lastUpdatedNotifications: null,
-      gettingSmsList: false,
     };
   },
   computed: {
@@ -111,6 +103,7 @@ export default {
       loading: state => state.loading,
       allNotifications: state => state.notifications.all,
       boxes: state => state.sms.boxes,
+      gettingSmsList: state => state.gettingSmsList,
     }),
     ...mapGetters({
       modeName: 'modeName',
@@ -124,24 +117,20 @@ export default {
     modeNames: () => modeNames,
     modeColor() {
       switch (this.$mode) {
-        case modes.OFFLINE: {
-          return '#f00';
-        }
-        case modes.BASIC: {
-          return '#ffa500';
-        }
-        case modes.ADMIN: {
-          return '#0f0';
-        }
+      case modes.OFFLINE: {
+        return '#f00';
+      }
+      case modes.BASIC: {
+        return '#ffa500';
+      }
+      case modes.ADMIN: {
+        return '#0f0';
+      }
       }
     },
   },
   async mounted() {
     this.startRefreshCycle();
-
-    this.globalBus.$on('refresh:second', () => {
-      this.currentTime = Date.now();
-    });
 
     this.globalBus.$on('refresh:basic', () => {
       this.globalBus.$emit('refresh:graph');
@@ -152,41 +141,7 @@ export default {
 
     this.globalBus.$on('refresh:notifications', async () => {
       if (this.$adminMode) {
-        if (!this.gettingSmsList) {
-          this.gettingSmsList = true;
-          try {
-            await this.getSmsCount();
-            const list = await router.sms.getFullSmsList({
-              total: this.boxes[boxTypes.LOCAL_INBOX].count,
-            }, {
-              sortOrder: 'desc',
-            });
-            const newNotifications = [];
-            for (const message of list) {
-              let exists = false;
-              const n = Notification.fromSms(message);
-
-              // Check if this notification is new
-              for (const n2 of this.allNotifications) {
-                if (n.id === n2.id) {
-                  exists = true;
-                  break;
-                }
-              }
-
-              if (!exists) {
-                newNotifications.push(n);
-              }
-            }
-            this.addNotifications(newNotifications);
-
-            this.lastUpdatedNotifications = Date.now();
-          } catch (e) {
-            this.$store.dispatch('handleError', e);
-          } finally {
-            this.gettingSmsList = false;
-          }
-        }
+        this.$store.dispatch('notifications/refresh');
       }
     });
     routerHelper.events.addListener('optionsSaved', () => {
@@ -196,20 +151,20 @@ export default {
   watch: {
     ['$mode'](val, oldVal) {
       switch (val) {
-        case modes.ADMIN:
-          this.globalBus.$emit('mode-change:admin');
-          break;
-        case modes.BASIC:
-          this.globalBus.$emit('mode-change:basic');
-          break;
-        case modes.OFFLINE:
-          this.globalBus.$emit('mode-change:offline');
-          break;
+      case modes.ADMIN:
+        this.globalBus.$emit('mode-change:admin');
+        break;
+      case modes.BASIC:
+        this.globalBus.$emit('mode-change:basic');
+        break;
+      case modes.OFFLINE:
+        this.globalBus.$emit('mode-change:offline');
+        break;
       }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.loadNotifications();
       }
-  },
+    },
   },
   methods: {
     ...mapActions({
