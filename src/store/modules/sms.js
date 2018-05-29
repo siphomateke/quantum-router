@@ -2,6 +2,7 @@ import Vue from 'vue';
 import {Toast} from 'buefy';
 import router from 'huawei-router-api/browser';
 import i18n from '@/browser/i18n.js';
+import {bus} from '@/events';
 
 const routerBoxTypes = router.sms.boxTypes;
 
@@ -25,6 +26,7 @@ export const types = {
   ADD_TO_SELECTED: 'ADD_TO_SELECTED',
   CLEAR_SELECTED: 'CLEAR_SELECTED',
   SET_GETTING_SMS_LIST: 'SET_GETTING_SMS_LIST',
+  SET_IMPORT_ENABLED: 'SET_IMPORT_ENABLED',
 };
 
 export const boxTypes = {
@@ -112,6 +114,7 @@ const state = {
   countLastUpdated: null,
   smsCountTimeout: 5000, // TODO: Move this to settings
   gettingSmsList: false,
+  importEnabled: false, // TODO: Move this to settings
 };
 
 for (const boxType of Object.values(boxTypes)) {
@@ -224,6 +227,9 @@ const mutations = {
   },
   [types.SET_GETTING_SMS_LIST](state, value) {
     state.gettingSmsList = value;
+  },
+  [types.SET_IMPORT_ENABLED](state, value) {
+    state.importEnabled = value;
   },
 };
 
@@ -428,6 +434,80 @@ const actions = {
   },
   setGettingSmsList({commit}, value) {
     commit(types.SET_GETTING_SMS_LIST, value);
+  },
+  /**
+   * Checks if importing messages from the SIM card is supported on this router
+   * @return {boolean}
+   */
+  async checkImport({commit}) {
+    const smsConfig = await router.config.getSmsConfig();
+    commit(types.SET_IMPORT_ENABLED, smsConfig.import_enabled);
+    return smsConfig.import_enabled;
+  },
+  /**
+   * Imports messages from the SIM card
+   */
+  async import({dispatch}) {
+    try {
+      const info = await router.sms.importMessages();
+      if (info.successNumber > 0) {
+        bus.$emit('refresh:sms');
+      }
+      Toast.open({
+        type: info.successNumber > 0 && info.failNumber === 0 ? 'is-success' : 'is-dark',
+        message: i18n.getMessage('sms_import_complete', info.successNumber, info.failNumber),
+      });
+    } catch (e) {
+      if (e instanceof router.errors.RouterError) {
+        switch (e.code) {
+        case 'sms_import_sim_empty':
+          // No messages to import
+          Toast.open(i18n.getMessage('sms_import_complete', 0, 0));
+          break;
+        case 'sms_not_enough_space':
+          dispatch('dialog/alert', {
+            type: 'danger',
+            message: i18n.getMessage('sms_import_error_not_enough_space'),
+          }, {root: true});
+          break;
+        case 'sms_import_invalid_response':
+          // Generic unknown error
+          dispatch('dialog/alert', {
+            type: 'danger',
+            message: i18n.getMessage('sms_import_error_generic'),
+          }, {root: true});
+          throw e;
+        default:
+          throw e;
+        }
+      } else {
+        throw e;
+      }
+    }
+  },
+  async importConfirm({state, getters, dispatch}) {
+    await dispatch('getCount');
+    // Ask user if they want to import messages
+    dispatch('dialog/confirm', {
+      message: i18n.getMessage('sms_import_confirm', getters.simTotal),
+      confirmText: i18n.getMessage('generic_yes'),
+      onConfirm: () => {
+        // If there is space for some but not all messages to be imported, inform user
+        const available = state.localMax - getters.localTotal;
+        const toImport = getters.simTotal;
+        if (available > 0 && toImport > available) {
+          dispatch('dialog/alert', {
+            message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+            type: 'warning',
+            onConfirm: () => {
+              dispatch('import');
+            },
+          }, {root: true});
+        } else {
+          dispatch('import');
+        }
+      },
+    }, {root: true});
   },
 };
 

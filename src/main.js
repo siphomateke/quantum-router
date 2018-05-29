@@ -6,6 +6,7 @@ import {mapState, mapGetters} from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import i18n from '@/browser/i18n.js';
+import {bus} from './events.js';
 
 if (process.env.NODE_ENV !== 'development') {
   devtools.connect();
@@ -17,19 +18,6 @@ Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });
 
-const bus = new Vue();
-/*
-Global events
-
-refresh:basic
-refresh:sms(boxType)
-refresh:notifications
-refresh:graph
-
-mode-change:admin
-mode-change:basic
-mode-change:offline
-*/
 Vue.mixin({
   data: function() {
     return {

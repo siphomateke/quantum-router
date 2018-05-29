@@ -59,8 +59,7 @@ import SmsActions from '@/components/sms/SmsActions.vue';
 import {selectionStates} from '@/components/sms/select';
 import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
-import router from 'huawei-router-api/browser';
-import {mapState, mapGetters, mapActions} from 'vuex';
+import {mapState, mapGetters} from 'vuex';
 import {boxTypes} from '@/store/modules/sms';
 
 export default {
@@ -90,7 +89,6 @@ export default {
         numbers: [],
         content: '',
       },
-      importEnabled: false,
     };
   },
   mounted() {
@@ -109,7 +107,7 @@ export default {
     }
 
     this.bus.$on('sms-actions:new', this.newMessage);
-    this.bus.$on('sms-actions:import', this.importClicked);
+    this.bus.$on('sms-actions:import', this.import);
 
     if (this.$adminMode) {
       this.refreshAdmin();
@@ -120,11 +118,7 @@ export default {
   computed: {
     ...mapState({
       boxes: state => state.sms.boxes,
-      localMax: state => state.sms.local.max,
-    }),
-    ...mapGetters({
-      simTotal: 'sms/simTotal',
-      localTotal: 'sms/localTotal',
+      importEnabled: state => state.sms.importEnabled,
     }),
     boxType() {
       return this.tabs[this.currentTab].boxType;
@@ -155,16 +149,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions({
-      getSmsCount: 'sms/getCount',
-    }),
     changedTab(idx) {
       this.currentTab = idx;
     },
     async refreshAdmin() {
       // TODO: Refresh every once in a while
-      await this.getSmsCount();
-      this.checkImport();
+      await this.$store.dispatch('sms/getCount');
+      this.$store.dispatch('sms/checkImport');
     },
     refresh() {
       if (this.$adminMode) {
@@ -196,77 +187,8 @@ export default {
       this.dialog.content = message.content;
       this.showSmsDialog = true;
     },
-
-    /**
-     * Checks if importing messages from the SIM card is supported on this router
-     */
-    async checkImport() {
-      const smsConfig = await router.config.getSmsConfig();
-      this.importEnabled = smsConfig.import_enabled;
-      return this.importEnabled;
-    },
-    /**
-     * Imports messages from the SIM card
-     */
     async import() {
-      try {
-        const info = await router.sms.importMessages();
-        if (info.successNumber > 0) {
-          this.globalBus.$emit('refresh:sms');
-        }
-        this.$toast.open({
-          type: info.successNumber > 0 && info.failNumber === 0 ? 'is-success' : 'is-dark',
-          message: this.$i18n('sms_import_complete', info.successNumber, info.failNumber),
-        });
-      } catch (e) {
-        if (e instanceof router.errors.RouterError) {
-          switch (e.code) {
-          case 'sms_import_sim_empty':
-            // No messages to import
-            this.$toast.open(this.$i18n('sms_import_complete', 0, 0));
-            break;
-          case 'sms_not_enough_space':
-            this.$store.dispatch('dialog/alert', {
-              type: 'danger',
-              message: this.$i18n('sms_import_error_not_enough_space'),
-            });
-            break;
-          case 'sms_import_invalid_response':
-            // Generic unknown error
-            this.$store.dispatch('dialog/alert', {
-              type: 'danger',
-              message: this.$i18n('sms_import_error_generic'),
-            });
-            throw e;
-          default:
-            throw e;
-          }
-        } else {
-          throw e;
-        }
-      }
-    },
-    async importClicked() {
-      await this.getSmsCount();
-      // Ask user if they want to import messages
-      this.$store.dispatch('dialog/confirm', {
-        message: this.$i18n('sms_import_confirm', this.simTotal),
-        confirmText: this.$i18n('generic_yes'),
-        onConfirm: () => {
-          // If there is space for some but not all messages to be imported, inform user
-          const available = this.localMax - this.localTotal;
-          const toImport = this.simTotal;
-          if (available > 0 && toImport > available) {
-            this.$store.dispatch('dialog/alert', {
-              message: this.$i18n('sms_import_warning_not_enough_space', available, toImport),
-              type: 'warning',
-              onConfirm: this.import,
-            });
-          } else {
-            this.import();
-          }
-        },
-      });
+      this.$store.dispatch('sms/importConfirm');
     },
   },
 };
