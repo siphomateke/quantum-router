@@ -458,30 +458,36 @@ const actions = {
         message: i18n.getMessage('sms_import_complete', info.successNumber, info.failNumber),
       });
     } catch (e) {
-      if (e instanceof router.errors.RouterError) {
-        switch (e.code) {
-        case 'sms_import_sim_empty':
-          // No messages to import
-          Toast.open(i18n.getMessage('sms_import_complete', 0, 0));
-          break;
-        case 'sms_not_enough_space':
-          dispatch('dialog/alert', {
-            type: 'danger',
-            message: i18n.getMessage('sms_import_error_not_enough_space'),
-          }, {root: true});
-          break;
-        case 'sms_import_invalid_response':
-          // Generic unknown error
-          dispatch('dialog/alert', {
-            type: 'danger',
-            message: i18n.getMessage('sms_import_error_generic'),
-          }, {root: true});
-          throw e;
-        default:
+      try {
+        if (e instanceof router.errors.RouterError) {
+          switch (e.code) {
+          case 'sms_import_sim_empty':
+            // No messages to import
+            Toast.open(i18n.getMessage('sms_import_complete', 0, 0));
+            break;
+          case 'sms_not_enough_space':
+            dispatch('dialog/alert', {
+              type: 'danger',
+              message: i18n.getMessage('sms_import_error_not_enough_space'),
+            }, {root: true});
+            break;
+          case 'sms_import_invalid_response':
+            // Generic unknown error
+            dispatch('dialog/alert', {
+              type: 'danger',
+              message: i18n.getMessage('sms_import_error_generic'),
+            }, {root: true});
+            // TODO: Consider if this should bubble to the global event handler.
+            // It may be a bit much having two error messages pop-up
+            throw e;
+          default:
+            throw e;
+          }
+        } else {
           throw e;
         }
-      } else {
-        throw e;
+      } catch (e) {
+        dispatch('handleError', e, {root: true});
       }
     }
   },
