@@ -492,28 +492,32 @@ const actions = {
     }
   },
   async importConfirm({state, getters, dispatch}) {
-    await dispatch('getCount');
-    // Ask user if they want to import messages
-    dispatch('dialog/confirm', {
-      message: i18n.getMessage('sms_import_confirm', getters.simTotal),
-      confirmText: i18n.getMessage('generic_yes'),
-      onConfirm: () => {
-        // If there is space for some but not all messages to be imported, inform user
-        const available = state.localMax - getters.localTotal;
-        const toImport = getters.simTotal;
-        if (available > 0 && toImport > available) {
-          dispatch('dialog/alert', {
-            message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
-            type: 'warning',
-            onConfirm: () => {
-              dispatch('import');
-            },
-          }, {root: true});
-        } else {
-          dispatch('import');
-        }
-      },
-    }, {root: true});
+    try {
+      await dispatch('getCount');
+      // Ask user if they want to import messages
+      dispatch('dialog/confirm', {
+        message: i18n.getMessage('sms_import_confirm', getters.simTotal),
+        confirmText: i18n.getMessage('generic_yes'),
+        onConfirm: () => {
+          // If there is space for some but not all messages to be imported, inform user
+          const available = state.localMax - getters.localTotal;
+          const toImport = getters.simTotal;
+          if (available > 0 && toImport > available) {
+            dispatch('dialog/alert', {
+              message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+              type: 'warning',
+              onConfirm: () => {
+                dispatch('import');
+              },
+            }, {root: true});
+          } else {
+            dispatch('import');
+          }
+        },
+      }, {root: true});
+    } catch (e) {
+      dispatch('handleError', e, {root: true});
+    }
   },
 };
 
