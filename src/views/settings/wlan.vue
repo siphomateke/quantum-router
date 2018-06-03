@@ -3,7 +3,8 @@
   <section class="section">
     <h3 class="title is-3">Basic settings</h3>
     <p class="content">
-      WPS is not available if security mode is set to WEP. If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
+      WPS is not available if security mode is set to WEP.<br>
+      If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
     </p>
     <div class="field">
       <b-switch v-model="settings.basic.moduleEnabled">WLAN module</b-switch>
@@ -77,7 +78,7 @@
       <button class="button is-primary" @click="apply">Apply</button>
     </div>
   </section>
-    </div>
+</div>
 </template>
 
 <script>
@@ -141,7 +142,7 @@ export default {
     },
     apply() {
 
-  },
+    },
   },
 };
 </script>
