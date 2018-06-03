@@ -94,7 +94,8 @@ export default {
   data() {
     return {
       refreshIntervals: {
-        'basic': 3000,
+        graph: 1000,
+        basic: 3000,
       },
     };
   },
@@ -134,7 +135,6 @@ export default {
     this.startRefreshCycle();
 
     this.globalBus.$on('refresh:basic', () => {
-      this.globalBus.$emit('refresh:graph');
       this.globalBus.$emit('refresh:notifications');
       this.globalBus.$emit('refresh:status');
     });
