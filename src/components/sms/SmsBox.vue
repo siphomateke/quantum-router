@@ -103,6 +103,15 @@ export default {
     this.bus.$on('sms-actions:delete', this.deleteMessagesConfirm);
     this.bus.$on('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
+  beforeDestroy() {
+    this.globalBus.$off('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$off('refresh:sms', this.refresh);
+    this.bus.$off('sms-actions:clear-selection', this.clearSelected);
+    this.bus.$off('sms-actions:select-all', this.selectAll);
+    this.bus.$off('sms-actions:select', this.select);
+    this.bus.$off('sms-actions:delete', this.deleteMessagesConfirm);
+    this.bus.$off('sms-actions:mark-as-read', this.markMessagesAsRead);
+  },
   methods: {
     async dispatch(name, payload={}) {
       payload.box = this.boxType;

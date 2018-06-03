@@ -84,6 +84,9 @@ export default {
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
   },
+  beforeDestroy() {
+    this.globalBus.$off('mode-change:admin', this.refreshAdmin);
+  },
   methods: {
     ussdSelectedCommandChanged(command) {
       this.ussd.selectedCommand = command;

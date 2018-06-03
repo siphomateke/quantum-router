@@ -92,7 +92,19 @@ export default {
     },
   },
   mounted() {
-    this.globalBus.$on('refresh:graph', async () => {
+    this.globalBus.$on('refresh:graph', this.graph);
+  },
+  beforeDestroy() {
+    this.globalBus.$off('refresh:graph', this.graph);
+  },
+  filters: {
+    round(num, precision) {
+      const factor = Math.pow(10, precision);
+      return Math.round(num * factor) / factor;
+    },
+  },
+  methods: {
+    async graph() {
       if (!this.offline) {
         const data = await router.monitoring.getTrafficStatistics();
         this.lineChartData = Object.assign({}, this.lineChartData);
@@ -116,12 +128,6 @@ export default {
 
         this.previousUsage = Object.assign({}, this.usage);
       }
-    });
-  },
-  filters: {
-    round(num, precision) {
-      const factor = Math.pow(10, precision);
-      return Math.round(num * factor) / factor;
     },
   },
 };

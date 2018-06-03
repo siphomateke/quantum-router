@@ -62,6 +62,17 @@ import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
 import {mapState, mapGetters} from 'vuex';
 import {boxTypes} from '@/store/modules/sms';
 
+// Redirect these events to the active tab
+const eventsToRedirect = [
+  'sms-actions:clear-selection',
+  'sms-actions:select-all',
+  'sms-actions:select',
+  'sms-actions:delete',
+  'sms-actions:mark-as-read',
+];
+
+const callbacks = {};
+
 export default {
   components: {
     SmsActions,
@@ -92,18 +103,11 @@ export default {
     };
   },
   mounted() {
-    // Redirect these events to the active tab
-    const eventsToRedirect = [
-      'sms-actions:clear-selection',
-      'sms-actions:select-all',
-      'sms-actions:select',
-      'sms-actions:delete',
-      'sms-actions:mark-as-read',
-    ];
     for (const event of eventsToRedirect) {
-      this.bus.$on(event, data => {
+      callbacks[event] = data => {
         this.currentBus.$emit(event, data);
-      });
+      };
+      this.bus.$on(event, callbacks[event]);
     }
 
     this.bus.$on('sms-actions:new', this.newMessage);
@@ -114,6 +118,15 @@ export default {
     }
     this.globalBus.$on('mode-change:admin', this.refreshAdmin);
     this.globalBus.$on('refresh:sms', this.refresh);
+  },
+  beforeDestroy() {
+    for (const event of eventsToRedirect) {
+      this.bus.$off(event, callbacks[event]);
+    }
+    this.bus.$off('sms-actions:new', this.newMessage);
+    this.bus.$off('sms-actions:import', this.import);
+    this.globalBus.$off('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$off('refresh:sms', this.refresh);
   },
   computed: {
     ...mapState({
