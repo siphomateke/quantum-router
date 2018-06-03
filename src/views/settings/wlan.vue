@@ -3,7 +3,8 @@
   <section class="section">
     <h3 class="title is-3">Basic settings</h3>
     <p class="content">
-      WPS is not available if security mode is set to WEP. If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
+      WPS is not available if security mode is set to WEP.<br>
+      If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
     </p>
     <div class="field">
       <b-switch v-model="settings.basic.moduleEnabled">WLAN module</b-switch>
@@ -72,14 +73,22 @@
       </div>
     </div>
   </section>
+  <section class="section">
+    <div class="control">
+      <button class="button is-primary" @click="apply">Apply</button>
+    </div>
+  </section>
 </div>
 </template>
 
 <script>
 import Select from '@/components/form/Select';
-import {mapActions} from 'vuex';
+
 export default {
   name: 'SettingsWlan',
+  components: {
+    'q-select': Select,
+  },
   data() {
     return {
       editMode: false,
@@ -94,8 +103,8 @@ export default {
           ],
         },
         advanced: {
-          channel: 'auto',
-          wifiBandwidth: 'auto',
+          channel: '0',
+          wifiBandwidth: '0',
         },
       },
       options: {
@@ -104,34 +113,36 @@ export default {
         ]}},
         advanced: {
           channel: [
-            {label: 'Auto', value: 'auto'},
-            {label: 'Manual', value: 'manual'},
+            {label: 'Auto', value: '0'},
+            {label: '1', value: '1'},
+            {label: '2', value: '2'},
+            {label: '3', value: '3'},
+            {label: '4', value: '4'},
+            {label: '5', value: '5'},
+            {label: '6', value: '6'},
+            {label: '7', value: '7'},
+            {label: '8', value: '8'},
+            {label: '9', value: '9'},
+            {label: '10', value: '10'},
+            {label: '11', value: '11'},
+            {label: '12', value: '12'},
+            {label: '13', value: '13'},
           ],
           wifiBandwidth: [
-            {label: 'Auto (default)', value: 'auto'},
-            {label: 'Other', value: 'other'},
+            {label: 'Auto (default)', value: '0'},
+            {label: '20MHz', value: '20'},
           ],
         },
       },
     };
   },
-  mounted() {
-    // FIXME: Make this work
-    this.setSetting({
-      domain: 'wlan',
-      data: this.settings,
-    });
-  },
   methods: {
-    ...mapActions('settings', {
-      setSetting: 'set',
-    }),
     getStatusString: status => {
       return status ? 'On' : 'Off';
     },
-  },
-  components: {
-    'q-select': Select,
+    apply() {
+
+    },
   },
 };
 </script>

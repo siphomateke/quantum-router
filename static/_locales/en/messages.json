@@ -37,6 +37,7 @@
   "notifications_tooltip": {"message": "Notifications"},
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
+  "mobile_data_tooltip": {"message": "Mobile data status"},
 
   "router_module_error_api_login_username_wrong": {
     "message": "Incorrect username."
@@ -323,5 +324,9 @@
   "validation_tag_input_number": {
     "message": "Please only enter numbers.",
     "description": "Error message shown when a non-number is inputted in a tag input where only numbers are allowed."
+  },
+
+  "settings_admin_only": {
+    "message": "You must be in administrator mode to change settings."
   }
 }
