@@ -72,6 +72,11 @@
       </div>
     </div>
   </section>
+  <section class="section">
+    <div class="control">
+      <button class="button is-primary" @click="apply">Apply</button>
+    </div>
+  </section>
     </div>
 </template>
 
@@ -134,6 +139,8 @@ export default {
     getStatusString: status => {
       return status ? 'On' : 'Off';
     },
+    apply() {
+
   },
   },
 };
