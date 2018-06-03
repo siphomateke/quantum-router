@@ -72,14 +72,17 @@
       </div>
     </div>
   </section>
-</div>
+    </div>
 </template>
 
 <script>
 import Select from '@/components/form/Select';
-import {mapActions} from 'vuex';
+
 export default {
   name: 'SettingsWlan',
+  components: {
+    'q-select': Select,
+  },
   data() {
     return {
       editMode: false,
@@ -127,23 +130,11 @@ export default {
       },
     };
   },
-  mounted() {
-    // FIXME: Make this work
-    this.setSetting({
-      domain: 'wlan',
-      data: this.settings,
-    });
-  },
   methods: {
-    ...mapActions('settings', {
-      setSetting: 'set',
-    }),
     getStatusString: status => {
       return status ? 'On' : 'Off';
     },
   },
-  components: {
-    'q-select': Select,
   },
 };
 </script>
