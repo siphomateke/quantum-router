@@ -37,6 +37,7 @@
   "notifications_tooltip": {"message": "Notifications"},
   "notifications_title":{"message": "Notifications"},
   "notifications_empty":{"message": "No notifications"},
+  "mobile_data_tooltip": {"message": "Mobile data status"},
 
   "router_module_error_api_login_username_wrong": {
     "message": "Incorrect username."

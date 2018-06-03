@@ -54,7 +54,7 @@
                 </b-dropdown-item>
               </template>
             </q-toolbar-item>
-            <q-toolbar-item icon="plug"></q-toolbar-item>
+            <q-toolbar-item :title="$i18n('mobile_data_tooltip')" icon="plug" :is-active="mobileDataState"></q-toolbar-item>
             <q-toolbar-item icon="wifi"></q-toolbar-item>
           </template>
         </q-toolbar>
@@ -94,7 +94,7 @@ export default {
   data() {
     return {
       refreshIntervals: {
-        'basic': 1000,
+        'basic': 3000,
       },
     };
   },
@@ -104,6 +104,7 @@ export default {
       allNotifications: state => state.notifications.all,
       boxes: state => state.sms.boxes,
       gettingSmsList: state => state.gettingSmsList,
+      mobileDataState: state => state.settings.dialup.mobileData,
     }),
     ...mapGetters({
       modeName: 'modeName',
@@ -135,9 +136,14 @@ export default {
     this.globalBus.$on('refresh:basic', () => {
       this.globalBus.$emit('refresh:graph');
       this.globalBus.$emit('refresh:notifications');
+      this.globalBus.$emit('refresh:status');
     });
 
     this.tryChangeMode(modes.ADMIN);
+
+    this.globalBus.$on('refresh:status', async () => {
+      this.$store.dispatch('settings/refreshStatus');
+    });
 
     this.globalBus.$on('refresh:notifications', async () => {
       if (this.$adminMode) {
