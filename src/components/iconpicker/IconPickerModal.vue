@@ -19,6 +19,7 @@
       :key="iconPack.id"
       :label="iconPack.name">
       <button
+        type="button"
         class="button is-white"
         v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
         :key="icon.id"
@@ -35,7 +36,7 @@
 <script>
 // FIXME: tab change animation lag
 // TODO: Only show tabs if there is more than one iconPack
-// TODO: Don't remake modal everytime it's opened
+// TODO: Don't remake modal everytime it's opened, use a global instance
 export default {
   name: 'q-icon-picker-modal',
   props: {

@@ -41,11 +41,11 @@
         @blur="validate">
       </b-input>
       <p class="control">
-        <button class="button" @click="open">{{ pickerButtonText }}</button>
+        <button type="button" class="button" @click="open">{{ pickerButtonText }}</button>
       </p>
     </b-field>
     <template v-else>
-      <button class="button" @click="open">
+      <button type="button" class="button" @click="open">
         <b-icon
           :pack="iconPackId"
           :icon="iconId"
