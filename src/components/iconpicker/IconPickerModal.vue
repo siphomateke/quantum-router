@@ -13,24 +13,22 @@
       </b-input>
     </b-field>
   </header>
-  <section class="modal-card-body paddingless">
-    <b-tabs v-model="activeTab">
-      <b-tab-item
-        v-for="iconPack in iconPacks"
-        :key="iconPack.id"
-        :label="iconPack.name">
-        <button
-          class="button is-white"
-          v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
-          :key="icon.id"
-          :class="{'is-primary': icon.id === value}"
-          @click="() => select(icon.id, iconPack.id, icon.name)"
-          :title="icon.name">
-          <b-icon :icon="icon.id"></b-icon>
-        </button>
-      </b-tab-item>
-    </b-tabs>
-  </section>
+  <b-tabs v-model="activeTab" class="modal-card-tabs">
+    <b-tab-item
+      v-for="iconPack in iconPacks"
+      :key="iconPack.id"
+      :label="iconPack.name">
+      <button
+        class="button is-white"
+        v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
+        :key="icon.id"
+        :class="{'is-primary': icon.id === value}"
+        @click="() => select(icon.id, iconPack.id, icon.name)"
+        :title="icon.name">
+        <b-icon :icon="icon.id"></b-icon>
+      </button>
+    </b-tab-item>
+  </b-tabs>
 </div>
 </template>
 
@@ -97,10 +95,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  @import '~styles/vars.scss';
+<style lang="scss">
+  .modal-card-tabs.b-tabs {
+    background-color: white;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
 
-  .modal-card-body.paddingless {
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    .tab-content {
+      overflow: auto;
+    }
   }
 </style>
