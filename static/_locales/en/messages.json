@@ -328,5 +328,14 @@
 
   "settings_admin_only": {
     "message": "You must be in administrator mode to change settings."
+  },
+
+  "icon_picker_button": {
+    "message": "Choose",
+    "description": "Text on the button for opening icon pickers"
+  },
+  "icon_picker_title": {
+    "message": "Choose an icon",
+    "description": "Title for the icon picker modal"
   }
 }
