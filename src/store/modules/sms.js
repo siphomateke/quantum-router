@@ -270,9 +270,8 @@ const actions = {
     commit(types.ADD_MESSAGE, message);
     commit(types.ADD_MESSAGE_TO_BOX, {box, page, id: message.id});
   },
-  async getMessages({state, commit, dispatch}, {box}) {
+  async getMessages({state, commit, dispatch}, {box, page}) {
     const boxItem = state.boxes[box];
-    const page = boxItem.page;
     // Only get new messages if current page hasn't been retrieved before
     if (!(page in boxItem.messages)) {
       commit(types.SET_LOADING, {box, value: true});
@@ -325,23 +324,38 @@ const actions = {
       commit(types.CLEAR_SELECTED, {box});
     }
   },
+  async getCurrentPageMessages({state, dispatch}, {box}) {
+    await dispatch('getMessages', {box, page: state.boxes[box].page});
+  },
+  getAllMessages({commit, dispatch}, {box}) {
+    return new Promise((resolve, reject) => {
+      commit(types.RESET_MESSAGES, {box});
+      const boxObj = state.boxes[box];
+      const pages = Math.round(boxObj.count / boxObj.perPage);
+      const promises = [];
+      for (let i=0; i<pages; i++) {
+        promises.push(dispatch('getMessages', {box, page: i}));
+      }
+      Promise.all(promises).then(resolve, reject);
+    });
+  },
   refresh({commit, dispatch}, {box}) {
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getMessages', {box});
+    dispatch('getCurrentPageMessages', {box});
   },
   setPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PAGE, {box, value});
-    dispatch('getMessages', {box});
+    dispatch('getCurrentPageMessages', {box});
   },
   setSortOrder({state, commit, dispatch}, {box, value}) {
     commit(types.SET_SORT_ORDER, {box, value});
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getMessages', {box});
+    dispatch('getCurrentPageMessages', {box});
   },
   setPerPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PER_PAGE, {box, value});
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getMessages', {box});
+    dispatch('getCurrentPageMessages', {box});
   },
   addToSelected({commit}, payload) {
     commit(types.ADD_TO_SELECTED, payload);
