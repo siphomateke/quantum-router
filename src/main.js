@@ -25,14 +25,10 @@ Vue.mixin({
     };
   },
   methods: {
-    $i18n: function(key, ...args) {
-      return i18n.getMessage(key, args);
-    },
+    $i18n: i18n.getMessage,
   },
   filters: {
-    $i18n: function(key) {
-      return i18n.getMessage(key);
-    },
+    $i18n: i18n.getMessage,
   },
   computed: {
     ...mapState({
