@@ -385,11 +385,12 @@ const actions = {
   openSmsActionDialog({state, getters}, {props, events}) {
     const defaultProps = {
       list: [],
-      type: 'is-warning',
+      type: 'warning',
       hasIcon: true,
     };
     props = Object.assign(defaultProps, props);
     props.list = getters.actualMessages(props.messages);
+    props.type = 'is-'+props.type;
     ModalProgrammatic.open({
       component: SmsActionDialog,
       props: props,
@@ -480,7 +481,7 @@ const actions = {
     dispatch('openSmsActionDialog', {
       props: {
         messages: messages,
-        type: 'is-danger',
+        type: 'danger',
         confirmButton: i18n.getMessage('sms_action_delete'),
         confirmMessage: i18n.getMessage('sms_delete_confirm', messages.length),
       },
@@ -557,7 +558,7 @@ const actions = {
       dispatch('openSmsActionDialog', {
         props: {
           messages: messages,
-          type: 'is-warning',
+            type: 'warning',
           confirmButton: i18n.getMessage('generic_yes'),
           confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
         },
