@@ -565,7 +565,7 @@ const actions = {
         events: {
           confirm: () => {
             // If there is space for some but not all messages to be imported, inform user
-            const available = state.localMax - getters.localTotal;
+              const available = state.local.max - getters.localTotal;
             const toImport = getters.simTotal;
             if (available > 0 && toImport > available) {
               dispatch('dialog/alert', {
