@@ -278,7 +278,7 @@ const actions = {
       // NOTE: This sometimes doesn't work possibly due to Vue being slow to commit;
       // dispatch is sometimes run twice in less than smsCountTimeout milliseconds
       commit(types.SET_COUNT_LAST_UPDATED, now);
-      dispatch('getCount');
+      await dispatch('getCount');
     }
   },
   addMessage({commit}, {box, page, message}) {
@@ -354,23 +354,23 @@ const actions = {
       Promise.all(promises).then(resolve, reject);
     });
   },
-  refresh({commit, dispatch}, {box}) {
+  async refresh({commit, dispatch}, {box}) {
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getCurrentPageMessages', {box});
+    await dispatch('getCurrentPageMessages', {box});
   },
-  setPage({commit, dispatch}, {box, value}) {
+  async setPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PAGE, {box, value});
-    dispatch('getCurrentPageMessages', {box});
+    await dispatch('getCurrentPageMessages', {box});
   },
-  setSortOrder({state, commit, dispatch}, {box, value}) {
+  async setSortOrder({state, commit, dispatch}, {box, value}) {
     commit(types.SET_SORT_ORDER, {box, value});
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getCurrentPageMessages', {box});
+    await dispatch('getCurrentPageMessages', {box});
   },
-  setPerPage({commit, dispatch}, {box, value}) {
+  async setPerPage({commit, dispatch}, {box, value}) {
     commit(types.SET_PER_PAGE, {box, value});
     commit(types.RESET_MESSAGES, {box});
-    dispatch('getCurrentPageMessages', {box});
+    await dispatch('getCurrentPageMessages', {box});
   },
   addToSelected({commit}, payload) {
     commit(types.ADD_TO_SELECTED, payload);
@@ -399,7 +399,7 @@ const actions = {
       events: events,
     });
   },
-  markMessagesAsRead({state, getters, commit, dispatch}, {box, ids}) {
+  async markMessagesAsRead({state, getters, commit, dispatch}, {box, ids}) {
     const promises = [];
     let successful = 0;
     if (getters.isInbox(box)) {
@@ -413,12 +413,13 @@ const actions = {
         }
       }
     }
-    Promise.all(promises).then(() => {
+    try {
+      await Promise.all(promises);
       Toast.open({
         message: 'Marked '+successful+' message(s) as read',
         type: 'is-success',
       });
-    }).catch(e => {
+    } catch (e) {
       dispatch('handleError', e);
       if (successful > 0) {
         Toast.open({
@@ -433,10 +434,10 @@ const actions = {
           type: 'is-danger',
         });
       }
-    });
+    }
   },
-  markSelectedMessagesAsRead({state, dispatch}, {box}) {
-    dispatch('markMessagesAsRead', {box, ids: state.boxes[box].selected});
+  async markSelectedMessagesAsRead({state, dispatch}, {box}) {
+    await dispatch('markMessagesAsRead', {box, ids: state.boxes[box].selected});
   },
   select({commit, dispatch}, {box, selector}) {
     commit(types.CLEAR_SELECTED, {box});
