@@ -206,8 +206,9 @@
     }
   },
   "sms_mark_read_error": {"message": "Error marking messages as read."},
-  "sms_delete_confirm_hide_messages": {"message": "Hide messages"},
-  "sms_delete_confirm_show_messages": {"message": "Show messages"},
+  "sms_action_dialog_hide_messages": {"message": "Hide messages"},
+  "sms_action_dialog_show_messages": {"message": "Show messages"},
+  "sms_action_dialog_confirm_text": {"message": "OK"},
   "sms_delete_confirm": {
     "message": "Are you sure you want to delete $COUNT$ message(s)?",
     "placeholders": {

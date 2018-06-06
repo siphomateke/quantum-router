@@ -142,23 +142,8 @@ export default {
     onSort(order) {
       this.dispatch('sms/setSortOrder', {value: order});
     },
-    async deleteMessages() {
-      await this.dispatch('sms/deleteSelectedMessages');
-      this.globalBus.$emit('refresh:sms');
-    },
     deleteMessagesConfirm() {
-      // TODO: Consider moving to Vuex
-      const self = this;
-      this.$modal.open({
-        parent: this,
-        component: DeleteSmsDialog,
-        props: {
-          list: this.checkedRows,
-        },
-        events: {
-          confirm: self.deleteMessages,
-        },
-      });
+      this.dispatch('sms/deleteSelectedMessagesConfirm');
     },
     markMessagesAsRead() {
       this.dispatch('sms/markSelectedMessagesAsRead');

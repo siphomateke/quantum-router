@@ -1,8 +1,9 @@
 import Vue from 'vue';
-import {Toast} from 'buefy';
+import {Toast, ModalProgrammatic} from 'buefy';
 import router from 'huawei-router-api/browser';
 import i18n from '@/browser/i18n.js';
 import {bus} from '@/events';
+import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
 
 const routerBoxTypes = router.sms.boxTypes;
 
@@ -372,6 +373,20 @@ const actions = {
   clearSelected({commit}, payload) {
     commit(types.CLEAR_SELECTED, payload);
   },
+  openSmsActionDialog({state, getters}, {props, events}) {
+    const defaultProps = {
+      list: [],
+      type: 'is-warning',
+      hasIcon: true,
+    };
+    props = Object.assign(defaultProps, props);
+    props.list = getters.actualMessages(props.messages);
+    ModalProgrammatic.open({
+      component: SmsActionDialog,
+      props: props,
+      events: events,
+    });
+  },
   markMessagesAsRead({state, getters, commit, dispatch}, {box, ids}) {
     const promises = [];
     let successful = 0;
@@ -446,9 +461,24 @@ const actions = {
     await router.sms.deleteSms(ids);
     // TODO: delete sms loading indicator
     commit(types.CLEAR_SELECTED, {box});
+    bus.$emit('refresh:sms');
   },
   async deleteSelectedMessages({state, dispatch}, {box}) {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
+  },
+  deleteSelectedMessagesConfirm({state, getters, dispatch}, {box}) {
+    const messages = state.boxes[box].selected;
+    dispatch('openSmsActionDialog', {
+      props: {
+        messages: messages,
+        type: 'is-danger',
+        confirmButton: i18n.getMessage('sms_action_delete'),
+        confirmMessage: i18n.getMessage('sms_delete_confirm', messages.length),
+      },
+      events: {
+        confirm: () => dispatch('deleteSelectedMessages', {box}),
+      },
+    });
   },
   setGettingSmsList({commit}, value) {
     commit(types.SET_GETTING_SMS_LIST, value);

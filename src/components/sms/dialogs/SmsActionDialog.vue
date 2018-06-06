@@ -1,16 +1,17 @@
 <template>
   <q-dialog
-    type="is-danger"
-    :has-icon="true"
-    :confirm-text="$i18n('sms_action_delete')"
+    v-bind="$attrs"
+    :confirm-text="confirmButton"
     @confirm="confirm"
     @cancel="cancel">
-    <p>{{ $i18n('sms_delete_confirm', list.length) }}</p>
+    <slot name="base">
+      <p><slot>{{ confirmMessage }}</slot></p>
+    </slot>
     <template slot="extra">
       <b-collapse class="card" :open="false">
         <div class="card-header" slot="trigger" slot-scope="props">
             <p class="card-header-title">
-              {{ $i18n(props.open ? 'sms_delete_confirm_hide_messages' : 'sms_delete_confirm_show_messages') }}
+              {{ $i18n(props.open ? 'sms_action_dialog_hide_messages' : 'sms_action_dialog_show_messages') }}
             </p>
             <a class="card-header-icon">
                 <b-icon
@@ -31,15 +32,22 @@
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
 import Dialog from '@/components/dialogs/Dialog.vue';
+import i18n from '@/browser/i18n';
 
 export default {
-  name: 'q-delete-sms-dialog',
+  name: 'q-sms-action-dialog',
+  inheritAttrs: false,
   components: {
     SmsList,
     [Dialog.name]: Dialog,
   },
   props: {
     list: Array,
+    confirmButton: {
+      type: String,
+      default: i18n.getMessage('sms_action_dialog_confirm_text'),
+    },
+    confirmMessage: String,
   },
   methods: {
     confirm() {
