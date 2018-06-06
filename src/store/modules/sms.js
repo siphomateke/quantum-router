@@ -555,7 +555,15 @@ const actions = {
   async importConfirm({state, getters, dispatch}) {
     try {
       await dispatch('getCount');
-      // Ask user if they want to import messages
+
+      if (getters.localFull) {
+        // This shouldn't happen since the import button gets disabled
+        // when the local box is full
+        dispatch('dialog/alert', {
+          message: i18n.getMessage('sms_import_error_not_enough_space'),
+          type: 'warning',
+        }, {root: true});
+      } else {
       await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
       const messages = getters.allMessages(boxTypes.SIM_INBOX);
       dispatch('openSmsActionDialog', {
@@ -584,6 +592,7 @@ const actions = {
           },
         },
       });
+      }
     } catch (e) {
       dispatch('handleError', e, {root: true});
     }

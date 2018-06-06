@@ -276,6 +276,11 @@
   "sms_types_depleted": {"message": "Depleted"},
   "sms_types_ad": {"message": "Advert"},
 
+  "sms_box_full": {
+    "message": "Your message box is full. To receive new messages, delete some existing ones.",
+    "description": "Shown to the user when their message box is full."
+  },
+
   "sms_read": {"message": "Read", "description": "Show when an sms message has been read"},
   "sms_unread": {"message": "Unread", "description": "Show when an sms message has not been read"},
 

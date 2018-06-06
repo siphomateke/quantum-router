@@ -11,10 +11,20 @@
           :disabled="{
             'delete': selected.length === 0,
             'markAsRead': selected.length === 0,
-            'import': !importEnabled,
+            'new': localFull,
+            'import': !importEnabled || localFull,
           }"
           :selection-state="selectionState">
         </sms-actions>
+      </div>
+      <div class="message-wrapper">
+        <b-message
+          v-if="localFull"
+          type="is-info"
+          has-icon
+          icon-size="small">
+          {{ 'sms_box_full' | $i18n }}
+        </b-message>
       </div>
       <b-tabs type="is-boxed" expanded @change="changedTab">
         <b-tab-item
@@ -133,6 +143,9 @@ export default {
       boxes: state => state.sms.boxes,
       importEnabled: state => state.sms.importEnabled,
     }),
+    ...mapGetters({
+      localFull: 'sms/localFull',
+    }),
     boxType() {
       return this.tabs[this.currentTab].boxType;
     },
@@ -211,5 +224,9 @@ export default {
 <style lang="scss" scoped>
   .sms-action-wrapper{
     padding: 1rem;
+  }
+  .message-wrapper {
+    padding: 1rem;
+    padding-top: 0;
   }
 </style>
