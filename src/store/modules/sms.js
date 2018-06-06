@@ -65,27 +65,27 @@ const mapBoxTypeToRouterBoxType = {
   [boxTypes.SIM_DRAFT]: routerBoxTypes.SIM_DRAFT,
 };
 
+    /**
+ * @typedef Box
+ * @property {Object.<string, number[]>} messages Object containing page numbers as keys and arrays of message IDs as values
+ * @property {number[]} selected Array of selected messages IDs
+ * @property {number} count Total number of messages in this box
+ * @property {boolean} loading
+ * @property {number} page The current page
+ * @property {('desc'|'asc')} sortOrder The direction messages should be sorted in (ascending or descending)
+ * @property {number} perPage
+     */
+
+    /**
+ * @return {Box}
+     */
 function generateBox() {
   return {
-    /**
-     * Object containing page numbers as keys and arrays of message IDs as values
-     * @type {Object.<string, number[]>}
-     */
     messages: {},
-    /**
-     * Array of selected messages IDs
-     * @type {number[]}
-     */
     selected: [],
-    /** Total number of messages in this box */
     count: 0,
     loading: false,
-    /** The current page */
     page: 1,
-    /**
-     * The direction messages should be sorted in (ascending or descending)
-     * @type {('desc'|'asc')}
-     */
     sortOrder: 'desc',
     perPage: 20,
   };
@@ -109,6 +109,7 @@ const state = {
     ],
     max: null,
   },
+  /** @type {Object.<string, Box>} */
   boxes: {},
   messages: {},
   countLastUpdated: null,
