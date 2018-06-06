@@ -348,7 +348,7 @@ const actions = {
       const boxObj = state.boxes[box];
       const pages = Math.round(boxObj.count / boxObj.perPage);
       const promises = [];
-      for (let i=0; i<pages; i++) {
+    for (let i=1; i<pages; i++) {
         promises.push(dispatch('getMessages', {box, page: i}));
       }
       Promise.all(promises).then(resolve, reject);
