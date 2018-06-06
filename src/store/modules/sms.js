@@ -66,7 +66,7 @@ const mapBoxTypeToRouterBoxType = {
   [boxTypes.SIM_DRAFT]: routerBoxTypes.SIM_DRAFT,
 };
 
-    /**
+/**
  * @typedef Box
  * @property {Object.<string, number[]>} messages Object containing page numbers as keys and arrays of message IDs as values
  * @property {number[]} selected Array of selected messages IDs
@@ -75,11 +75,11 @@ const mapBoxTypeToRouterBoxType = {
  * @property {number} page The current page
  * @property {('desc'|'asc')} sortOrder The direction messages should be sorted in (ascending or descending)
  * @property {number} perPage
-     */
+ */
 
-    /**
+/**
  * @return {Box}
-     */
+ */
 function generateBox() {
   return {
     messages: {},
@@ -155,6 +155,14 @@ const getters = {
   },
   actualMessages: state => ids => {
     return ids.map(id => state.messages[id]);
+  },
+  allMessages: state => box => {
+    let messages = [];
+    const boxPages = state.boxes[box].messages;
+    for (const page of Object.keys(boxPages)) {
+      messages = messages.concat(boxPages[page]);
+    }
+    return messages;
   },
   isInbox: state => box => {
     return box === boxTypes.LOCAL_INBOX;
@@ -255,6 +263,7 @@ const actions = {
     }
   },
   async getCount({dispatch}) {
+    // TODO: Separate count loading from message loading
     dispatch('setAllLoading', true);
     const count = await router.sms.getSmsCount();
     dispatch('setCount', count);
@@ -543,26 +552,34 @@ const actions = {
     try {
       await dispatch('getCount');
       // Ask user if they want to import messages
-      dispatch('dialog/confirm', {
-        message: i18n.getMessage('sms_import_confirm', getters.simTotal),
-        confirmText: i18n.getMessage('generic_yes'),
-        onConfirm: () => {
-          // If there is space for some but not all messages to be imported, inform user
-          const available = state.localMax - getters.localTotal;
-          const toImport = getters.simTotal;
-          if (available > 0 && toImport > available) {
-            dispatch('dialog/alert', {
-              message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
-              type: 'warning',
-              onConfirm: () => {
-                dispatch('import');
-              },
-            }, {root: true});
-          } else {
-            dispatch('import');
-          }
+      await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
+      const messages = getters.allMessages(boxTypes.SIM_INBOX);
+      dispatch('openSmsActionDialog', {
+        props: {
+          messages: messages,
+          type: 'is-warning',
+          confirmButton: i18n.getMessage('generic_yes'),
+          confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
         },
-      }, {root: true});
+        events: {
+          confirm: () => {
+            // If there is space for some but not all messages to be imported, inform user
+            const available = state.localMax - getters.localTotal;
+            const toImport = getters.simTotal;
+            if (available > 0 && toImport > available) {
+              dispatch('dialog/alert', {
+                message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+                type: 'warning',
+                onConfirm: () => {
+                  dispatch('import');
+                },
+              }, {root: true});
+            } else {
+              dispatch('import');
+            }
+          },
+        },
+      });
     } catch (e) {
       dispatch('handleError', e, {root: true});
     }
