@@ -326,6 +326,10 @@
     "message": "Please only enter numbers.",
     "description": "Error message shown when a non-number is inputted in a tag input where only numbers are allowed."
   },
+  "validation_tag_input_required":{
+    "message": "Please fill in this field.",
+    "description": "Error message shown when a tag input is required and was left blank."
+  },
 
   "settings_admin_only": {
     "message": "You must be in administrator mode to change settings."

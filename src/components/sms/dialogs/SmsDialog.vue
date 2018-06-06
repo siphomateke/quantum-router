@@ -21,6 +21,7 @@
       :label="this.$i18n('sms_dialog_field_content')"
       :addons="false">
       <b-input
+        ref="content"
         type="textarea"
         v-model="internalContent"
         :maxlength="sms7bitMaxSize"
@@ -121,6 +122,11 @@ export default {
   },
   methods: {
     validateNumbers() {
+      if (this.internalNumbers.length === 0) {
+        this.fields.numbers.type = 'is-danger';
+        this.fields.numbers.message = this.$i18n('validation_tag_input_required');
+        return false;
+      }
       let valid = true;
       for (const number of this.internalNumbers) {
         if (isNaN(number)) {
@@ -137,7 +143,9 @@ export default {
       return valid;
     },
     isValid() {
-      return this.$refs.form.checkValidity() && this.validateNumbers();
+      return this.$refs.form.checkValidity() &&
+        this.$refs.content.checkHtml5Validity() &&
+        this.validateNumbers();
     },
     // TODO: Show send and save status, and allow cancelling. Requires task runner to be implemented
     async send() {
