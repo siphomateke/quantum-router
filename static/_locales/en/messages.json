@@ -281,8 +281,8 @@
     "description": "Shown to the user when their message box is full."
   },
 
-  "sms_read": {"message": "Read", "description": "Show when an sms message has been read"},
-  "sms_unread": {"message": "Unread", "description": "Show when an sms message has not been read"},
+  "sms_read": {"message": "Read", "description": "Shown when an sms message has been read"},
+  "sms_unread": {"message": "Unread", "description": "Shown when an sms message has not been read"},
 
   "services_ussd_command" : {
     "message": "USSD Command"
