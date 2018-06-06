@@ -579,9 +579,11 @@ const actions = {
               const available = state.local.max - getters.localTotal;
             const toImport = getters.simTotal;
               if (!getters.localFull && toImport > available) {
-              dispatch('dialog/alert', {
+                dispatch('dialog/confirm', {
                 message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
                 type: 'warning',
+                  confirmText: i18n.getMessage('generic_yes'),
+                  cancelText: i18n.getMessage('generic_no'),
                 onConfirm: () => {
                   dispatch('import');
                 },

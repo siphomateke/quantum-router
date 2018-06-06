@@ -228,7 +228,7 @@
     }
   },
   "sms_import_warning_not_enough_space": {
-    "message": "Only $AVAILABLE$ message(s) out of $COUNT$ will be imported due to lack of space.",
+    "message": "There is only enough space to import $AVAILABLE$ message(s) out of $COUNT$. Would you like to import anyways?",
     "placeholders": {
       "available": {
         "content": "$1",
