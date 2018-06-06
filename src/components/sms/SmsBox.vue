@@ -29,8 +29,7 @@
 import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
 import {boxTypes} from '@/store/modules/sms';
-import {mapState} from 'vuex';
-import DeleteSmsDialog from '@/components/sms/dialogs/DeleteSmsDialog.vue';
+import {mapState, mapGetters} from 'vuex';
 
 export default {
   name: 'sms-box',
@@ -50,6 +49,9 @@ export default {
     ...mapState({
       boxes: state => state.sms.boxes,
       allMessages: state => state.sms.messages,
+    }),
+    ...mapGetters({
+      getActualMessages: 'sms/actualMessages',
     }),
     box() {
       return this.boxes[this.boxType];
@@ -71,7 +73,7 @@ export default {
     },
     messages() {
       if (this.page in this.box.messages) {
-        return this.box.messages[this.page].map(id => this.allMessages[id]);
+        return this.getActualMessages(this.box.messages[this.page]);
       }
       return [];
     },
@@ -79,7 +81,7 @@ export default {
       return this.box.selected;
     },
     checkedRows() {
-      return this.selected.map(id => this.allMessages[id]);
+      return this.getActualMessages(this.selected);
     },
     isInbox() {
       return this.boxType === boxTypes.LOCAL_INBOX;

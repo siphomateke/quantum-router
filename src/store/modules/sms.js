@@ -152,6 +152,9 @@ const getters = {
     const boxItem = state.boxes[box];
     return boxItem.messages[boxItem.page];
   },
+  actualMessages: state => ids => {
+    return ids.map(id => state.messages[id]);
+  },
   isInbox: state => box => {
     return box === boxTypes.LOCAL_INBOX;
   },
