@@ -584,6 +584,31 @@ const actions = {
       dispatch('handleError', e, {root: true});
     }
   },
+  // TODO: Show send and save status, and allow cancelling. Requires task runner to be implemented
+  // TODO: Test send
+  async send({dispatch}, data) {
+    try {
+      await router.sms.sendSms(data);
+    } catch (e) {
+      dispatch('handleError', e, {root: true});
+    }
+    bus.$emit('refresh:sms', boxTypes.LOCAL_DRAFT);
+  },
+  async save({dispatch}, data) {
+    try {
+      await router.sms.saveSms(data);
+    } catch (e) {
+      if (e instanceof router.errors.RouterError && e.code === 'api_sms_not_enough_space') {
+        dispatch('dialog/alert', {
+          type: 'danger',
+          message: i18n.getMessage('sms_save_not_enough_space'),
+        }, {root: true});
+      } else {
+        dispatch('handleError', e, {root: true});
+      }
+    }
+    bus.$emit('refresh:sms', boxTypes.LOCAL_DRAFT);
+  },
 };
 
 export default {

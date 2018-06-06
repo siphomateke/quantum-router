@@ -147,26 +147,21 @@ export default {
         this.$refs.content.checkHtml5Validity() &&
         this.validateNumbers();
     },
-    // TODO: Show send and save status, and allow cancelling. Requires task runner to be implemented
     async send() {
       if (this.isValid()) {
-        // TODO: Handle errors
-        await router.sms.sendSms({
+        this.$emit('send', {
           numbers: this.numbers,
           content: this.content,
         });
-        this.$emit('send');
       }
     },
     async save() {
       if (this.isValid()) {
-        // TODO: Handle errors
-        await router.sms.saveSms({
+        this.$emit('save', {
           index: this.id,
           numbers: this.numbers,
           content: this.content,
         });
-        this.$emit('save');
       }
     },
     cancel() {

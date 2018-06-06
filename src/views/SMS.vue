@@ -180,15 +180,16 @@ export default {
     smsDialogClose() {
       this.$refs['smsDialogModal'].close();
     },
-    smsDialogSave() {
-      this.globalBus.$emit('refresh:sms', boxTypes.LOCAL_DRAFT);
+    async smsDialogSave(data) {
+      await this.$store.dispatch('sms/save', data);
       this.smsDialogClose();
     },
-    smsDialogSend() {
-      this.globalBus.$emit('refresh:sms', boxTypes.LOCAL_DRAFT);
+    async smsDialogSend(data) {
+      await this.$store.dispatch('sms/send', data);
       this.smsDialogClose();
     },
     newMessage() {
+      // TODO: Only allow if there is enough space
       this.dialog.id = -1;
       this.dialog.numbers = [];
       this.dialog.content = '';

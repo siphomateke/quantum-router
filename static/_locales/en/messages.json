@@ -265,6 +265,10 @@
     }
   },
 
+  "sms_save_not_enough_space": {
+    "message": "Not enough space to save message."
+  },
+
   "sms_types_recharge": {"message": "Recharge"},
   "sms_types_data": {"message": "Data remaining"},
   "sms_types_data_percent": {"message": "Percentage data used"},
