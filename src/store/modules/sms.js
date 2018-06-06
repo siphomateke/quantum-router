@@ -149,6 +149,8 @@ const getters = {
     boxTypes.SIM_SENT,
     boxTypes.SIM_DRAFT,
   ]),
+  localFull: (state, getters) => (state.local.max === getters.localTotal),
+  simFull: (state, getters) => (state.sim.max === getters.simTotal),
   getVisibleMessagesIds: state => box => {
     const boxItem = state.boxes[box];
     return boxItem.messages[boxItem.page];
@@ -549,6 +551,7 @@ const actions = {
       }
     }
   },
+  // Called before the actual import
   async importConfirm({state, getters, dispatch}) {
     try {
       await dispatch('getCount');
@@ -567,7 +570,7 @@ const actions = {
             // If there is space for some but not all messages to be imported, inform user
               const available = state.local.max - getters.localTotal;
             const toImport = getters.simTotal;
-            if (available > 0 && toImport > available) {
+              if (!getters.localFull && toImport > available) {
               dispatch('dialog/alert', {
                 message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
                 type: 'warning',
