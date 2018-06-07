@@ -169,6 +169,10 @@ const getters = {
   isInbox: state => box => {
     return box === boxTypes.LOCAL_INBOX;
   },
+  numPages: state => box => {
+    const boxItem = state.boxes[box];
+    return Math.ceil(boxItem.count / boxItem.perPage);
+  },
 };
 
 const boxMutation = {
@@ -271,6 +275,8 @@ const actions = {
     dispatch('setCount', count);
     dispatch('setAllLoading', false);
   },
+  // TODO: Do this in a better way so each 'run' or execution has the same count
+  // rather than using a timeout
   async getCountLenient({state, commit, dispatch}) {
     const now = Date.now();
     if ((now - state.countLastUpdated > state.smsCountTimeout)
@@ -281,6 +287,27 @@ const actions = {
       await dispatch('getCount');
     }
   },
+  /**
+   * Makes sure the current page is valid
+   */
+  async checkCurrentPage({state, commit, getters, dispatch}, {box}) {
+    await dispatch('getCountLenient'); // needed in numPages
+    const numPages = getters.numPages(box);
+    const currentPage = state.boxes[box].page;
+    // If the page doesn't exist,
+    // roll it back to one that does
+    if (currentPage > numPages) {
+      let page = currentPage;
+      while (page > numPages && page > 1) {
+        page--;
+      }
+      commit(types.SET_PAGE, {box, value: page});
+    }
+  },
+  async reset({commit, dispatch}, {box}) {
+    commit(types.RESET_MESSAGES, {box});
+    await dispatch('checkCurrentPage', {box});
+  },
   addMessage({commit}, {box, page, message}) {
     commit(types.ADD_MESSAGE, message);
     commit(types.ADD_MESSAGE_TO_BOX, {box, page, id: message.id});
@@ -290,6 +317,7 @@ const actions = {
     // Only get new messages if current page hasn't been retrieved before
     if (!(page in boxItem.messages)) {
       commit(types.SET_LOADING, {box, value: true});
+      // refresh count to match messages
       dispatch('getCountLenient');
       try {
         let messages = await router.sms.getSmsList({
@@ -329,7 +357,7 @@ const actions = {
           });
         }
       } catch (e) {
-        // FIXME: Handle errors
+      // FIXME: Handle errors
         throw e;
       } finally {
         commit(types.SET_LOADING, {box, value: false});
@@ -340,19 +368,16 @@ const actions = {
     }
   },
   async getCurrentPageMessages({state, dispatch}, {box}) {
+    await dispatch('checkCurrentPage', {box});
     await dispatch('getMessages', {box, page: state.boxes[box].page});
   },
-  getAllMessages({commit, dispatch}, {box}) {
-    return new Promise((resolve, reject) => {
-      commit(types.RESET_MESSAGES, {box});
-      const boxObj = state.boxes[box];
-      const pages = Math.round(boxObj.count / boxObj.perPage);
-      const promises = [];
-    for (let i=1; i<pages; i++) {
-        promises.push(dispatch('getMessages', {box, page: i}));
-      }
-      Promise.all(promises).then(resolve, reject);
-    });
+  async getAllMessages({getters, dispatch}, {box}) {
+    await dispatch('reset', {box});
+    const promises = [];
+    for (let i=1; i<getters.numPages(box); i++) {
+      promises.push(dispatch('getMessages', {box, page: i}));
+    }
+    await Promise.all(promises);
   },
   async refresh({commit, dispatch}, {box}) {
     commit(types.RESET_MESSAGES, {box});
@@ -565,36 +590,36 @@ const actions = {
           type: 'warning',
         }, {root: true});
       } else {
-      await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
-      const messages = getters.allMessages(boxTypes.SIM_INBOX);
-      dispatch('openSmsActionDialog', {
-        props: {
-          messages: messages,
+        await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
+        const messages = getters.allMessages(boxTypes.SIM_INBOX);
+        dispatch('openSmsActionDialog', {
+          props: {
+            messages: messages,
             type: 'warning',
-          confirmButton: i18n.getMessage('generic_yes'),
-          confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
-        },
-        events: {
-          confirm: () => {
-            // If there is space for some but not all messages to be imported, inform user
+            confirmButton: i18n.getMessage('generic_yes'),
+            confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
+          },
+          events: {
+            confirm: () => {
+              // If there is space for some but not all messages to be imported, inform user
               const available = state.local.max - getters.localTotal;
-            const toImport = getters.simTotal;
+              const toImport = getters.simTotal;
               if (!getters.localFull && toImport > available) {
                 dispatch('dialog/confirm', {
-                message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
-                type: 'warning',
+                  message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+                  type: 'warning',
                   confirmText: i18n.getMessage('generic_yes'),
                   cancelText: i18n.getMessage('generic_no'),
-                onConfirm: () => {
-                  dispatch('import');
-                },
-              }, {root: true});
-            } else {
-              dispatch('import');
-            }
+                  onConfirm: () => {
+                    dispatch('import');
+                  },
+                }, {root: true});
+              } else {
+                dispatch('import');
+              }
+            },
           },
-        },
-      });
+        });
       }
     } catch (e) {
       dispatch('handleError', e, {root: true});
