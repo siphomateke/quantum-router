@@ -13,6 +13,7 @@ const routerBoxTypes = router.sms.boxTypes;
 export const types = {
   SET_COUNT: 'SET_COUNT',
   SET_COUNT_LAST_UPDATED: 'SET_COUNT_LAST_UPDATED',
+  SET_COUNT_REQUEST: 'SET_COUNT_REQUEST',
   SET_LOADING: 'SET_LOADING',
   SET_COUNT_LOADING: 'SET_COUNT_LOADING',
   ADD_MESSAGE: 'ADD_MESSAGE',
@@ -115,6 +116,7 @@ const state = {
   boxes: {},
   messages: {},
   countLoading: false,
+  countRequest: null,
   countLastUpdated: null,
   smsCountTimeout: 5000, // TODO: Move this to settings
   gettingSmsList: false,
@@ -197,6 +199,9 @@ const mutations = {
   [types.SET_COUNT_LAST_UPDATED](state, time) {
     state.countLastUpdated = time;
   },
+  [types.SET_COUNT_REQUEST](state, request) {
+    state.countRequest = request;
+  },
   [types.SET_LOADING]: boxMutation.set('loading'),
   [types.SET_COUNT_LOADING](state, loading) {
     state.countLoading = loading;
@@ -275,7 +280,10 @@ const actions = {
   },
   async getCount({commit, dispatch}) {
     commit(types.SET_COUNT_LOADING, true);
-    const count = await router.sms.getSmsCount();
+    const promise = router.sms.getSmsCount();
+    commit(types.SET_COUNT_REQUEST, promise);
+    const count = await promise;
+    commit(types.SET_COUNT_REQUEST, null);
     dispatch('setCount', count);
     commit(types.SET_COUNT_LOADING, false);
     commit(types.SET_COUNT_LAST_UPDATED, Date.now());
@@ -283,18 +291,18 @@ const actions = {
   /*
   TODO: Do this in a better way so each 'run' or execution has the same count
   rather than using a timeout.
-
-  FIXME: This doesn't wait for previously made count requests. If it hasn't finished
-  (countLastUpdated hasn't updated) then multiple requests may be made.
-  We can't just set countLastUpdated before the request starts because if we
-  requested count after getCountLenient it would be null.
-  We need a way to tell when previous requests have finished.
   */
   async getCountLenient({state, commit, dispatch}) {
     const now = Date.now();
     if ((now - state.countLastUpdated > state.smsCountTimeout)
     || state.countLastUpdated === null) {
-      await dispatch('getCount');
+      // If count has not already been requested
+      if (state.countRequest === null) {
+        await dispatch('getCount');
+      } else {
+        // Wait for the previous request
+        await state.countRequest;
+      }
     }
   },
   /**
