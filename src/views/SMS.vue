@@ -202,7 +202,6 @@ export default {
       this.smsDialogClose();
     },
     newMessage() {
-      // TODO: Only allow if there is enough space
       this.dialog.id = -1;
       this.dialog.numbers = [];
       this.dialog.content = '';
