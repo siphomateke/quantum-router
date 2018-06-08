@@ -31,7 +31,15 @@
 
           <template slot="header">
             <b-icon :icon="tab.icon" size="is-small"/>
-            <span>{{ tab.label }} <b-tag rounded>{{boxes[tab.boxType].count}}</b-tag></span>
+            <span>
+              {{ tab.label }}
+              <b-tag rounded>
+                <template v-if="!boxes[tab.boxType].countLoading">
+                  {{boxes[tab.boxType].count}}
+                </template>
+                <span v-else class="tag-loader"></span>
+              </b-tag>
+            </span>
           </template>
 
           <sms-box

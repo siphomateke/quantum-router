@@ -230,4 +230,13 @@ body {
 .help-cursor {
   cursor: help;
 }
+
+// Place inside a b-tag
+.tag .tag-loader {
+  display: inline-flex;
+  position: relative;
+  &:after {
+    @include loader;
+  }
+}
 </style>

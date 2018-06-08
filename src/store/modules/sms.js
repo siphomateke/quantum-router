@@ -14,6 +14,7 @@ export const types = {
   SET_COUNT: 'SET_COUNT',
   SET_COUNT_LAST_UPDATED: 'SET_COUNT_LAST_UPDATED',
   SET_LOADING: 'SET_LOADING',
+  SET_COUNT_LOADING: 'SET_COUNT_LOADING',
   ADD_MESSAGE: 'ADD_MESSAGE',
   ADD_MESSAGE_TO_BOX: 'ADD_MESSAGE_TO_BOX',
   SET_MESSAGE_READ: 'SET_MESSAGE_READ',
@@ -85,6 +86,7 @@ function generateBox() {
     messages: {},
     selected: [],
     count: 0,
+    countLoading: false,
     loading: false,
     page: 1,
     sortOrder: 'desc',
@@ -196,6 +198,7 @@ const mutations = {
     state.countLastUpdated = time;
   },
   [types.SET_LOADING]: boxMutation.set('loading'),
+  [types.SET_COUNT_LOADING]: boxMutation.set('countLoading'),
   [types.ADD_MESSAGE](state, message) {
     Vue.set(state.messages, message.id, message);
   },
@@ -268,12 +271,16 @@ const actions = {
       commit(types.SET_LOADING, {box: boxType, value});
     }
   },
+  setAllCountLoading({commit}, value) {
+    for (const boxType of Object.values(boxTypes)) {
+      commit(types.SET_COUNT_LOADING, {box: boxType, value});
+    }
+  },
   async getCount({dispatch}) {
-    // TODO: Separate count loading from message loading
-    dispatch('setAllLoading', true);
+    dispatch('setAllCountLoading', true);
     const count = await router.sms.getSmsCount();
     dispatch('setCount', count);
-    dispatch('setAllLoading', false);
+    dispatch('setAllCountLoading', false);
   },
   // TODO: Do this in a better way so each 'run' or execution has the same count
   // rather than using a timeout
