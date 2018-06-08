@@ -34,7 +34,7 @@
             <span>
               {{ tab.label }}
               <b-tag rounded>
-                <template v-if="!boxes[tab.boxType].countLoading">
+                <template v-if="!countLoading">
                   {{boxes[tab.boxType].count}}
                 </template>
                 <span v-else class="tag-loader"></span>
@@ -149,6 +149,7 @@ export default {
     ...mapState({
       boxes: state => state.sms.boxes,
       importEnabled: state => state.sms.importEnabled,
+      countLoading: state => state.sms.countLoading,
     }),
     ...mapGetters({
       localFull: 'sms/localFull',

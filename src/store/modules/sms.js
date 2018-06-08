@@ -86,7 +86,6 @@ function generateBox() {
     messages: {},
     selected: [],
     count: 0,
-    countLoading: false,
     loading: false,
     page: 1,
     sortOrder: 'desc',
@@ -115,6 +114,7 @@ const state = {
   /** @type {Object.<string, Box>} */
   boxes: {},
   messages: {},
+  countLoading: false,
   countLastUpdated: null,
   smsCountTimeout: 5000, // TODO: Move this to settings
   gettingSmsList: false,
@@ -198,7 +198,9 @@ const mutations = {
     state.countLastUpdated = time;
   },
   [types.SET_LOADING]: boxMutation.set('loading'),
-  [types.SET_COUNT_LOADING]: boxMutation.set('countLoading'),
+  [types.SET_COUNT_LOADING](state, loading) {
+    state.countLoading = loading;
+  },
   [types.ADD_MESSAGE](state, message) {
     Vue.set(state.messages, message.id, message);
   },
@@ -271,16 +273,11 @@ const actions = {
       commit(types.SET_LOADING, {box: boxType, value});
     }
   },
-  setAllCountLoading({commit}, value) {
-    for (const boxType of Object.values(boxTypes)) {
-      commit(types.SET_COUNT_LOADING, {box: boxType, value});
-    }
-  },
   async getCount({commit, dispatch}) {
-    dispatch('setAllCountLoading', true);
+    commit(types.SET_COUNT_LOADING, true);
     const count = await router.sms.getSmsCount();
     dispatch('setCount', count);
-    dispatch('setAllCountLoading', false);
+    commit(types.SET_COUNT_LOADING, false);
     commit(types.SET_COUNT_LAST_UPDATED, Date.now());
   },
   /*
