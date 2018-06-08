@@ -287,7 +287,7 @@ const actions = {
   TODO: Do this in a better way so each 'run' or execution has the same count
   rather than using a timeout.
 
-  This doesn't wait for previously made count requests. If it hasn't finished
+  FIXME: This doesn't wait for previously made count requests. If it hasn't finished
   (countLastUpdated hasn't updated) then multiple requests may be made.
   We can't just set countLastUpdated before the request starts because if we
   requested count after getCountLenient it would be null.
@@ -297,8 +297,6 @@ const actions = {
     const now = Date.now();
     if ((now - state.countLastUpdated > state.smsCountTimeout)
     || state.countLastUpdated === null) {
-      // NOTE: This sometimes doesn't work possibly due to Vue being slow to commit;
-      // dispatch is sometimes run twice in less than smsCountTimeout milliseconds
       await dispatch('getCount');
     }
   },
