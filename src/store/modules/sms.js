@@ -374,8 +374,11 @@ const actions = {
   async getAllMessages({getters, dispatch}, {box}) {
     await dispatch('reset', {box});
     const promises = [];
-    for (let i=1; i<getters.numPages(box); i++) {
-      promises.push(dispatch('getMessages', {box, page: i}));
+    for (let i=0; i<getters.numPages(box); i++) {
+      promises.push(dispatch('getMessages', {
+        box,
+        page: i+1, // PageIndex starts at 1
+      }));
     }
     await Promise.all(promises);
   },
