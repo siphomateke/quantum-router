@@ -17,9 +17,8 @@
           :selection-state="selectionState">
         </sms-actions>
       </div>
-      <div class="message-wrapper">
+      <div v-if="localFull" class="message-wrapper">
         <b-message
-          v-if="localFull"
           type="is-info"
           has-icon
           icon-size="small">
