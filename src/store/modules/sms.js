@@ -325,7 +325,7 @@ const actions = {
     if (!(page in boxItem.messages)) {
       commit(types.SET_LOADING, {box, value: true});
       // refresh count to match messages
-      dispatch('getCountLenient');
+      await dispatch('getCountLenient');
       try {
         let messages = await router.sms.getSmsList({
           boxType: mapBoxTypeToRouterBoxType[box],
