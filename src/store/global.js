@@ -19,6 +19,7 @@ modeNames[modes.ADMIN] = 'admin';
 export const types = {
   MODE: 'MODE',
   SET_LOADING: 'SET_LOADING',
+  SET_LOGGING_IN: 'SET_LOGGING_IN',
 };
 
 async function updateConfig() {
@@ -33,6 +34,7 @@ export default {
   state: {
     mode: modes.OFFLINE,
     loading: false,
+    loggingIn: false,
   },
   getters: {
     modeName: state => modeNames[state.mode],
@@ -44,6 +46,9 @@ export default {
     },
     [types.SET_LOADING](state, loading) {
       state.loading = loading;
+    },
+    [types.SET_LOGGING_IN](state, value) {
+      state.loggingIn = value;
     },
   },
   actions: {
@@ -109,7 +114,7 @@ export default {
         Toast.open(i18n.getMessage('changed_mode_to', i18n.getMessage('mode_'+modeNames[mode])));
       }
     },
-    async prepChangeMode({dispatch}, newMode) {
+    async prepChangeMode({commit, dispatch}, newMode) {
       try {
         await updateConfig();
         if (newMode === modes.BASIC || newMode === modes.ADMIN) {
@@ -119,7 +124,9 @@ export default {
               return true;
             } else if (newMode === modes.ADMIN) {
               try {
+                commit(types.SET_LOGGING_IN, true);
                 await router.admin.login();
+                commit(types.SET_LOGGING_IN, false);
                 return true;
               } catch (e) {
                 let errorMessage = i18n.getMessage('router_unknown_error_logging_in');

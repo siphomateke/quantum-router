@@ -135,18 +135,22 @@ export default {
     this.startRefreshCycle();
 
     this.globalBus.$on('refresh:basic', () => {
-      this.globalBus.$emit('refresh:notifications');
-      this.globalBus.$emit('refresh:status');
+      if (!this.$store.state.loggingIn && this.$mode > modes.OFFLINE) {
+        this.globalBus.$emit('refresh:notifications');
+        this.globalBus.$emit('refresh:status');
+      }
     });
 
     this.tryChangeMode(modes.ADMIN);
 
     this.globalBus.$on('refresh:status', async () => {
-      this.$store.dispatch('settings/refreshStatus');
+      if (!this.$store.state.loggingIn && this.$mode > modes.OFFLINE) {
+        this.$store.dispatch('settings/refreshStatus');
+      }
     });
 
     this.globalBus.$on('refresh:notifications', async () => {
-      if (this.$adminMode) {
+      if (!this.$store.state.loggingIn && this.$adminMode) {
         this.$store.dispatch('notifications/refresh');
       }
     });
