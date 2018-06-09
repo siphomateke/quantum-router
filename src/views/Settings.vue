@@ -5,7 +5,13 @@
       <nav class="navbar has-shadow">
         <div class="container">
           <div class="navbar-tabs">
-            <router-link v-for="item in nav" :key="item.name" class="navbar-item is-tab" active-class="is-active" tag="a" :to="{ name: item.name }">
+            <router-link
+              v-for="item in nav"
+              :key="item.name"
+              class="navbar-item is-tab"
+              active-class="is-active"
+              tag="a"
+              :to="{ name: item.name }">
               {{ item.label }}
             </router-link>
           </div>
