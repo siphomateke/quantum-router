@@ -521,15 +521,17 @@ const actions = {
   // TODO: Test for errors and handle them
   async deleteMessages({state, commit, dispatch}, {box, ids}) {
     await router.sms.deleteSms(ids);
+    if (box === boxTypes.LOCAL_INBOX) {
     let unread = 0;
     for (const id of ids) {
       if (!state.messages[id].read) {
         unread++;
       }
     }
+      dispatch('notifications/reduceLastCount', unread, {root: true});
+    }
     commit(types.CLEAR_SELECTED, {box});
     bus.$emit('refresh:sms');
-    dispatch('notifications/reduceLastCount', unread, {root: true});
   },
   async deleteSelectedMessages({state, dispatch}, {box}) {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
