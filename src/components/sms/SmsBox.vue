@@ -84,7 +84,7 @@ export default {
       return this.getActualMessages(this.selected);
     },
     isInbox() {
-      return this.boxType === boxTypes.LOCAL_INBOX;
+      return this.$store.getters['sms/isInbox'](this.boxType);
     },
     isDraft() {
       return this.boxType === boxTypes.LOCAL_DRAFT;

@@ -161,7 +161,7 @@ export default {
       return this.buses[this.currentTab];
     },
     isInbox() {
-      return this.boxType === boxTypes.LOCAL_INBOX;
+      return this.$store.getters['sms/isInbox'](this.boxType);
     },
     box() {
       return this.boxes[this.boxType];

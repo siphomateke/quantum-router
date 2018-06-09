@@ -171,7 +171,7 @@ const getters = {
     return messages;
   },
   isInbox: state => box => {
-    return box === boxTypes.LOCAL_INBOX;
+    return (box === boxTypes.LOCAL_INBOX) || (box === boxTypes.SIM_INBOX);
   },
   numPages: state => box => {
     const boxItem = state.boxes[box];
