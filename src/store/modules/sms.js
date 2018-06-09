@@ -555,10 +555,15 @@ const actions = {
    * Checks if importing messages from the SIM card is supported on this router
    * @return {boolean}
    */
-  async checkImport({commit}) {
-    const smsConfig = await router.config.getSmsConfig();
-    commit(types.SET_IMPORT_ENABLED, smsConfig.import_enabled);
-    return smsConfig.import_enabled;
+  async checkImport({state, commit, dispatch}) {
+    try {
+      const smsConfig = await router.config.getSmsConfig();
+      commit(types.SET_IMPORT_ENABLED, smsConfig.import_enabled);
+      return smsConfig.import_enabled;
+    } catch (e) {
+      dispatch('handleError', e, {root: true});
+      return state.importEnabled;
+    }
   },
   /**
    * Imports messages from the SIM card
