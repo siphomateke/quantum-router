@@ -4,32 +4,16 @@ import {EventEmitter} from 'events';
 
 export class Notifier {
   /**
-   * @private
-   * @param {object} data The notification data
+   * @param {browser.notifications.CreateNotificationOptions} data The notification data
    */
-  static _notify(data) {
-    data.type = 'basic';
-    data.iconUrl = browser.runtime.getManifest().icons['128'];
-    data.title = 'Quantum Router';
-    data.isClickable = false;
+  static notify(data) {
+    data = Object.assign({
+      type: 'basic',
+      iconUrl: browser.runtime.getManifest().icons['128'],
+      title: 'Quantum Router',
+      isClickable: false,
+    }, data);
     browser.notifications.create('', data);
-  }
-
-  /**
-   * Creates a browser notification
-   * @param {string} msg  The notification message
-   * @param {('error'|'normal')} [type=normal] The type of notification.
-   */
-  static notify(msg, type = 'normal') {
-    if (type == 'error') {
-      this._notify({
-        'message': 'Error: ' + msg,
-      });
-    } else {
-      this._notify({
-        'message': msg,
-      });
-    }
   }
 }
 
