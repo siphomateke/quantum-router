@@ -3,15 +3,15 @@
   :class="{'is-loading': loading}"
   style="width:400px;max-height:500px;overflow-y:scroll;">
   <template v-if="list.length>0">
-    <template v-for="(n, key) in list">
-      <notification :key="key"
+    <notification
+      v-for="(n, key) in list"
+      :key="key"
       :title="n.title"
       :message="n.message"
       :date="n.date"
       :read="n.read"
       :progress="n.progress"
-      ></notification>
-    </template>
+    ></notification>
   </template>
   <template class="content" v-else>
     <section class="section">

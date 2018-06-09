@@ -15,7 +15,12 @@
     </div>
     <div class="navbar-end">
       <slot name="navbar-end"></slot>
-      <a v-for="item in items" class="navbar-item" :href="item.link" :class="{'is-active': item.isActive}">
+      <a
+        v-for="item in items"
+        :key="item.link"
+        class="navbar-item"
+        :href="item.link"
+        :class="{'is-active': item.isActive}">
         <b-icon v-if="item.icon" pack="fa" :icon="item.icon" class="fa-fw"></b-icon> {{ item.label }}
       </a>
     </div>

@@ -24,7 +24,7 @@
           :native-value="key">
             {{ key + '. ' + option }}
         </b-radio>
-        <br>
+        <br :key="key">
       </template>
     </div>
     <button @click="send"
