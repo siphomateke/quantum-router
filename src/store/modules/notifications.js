@@ -85,6 +85,9 @@ export default {
     setUpdateTime({commit}, time) {
       commit(types.SET_UPDATE_TIME, time);
     },
+    reduceLastCount({state, commit}, amount) {
+      commit(types.SET_LAST_COUNT, state.lastCount - amount);
+    },
     async newNotifications({rootState, dispatch}, count) {
       // NOTE: This won't wait to run. Instead it depends on being called again
       // This is to prevent a backlog of router requests
@@ -118,8 +121,9 @@ export default {
     async refresh({rootState, state, commit, dispatch}) {
       try {
         const count = (await router.monitoring.checkNotifications()).UnreadMessage;
-        // NOTE: If an SMS is deleted and then a notification is received
-        // before the next refresh, this won't work
+        // NOTE: If an SMS is deleted or marked as read and then a
+        // notification is received  before the next refresh,
+        // using another client such as the app, this won't work
         if (count > state.lastCount) {
           dispatch('newNotifications', count - state.lastCount);
         }

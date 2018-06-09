@@ -465,6 +465,7 @@ const actions = {
         message: 'Marked '+successful+' message(s) as read',
         type: 'is-success',
       });
+      dispatch('notifications/reduceLastCount', successful, {root: true});
     } catch (e) {
       dispatch('handleError', e);
       if (successful > 0) {
@@ -516,11 +517,19 @@ const actions = {
       }
     }
   },
-  async deleteMessages({commit}, {box, ids}) {
+  // TODO: delete sms loading indicator
+  // TODO: Test for errors and handle them
+  async deleteMessages({state, commit, dispatch}, {box, ids}) {
     await router.sms.deleteSms(ids);
-    // TODO: delete sms loading indicator
+    let unread = 0;
+    for (const id of ids) {
+      if (!state.messages[id].read) {
+        unread++;
+      }
+    }
     commit(types.CLEAR_SELECTED, {box});
     bus.$emit('refresh:sms');
+    dispatch('notifications/reduceLastCount', unread, {root: true});
   },
   async deleteSelectedMessages({state, dispatch}, {box}) {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
