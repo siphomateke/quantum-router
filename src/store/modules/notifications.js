@@ -1,7 +1,7 @@
 /* global browser */
 import {Notification} from '@/browser/notification.js';
 import router from 'huawei-router-api/browser';
-import {boxTypes} from '@/store/modules/sms';
+import {Notifier} from '@/browser/routerHelper';
 
 export const types = {
   ADD: 'ADD',
@@ -9,6 +9,7 @@ export const types = {
   UPDATE: 'UPDATE',
   CLEAR: 'CLEAR',
   SET_UPDATE_TIME: 'SET_UPDATE_TIME',
+  SET_LAST_COUNT: 'SET_LAST_COUNT',
 };
 
 export default {
@@ -16,6 +17,7 @@ export default {
   state: {
     all: [],
     lastUpdated: null,
+    lastCount: null,
   },
   getters: {
     unread(state) {
@@ -45,6 +47,9 @@ export default {
     [types.SET_UPDATE_TIME](state, time) {
       state.lastUpdated = time;
     },
+    [types.SET_LAST_COUNT](state, count) {
+      state.lastCount = count;
+    },
   },
   actions: {
     async load({commit}) {
@@ -57,12 +62,16 @@ export default {
         }
       }
       commit(types.ADD, notifications);
+      if ('lastCount' in items) {
+        commit(types.SET_LAST_COUNT, items.lastCount);
+      }
       return notifications.length;
     },
     // TODO: Evaluate better persistent storage methods
     save({state}) {
       return browser.storage.sync.set({
         notifications: state.all,
+        lastCount: state.lastCount,
       });
     },
     add({commit, dispatch}, notifications) {
@@ -76,41 +85,47 @@ export default {
     setUpdateTime({commit}, time) {
       commit(types.SET_UPDATE_TIME, time);
     },
-    async refresh({rootState, state, commit, dispatch}) {
+    async newNotifications({rootState, dispatch}, count) {
+      // NOTE: This won't wait to run. Instead it depends on being called again
+      // This is to prevent a backlog of router requests
       if (!rootState.sms.gettingSmsList) {
         dispatch('sms/setGettingSmsList', true, {root: true});
         try {
-          await dispatch('sms/getCount', null, {root: true});
-          const list = await router.sms.getFullSmsList({
-            total: rootState.sms.boxes[boxTypes.LOCAL_INBOX].count,
+          const newMessages = await router.sms.getFullSmsList({
+            total: count,
+            filter: {read: false},
           }, {
             sortOrder: 'desc',
           });
           const newNotifications = [];
-          for (const message of list) {
-            let exists = false;
+          for (const message of newMessages) {
             const n = Notification.fromSms(message);
-
-            // Check if this notification is new
-            for (const n2 of state.all) {
-              if (n.id === n2.id) {
-                exists = true;
-                break;
-              }
-            }
-
-            if (!exists) {
-              newNotifications.push(n);
-            }
+            Notifier.notify({
+              title: n.title,
+              message: n.message,
+            });
+            newNotifications.push(n);
           }
           dispatch('add', newNotifications);
-
           dispatch('setUpdateTime', Date.now());
         } catch (e) {
           dispatch('handleError', e, {root: true});
         } finally {
           dispatch('sms/setGettingSmsList', false, {root: true});
         }
+      }
+    },
+    async refresh({rootState, state, commit, dispatch}) {
+      try {
+        const count = (await router.monitoring.checkNotifications()).UnreadMessage;
+        // NOTE: If an SMS is deleted and then a notification is received
+        // before the next refresh, this won't work
+        if (count > state.lastCount) {
+          dispatch('newNotifications', count - state.lastCount);
+        }
+        commit(types.SET_LAST_COUNT, count);
+      } catch (e) {
+        dispatch('handleError', e, {root: true});
       }
     },
   },
