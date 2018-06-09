@@ -52,11 +52,15 @@ export default {
       commit(types.SET, payload);
     },
     async refreshStatus({dispatch}) {
-      dispatch('set', {
+      try {
+        await dispatch('set', {
         domain: 'dialup',
         key: 'mobileData',
         value: await router.dialup.getMobileDataSwitch(),
       });
+      } catch (e) {
+        dispatch('handleError', e, {root: true});
+      }
     },
   },
 };
