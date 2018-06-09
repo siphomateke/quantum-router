@@ -2,6 +2,8 @@
 import {Notification} from '@/browser/notification.js';
 import router from 'huawei-router-api/browser';
 import {Notifier} from '@/browser/routerHelper';
+import {bus} from '@/events';
+import {boxTypes} from '@/store/modules/sms';
 
 export const types = {
   ADD: 'ADD',
@@ -88,7 +90,7 @@ export default {
     reduceLastCount({state, commit}, amount) {
       commit(types.SET_LAST_COUNT, state.lastCount - amount);
     },
-    async newNotifications({rootState, dispatch}, count) {
+    async newNotifications({rootState, dispatch}, {count, first}) {
       // NOTE: This won't wait to run. Instead it depends on being called again
       // This is to prevent a backlog of router requests
       if (!rootState.sms.gettingSmsList) {
@@ -111,6 +113,9 @@ export default {
           }
           dispatch('add', newNotifications);
           dispatch('setUpdateTime', Date.now());
+          if (!first) {
+            bus.$emit('refresh:sms', boxTypes.LOCAL_INBOX);
+          }
         } catch (e) {
           dispatch('handleError', e, {root: true});
         } finally {
@@ -125,7 +130,10 @@ export default {
         // notification is received  before the next refresh,
         // using another client such as the app, this won't work
         if (count > state.lastCount) {
-          dispatch('newNotifications', count - state.lastCount);
+          dispatch('newNotifications', {
+            count: count - state.lastCount,
+            first: state.lastCount === null,
+          });
         }
         commit(types.SET_LAST_COUNT, count);
       } catch (e) {
