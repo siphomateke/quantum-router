@@ -467,7 +467,7 @@ const actions = {
       });
       dispatch('notifications/reduceLastCount', successful, {root: true});
     } catch (e) {
-      dispatch('handleError', e);
+      dispatch('handleError', e, {root: true});
       if (successful > 0) {
         Toast.open({
           message: i18n.getMessage(
@@ -522,12 +522,12 @@ const actions = {
   async deleteMessages({state, commit, dispatch}, {box, ids}) {
     await router.sms.deleteSms(ids);
     if (box === boxTypes.LOCAL_INBOX) {
-    let unread = 0;
-    for (const id of ids) {
-      if (!state.messages[id].read) {
-        unread++;
+      let unread = 0;
+      for (const id of ids) {
+        if (!state.messages[id].read) {
+          unread++;
+        }
       }
-    }
       dispatch('notifications/reduceLastCount', unread, {root: true});
     }
     commit(types.CLEAR_SELECTED, {box});
