@@ -14,20 +14,21 @@ export default {
     dialup,
   },
   state: {
+    // FIXME: Actually use these
     general: {
       defaultMode: modes.ADMIN,
       rememberPassword: true,
     },
     sms: {
-      // FIXME: Actually use these
       hideSimBoxes: true,
-      confirmationDialogs: ['delete', 'import'],
+      confirmDialogsToShow: ['delete', 'import'],
       typeIcons: {
-        [smsTypes.DATA]: 'area-chart',
-        [smsTypes.DATA_PERCENT]: 'pie-chart',
-        [smsTypes.ACTIVATED]: 'lightbulb-o',
-        [smsTypes.DEPLETED]: 'exclamation',
-        [smsTypes.AD]: 'bullhorn',
+        [smsTypes.RECHARGE]: {pack: 'fa', id: 'bolt'},
+        [smsTypes.DATA]: {pack: 'fa', id: 'area-chart'},
+        [smsTypes.DATA_PERCENT]: {pack: 'fa', id: 'pie-chart'},
+        [smsTypes.ACTIVATED]: {pack: 'fa', id: 'lightbulb-o'},
+        [smsTypes.DEPLETED]: {pack: 'fa', id: 'exclamation'},
+        [smsTypes.AD]: {pack: 'fa', id: 'bullhorn'},
       },
     },
     wlan: {
@@ -54,10 +55,10 @@ export default {
     async refreshStatus({dispatch}) {
       try {
         await dispatch('set', {
-        domain: 'dialup',
-        key: 'mobileData',
-        value: await router.dialup.getMobileDataSwitch(),
-      });
+          domain: 'dialup',
+          key: 'mobileData',
+          value: await router.dialup.getMobileDataSwitch(),
+        });
       } catch (e) {
         dispatch('handleError', e, {root: true});
       }

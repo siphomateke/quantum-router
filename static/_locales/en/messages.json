@@ -19,6 +19,7 @@
   "menu_statistics":{"message": "Statistics"},
   "menu_services":{"message": "Services"},
   "menu_settings":{"message": "Settings"},
+  "menu_extension_settings":{"message": "Extension settings"},
 
   "mode_offline":{"message": "Offline"},
   "mode_basic":{"message": "Basic"},
