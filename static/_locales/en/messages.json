@@ -331,6 +331,48 @@
   "options_save_success": {
     "message": "Saved changes"
   },
+  "options_save_error": {
+    "message": "Failed to save settings"
+  },
+  "options_header": {
+    "message": "Extension settings"
+  },
+  "options_tabs_general": {
+    "message": "General"
+  },
+  "options_tabs_sms": {
+    "message": "SMS"
+  },
+  "options_labels_general_defaultMode": {
+    "message": "Default mode"
+  },
+  "options_descriptions_general_defaultMode": {
+    "message": "The mode that is the default when you first open Quantum router"
+  },
+  "options_labels_general_rememberLogin": {
+    "message": "Remember login details"
+  },
+  "options_descriptions_general_rememberLogin": {
+    "message": "Whether Quantum should save your login details"
+  },
+  "options_labels_general_hideSimBoxes": {
+    "message": "Hide SIM boxes"
+  },
+  "options_descriptions_general_hideSimBoxes": {
+    "message": "Whether SIM boxes (inbox, sent and draft) should be shown"
+  },
+  "options_labels_general_confirmDialogsToShow": {
+    "message": "Confirmation dialogs to show"
+  },
+  "options_descriptions_general_confirmDialogsToShow": {
+    "message": "Actions which will show confirmation dialogs before execution"
+  },
+  "options_labels_sms_typeIcons": {
+    "message": "Message icons"
+  },
+  "options_descriptions_sms_typeIcons": {
+    "message": "The icons to use for different message types"
+  },
 
   "validation_tag_input_number": {
     "message": "Please only enter numbers.",

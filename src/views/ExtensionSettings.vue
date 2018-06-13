@@ -1,12 +1,12 @@
 <template>
   <div class="box">
     <form @submit.prevent="submit">
-      <h4 class="title is-4">Extension Settings</h4>
+      <h4 class="title is-4">{{ $i18n('options_header') }}</h4>
       <b-tabs v-if="loadedSettings">
-        <b-tab-item label="General">
+        <b-tab-item :label="$i18n('options_tabs_general')">
           <config-field
-            label="Default mode"
-            description="The mode that is the default when you first open Quantum router">
+            :label="$i18n('options_general_defaultMode')"
+            :description="$i18n('options_descriptions_general_defaultMode')">
             <template v-for="mode in modes">
               <b-radio
                 :key="mode"
@@ -17,35 +17,36 @@
             </template>
           </config-field>
           <config-field
-            label="Remember password"
-            description="Whether Quantum should save your login details">
+            :label="$i18n('options_labels_general_rememberLogin')"
+            :description="$i18n('options_descriptions_general_rememberLogin')">
             <b-checkbox v-model="settings.general.rememberLoginDetails">
             </b-checkbox>
           </config-field>
         </b-tab-item>
-        <b-tab-item label="SMS">
+        <b-tab-item :label="$i18n('options_tabs_sms')">
           <config-field
-            label="Hide SIM boxes">
+            :label="$i18n('options_labels_general_hideSimBoxes')"
+            :description="$i18n('options_descriptions_general_hideSimBoxes')">
             <b-checkbox v-model="settings.sms.hideSimBoxes">
             </b-checkbox>
           </config-field>
           <config-field
-            label="Show confirmation dialogs"
-            description="Actions which will show confirmation dialogs before execution">
+            :label="$i18n('options_labels_general_confirmDialogsToShow')"
+            :description="$i18n('options_descriptions_general_confirmDialogsToShow')">
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="delete">
-              Delete
+              {{ $i18n('sms_action_delete') }}
             </b-checkbox>
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="import">
-              Import
+              {{ $i18n('sms_action_import') }}
             </b-checkbox>
           </config-field>
           <config-field
-            label="Message icons"
-            description="The icons to use for different message types">
+            :label="$i18n('options_labels_sms_typeIcons')"
+            :description="$i18n('options_descriptions_sms_typeIcons')">
             <b-field
               horizontal
               v-for="smsType in smsTypes"
@@ -61,7 +62,7 @@
           class="button is-primary"
           type="submit"
           :class="{'is-loading': saving}">
-          Save
+          {{ $i18n('options_button_save') }}
         </button>
       </div>
     </form>
@@ -123,12 +124,12 @@ export default {
         await Promise.all(promises);
         await this.$store.dispatch('settings/save');
         this.$toast.open({
-          message: 'Saved settings',
+          message: this.$i18n('options_save_success'),
           type: 'is-success',
         });
       } catch (e) {
         this.$toast.open({
-          message: 'Failed to save settings',
+          message: this.$i18n('options_save_error'),
           type: 'is-danger',
         });
         this.$store.dispatch('handleError', e);
