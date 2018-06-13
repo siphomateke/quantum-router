@@ -1,7 +1,8 @@
-import dialup from './settings/dialup';
-import router from 'huawei-router-api/browser';
-import internal from './settings/internal';
+import {storage} from '@/browser/routerHelper';
 import dotty from 'dotty';
+import router from 'huawei-router-api/browser';
+import dialup from './dialup';
+import internal from './internal';
 
 export const types = {
   SET: 'SET',
@@ -43,6 +44,17 @@ export default {
         });
       } catch (e) {
         dispatch('handleError', e, {root: true});
+      }
+    },
+    save({state}) {
+      return storage.set({
+        settings: state.internal,
+      });
+    },
+    async load({dispatch}) {
+      const items = await storage.get('settings');
+      if ('settings' in items) {
+        dispatch('set', {path: 'internal', value: items.settings});
       }
     },
   },
