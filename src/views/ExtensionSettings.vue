@@ -83,7 +83,7 @@
       <button
         class="button is-primary"
         type="submit"
-        :class="{'is-loading': saving | formLoading}">
+        :class="{'is-loading': saving || formLoading}">
         {{ $i18n('options_button_save') }}
       </button>
     </div>
