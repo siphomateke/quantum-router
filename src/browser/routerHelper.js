@@ -1,6 +1,7 @@
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
 import {EventEmitter} from 'events';
+import dotty from 'dotty';
 
 export class Notifier {
   /**
@@ -17,14 +18,23 @@ export class Notifier {
   }
 }
 
+export const storage = {
+  set(data) {
+    return browser.storage.sync.set(data);
+  },
+  get(data) {
+    return browser.storage.sync.get(data);
+  },
+};
+
 /**
- * Gets the url of router page from browser.storage
+ * Gets the url of router page from storage
  * @return {Promise<string>}
  */
 export async function getRouterUrl() {
-  const items = await browser.storage.sync.get('routerUrl');
-  if ('routerUrl' in items) {
-    return items.routerUrl;
+  const items = await storage.get('settings');
+  if (dotty.exists(items, 'settings.general.routerUrl')) {
+    return items.settings.general.routerUrl;
   } else {
     return Promise.reject(new RouterError(
       'router_url_not_set', 'No router url set in storage'));
@@ -42,11 +52,13 @@ export async function getRouterUrl() {
  * @return {Promise<LoginDetails>}
  */
 export async function getLoginDetails() {
-  const items = await browser.storage.sync.get(['username', 'password']);
-  if ('username' in items && 'password' in items) {
+  const items = await storage.get('settings');
+  if (dotty.exists(items, 'settings.general.username')
+  && dotty.exists(items, 'settings.general.password')) {
+    const general = items.settings.general;
     return {
-      username: items.username,
-      password: items.password,
+      username: general.username,
+      password: general.password,
     };
   } else {
     // TODO: Make this error more detailed and not use 'Error' object
@@ -70,14 +82,5 @@ browser.runtime.onMessage.addListener((message, sender) => {
 export const events = {
   addListener(name, callback) {
     emitter.on(name, callback);
-  },
-};
-
-export const storage = {
-  set(data) {
-    return browser.storage.sync.set(data);
-  },
-  get(data) {
-    return browser.storage.sync.get(data);
   },
 };

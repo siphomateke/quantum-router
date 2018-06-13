@@ -7,6 +7,9 @@ export default {
   // FIXME: Actually use these
   state: {
     general: {
+      routerUrl: 'http://192.168.1.1',
+      username: '',
+      password: '',
       defaultMode: modes.ADMIN,
       rememberLoginDetails: true,
     },

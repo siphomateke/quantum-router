@@ -308,15 +308,18 @@
     "message": "Go offline"
   },
 
-  "options_field_router_url": {
+  "options_labels_general_loginDetails": {
+    "message": "Login details"
+  },
+  "options_labels_general_routerUrl": {
     "message": "Router URL",
     "description": "Router URL field on the extensions options page."
   },
-  "options_field_admin_username": {
+  "options_labels_general_username": {
     "message": "Username",
     "description": "Username field on the extension options page."
   },
-  "options_field_admin_password": {
+  "options_labels_general_password": {
     "message": "Password",
     "description": "Password field on the extension options page."
   },

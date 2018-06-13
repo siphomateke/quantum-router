@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Options from './Options.vue';
 import Buefy from 'buefy';
 import i18n from '@/browser/i18n.js';
+import store from '@/store';
 
 Vue.config.productionTip = false;
 
@@ -21,6 +22,7 @@ Vue.mixin({
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   render: h => h(Options),
 });
 
