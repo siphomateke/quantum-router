@@ -195,15 +195,13 @@ export default {
       getSmsCount: 'sms/getCount',
     }),
     startRefreshCycle() {
-      for (const name in this.refreshIntervals) {
-        if (this.refreshIntervals.hasOwnProperty(name)) {
-          const interval = this.refreshIntervals[name];
-          const func = () => {
-            this.globalBus.$emit('refresh:'+name);
-            setTimeout(func, interval);
-          };
-          func();
-        }
+      for (const name of Object.keys(this.refreshIntervals)) {
+        const interval = this.refreshIntervals[name];
+        const func = () => {
+          this.globalBus.$emit('refresh:'+name);
+          setTimeout(func, interval);
+        };
+        func();
       }
     },
     userChangedMode(newMode) {

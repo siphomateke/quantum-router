@@ -73,10 +73,8 @@ export default {
   watch: {
     synced(val) {
       if (val === false) {
-        for (const key in this.disabled) {
-          if (this.disabled.hasOwnProperty(key)) {
-            this.disabled[key] = true;
-          }
+        for (const key of Object.keys(this.disabled)) {
+          this.disabled[key] = true;
         }
       }
     },
