@@ -111,6 +111,7 @@ export default {
       boxes: state => state.sms.boxes,
       gettingSmsList: state => state.gettingSmsList,
       mobileDataState: state => state.settings.dialup.mobileData,
+      internalSettings: state => state.settings.internal,
     }),
     ...mapGetters({
       modeName: 'modeName',
@@ -148,7 +149,7 @@ export default {
       }
     });
 
-    this.tryChangeMode(modes.ADMIN);
+    this.tryChangeMode(this.internalSettings.general.defaultMode);
 
 
     this.globalBus.$on('refresh:status', async () => {
@@ -163,7 +164,7 @@ export default {
       }
     });
     routerHelper.events.addListener('optionsSaved', () => {
-      this.tryChangeMode(modes.ADMIN);
+      this.tryChangeMode(this.internalSettings.general.defaultMode);
     });
   },
   watch: {
