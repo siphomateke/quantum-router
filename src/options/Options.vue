@@ -1,5 +1,5 @@
 <template>
-  <extension-settings></extension-settings>
+  <extension-settings @save="save"></extension-settings>
 </template>
 
 <script>
@@ -9,6 +9,14 @@ export default {
   name: 'app',
   components: {
     ExtensionSettings,
+  },
+  methods: {
+    save() {
+      browser.runtime.sendMessage({
+        from: 'options',
+        status: 'saved',
+      });
+    },
   },
 };
 </script>
