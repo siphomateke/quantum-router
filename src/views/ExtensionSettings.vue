@@ -5,7 +5,7 @@
       <b-tabs v-if="loadedSettings">
         <b-tab-item :label="$i18n('options_tabs_general')">
           <config-field
-            :label="$i18n('options_general_defaultMode')"
+            :label="$i18n('options_labels_general_defaultMode')"
             :description="$i18n('options_descriptions_general_defaultMode')">
             <template v-for="mode in modes">
               <b-radio
