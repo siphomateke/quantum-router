@@ -14,9 +14,6 @@ Vue.mixin({
   methods: {
     $i18n: i18n.getMessage,
   },
-  filters: {
-    $i18n: i18n.getMessage,
-  },
 });
 
 /* eslint-disable no-new */

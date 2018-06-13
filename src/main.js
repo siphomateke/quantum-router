@@ -27,9 +27,6 @@ Vue.mixin({
   methods: {
     $i18n: i18n.getMessage,
   },
-  filters: {
-    $i18n: i18n.getMessage,
-  },
   computed: {
     ...mapState({
       $mode: state => state.mode,

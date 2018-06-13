@@ -2,7 +2,7 @@
   <div class="notification-popup">
     <div class="popup-card">
       <header class="popup-card-head">
-        <span class="popup-card-title">{{ 'notifications_title' | $i18n}}</span>
+        <span class="popup-card-title">{{ $i18n('notifications_title') }}</span>
       </header>
       <section class="popup-card-body">
         <q-notification-list :list="list" :loading="loading"></q-notification-list>

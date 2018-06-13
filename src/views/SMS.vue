@@ -22,7 +22,7 @@
           type="is-info"
           has-icon
           icon-size="small">
-          {{ 'sms_box_full' | $i18n }}
+          {{ $i18n('sms_box_full') }}
         </b-message>
       </div>
       <b-tabs type="is-boxed" expanded @change="changedTab">
@@ -63,7 +63,7 @@
     <template v-else>
       <div class="padding-container">
         <b-message type="is-info" has-icon>
-          {{ 'sms_admin_only' | $i18n}}
+          {{ $i18n('sms_admin_only') }}
         </b-message>
       </div>
     </template>

@@ -18,10 +18,10 @@
                 v-for="selector in selectors"
                 :key="selector"
                 @click="changeSelection(selector)">
-                 {{ 'sms_action_select_'+selector | $i18n }}
+                 {{ $i18n('sms_action_select_'+selector) }}
               </b-dropdown-item>
               <b-dropdown-item separator></b-dropdown-item>
-              <b-dropdown-item custom><b>{{ 'sms_action_select_dropdown_types_group' | $i18n }}</b></b-dropdown-item>
+              <b-dropdown-item custom><b>{{ $i18n('sms_action_select_dropdown_types_group') }}</b></b-dropdown-item>
               <b-dropdown-item
                 v-for="smsType in smsTypes"
                 :key="smsType"

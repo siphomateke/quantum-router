@@ -25,7 +25,7 @@
   <template v-else>
     <div class="padding-container">
       <b-message type="is-info" has-icon>
-        {{ 'settings_admin_only' | $i18n}}
+        {{ $i18n('settings_admin_only') }}
       </b-message>
     </div>
     </template>

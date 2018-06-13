@@ -81,7 +81,7 @@
       <template slot="empty">
         <section class="section">
           <template v-if="!loading">
-            <p>{{ 'sms_empty' | $i18n }}</p>
+            <p>{{ $i18n('sms_empty') }}</p>
           </template>
         </section>
       </template>

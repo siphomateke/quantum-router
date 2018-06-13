@@ -44,7 +44,7 @@
                     v-for="mode in modes"
                     :key="mode"
                     :value="mode">
-                   {{ 'mode_'+modeNames[mode] | $i18n }}
+                   {{ $i18n('mode_'+modeNames[mode]) }}
                   </q-dropdown-item>
                 </q-dropdown-select>
               </template>
