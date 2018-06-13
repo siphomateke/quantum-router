@@ -102,6 +102,23 @@
     "message": "Router URL is empty. Please set a valid URL in the extension's options."
   },
 
+  "home_admin_only": {
+    "message": "Cannot view data usage while offline"
+  },
+  "home_data_usage": {
+    "message": "Received/Sent: $RECEIVED$ / $SENT$",
+    "placeholders": {
+      "received": {
+        "content": "$1",
+        "example": "30"
+      },
+      "sent": {
+        "content": "$2",
+        "example": "12"
+      }
+    }
+  },
+
   "sms_admin_only": {
     "message": "You must have administrator access to view SMS messages."
   },

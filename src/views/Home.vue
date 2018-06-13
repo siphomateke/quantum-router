@@ -4,7 +4,7 @@
     <div class="content">
       <template v-if="!offline">
         <template v-if="usage">
-          Received/Sent: {{ usage.received | round(2) }} / {{ usage.sent | round(2) }}
+          {{ $i18n('home_data_usage', round(usage.received, 2), round(usage.sent, 2)) }}
         </template>
         <line-chart
         :chart-data="lineChartData"
@@ -14,9 +14,7 @@
         </line-chart>
       </template>
       <template v-else>
-        <b-message type="is-info" has-icon>
-          Cannot view data usage while offline
-        </b-message>
+        <b-message type="is-info" has-icon>{{ $i18n('home_admin_only') }}</b-message>
       </template>
     </div>
   </section>
