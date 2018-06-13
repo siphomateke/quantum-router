@@ -94,13 +94,11 @@ export default {
   beforeDestroy() {
     this.globalBus.$off('refresh:graph', this.graph);
   },
-  filters: {
+  methods: {
     round(num, precision) {
       const factor = Math.pow(10, precision);
       return Math.round(num * factor) / factor;
     },
-  },
-  methods: {
     async graph() {
       if (!this.offline) {
         const data = await router.monitoring.getTrafficStatistics();
