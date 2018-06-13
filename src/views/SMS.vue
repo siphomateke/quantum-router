@@ -61,7 +61,7 @@
       </b-modal>
     </template>
     <template v-else>
-      <div class="box">
+      <div class="padding-container">
         <b-message type="is-info" has-icon>
           {{ 'sms_admin_only' | $i18n}}
         </b-message>

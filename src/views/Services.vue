@@ -1,5 +1,5 @@
 <template>
-<div class="box">
+<div class="padding-container">
   <form v-on:submit.prevent v-if="$adminMode">
     <b-field :label="'services_ussd_command' | $i18n">
       <b-input v-model="ussd.content" type="text"></b-input>

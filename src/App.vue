@@ -212,42 +212,4 @@ export default {
 
 <style lang="scss">
 @import "~styles/global-base";
-
-body {
-  background: $page-background-color;
-}
-
-.page-wrapper {
-  position: relative;
-}
-
-.page-content {
-  background-color: $content-background-color;
-}
-
-.nav.menu {
-  background-color: #fff;
-  border-bottom: 1px solid #e1e1e1;
-  z-index: 1;
-}
-
-.notification-dropdown .dropdown-content{
-  box-shadow: 0 0 15px rgba(0,0,0,0.18);
-  border: solid 1px rgba(10,10,10,0.2);
-  padding: 0;
-}
-
-// TODO: Give this a better name and put it in a better place
-.help-cursor {
-  cursor: help;
-}
-
-// Place inside a b-tag
-.tag .tag-loader {
-  display: inline-flex;
-  position: relative;
-  &:after {
-    @include loader;
-  }
-}
 </style>

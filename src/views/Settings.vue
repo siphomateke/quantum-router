@@ -23,11 +23,11 @@
     </div>
   </template>
   <template v-else>
-      <div class="box">
-        <b-message type="is-info" has-icon>
-          {{ 'settings_admin_only' | $i18n}}
-        </b-message>
-      </div>
+    <div class="padding-container">
+      <b-message type="is-info" has-icon>
+        {{ 'settings_admin_only' | $i18n}}
+      </b-message>
+    </div>
     </template>
 </div>
 </template>

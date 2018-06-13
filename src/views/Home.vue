@@ -1,31 +1,30 @@
 <template>
-<div class="page-content">
-  <div class="box">
-    <section class="section">
-      <div class="content">
-        <template v-if="!offline">
-          <template v-if="usage">
-            Received/Sent: {{ usage.received | round(2) }} / {{ usage.sent | round(2) }}
-          </template>
-          <line-chart
-          :chart-data="lineChartData"
-          :options="chartOptions"
-          :height="400"
-          >
-          </line-chart>
+<div class="page-content padding-container">
+  <section class="section">
+    <div class="content">
+      <template v-if="!offline">
+        <template v-if="usage">
+          Received/Sent: {{ usage.received | round(2) }} / {{ usage.sent | round(2) }}
         </template>
-        <template v-else>
-          <b-message type="is-info" has-icon>
-            Cannot view data usage while offline
-          </b-message>
-        </template>
-      </div>
-    </section>
-  </div>
+        <line-chart
+        :chart-data="lineChartData"
+        :options="chartOptions"
+        :height="400"
+        >
+        </line-chart>
+      </template>
+      <template v-else>
+        <b-message type="is-info" has-icon>
+          Cannot view data usage while offline
+        </b-message>
+      </template>
+    </div>
+  </section>
 </div>
 </template>
 
 <script>
+// TODO: Fix padding and too many wrappers
 import {modes} from '@/store';
 import LineChart from '@/components/charts/LineChart.js';
 import router from 'huawei-router-api/browser';
