@@ -57,7 +57,8 @@
           v-if="showType">
           <b-icon
             :title="getSmsTypeName(props.row.parsed.type)"
-            :icon="getSmsTypeIcon(props.row.parsed.type)">
+            :pack="smsTypeIcons[props.row.parsed.type].pack"
+            :icon="smsTypeIcons[props.row.parsed.type].id">
           </b-icon>
         </b-table-column>
         <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>

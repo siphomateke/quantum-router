@@ -536,19 +536,25 @@ const actions = {
   async deleteSelectedMessages({state, dispatch}, {box}) {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
   },
-  deleteSelectedMessagesConfirm({state, getters, dispatch}, {box}) {
-    const messages = state.boxes[box].selected;
-    dispatch('openSmsActionDialog', {
-      props: {
-        messages: messages,
-        type: 'danger',
-        confirmButton: i18n.getMessage('sms_action_delete'),
-        confirmMessage: i18n.getMessage('sms_delete_confirm', messages.length),
-      },
-      events: {
-        confirm: () => dispatch('deleteSelectedMessages', {box}),
-      },
-    });
+  deleteSelectedMessagesConfirm({rootState, state, dispatch}, {box}) {
+    // TODO: Test this
+    const confirmDialogsToShow = rootState.settings.internal.general.confirmDialogsToShow;
+    if ('delete' in confirmDialogsToShow) {
+      const messages = state.boxes[box].selected;
+      dispatch('openSmsActionDialog', {
+        props: {
+          messages: messages,
+          type: 'danger',
+          confirmButton: i18n.getMessage('sms_action_delete'),
+          confirmMessage: i18n.getMessage('sms_delete_confirm', messages.length),
+        },
+        events: {
+          confirm: () => dispatch('deleteSelectedMessages', {box}),
+        },
+      });
+    } else {
+      dispatch('deleteSelectedMessages', {box});
+    }
   },
   setGettingSmsList({commit}, value) {
     commit(types.SET_GETTING_SMS_LIST, value);
@@ -614,8 +620,27 @@ const actions = {
       }
     }
   },
+  // TODO: Give this a better name.
+  async importNotEnoughSpaceConfirm({state, getters, dispatch}) {
+    // If there is space for some but not all messages to be imported, inform user
+    const available = state.local.max - getters.localTotal;
+    const toImport = getters.simTotal;
+    if (!getters.localFull && toImport > available) {
+      dispatch('dialog/confirm', {
+        message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+        type: 'warning',
+        confirmText: i18n.getMessage('generic_yes'),
+        cancelText: i18n.getMessage('generic_no'),
+        onConfirm: () => {
+          dispatch('import');
+        },
+      }, {root: true});
+    } else {
+      dispatch('import');
+    }
+  },
   // Called before the actual import
-  async importConfirm({state, getters, dispatch}) {
+  async importConfirm({rootState, getters, dispatch}) {
     try {
       await dispatch('getCount');
 
@@ -627,36 +652,27 @@ const actions = {
           type: 'warning',
         }, {root: true});
       } else {
-        await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
-        const messages = getters.allMessages(boxTypes.SIM_INBOX);
-        dispatch('openSmsActionDialog', {
-          props: {
-            messages: messages,
-            type: 'warning',
-            confirmButton: i18n.getMessage('generic_yes'),
-            confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
-          },
-          events: {
-            confirm: () => {
-              // If there is space for some but not all messages to be imported, inform user
-              const available = state.local.max - getters.localTotal;
-              const toImport = getters.simTotal;
-              if (!getters.localFull && toImport > available) {
-                dispatch('dialog/confirm', {
-                  message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
-                  type: 'warning',
-                  confirmText: i18n.getMessage('generic_yes'),
-                  cancelText: i18n.getMessage('generic_no'),
-                  onConfirm: () => {
-                    dispatch('import');
-                  },
-                }, {root: true});
-              } else {
-                dispatch('import');
-              }
+        // TODO: Test this
+        const confirmDialogsToShow = rootState.settings.internal.general.confirmDialogsToShow;
+        if ('import' in confirmDialogsToShow) {
+          await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
+          const messages = getters.allMessages(boxTypes.SIM_INBOX);
+          dispatch('openSmsActionDialog', {
+            props: {
+              messages: messages,
+              type: 'warning',
+              confirmButton: i18n.getMessage('generic_yes'),
+              confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
             },
-          },
-        });
+            events: {
+              confirm: () => {
+                dispatch('importNotEnoughSpaceConfirm');
+              },
+            },
+          });
+        } else {
+          dispatch('importNotEnoughSpaceConfirm');
+        }
       }
     } catch (e) {
       dispatch('handleError', e, {root: true});

@@ -1,8 +1,14 @@
+import {mapState} from 'vuex';
 import router from 'huawei-router-api/browser';
 
 const smsTypes = router.sms.types;
 
 export default {
+  computed: {
+    ...mapState({
+      smsTypeIcons: state => state.settings.internal.sms.typeIcons,
+    }),
+  },
   methods: {
     /**
      * Rather than directly using the values of the sms types
@@ -30,25 +36,6 @@ export default {
     },
     getSmsTypeName(type) {
       return this.$i18n('sms_types_'+this.getSmsTypeCode(type));
-    },
-    // TODO: Add icon customization to settings
-    getSmsTypeIcon(type) {
-      switch (type) {
-      case smsTypes.RECHARGE:
-        return 'bolt';
-      case smsTypes.DATA:
-        return 'area-chart';
-      case smsTypes.DATA_PERCENT:
-        return 'pie-chart';
-      case smsTypes.ACTIVATED:
-        return 'lightbulb-o';
-      case smsTypes.DEPLETED:
-        return 'exclamation';
-      case smsTypes.AD:
-        return 'bullhorn';
-      default:
-        return '';
-      }
     },
   },
 };

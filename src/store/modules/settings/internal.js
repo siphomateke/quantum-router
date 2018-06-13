@@ -4,14 +4,13 @@ import router from 'huawei-router-api/browser';
 const smsTypes = router.sms.types;
 
 export default {
-  // FIXME: Actually use these
   state: {
     general: {
       routerUrl: 'http://192.168.1.1',
       username: '',
       password: '',
+      rememberLoginDetails: true, // FIXME: Use this
       defaultMode: modes.ADMIN,
-      rememberLoginDetails: true,
     },
     sms: {
       hideSimBoxes: true,

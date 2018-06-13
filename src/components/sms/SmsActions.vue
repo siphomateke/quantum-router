@@ -26,7 +26,7 @@
                 v-for="smsType in smsTypes"
                 :key="smsType"
                 @click="changeSelection(smsType)">
-                  <b-icon :icon="getSmsTypeIcon(smsType)"></b-icon>
+                  <b-icon :pack="smsTypeIcons[smsType].pack" :icon="smsTypeIcons[smsType].id"></b-icon>
                   <span style="padding-left:0.5em;">{{ getSmsTypeName(smsType) }}</span>
               </b-dropdown-item>
             </b-dropdown>

@@ -97,19 +97,8 @@ export default {
     SmsDialog,
   },
   data() {
-    const tabs = [
-      {boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox'},
-      {boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms_box_sent'), icon: 'send'},
-      {boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file'},
-    ];
-    const buses = [];
-    for (let i=0; i<tabs.length; i++) {
-      buses[i] = new Vue();
-    }
     return {
-      tabs,
       currentTab: 0,
-      buses,
       bus: new Vue(),
       showSmsDialog: false,
       dialog: {
@@ -150,10 +139,33 @@ export default {
       boxes: state => state.sms.boxes,
       importEnabled: state => state.sms.importEnabled,
       countLoading: state => state.sms.countLoading,
+      internalSettings: state => state.settings.internal,
     }),
     ...mapGetters({
       localFull: 'sms/localFull',
     }),
+    tabs() {
+      let tabs = [
+        {boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox'},
+        {boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms_box_sent'), icon: 'send'},
+        {boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file'},
+      ];
+      if (!this.internalSettings.sms.hideSimBoxes) {
+        tabs = tabs.concat([
+          {boxType: boxTypes.SIM_INBOX, label: this.$i18n('sms_sim_box_inbox'), icon: 'inbox'},
+          {boxType: boxTypes.SIM_SENT, label: this.$i18n('sms_sim_box_sent'), icon: 'send'},
+          {boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_sim_box_draft'), icon: 'file'},
+        ]);
+      }
+      return tabs;
+    },
+    buses() {
+      const buses = [];
+      for (let i=0; i<this.tabs.length; i++) {
+        buses[i] = new Vue();
+      }
+      return buses;
+    },
     boxType() {
       return this.tabs[this.currentTab].boxType;
     },
