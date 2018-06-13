@@ -358,16 +358,16 @@
   "options_descriptions_general_rememberLogin": {
     "message": "Whether Quantum should save your login details"
   },
-  "options_labels_general_hideSimBoxes": {
+  "options_labels_sms_hideSimBoxes": {
     "message": "Hide SIM boxes"
   },
-  "options_descriptions_general_hideSimBoxes": {
+  "options_descriptions_sms_hideSimBoxes": {
     "message": "Whether SIM boxes (inbox, sent and draft) should be shown"
   },
-  "options_labels_general_confirmDialogsToShow": {
+  "options_labels_sms_confirmDialogsToShow": {
     "message": "Confirmation dialogs to show"
   },
-  "options_descriptions_general_confirmDialogsToShow": {
+  "options_descriptions_sms_confirmDialogsToShow": {
     "message": "Actions which will show confirmation dialogs before execution"
   },
   "options_labels_sms_typeIcons": {

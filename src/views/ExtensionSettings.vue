@@ -47,14 +47,14 @@
       </b-tab-item>
       <b-tab-item :label="$i18n('options_tabs_sms')">
         <config-field
-          :label="$i18n('options_labels_general_hideSimBoxes')"
-          :description="$i18n('options_descriptions_general_hideSimBoxes')">
+          :label="$i18n('options_labels_sms_hideSimBoxes')"
+          :description="$i18n('options_descriptions_sms_hideSimBoxes')">
           <b-checkbox v-model="settings.sms.hideSimBoxes">
           </b-checkbox>
         </config-field>
         <config-field
-          :label="$i18n('options_labels_general_confirmDialogsToShow')"
-          :description="$i18n('options_descriptions_general_confirmDialogsToShow')">
+          :label="$i18n('options_labels_sms_confirmDialogsToShow')"
+          :description="$i18n('options_descriptions_sms_confirmDialogsToShow')">
           <b-checkbox
             v-model="settings.sms.confirmDialogsToShow"
             native-value="delete">
