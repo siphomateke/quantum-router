@@ -19,7 +19,7 @@
           <config-field
             label="Remember password"
             description="Whether Quantum should save your login details">
-            <b-checkbox v-model="settings.general.rememberPassword">
+            <b-checkbox v-model="settings.general.rememberLoginDetails">
             </b-checkbox>
           </config-field>
         </b-tab-item>

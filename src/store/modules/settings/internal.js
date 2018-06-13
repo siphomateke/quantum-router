@@ -8,7 +8,7 @@ export default {
   state: {
     general: {
       defaultMode: modes.ADMIN,
-      rememberPassword: true,
+      rememberLoginDetails: true,
     },
     sms: {
       hideSimBoxes: true,
