@@ -163,7 +163,8 @@ export default {
         this.$store.dispatch('notifications/refresh');
       }
     });
-    routerHelper.events.addListener('optionsSaved', () => {
+    routerHelper.events.addListener('optionsSaved', async () => {
+      await this.$store.dispatch('settings/load');
       this.tryChangeMode(this.internalSettings.general.defaultMode);
     });
   },
