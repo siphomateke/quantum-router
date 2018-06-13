@@ -1,5 +1,5 @@
 <template>
-<div class="padding-container">
+<div class="page-content padding-container">
   <form v-on:submit.prevent v-if="$adminMode">
     <b-field :label="'services_ussd_command' | $i18n">
       <b-input v-model="ussd.content" type="text"></b-input>
@@ -144,6 +144,7 @@ export default {
       this.resetCommandResult();
       await this._send();
       if (this.cancelling) {
+        // TODO: Use Vuex
         await router.ussd.releaseUssd();
       }
       this.cancelling = false;
