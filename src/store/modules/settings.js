@@ -1,8 +1,7 @@
 import dialup from './settings/dialup';
-import {modes} from '@/store/global.js';
 import router from 'huawei-router-api/browser';
-
-const smsTypes = router.sms.types;
+import internal from './settings/internal';
+import dotty from 'dotty';
 
 export const types = {
   SET: 'SET',
@@ -12,25 +11,9 @@ export default {
   namespaced: true,
   modules: {
     dialup,
+    internal,
   },
   state: {
-    // FIXME: Actually use these
-    general: {
-      defaultMode: modes.ADMIN,
-      rememberPassword: true,
-    },
-    sms: {
-      hideSimBoxes: true,
-      confirmDialogsToShow: ['delete', 'import'],
-      typeIcons: {
-        [smsTypes.RECHARGE]: {pack: 'fa', id: 'bolt'},
-        [smsTypes.DATA]: {pack: 'fa', id: 'area-chart'},
-        [smsTypes.DATA_PERCENT]: {pack: 'fa', id: 'pie-chart'},
-        [smsTypes.ACTIVATED]: {pack: 'fa', id: 'lightbulb-o'},
-        [smsTypes.DEPLETED]: {pack: 'fa', id: 'exclamation'},
-        [smsTypes.AD]: {pack: 'fa', id: 'bullhorn'},
-      },
-    },
     wlan: {
       moduleEnabled: false,
       ssidList: [
@@ -45,18 +28,17 @@ export default {
   },
   mutations: {
     [types.SET](state, payload) {
-      state[payload.domain][payload.key] = payload.value;
+      dotty.put(state, payload.path, payload.value);
     },
   },
   actions: {
-    set({commit}, payload) {
+    async set({commit}, payload) {
       commit(types.SET, payload);
     },
     async refreshStatus({dispatch}) {
       try {
         await dispatch('set', {
-          domain: 'dialup',
-          key: 'mobileData',
+          path: 'dialup.mobileData',
           value: await router.dialup.getMobileDataSwitch(),
         });
       } catch (e) {

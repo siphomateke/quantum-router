@@ -16,16 +16,16 @@ export default {
     // FIXME: Handle errors
     async getMobileDataSwitch({dispatch}) {
       const value = await router.dialup.getMobileDataSwitch();
-      dispatch('set', {domain: 'dialup', key: 'mobileData', value});
+      await dispatch('set', {path: 'dialup.mobileData', value});
       return value;
     },
     async setMobileDataSwitch({dispatch}, value) {
       await router.dialup.setMobileDataSwitch(value);
-      dispatch('set', {domain: 'dialup', key: 'mobileData', value});
+      await dispatch('set', {path: 'dialup.mobileData', value});
     },
     async getRoamingSwitch({dispatch, getters}) {
       const value = await router.dialup.getConnection();
-      dispatch('set', {domain: 'dialup', key: 'connection', value});
+      await dispatch('set', {path: 'dialup.connection', value});
       return getters.roaming;
     },
     async setRoamingSwitch({state, dispatch}, value) {
