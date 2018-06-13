@@ -72,3 +72,12 @@ export const events = {
     emitter.on(name, callback);
   },
 };
+
+export const storage = {
+  set(data) {
+    return browser.storage.sync.set(data);
+  },
+  get(data) {
+    return browser.storage.sync.get(data);
+  },
+};

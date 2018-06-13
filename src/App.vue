@@ -148,6 +148,8 @@ export default {
 
     this.tryChangeMode(modes.ADMIN);
 
+    this.$store.dispatch('settings/load');
+
     this.globalBus.$on('refresh:status', async () => {
       if (!this.$store.state.loggingIn && this.$mode > modes.OFFLINE) {
         this.$store.dispatch('settings/refreshStatus');

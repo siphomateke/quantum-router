@@ -96,7 +96,8 @@ export default {
     modeNames: () => modeNames,
     smsTypes: () => smsTypes,
   },
-  beforeMount() {
+  async beforeMount() {
+    await this.$store.dispatch('settings/load');
     const stateSettings = this.$store.state.settings.internal;
     for (const domain of Object.keys(stateSettings)) {
       this.$set(this.settings, domain, {});
@@ -118,8 +119,22 @@ export default {
           promises.push(this.setSetting(domain+'.'+name, this.settings[domain][name]));
         }
       }
-      await Promise.all(promises);
-      this.saving = false;
+      try {
+        await Promise.all(promises);
+        await this.$store.dispatch('settings/save');
+        this.$toast.open({
+          message: 'Saved settings',
+          type: 'is-success',
+        });
+      } catch (e) {
+        this.$toast.open({
+          message: 'Failed to save settings',
+          type: 'is-danger',
+        });
+        this.$store.dispatch('handleError', e);
+      } finally {
+        this.saving = false;
+      }
     },
   },
 };

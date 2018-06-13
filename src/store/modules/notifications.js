@@ -4,6 +4,7 @@ import router from 'huawei-router-api/browser';
 import {Notifier} from '@/browser/routerHelper';
 import {bus} from '@/events';
 import {boxTypes} from '@/store/modules/sms';
+import {storage} from '@/browser/routerHelper';
 
 export const types = {
   ADD: 'ADD',
@@ -55,7 +56,7 @@ export default {
   },
   actions: {
     async load({commit}) {
-      const items = await browser.storage.sync.get('notifications');
+      const items = await storage.get('notifications');
       commit(types.CLEAR);
       const notifications = [];
       if ('notifications' in items) {
@@ -71,7 +72,7 @@ export default {
     },
     // TODO: Evaluate better persistent storage methods
     save({state}) {
-      return browser.storage.sync.set({
+      return storage.set({
         notifications: state.all,
         lastCount: state.lastCount,
       });
