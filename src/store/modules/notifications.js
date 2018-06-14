@@ -10,7 +10,6 @@ export const types = {
   REMOVE: 'REMOVE',
   UPDATE: 'UPDATE',
   CLEAR: 'CLEAR',
-  SET_UPDATE_TIME: 'SET_UPDATE_TIME',
   SET_LAST_COUNT: 'SET_LAST_COUNT',
 };
 
@@ -18,7 +17,6 @@ export default {
   namespaced: true,
   state: {
     all: [],
-    lastUpdated: null,
     lastCount: null,
   },
   getters: {
@@ -44,9 +42,6 @@ export default {
     },
     [types.REMOVE](state, notifications) {
       state.all = state.all.filter(notification => !notifications.includes(notification));
-    },
-    [types.SET_UPDATE_TIME](state, time) {
-      state.lastUpdated = time;
     },
     [types.SET_LAST_COUNT](state, count) {
       state.lastCount = count;
@@ -87,9 +82,6 @@ export default {
       commit(types.SET_LAST_COUNT, count);
       dispatch('save');
     },
-    setUpdateTime({commit}, time) {
-      commit(types.SET_UPDATE_TIME, time);
-    },
     reduceLastCount({state, dispatch}, amount) {
       dispatch('setLastCount', state.lastCount - amount);
     },
@@ -115,7 +107,6 @@ export default {
             newNotifications.push(n);
           }
           dispatch('add', newNotifications);
-          dispatch('setUpdateTime', Date.now());
           if (!first) {
             bus.$emit('refresh:sms', boxTypes.LOCAL_INBOX);
           }
