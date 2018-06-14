@@ -160,7 +160,13 @@ const getters = {
     return boxItem.messages[boxItem.page];
   },
   actualMessages: state => ids => {
-    return ids.map(id => state.messages[id]);
+    const messages = [];
+    for (const id of ids) {
+      if (id in state.messages) {
+        messages.push(state.messages[id]);
+      }
+    }
+    return messages;
   },
   allMessages: state => box => {
     let messages = [];
