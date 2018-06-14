@@ -1,7 +1,10 @@
 <template>
-<div class="page-content padding-container">
-  <section class="section">
-    <div class="content">
+<div class="padding-container">
+  <div class="card">
+    <header class="card-header">
+      <span class="card-header-title">{{ $i18n('home_cards_data_usage_graph') }}</span>
+    </header>
+    <div class="card-content">
       <template v-if="!offline">
         <template v-if="usage">
           {{ $i18n('home_data_usage', round(usage.received, 2), round(usage.sent, 2)) }}
@@ -17,12 +20,11 @@
         <b-message type="is-info" has-icon>{{ $i18n('home_admin_only') }}</b-message>
       </template>
     </div>
-  </section>
+  </div>
 </div>
 </template>
 
 <script>
-// TODO: Fix padding and too many wrappers
 import {modes} from '@/store';
 import LineChart from '@/components/charts/LineChart.js';
 import router from 'huawei-router-api/browser';

@@ -102,6 +102,9 @@
     "message": "Router URL is empty. Please set a valid URL in the extension's options."
   },
 
+  "home_cards_data_usage_graph": {
+    "message": "Data usage"
+  },
   "home_admin_only": {
     "message": "Cannot view data usage while offline"
   },
