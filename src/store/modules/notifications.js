@@ -41,7 +41,7 @@ export default {
       state.all[index] = notification;
     },
     [types.REMOVE](state, notifications) {
-      state.all = state.all.filter(notification => !notifications.includes(notification));
+      state.all = state.all.filter(n => !notifications.includes(n));
     },
     [types.SET_LAST_COUNT](state, count) {
       state.lastCount = count;
@@ -119,7 +119,8 @@ export default {
     },
     async refresh({state, dispatch}) {
       try {
-        const count = (await router.monitoring.checkNotifications()).UnreadMessage;
+        const data = await router.monitoring.checkNotifications();
+        const count = data.UnreadMessage;
         const lastCount = state.lastCount;
         dispatch('setLastCount', count);
         // NOTE: If an SMS is deleted or marked as read and then a
