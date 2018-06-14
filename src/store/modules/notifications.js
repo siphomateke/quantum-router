@@ -1,4 +1,3 @@
-/* global browser */
 import {Notification} from '@/browser/notification.js';
 import router from 'huawei-router-api/browser';
 import {Notifier} from '@/browser/routerHelper';
@@ -43,9 +42,8 @@ export default {
     [types.UPDATE](state, {index, notification}) {
       state.all[index] = notification;
     },
-    [types.REMOVE](state, notification) {
-      const index = state.all.indexOf(notification);
-      state.all.splice(index, 1);
+    [types.REMOVE](state, notifications) {
+      state.all = state.all.filter(notification => !notifications.includes(notification));
     },
     [types.SET_UPDATE_TIME](state, time) {
       state.lastUpdated = time;
@@ -81,8 +79,8 @@ export default {
       commit(types.ADD, notifications);
       // dispatch('save');
     },
-    remove({commit, dispatch}, notification) {
-      commit(types.REMOVE, notification);
+    remove({commit, dispatch}, notifications) {
+      commit(types.REMOVE, notifications);
       // dispatch('save');
     },
     setUpdateTime({commit}, time) {
