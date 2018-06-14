@@ -54,7 +54,7 @@ export default {
   },
   actions: {
     async load({commit}) {
-      const items = await storage.get('notifications');
+      const items = await storage.get(['notifications', 'lastCount']);
       commit(types.CLEAR);
       const notifications = [];
       if ('notifications' in items) {
@@ -77,17 +77,21 @@ export default {
     },
     add({commit, dispatch}, notifications) {
       commit(types.ADD, notifications);
-      // dispatch('save');
+      dispatch('save');
     },
     remove({commit, dispatch}, notifications) {
       commit(types.REMOVE, notifications);
-      // dispatch('save');
+      dispatch('save');
+    },
+    setLastCount({commit, dispatch}, count) {
+      commit(types.SET_LAST_COUNT, count);
+      dispatch('save');
     },
     setUpdateTime({commit}, time) {
       commit(types.SET_UPDATE_TIME, time);
     },
-    reduceLastCount({state, commit}, amount) {
-      commit(types.SET_LAST_COUNT, state.lastCount - amount);
+    reduceLastCount({state, dispatch}, amount) {
+      dispatch('setLastCount', state.lastCount - amount);
     },
     async newNotifications({rootState, dispatch}, {count, first}) {
       // NOTE: This won't wait to run. Instead it depends on being called again
@@ -122,19 +126,20 @@ export default {
         }
       }
     },
-    async refresh({rootState, state, commit, dispatch}) {
+    async refresh({state, dispatch}) {
       try {
         const count = (await router.monitoring.checkNotifications()).UnreadMessage;
+        const lastCount = state.lastCount;
+        dispatch('setLastCount', count);
         // NOTE: If an SMS is deleted or marked as read and then a
         // notification is received  before the next refresh,
         // using another client such as the app, this won't work
-        if (count > state.lastCount) {
+        if (count > lastCount) {
           dispatch('newNotifications', {
-            count: count - state.lastCount,
-            first: state.lastCount === null,
+            count: count - lastCount,
+            first: lastCount === null,
           });
         }
-        commit(types.SET_LAST_COUNT, count);
       } catch (e) {
         dispatch('handleError', e, {root: true});
       }
