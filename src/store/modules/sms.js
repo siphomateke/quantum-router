@@ -537,9 +537,8 @@ const actions = {
     await dispatch('deleteMessages', {box, ids: state.boxes[box].selected});
   },
   deleteSelectedMessagesConfirm({rootState, state, dispatch}, {box}) {
-    // TODO: Test this
-    const confirmDialogsToShow = rootState.settings.internal.general.confirmDialogsToShow;
-    if ('delete' in confirmDialogsToShow) {
+    const confirmDialogsToShow = rootState.settings.internal.sms.confirmDialogsToShow;
+    if (confirmDialogsToShow.includes('delete')) {
       const messages = state.boxes[box].selected;
       dispatch('openSmsActionDialog', {
         props: {
@@ -652,9 +651,8 @@ const actions = {
           type: 'warning',
         }, {root: true});
       } else {
-        // TODO: Test this
-        const confirmDialogsToShow = rootState.settings.internal.general.confirmDialogsToShow;
-        if ('import' in confirmDialogsToShow) {
+        const confirmDialogsToShow = rootState.settings.internal.sms.confirmDialogsToShow;
+        if (confirmDialogsToShow.includes('import')) {
           await dispatch('getAllMessages', {box: boxTypes.SIM_INBOX});
           const messages = getters.allMessages(boxTypes.SIM_INBOX);
           dispatch('openSmsActionDialog', {
