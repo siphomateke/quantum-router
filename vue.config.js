@@ -39,4 +39,10 @@ module.exports = {
     config.resolve.alias.set('styles', resolvePath('src/styles'));
     config.entry('preload').add(resolvePath('src/styles/preload.scss'));
   },
+
+  configureWebpack: {
+    node: {
+      global: true,
+    },
+  },
 };
