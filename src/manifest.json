@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Quantum Router",
+  "short_name": "Q Router",
+  "author": "nextgensparx",
+  "homepage_url": "https://github.com/nextgensparx/quantum-router",
+  "default_locale": "en",
+  "icons": {
+    "16": "./icons/icon128.png",
+    "48": "./icons/icon128.png",
+    "128": "./icons/icon128.png"
+  },
+  "options_ui": {
+    "chrome_style": false,
+    "page": "./options.html"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "./icons/icon128.png",
+    "default_title": "Open Quantum Router"
+  },
+  "permissions": [
+    "notifications",
+    "downloads",
+    "storage",
+    "https://*/*",
+    "http://*/*"
+  ]
+}
