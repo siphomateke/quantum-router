@@ -2,12 +2,12 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "serve",
+      "script": "serve:electron",
       "problemMatcher": []
     },
     {
       "type": "npm",
-      "script": "build",
+      "script": "build:electron",
       "problemMatcher": []
     },
     {
