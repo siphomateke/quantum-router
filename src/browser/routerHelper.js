@@ -67,5 +67,5 @@ export async function getLoginDetails() {
 }
 
 export function openOptionsPage() {
-  // FIXME: Navigate to extension options
+  // FIXME: Navigate to app options
 }

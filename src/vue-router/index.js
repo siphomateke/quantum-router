@@ -6,7 +6,7 @@ import Services from '@/views/Services';
 import Settings from '@/views/Settings';
 import Wlan from '@/views/settings/wlan';
 import DialUp from '@/views/settings/dialup';
-import ExtensionSettings from '@/views/ExtensionSettings';
+import AppSettings from '@/views/AppSettings';
 
 Vue.use(Router);
 
@@ -56,9 +56,9 @@ export default new Router({
       ],
     },
     {
-      path: '/extension-settings',
-      name: 'extension-settings',
-      component: ExtensionSettings,
+      path: '/app-settings',
+      name: 'app-settings',
+      component: AppSettings,
     },
   ],
 });

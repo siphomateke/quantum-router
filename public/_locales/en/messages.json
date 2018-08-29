@@ -19,7 +19,7 @@
   "menu_statistics":{"message": "Statistics"},
   "menu_services":{"message": "Services"},
   "menu_settings":{"message": "Settings"},
-  "menu_extension_settings":{"message": "Extension settings"},
+  "menu_app_settings":{"message": "App settings"},
 
   "mode_offline":{"message": "Offline"},
   "mode_basic":{"message": "Basic"},
@@ -81,7 +81,7 @@
     "message": "Failed to login to router. Make sure the username and password are correct."
   },
   "connection_error": {
-    "message": "Cannot connect to the router at <a href='$URL$'>$URL$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='$URL$'>$URL$</a>) is correct in the extension's settings.",
+    "message": "Cannot connect to the router at <a href='$URL$'>$URL$</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='$URL$'>$URL$</a>) is correct in the app's settings.",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -90,7 +90,7 @@
     }
   },
   "invalid_router_url_error": {
-    "message": "Invalid router URL; $1. Please set a valid URL in the extensions's options.",
+    "message": "Invalid router URL; $1. Please set a valid URL in the app's options.",
     "placeholders": {
       "url": {
         "content": "$1",
@@ -99,7 +99,7 @@
     }
   },
   "empty_router_url_error": {
-    "message": "Router URL is empty. Please set a valid URL in the extension's options."
+    "message": "Router URL is empty. Please set a valid URL in the app's options."
   },
 
   "home_cards_data_usage_graph": {
@@ -336,23 +336,23 @@
   },
   "options_labels_general_routerUrl": {
     "message": "Router URL",
-    "description": "Router URL field on the extensions options page."
+    "description": "Router URL field on the app options page."
   },
   "options_labels_general_username": {
     "message": "Username",
-    "description": "Username field on the extension options page."
+    "description": "Username field on the app options page."
   },
   "options_labels_general_password": {
     "message": "Password",
-    "description": "Password field on the extension options page."
+    "description": "Password field on the app options page."
   },
   "options_button_save": {
     "message": "Save",
-    "description": "Save button on the extension options page."
+    "description": "Save button on the app options page."
   },
   "options_error_ping": {
     "message": "Cannot connect to specified URL.",
-    "description": "Error message displayed when a connection to the router URL can't be established. Used on the extension options page."
+    "description": "Error message displayed when a connection to the router URL can't be established. Used on the app options page."
   },
   "options_save_success": {
     "message": "Saved changes"
@@ -361,7 +361,7 @@
     "message": "Failed to save settings"
   },
   "options_header": {
-    "message": "Extension settings"
+    "message": "App settings"
   },
   "options_tabs_general": {
     "message": "General"

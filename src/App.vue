@@ -29,9 +29,9 @@
           :label="this.$i18n('menu_settings')">
         </drawer-item>
         <drawer-item
-          link="extension-settings"
+          link="app-settings"
           icon="sliders"
-          :label="this.$i18n('menu_extension_settings')">
+          :label="this.$i18n('menu_app_settings')">
         </drawer-item>
       </drawer>
       <div class="column">
