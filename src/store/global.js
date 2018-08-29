@@ -53,6 +53,9 @@ export default {
   },
   actions: {
     handleError({dispatch}, e) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error(e.toString());
+      }
       let unknown = false;
       if (e instanceof RouterError) {
         const adminError = [
