@@ -8,7 +8,7 @@ module.exports = {
   lintOnSave: false,
 
   pages: {
-    'app': {
+    'index': {
       entry: 'src/main.js',
     },
     'options/options': {
