@@ -1,3 +1,9 @@
+const path = require('path');
+
+function resolvePath(pathToResolve) {
+  return path.resolve(__dirname, pathToResolve);
+}
+
 module.exports = {
   lintOnSave: false,
 
@@ -26,5 +32,9 @@ module.exports = {
         },
       },
     },
+  },
+
+  chainWebpack: (config) => {
+    config.resolve.alias.set('styles', resolvePath('src/styles'));
   },
 };
