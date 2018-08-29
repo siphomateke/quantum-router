@@ -12,9 +12,6 @@ module.exports = {
       entry: 'src/main.js',
       chunks: ['chunk-vendors', 'chunk-common', 'index', 'preload'],
     },
-    'options/options': {
-      entry: 'src/options/options.js',
-    },
   },
 
   pluginOptions: {

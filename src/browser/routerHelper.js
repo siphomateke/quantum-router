@@ -1,6 +1,5 @@
 import router from 'huawei-router-api/browser';
 const {RouterError} = router.errors;
-import {EventEmitter} from 'events';
 import dotty from 'dotty';
 
 export class Notifier {
@@ -68,19 +67,5 @@ export async function getLoginDetails() {
 }
 
 export function openOptionsPage() {
-  return browser.runtime.openOptionsPage();
+  // FIXME: Navigate to extension options
 }
-
-export const emitter = new EventEmitter();
-
-browser.runtime.onMessage.addListener((message, sender) => {
-  if (message.from === 'options' && message.status === 'saved') {
-    emitter.emit('optionsSaved');
-  }
-});
-
-export const events = {
-  addListener(name, callback) {
-    emitter.on(name, callback);
-  },
-};

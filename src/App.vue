@@ -165,8 +165,8 @@ export default {
         this.$store.dispatch('notifications/refresh');
       }
     });
-    routerHelper.events.addListener('optionsSaved', async () => {
-      await this.$store.dispatch('settings/load');
+    this.globalBus.$on('options-saved', () => {
+      // TODO: Make sure this works
       this.tryChangeMode(this.internalSettings.general.defaultMode);
     });
   },

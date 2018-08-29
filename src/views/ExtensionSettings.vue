@@ -164,6 +164,7 @@ export default {
           await Promise.all(promises);
           await this.$store.dispatch('settings/save');
           this.showMessage(this.$i18n('options_save_success'), 'is-success');
+          this.globalBus.$emit('options-saved');
           this.$emit('save');
         } catch (e) {
           this.showMessage(this.$i18n('options_save_error'), 'is-danger');
