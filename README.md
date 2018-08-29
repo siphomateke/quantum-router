@@ -1,6 +1,6 @@
 # Quantum Router
 
-An extension that replaces the default Huawei router interface.
+An app that replaces the default Huawei router interface.
 
 ### Important: This project is still very young. As of yet there are no releases.
 
@@ -8,7 +8,7 @@ The default UI on a Huawei router is outdated and difficult to use;
 
 ![Screenshot of MTN router interface](img/mtn_router.png?raw=true)
 
-This extension aims to offer a sleeker and more modern alternative UI to the router while adding some new features;
+This app aims to offer a sleeker and more modern alternative UI to the router while adding some new features;
 
 ![Screenshot of QuantumRouter interface](img/quantum_router.png?raw=true)
 
@@ -50,34 +50,17 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn serve:electron
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
+yarn build:electron
 ```
 
 ### Lints and fixes files
 ```
-yarn run lint
+yarn lint
 ```
-
-### Runs vue-devtools
-```
-yarn run devtools
-```
-
-To use in Chrome: open `chrome://extensions`, enable developer mode, press load unpacked extension and select `dist/manifest.json`.
-
-To use in Firefox: generate a random GUID and add the following to `static/browser-manifest.json`:
-```json
-"applications": {
-  "gecko": {
-    "id": "{YOUR_GUID}"
-  }
-},
-```
-Then open `about:debugging`, press load temporary addon and select `dist/manifest.json`.
 
 If you encounter any bugs, which you almost certainly will, please report them on the issues page.

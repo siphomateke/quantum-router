@@ -25,3 +25,6 @@ yarn-error.log*
 *.pub
 *.zip
 /dist-zip
+
+#Electron-builder output
+/dist_electron

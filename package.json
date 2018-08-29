@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "devtools": "node ./node_modules/.bin/vue-devtools"
+    "build:electron": "vue-cli-service build:electron",
+    "serve:electron": "vue-cli-service serve:electron",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "buefy": "^0.6.6",
@@ -24,17 +24,19 @@
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
-    "@vue/devtools": "^1.1.0",
+    "@vue/devtools": "^4.1.5",
+    "electron": "^2.0.2",
     "eslint-config-google": "^0.9.1",
     "imports-loader": "^0.8.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "vue-cli-plugin-browser-extension": "^0.11.0",
+    "vue-cli-plugin-electron-builder": "^1.0.0-rc.2",
     "vue-template-compiler": "^2.5.17"
   },
-  "description": "An extension that replaces the default Huawei router interface",
+  "description": "An app that replaces the default Huawei router interface",
   "author": {
     "name": "nextgensparx",
     "email": "siphomateke@gmail.com"
-  }
+  },
+  "main": "dist_electron/bundled/background.js"
 }

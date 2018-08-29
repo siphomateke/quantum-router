@@ -14,11 +14,6 @@
       "type": "npm",
       "script": "lint",
       "problemMatcher": []
-    },
-    {
-      "type": "npm",
-      "script": "devtools",
-      "problemMatcher": []
     }
   ]
 }
