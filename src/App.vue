@@ -64,7 +64,9 @@
           </template>
         </q-toolbar>
         <div class="page-wrapper">
-          <router-view></router-view>
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
         </div>
       </div>
     </div>
