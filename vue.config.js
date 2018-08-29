@@ -14,24 +14,6 @@ module.exports = {
     },
   },
 
-  pluginOptions: {
-    browserExtension: {
-      components: {
-        background: true,
-        options: true,
-        standalone: true,
-      },
-      api: 'browser',
-      usePolyfill: true,
-      autoImportPolyfill: true,
-      componentOptions: {
-        background: {
-          entry: 'src/browser/background.js',
-        },
-      },
-    },
-  },
-
   chainWebpack: (config) => {
     config.resolve.alias.set('styles', resolvePath('src/styles'));
     config.entry('preload').add(resolvePath('src/styles/preload.scss'));
