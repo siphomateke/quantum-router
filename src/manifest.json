@@ -12,7 +12,7 @@
   },
   "options_ui": {
     "chrome_style": false,
-    "page": "./options.html"
+    "page": "./options/options.html"
   },
   "background": {
     "scripts": ["background.js"],
