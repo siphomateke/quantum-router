@@ -8,13 +8,7 @@
   "json.schemas": [
     {
       "fileMatch": [
-        "/static/browser-manifest.json"
-      ],
-      "url": "http://json.schemastore.org/webextension"
-    },
-    {
-      "fileMatch": [
-        "/static/chrome-manifest.json"
+        "src/manifest.json"
       ],
       "url": "http://json.schemastore.org/chrome-manifest"
     }
