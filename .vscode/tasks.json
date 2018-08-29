@@ -2,12 +2,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "dev",
-      "problemMatcher": []
-    },
-    {
-      "type": "npm",
-      "script": "dev-chrome",
+      "script": "serve",
       "problemMatcher": []
     },
     {
@@ -17,7 +12,7 @@
     },
     {
       "type": "npm",
-      "script": "build-chrome",
+      "script": "lint",
       "problemMatcher": []
     },
     {
