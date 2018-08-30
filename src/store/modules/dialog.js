@@ -1,5 +1,5 @@
 import {Dialog} from 'buefy';
-import i18n from '@/browser/i18n.js';
+import i18n from '@/platform/i18n';
 
 export const types = {
   ADD_CATEGORY: 'ADD_CATEGORY',

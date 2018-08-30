@@ -1,12 +1,13 @@
 'use strict';
 
-import {app, protocol, BrowserWindow} from 'electron';
+import {app, protocol, BrowserWindow, ipcMain} from 'electron';
 import * as path from 'path';
 import {format as formatUrl} from 'url';
 import {
   createProtocol,
   installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
+import i18n, {getCurrentLanguageData} from './electron/i18n';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
   // Don't load any native (external) modules until the following line is run:
@@ -73,4 +74,14 @@ app.on('ready', async () => {
     await installVueDevtools();
   }
   mainWindow = createMainWindow();
+});
+
+// send initial translations to client
+ipcMain.on('get-initial-language-data', (event, arg) => {
+  event.returnValue = getCurrentLanguageData();
+});
+
+// send new translations to client each time the language changes
+i18n.on('languageChanged', () => {
+  mainWindow.webContents.send('language-changed', getCurrentLanguageData());
 });

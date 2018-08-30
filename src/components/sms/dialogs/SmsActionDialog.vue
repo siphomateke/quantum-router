@@ -32,7 +32,7 @@
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
 import Dialog from '@/components/dialogs/Dialog.vue';
-import i18n from '@/browser/i18n';
+import i18n from '@/platform/i18n';
 
 export default {
   name: 'q-sms-action-dialog',

@@ -1,5 +1,5 @@
 import {Toast} from 'buefy';
-import i18n from '@/browser/i18n.js';
+import i18n from '@/platform/i18n';
 import router from 'huawei-router-api/browser';
 import * as routerHelper from '@/browser/routerHelper';
 const {RouterError} = router.errors;
@@ -71,7 +71,7 @@ export default {
         } else if (e.code === 'invalid_router_url') {
           if (router.config.getUrl().length > 0) {
             dispatch('dialog/warning', {
-              message: i18n.getMessage('invalid_router_url_error', router.config.getUrl()),
+              message: i18n.getMessage('invalid_router_url_error', {url: router.config.getUrl()}),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
                 routerHelper.openOptionsPage();
@@ -114,7 +114,7 @@ export default {
     changeMode({state, dispatch}, mode) {
       if (mode !== state.mode) {
         dispatch('setMode', mode);
-        Toast.open(i18n.getMessage('changed_mode_to', i18n.getMessage('mode_'+modeNames[mode])));
+        Toast.open(i18n.getMessage('changed_mode_to', {mode: i18n.getMessage('mode_'+modeNames[mode])}));
       }
     },
     async prepChangeMode({commit, dispatch}, newMode) {
@@ -145,7 +145,7 @@ export default {
                   ];
                   if (knownErrors.includes(e.code)) {
                     const actualError = i18n.getMessage('router_module_error_'+e.code);
-                    errorMessage = i18n.getMessage('router_error_logging_in', actualError);
+                    errorMessage = i18n.getMessage('router_error_logging_in', {error: actualError});
                   }
                 } else {
                   dispatch('handleError', e);
@@ -165,7 +165,7 @@ export default {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
               dispatch('dialog/warning', {
-                message: i18n.getMessage('connection_error', router.config.getUrl()),
+                message: i18n.getMessage('connection_error', {url: router.config.getUrl()}),
                 confirmText: i18n.getMessage('dialog_retry'),
                 onConfirm: () => {
                   dispatch('tryChangeMode', newMode);

@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import i18n from '@/browser/i18n.js';
+import i18n from '@/platform/i18n.js';
 
 export default {
   name: 'q-dialog',
