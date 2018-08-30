@@ -1,4 +1,3 @@
-import devtools from '@vue/devtools';
 import Vue from 'vue';
 import App from './App';
 import router from './vue-router';
@@ -7,10 +6,6 @@ import Buefy from 'buefy';
 import store from './store';
 import i18n from '@/browser/i18n.js';
 import {bus} from './events.js';
-
-if (process.env.NODE_ENV === 'development') {
-  devtools.connect();
-}
 
 Vue.config.productionTip = false;
 
