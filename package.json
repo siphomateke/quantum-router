@@ -12,6 +12,7 @@
     "buefy": "^0.6.6",
     "chart.js": "^2.7.2",
     "dotty": "^0.1.0",
+    "electron-store": "^2.0.0",
     "font-awesome": "^4.7.0",
     "huawei-router-api": "link:../../../../NPM packages/huawei-router-api",
     "i18next": "^11.6.0",

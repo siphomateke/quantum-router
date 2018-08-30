@@ -1,4 +1,4 @@
-import {storage} from '@/browser/routerHelper';
+import storage from '@/platform/storage';
 import dotty from 'dotty';
 import router from 'huawei-router-api/browser';
 import dialup from './dialup';
@@ -52,9 +52,11 @@ export default {
       });
     },
     async load({dispatch}) {
-      const items = await storage.get('settings');
-      if ('settings' in items) {
-        dispatch('set', {path: 'internal', value: items.settings});
+      if (await storage.has('settings')) {
+        dispatch('set', {
+          path: 'internal',
+          value: await storage.get('settings'),
+        });
       }
     },
   },

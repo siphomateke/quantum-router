@@ -1,5 +1,6 @@
 import {Toast} from 'buefy';
 import i18n from '@/platform/i18n';
+import storage from '@/platform/storage';
 import router from 'huawei-router-api/browser';
 import * as routerHelper from '@/browser/routerHelper';
 const {RouterError} = router.errors;
@@ -23,10 +24,10 @@ export const types = {
 };
 
 async function updateConfig() {
-  const data = await routerHelper.getLoginDetails();
+  const data = await storage.getLoginDetails();
   router.config.setUsername(data.username);
   router.config.setPassword(data.password);
-  const url = await routerHelper.getRouterUrl();
+  const url = await storage.getRouterUrl();
   router.config.setUrl(url);
 }
 
