@@ -8,7 +8,6 @@ i18next.use(Backend).use(LanguageDetector);
 
 /** @type {i18next.InitOptions} */
 let options = {
-  debug: true,
   backend: {
     loadPath: path.join(__static, 'locales', '{{lng}}', '{{ns}}.json'),
   },
