@@ -10,8 +10,7 @@ i18next.use(Backend).use(LanguageDetector);
 let options = {
   debug: true,
   backend: {
-    // TODO: Rename '_locales' folder to 'locales'
-    loadPath: path.join(__static, '_locales', '{{lng}}', '{{ns}}.json'),
+    loadPath: path.join(__static, 'locales', '{{lng}}', '{{ns}}.json'),
   },
 };
 options = Object.assign(defaultOptions, options);
