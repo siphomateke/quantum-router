@@ -12,7 +12,3 @@ export class Notifier {
     browser.notifications.create('', data);
   }
 }
-
-export function openOptionsPage() {
-  // FIXME: Navigate to app options
-}

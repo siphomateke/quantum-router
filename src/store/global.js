@@ -2,7 +2,7 @@ import {Toast} from 'buefy';
 import i18n from '@/platform/i18n';
 import storage from '@/platform/storage';
 import router from 'huawei-router-api/browser';
-import * as routerHelper from '@/browser/routerHelper';
+import vueRouter from '@/vue-router';
 const {RouterError} = router.errors;
 
 export const modes = {
@@ -53,6 +53,11 @@ export default {
     },
   },
   actions: {
+    openSettingsPage() {
+      vueRouter.push({
+        name: 'app-settings',
+      });
+    },
     handleError({dispatch}, e) {
       if (process.env.NODE_ENV === 'development') {
         console.error(e.toString());
@@ -75,7 +80,7 @@ export default {
               message: i18n.getMessage('invalid_router_url_error', {url: router.config.getUrl()}),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
-                routerHelper.openOptionsPage();
+                dispatch('openSettingsPage');
               },
               category: 'admin',
             });
@@ -84,7 +89,7 @@ export default {
               message: i18n.getMessage('empty_router_url_error'),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
-                routerHelper.openOptionsPage();
+                dispatch('openSettingsPage');
               },
               category: 'admin',
             });
