@@ -74,14 +74,12 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import Drawer from '@/components/drawer/Drawer.vue';
 import DrawerItem from '@/components/drawer/DrawerItem.vue';
 import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
-import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
 import {mapState, mapGetters, mapActions} from 'vuex';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
