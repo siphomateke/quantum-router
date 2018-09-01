@@ -7,6 +7,7 @@ import {
   createProtocol,
   installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
+import iconConfig from '@/config/icons';
 import i18n, {getCurrentLanguageData} from '@/electron/i18n';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
@@ -23,6 +24,7 @@ function createMainWindow() {
   const window = new BrowserWindow({
     // Allow cross-origin requests
     webPreferences: {webSecurity: false},
+    icon: iconConfig.windowIcon,
   });
 
   if (isDevelopment) {
