@@ -7,7 +7,7 @@ import {
   createProtocol,
   installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
-import i18n, {getCurrentLanguageData} from './electron/i18n';
+import i18n, {getCurrentLanguageData} from '@/electron/i18n';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
   // Don't load any native (external) modules until the following line is run:

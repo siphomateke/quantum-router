@@ -24,4 +24,13 @@ module.exports = {
       global: true,
     },
   },
+
+  pluginOptions: {
+    electronBuilder: {
+      chainWebpackMainProcess: (config) => {
+        config.resolve.alias.set('@', resolvePath('src'));
+        return config;
+      },
+    },
+  },
 };
