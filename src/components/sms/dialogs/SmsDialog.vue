@@ -61,7 +61,6 @@
 
 <script>
 import Dialog from '@/components/dialogs/Dialog.vue';
-import router from 'huawei-router-api/browser';
 
 /**
  * Used for creating, editing and sending sms messages

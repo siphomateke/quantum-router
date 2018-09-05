@@ -19,9 +19,6 @@ Vue.mixin({
       globalBus: bus,
     };
   },
-  methods: {
-    $i18n: i18n.getMessage,
-  },
   computed: {
     ...mapState({
       $mode: state => state.mode,
@@ -29,6 +26,9 @@ Vue.mixin({
     ...mapGetters({
       $adminMode: 'adminMode',
     }),
+  },
+  methods: {
+    $i18n: i18n.getMessage,
   },
 });
 

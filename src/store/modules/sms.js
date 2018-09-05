@@ -70,7 +70,8 @@ const mapBoxTypeToRouterBoxType = {
 
 /**
  * @typedef Box
- * @property {Object.<string, number[]>} messages Object containing page numbers as keys and arrays of message IDs as values
+ * @property {Object.<string, number[]>} messages
+ * Object containing page numbers as keys and arrays of message IDs as values
  * @property {number[]} selected Array of selected messages IDs
  * @property {number} count Total number of messages in this box
  * @property {boolean} loading

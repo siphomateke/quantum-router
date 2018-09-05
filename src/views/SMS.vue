@@ -122,32 +122,6 @@ export default {
       },
     };
   },
-  mounted() {
-    for (const event of eventsToRedirect) {
-      callbacks[event] = (data) => {
-        this.currentBus.$emit(event, data);
-      };
-      this.bus.$on(event, callbacks[event]);
-    }
-
-    this.bus.$on('sms-actions:new', this.newMessage);
-    this.bus.$on('sms-actions:import', this.import);
-
-    if (this.$adminMode) {
-      this.refreshAdmin();
-    }
-    this.globalBus.$on('mode-change:admin', this.refreshAdmin);
-    this.globalBus.$on('refresh:sms', this.refresh);
-  },
-  beforeDestroy() {
-    for (const event of eventsToRedirect) {
-      this.bus.$off(event, callbacks[event]);
-    }
-    this.bus.$off('sms-actions:new', this.newMessage);
-    this.bus.$off('sms-actions:import', this.import);
-    this.globalBus.$off('mode-change:admin', this.refreshAdmin);
-    this.globalBus.$off('refresh:sms', this.refresh);
-  },
   computed: {
     ...mapState({
       boxes: state => state.sms.boxes,
@@ -207,6 +181,32 @@ export default {
       }
       return selectionState;
     },
+  },
+  mounted() {
+    for (const event of eventsToRedirect) {
+      callbacks[event] = (data) => {
+        this.currentBus.$emit(event, data);
+      };
+      this.bus.$on(event, callbacks[event]);
+    }
+
+    this.bus.$on('sms-actions:new', this.newMessage);
+    this.bus.$on('sms-actions:import', this.import);
+
+    if (this.$adminMode) {
+      this.refreshAdmin();
+    }
+    this.globalBus.$on('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$on('refresh:sms', this.refresh);
+  },
+  beforeDestroy() {
+    for (const event of eventsToRedirect) {
+      this.bus.$off(event, callbacks[event]);
+    }
+    this.bus.$off('sms-actions:new', this.newMessage);
+    this.bus.$off('sms-actions:import', this.import);
+    this.globalBus.$off('mode-change:admin', this.refreshAdmin);
+    this.globalBus.$off('refresh:sms', this.refresh);
   },
   methods: {
     changedTab(idx) {

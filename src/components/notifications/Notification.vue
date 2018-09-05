@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      _date: null,
+      internalDate: null,
     };
   },
   computed: {
@@ -48,14 +48,14 @@ export default {
       return moment(this.date).format('Y-M-D HH:mm:ss');
     },
     time() {
-      if (this._date) {
+      if (this.internalDate) {
         const duration = moment.duration(Date.now() - this.date);
         if (duration.asMinutes() <= 30) {
-          return this._date.fromNow();
+          return this.internalDate.fromNow();
         } else if (duration.asDays() < 1) {
-          return this._date.format('HH:mm');
+          return this.internalDate.format('HH:mm');
         } else {
-          return this._date.format('Y-M-D HH:mm');
+          return this.internalDate.format('Y-M-D HH:mm');
         }
       } else {
         return null;
@@ -73,7 +73,7 @@ export default {
   methods: {
     updateDate(date) {
       if (date) {
-        this._date = moment(date);
+        this.internalDate = moment(date);
       }
     },
   },
