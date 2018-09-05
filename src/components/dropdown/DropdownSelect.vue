@@ -7,7 +7,12 @@
 <script>
 export default {
   name: 'QDropdownSelect',
-  props: ['value'],
+  props: {
+    value: {
+      type: [String, Number, Boolean, Object, Array, Symbol, Function],
+      default: null,
+    },
+  },
   data() {
     return {
       selected: null,

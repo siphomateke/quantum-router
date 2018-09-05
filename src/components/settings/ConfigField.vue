@@ -17,8 +17,14 @@
 <script>
 export default {
   props: {
-    label: String,
-    description: String,
+    label: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
   },
 };
 </script>

@@ -16,11 +16,27 @@ import moment from 'moment';
 export default {
   name: 'QNotification',
   props: {
-    title: String,
-    message: String,
-    date: Number,
-    read: Boolean,
-    progress: Number,
+    title: {
+      type: String,
+      default: '',
+    },
+    message: {
+      type: String,
+      default: '',
+    },
+    date: {
+      type: Number,
+      default: null,
+    },
+    read: {
+      type: Boolean,
+      default: false,
+    },
+    progress: {
+      type: Number,
+      default: 0,
+      validator: value => value >= 0 && value <= 1,
+    },
   },
   data() {
     return {

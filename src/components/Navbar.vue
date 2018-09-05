@@ -42,7 +42,10 @@
 <script>
 export default {
   props: {
-    items: Array,
+    items: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

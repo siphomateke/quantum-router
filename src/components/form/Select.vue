@@ -15,14 +15,17 @@
 export default {
   name: 'QSelect',
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: '',
+    },
     value: {
       type: [String, Number, Boolean, Object, Array, Function],
       default: null,
     },
     options: {
       type: Array,
-      default: [],
+      default: () => [],
     },
   },
   data() {

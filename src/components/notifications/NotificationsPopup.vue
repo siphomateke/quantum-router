@@ -22,8 +22,14 @@ export default {
     'q-notification-list': NotificationList,
   },
   props: {
-    list: Array,
-    loading: Boolean,
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>

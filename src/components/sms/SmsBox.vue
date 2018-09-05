@@ -36,12 +36,15 @@ export default {
     SmsList,
   },
   props: {
-    boxType: {},
+    boxType: {
+      type: String,
+      default: null,
+      validator: value => Object.values(boxTypes).includes(value),
+    },
     bus: {
       type: Object,
-      validator(val) {
-        return val instanceof Vue;
-      },
+      default: null,
+      validator: val => val instanceof Vue,
     },
   },
   computed: {

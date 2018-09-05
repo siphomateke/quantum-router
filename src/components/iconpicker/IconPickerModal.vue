@@ -41,8 +41,23 @@
 export default {
   name: 'QIconPickerModal',
   props: {
-    iconPacks: Array,
-    value: Object,
+    iconPacks: {
+      type: Array,
+      default: () => [],
+    },
+    value: {
+      type: Object,
+      default() {
+        return {
+          id: '',
+          pack: '',
+        };
+      },
+      validator(value) {
+        return typeof value.id === 'string'
+            && typeof value.pack === 'string';
+      },
+    },
     title: {
       type: String,
       default: 'Choose an icon',

@@ -17,11 +17,26 @@
 export default {
   name: 'ActionButton',
   props: {
-    type: String,
-    icon: String,
-    label: String,
-    disabled: Boolean,
-    loading: Boolean,
+    type: {
+      type: String,
+      default: '',
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     click(...args) {

@@ -47,22 +47,46 @@
 export default {
   name: 'QToolbarItem',
   props: {
-    icon: String,
-    label: String,
+    icon: {
+      type: String,
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
     isActive: {
       type: Boolean,
       default: false,
     },
-    link: String,
+    link: {
+      type: String,
+      default: '',
+    },
     badgeVisible: {
       type: Boolean,
       default: false,
     },
-    badge: [Number, String],
-    color: String,
-    value: {},
-    position: String,
-    mobileModal: Boolean,
+    badge: {
+      type: [Number, String],
+      default: '',
+    },
+    color: {
+      type: String,
+      default: '',
+    },
+    value: {
+      type: [String, Number, Boolean, Object, Array, Symbol, Function],
+      default: null,
+    },
+    position: {
+      type: String,
+      default: null,
+    },
+    mobileModal: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     checkSlot(slotName) {

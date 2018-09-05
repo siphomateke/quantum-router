@@ -125,12 +125,18 @@ import smsTypeMixin from '@/mixins/smsType';
 export default {
   mixins: [smsTypeMixin],
   props: {
-    list: Array,
+    list: {
+      type: Array,
+      default: () => [],
+    },
     checkable: {
       type: Boolean,
       default: false,
     },
-    checkedRows: Array,
+    checkedRows: {
+      type: Array,
+      default: () => [],
+    },
     loading: {
       type: Boolean,
       default: false,

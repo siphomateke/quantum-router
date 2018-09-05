@@ -10,7 +10,12 @@
 <script>
 export default {
   name: 'QDropdownItem',
-  props: ['value'],
+  props: {
+    value: {
+      type: [String, Number, Boolean, Object, Array, Symbol, Function],
+      default: null,
+    },
+  },
   methods: {
     click() {
       this.$parent.selectItem(this.value);

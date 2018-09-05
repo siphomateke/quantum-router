@@ -38,8 +38,14 @@ export default {
     'notification': Notification,
   },
   props: {
-    list: Array,
-    loading: Boolean,
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>

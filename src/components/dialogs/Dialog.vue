@@ -56,13 +56,22 @@ import i18n from '@/platform/i18n.js';
 export default {
   name: 'QDialog',
   props: {
-    title: String,
+    title: {
+      type: String,
+      default: '',
+    },
     type: {
       type: String,
       default: 'is-primary',
     },
-    hasIcon: Boolean,
-    icon: String,
+    hasIcon: {
+      type: Boolean,
+      default: false,
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
     confirmText: {
       type: String,
       default: () => i18n.getMessage('generic_ok'),

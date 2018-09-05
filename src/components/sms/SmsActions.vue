@@ -87,6 +87,26 @@ import {selectors, selectionStates} from './select';
 
 const smsTypes = router.sms.types;
 
+// TODO: Consider using these to generate events
+const actions = [
+  'delete',
+  'markAsRead',
+  'new',
+  'import',
+];
+
+function actionOptionValidator(value) {
+  if (typeof value !== 'object') return false;
+  let anyInvalid = false;
+  for (const key of Object.keys(value)) {
+    if (!actions.includes(key) || typeof value[key] === 'boolean') {
+      anyInvalid = true;
+      break;
+    }
+  }
+  return !anyInvalid;
+}
+
 /**
  * Events
  *
@@ -104,21 +124,29 @@ export default {
   },
   mixins: [smsTypeMixin],
   props: {
-    checkedRows: Array,
-    disabled: Object,
-    hidden: Object,
+    checkedRows: {
+      type: Array,
+      default: () => [],
+    },
+    disabled: {
+      type: Object,
+      default: () => ({}),
+      validator: actionOptionValidator,
+    },
+    hidden: {
+      type: Object,
+      default: () => ({}),
+      validator: actionOptionValidator,
+    },
     selectionState: {
       type: String,
       default: selectionStates.NONE,
-      validator(val) {
-        return Object.values(selectionStates).includes(val);
-      },
+      validator: val => Object.values(selectionStates).includes(val),
     },
     bus: {
       type: Object,
-      validator(val) {
-        return val instanceof Vue;
-      },
+      default: null,
+      validator: val => val instanceof Vue,
     },
   },
   data() {

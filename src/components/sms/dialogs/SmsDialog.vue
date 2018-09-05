@@ -72,9 +72,18 @@ export default {
     [Dialog.name]: Dialog,
   },
   props: {
-    id: Number,
-    numbers: Array,
-    content: String,
+    id: {
+      type: Number,
+      default: null,
+    },
+    numbers: {
+      type: Array,
+      default: () => [],
+    },
+    content: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {

@@ -45,12 +45,18 @@ export default {
   },
   inheritAttrs: false,
   props: {
-    list: Array,
+    list: {
+      type: Array,
+      default: () => [],
+    },
     confirmButton: {
       type: String,
       default: i18n.getMessage('sms_action_dialog_confirm_text'),
     },
-    confirmMessage: String,
+    confirmMessage: {
+      type: String,
+      default: null,
+    },
   },
   methods: {
     confirm() {

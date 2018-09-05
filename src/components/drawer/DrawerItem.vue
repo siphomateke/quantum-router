@@ -15,9 +15,18 @@
 <script>
 export default {
   props: {
-    link: String,
-    icon: String,
-    label: String,
+    link: {
+      type: String,
+      default: '',
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
   },
 };
 </script>
