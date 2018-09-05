@@ -1,9 +1,9 @@
-import {Notification} from '@/browser/notification.js';
+import {Notification} from '@/common/notifications';
 import router from 'huawei-router-api/browser';
-import {Notifier} from '@/browser/routerHelper';
+import {Notifier} from '@/platform/notifications';
 import {bus} from '@/events';
 import {boxTypes} from '@/store/modules/sms';
-import {storage} from '@/browser/routerHelper';
+import storage from '@/platform/storage';
 
 export const types = {
   ADD: 'ADD',
@@ -49,17 +49,19 @@ export default {
   },
   actions: {
     async load({commit}) {
-      const items = await storage.get(['notifications', 'lastCount']);
       commit(types.CLEAR);
       const notifications = [];
-      if ('notifications' in items) {
-        for (const n of items.notifications) {
+      // TODO: Consider getting notifications and lastCount at the same time
+      if (await storage.has('notifications')) {
+        const storedNotifications = await storage.get('notifications');
+        for (const n of storedNotifications) {
           notifications.push(Notification.fromJSON(n));
         }
       }
       commit(types.ADD, notifications);
-      if ('lastCount' in items) {
-        commit(types.SET_LAST_COUNT, items.lastCount);
+      if (await storage.has('lastCount')) {
+        const lastCount = await storage.get('lastCount');
+        commit(types.SET_LAST_COUNT, lastCount);
       }
       return notifications.length;
     },

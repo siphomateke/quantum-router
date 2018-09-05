@@ -3,38 +3,44 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "devtools": "node ./node_modules/.bin/vue-devtools"
+    "build:electron": "vue-cli-service build:electron",
+    "serve:electron": "vue-cli-service serve:electron",
+    "debug:electron": "vue-cli-service serve:electron --debug",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "buefy": "^0.6.6",
     "chart.js": "^2.7.2",
     "dotty": "^0.1.0",
+    "electron-store": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "huawei-router-api": "link:../../../../NPM packages/huawei-router-api",
+    "i18next": "^11.6.0",
+    "i18next-electron-language-detector": "^0.0.10",
+    "i18next-node-fs-backend": "^2.0.0",
     "moment": "^2.22.2",
     "vue": "^2.5.17",
     "vue-chartjs": "^2.8.7",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "webextension-polyfill": "^0.3.0"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
-    "@vue/devtools": "^1.1.0",
+    "electron": "^2.0.2",
     "eslint-config-google": "^0.9.1",
     "imports-loader": "^0.8.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
-    "vue-cli-plugin-browser-extension": "^0.11.0",
+    "vue-cli-plugin-electron-builder": "^1.0.0-rc.2",
     "vue-template-compiler": "^2.5.17"
   },
-  "description": "An extension that replaces the default Huawei router interface",
+  "description": "An app that replaces the default Huawei router interface",
   "author": {
     "name": "nextgensparx",
     "email": "siphomateke@gmail.com"
-  }
+  },
+  "main": "dist_electron/bundled/background.js"
 }

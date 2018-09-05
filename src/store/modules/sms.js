@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import {Toast, ModalProgrammatic} from 'buefy';
 import router from 'huawei-router-api/browser';
-import i18n from '@/browser/i18n.js';
+import i18n from '@/platform/i18n';
 import {bus} from '@/events';
 import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
 
@@ -476,9 +476,10 @@ const actions = {
       dispatch('handleError', e, {root: true});
       if (successful > 0) {
         Toast.open({
-          message: i18n.getMessage(
-            'sms_mark_read_partial_error',
-            successful, ids.length),
+          message: i18n.getMessage('sms_mark_read_partial_error', {
+            successful,
+            total: ids.length,
+          }),
           type: 'is-danger',
         });
       } else {
@@ -551,7 +552,7 @@ const actions = {
           messages: messages,
           type: 'danger',
           confirmButton: i18n.getMessage('sms_action_delete'),
-          confirmMessage: i18n.getMessage('sms_delete_confirm', messages.length),
+          confirmMessage: i18n.getMessage('sms_delete_confirm', {count: messages.length}),
         },
         events: {
           confirm: () => dispatch('deleteSelectedMessages', {box}),
@@ -589,7 +590,7 @@ const actions = {
       }
       Toast.open({
         type: info.successNumber > 0 && info.failNumber === 0 ? 'is-success' : 'is-dark',
-        message: i18n.getMessage('sms_import_complete', info.successNumber, info.failNumber),
+        message: i18n.getMessage('sms_import_complete', {success: info.successNumber, fail: info.failNumber}),
       });
     } catch (e) {
       try {
@@ -597,7 +598,7 @@ const actions = {
           switch (e.code) {
           case 'sms_import_sim_empty':
             // No messages to import
-            Toast.open(i18n.getMessage('sms_import_complete', 0, 0));
+            Toast.open(i18n.getMessage('sms_import_complete', {success: 0, fail: 0}));
             break;
           case 'sms_not_enough_space':
             dispatch('dialog/alert', {
@@ -632,7 +633,7 @@ const actions = {
     const toImport = getters.simTotal;
     if (!getters.localFull && toImport > available) {
       dispatch('dialog/confirm', {
-        message: i18n.getMessage('sms_import_warning_not_enough_space', available, toImport),
+        message: i18n.getMessage('sms_import_warning_not_enough_space', {available, count: toImport}),
         type: 'warning',
         confirmText: i18n.getMessage('generic_yes'),
         cancelText: i18n.getMessage('generic_no'),

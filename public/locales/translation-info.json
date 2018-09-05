@@ -1,0 +1,176 @@
+{
+  "generic_error": {
+    "placeholders": {
+      "error": {
+        "example": "Could not connect to router"
+      }
+    }
+  },
+  "changed_mode_to": {
+    "placeholders": {
+      "mode": {
+        "example": "Admin"
+      }
+    }
+  },
+  "connection_error": {
+    "placeholders": {
+      "url": {
+        "example": "192.168.1.1"
+      }
+    }
+  },
+  "invalid_router_url_error": {
+    "placeholders": {
+      "url": {
+        "example": "192.168.1.1"
+      }
+    }
+  },
+  "home_data_usage": {
+    "placeholders": {
+      "received": {
+        "example": "30"
+      },
+      "sent": {
+        "example": "12"
+      }
+    }
+  },
+  "sms_action_select_dropdown_types_group": {
+    "description": "Label given to the SMS types group in the dropdown used to select SMS messages."
+  },
+  "sms_first_to_last": {
+    "description": "Shows which sms messages are currently being displayed.",
+    "placeholders": {
+      "first": {
+        "example": "1"
+      },
+      "last": {
+        "example": "20"
+      }
+    }
+  },
+  "sms_first_to_last_of_total": {
+    "description": "Shows which sms messages are currently being displayed including the total.",
+    "placeholders": {
+      "first": {
+        "example": "1"
+      },
+      "last": {
+        "example": "20"
+      },
+      "total": {
+        "example": "100"
+      }
+    }
+  },
+  "sms_empty": {
+    "description": "Displayed when there are no messages"
+  },
+  "sms_edit_tooltip": {
+    "description": "Tooltip shown on the sms message edit button"
+  },
+  "sms_dialog_field_numbers_placeholder": {
+    "description": "Placeholder value for sms dialog numbers field"
+  },
+  "sms_dialog_segment_help": {
+    "description": "Explains how SMS concatenation works to the user.",
+    "placeholders": {
+      "normal_max": {
+        "example": "160"
+      },
+      "long_max": {
+        "example": "153"
+      }
+    }
+  },
+  "sms_mark_read_partial_error": {
+    "description": "Shown when there is an eror marking sms as read",
+    "placeholders": {
+      "successful": {
+        "example": "15"
+      },
+      "total": {
+        "example": "20"
+      }
+    }
+  },
+  "sms_delete_confirm": {
+    "placeholders": {
+      "count": {
+        "example": "13"
+      }
+    }
+  },
+  "sms_import_confirm": {
+    "placeholders": {
+      "count": {
+        "example": "13"
+      }
+    }
+  },
+  "sms_import_warning_not_enough_space": {
+    "placeholders": {
+      "available": {
+        "example": "5"
+      },
+      "count": {
+        "example": "13"
+      }
+    }
+  },
+  "sms_import_success": {
+    "placeholders": {
+      "success": {
+        "example": "15"
+      }
+    }
+  },
+  "sms_import_complete": {
+    "placeholders": {
+      "success": {
+        "example": "15"
+      },
+      "fail": {
+        "example": "20"
+      }
+    }
+  },
+  "sms_box_full": {
+    "description": "Shown to the user when their message box is full."
+  },
+  "sms_read": {
+    "description": "Shown when an sms message has been read"
+  },
+  "sms_unread": {
+    "description": "Shown when an sms message has not been read"
+  },
+  "options_labels_general_routerUrl": {
+    "description": "Router URL field on the app options page."
+  },
+  "options_labels_general_username": {
+    "description": "Username field on the app options page."
+  },
+  "options_labels_general_password": {
+    "description": "Password field on the app options page."
+  },
+  "options_button_save": {
+    "description": "Save button on the app options page."
+  },
+  "options_error_ping": {
+    "description": "Error message displayed when a connection to the router URL can't be established. Used on the app options page."
+  },
+  "validation_tag_input_number": {
+    "description": "Error message shown when a non-number is inputted in a tag input where only numbers are allowed."
+  },
+  "validation_tag_input_required": {
+    "description": "Error message shown when a tag input is required and was left blank."
+  },
+  "icon_picker_button": {
+    "description": "Text on the button for opening icon pickers"
+  },
+  "icon_picker_title": {
+    "description": "Title for the icon picker modal"
+  }
+}

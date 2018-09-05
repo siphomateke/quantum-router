@@ -5,7 +5,6 @@ module.exports = {
     browser: true,
     node: true,
     es6: true,
-    webextensions: true,
   },
 
   rules: {
@@ -13,7 +12,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-return-await': ['error'],
     'require-jsdoc': ['off'],
-    indent: ['error', 2],
+    'indent': ['error', 2],
+    'max-len': ['error', 120,]
   },
 
   parserOptions: {

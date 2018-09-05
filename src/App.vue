@@ -29,9 +29,9 @@
           :label="this.$i18n('menu_settings')">
         </drawer-item>
         <drawer-item
-          link="extension-settings"
+          link="app-settings"
           icon="sliders"
-          :label="this.$i18n('menu_extension_settings')">
+          :label="this.$i18n('menu_app_settings')">
         </drawer-item>
       </drawer>
       <div class="column">
@@ -74,14 +74,12 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import Drawer from '@/components/drawer/Drawer.vue';
 import DrawerItem from '@/components/drawer/DrawerItem.vue';
 import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
-import * as routerHelper from '@/browser/routerHelper';
 import {modes, modeNames} from '@/store';
 import {mapState, mapGetters, mapActions} from 'vuex';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
@@ -165,8 +163,8 @@ export default {
         this.$store.dispatch('notifications/refresh');
       }
     });
-    routerHelper.events.addListener('optionsSaved', async () => {
-      await this.$store.dispatch('settings/load');
+    this.globalBus.$on('options-saved', () => {
+      // TODO: Make sure this works
       this.tryChangeMode(this.internalSettings.general.defaultMode);
     });
   },

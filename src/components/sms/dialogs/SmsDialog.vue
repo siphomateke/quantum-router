@@ -44,7 +44,7 @@
         <span class="counter help-cursor">
           <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">{{ counterText.remaining }}</span>
           <span :title="this.$i18n('sms_dialog_message_count')">({{ counterText.numberOfMessages }})</span>
-          <span :title="this.$i18n('sms_dialog_segment_help', normalMax, longMax)">
+          <span :title="this.$i18n('sms_dialog_segment_help', {normalMax, longMax})">
             <b-icon icon="question-circle"></b-icon>
           </span>
         </span>

@@ -2,13 +2,5 @@
   "search.exclude": {
     "**/dist": true,
     "**/original_router": true
-  },
-  "json.schemas": [
-    {
-      "fileMatch": [
-        "src/manifest.json"
-      ],
-      "url": "http://json.schemastore.org/chrome-manifest"
-    }
-  ]
+  }
 }

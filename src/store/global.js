@@ -1,7 +1,8 @@
 import {Toast} from 'buefy';
-import i18n from '@/browser/i18n.js';
+import i18n from '@/platform/i18n';
+import storage from '@/platform/storage';
 import router from 'huawei-router-api/browser';
-import * as routerHelper from '@/browser/routerHelper';
+import vueRouter from '@/vue-router';
 const {RouterError} = router.errors;
 
 export const modes = {
@@ -23,10 +24,10 @@ export const types = {
 };
 
 async function updateConfig() {
-  const data = await routerHelper.getLoginDetails();
+  const data = await storage.getLoginDetails();
   router.config.setUsername(data.username);
   router.config.setPassword(data.password);
-  const url = await routerHelper.getRouterUrl();
+  const url = await storage.getRouterUrl();
   router.config.setUrl(url);
 }
 
@@ -52,6 +53,11 @@ export default {
     },
   },
   actions: {
+    openSettingsPage() {
+      vueRouter.push({
+        name: 'app-settings',
+      });
+    },
     handleError({dispatch}, e) {
       if (process.env.NODE_ENV === 'development') {
         console.error(e.toString());
@@ -71,10 +77,10 @@ export default {
         } else if (e.code === 'invalid_router_url') {
           if (router.config.getUrl().length > 0) {
             dispatch('dialog/warning', {
-              message: i18n.getMessage('invalid_router_url_error', router.config.getUrl()),
+              message: i18n.getMessage('invalid_router_url_error', {url: router.config.getUrl()}),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
-                routerHelper.openOptionsPage();
+                dispatch('openSettingsPage');
               },
               category: 'admin',
             });
@@ -83,7 +89,7 @@ export default {
               message: i18n.getMessage('empty_router_url_error'),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
-                routerHelper.openOptionsPage();
+                dispatch('openSettingsPage');
               },
               category: 'admin',
             });
@@ -114,7 +120,7 @@ export default {
     changeMode({state, dispatch}, mode) {
       if (mode !== state.mode) {
         dispatch('setMode', mode);
-        Toast.open(i18n.getMessage('changed_mode_to', i18n.getMessage('mode_'+modeNames[mode])));
+        Toast.open(i18n.getMessage('changed_mode_to', {mode: i18n.getMessage('mode_'+modeNames[mode])}));
       }
     },
     async prepChangeMode({commit, dispatch}, newMode) {
@@ -145,7 +151,7 @@ export default {
                   ];
                   if (knownErrors.includes(e.code)) {
                     const actualError = i18n.getMessage('router_module_error_'+e.code);
-                    errorMessage = i18n.getMessage('router_error_logging_in', actualError);
+                    errorMessage = i18n.getMessage('router_error_logging_in', {error: actualError});
                   }
                 } else {
                   dispatch('handleError', e);
@@ -165,7 +171,7 @@ export default {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
               dispatch('dialog/warning', {
-                message: i18n.getMessage('connection_error', router.config.getUrl()),
+                message: i18n.getMessage('connection_error', {url: router.config.getUrl()}),
                 confirmText: i18n.getMessage('dialog_retry'),
                 onConfirm: () => {
                   dispatch('tryChangeMode', newMode);

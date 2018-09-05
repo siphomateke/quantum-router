@@ -1,23 +1,27 @@
 {
   "tasks": [
     {
+      "label": "serve",
       "type": "npm",
-      "script": "serve",
+      "script": "serve:electron",
       "problemMatcher": []
     },
     {
+      "label": "debug",
       "type": "npm",
-      "script": "build",
+      "script": "debug:electron",
       "problemMatcher": []
     },
     {
+      "label": "build",
+      "type": "npm",
+      "script": "build:electron",
+      "problemMatcher": []
+    },
+    {
+      "label": "lint",
       "type": "npm",
       "script": "lint",
-      "problemMatcher": []
-    },
-    {
-      "type": "npm",
-      "script": "devtools",
       "problemMatcher": []
     }
   ]

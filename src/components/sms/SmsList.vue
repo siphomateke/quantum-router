@@ -171,9 +171,9 @@ export default {
       const first = ((this.internalPage-1)*this.perPage)+1;
       const last = (((this.internalPage-1)*this.perPage)+this.perPage)+1;
       if (last > this.internalTotal) {
-        return this.$i18n('sms_first_to_last', first, this.internalTotal);
+        return this.$i18n('sms_first_to_last', {first, last: this.internalTotal});
       } else {
-        return this.$i18n('sms_first_to_last_of_total', first, last, this.internalTotal);
+        return this.$i18n('sms_first_to_last_of_total', {first, last, total: this.internalTotal});
       }
     },
     internalTotal() {

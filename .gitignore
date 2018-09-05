@@ -20,8 +20,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
-# Vue Browser Extension Output
-*.pem
-*.pub
-*.zip
-/dist-zip
+#Electron-builder output
+/dist_electron
