@@ -1,15 +1,17 @@
 <template>
-<div class="config-field">
-  <div class="columns">
-    <div class="column is-3">
-      <h6 class="title is-6">{{ label }}</h6>
-      <h6 class="subtitle is-6" v-if="description">{{ description }}</h6>
-    </div>
-    <div class="column">
-      <slot></slot>
+  <div class="config-field">
+    <div class="columns">
+      <div class="column is-3">
+        <h6 class="title is-6">{{ label }}</h6>
+        <h6
+          v-if="description"
+          class="subtitle is-6">{{ description }}</h6>
+      </div>
+      <div class="column">
+        <slot/>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>

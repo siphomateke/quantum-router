@@ -1,94 +1,98 @@
 <template>
-<div class="page-content">
-  <div class="padding-container">
-    <h4 class="title is-4">{{ $i18n('options_header') }}</h4>
-  </div>
-  <form ref="form" @submit.prevent="submit">
-    <b-tabs v-if="loadedSettings">
-      <b-tab-item :label="$i18n('options_tabs_general')">
-        <config-field :label="$i18n('options_labels_general_routerUrl')">
-          <b-field
-            :type="validation.routerUrl.type"
-            :message="validation.routerUrl.message">
-            <b-input
-              v-model="settings.general.routerUrl"
-              type="url"
-              :loading="pinging"
-              @blur="onBlurRouterUrl">
-            </b-input>
-          </b-field>
-        </config-field>
-        <config-field :label="$i18n('options_labels_general_loginDetails')">
-          <b-field :label="$i18n('options_labels_general_username')">
-            <b-input v-model="settings.general.username" type="text"></b-input>
-          </b-field>
-          <b-field :label="$i18n('options_labels_general_password')">
-            <b-input v-model="settings.general.password" type="password" password-reveal></b-input>
-          </b-field>
-        </config-field>
-        <config-field
-          :label="$i18n('options_labels_general_defaultMode')"
-          :description="$i18n('options_descriptions_general_defaultMode')">
-          <template v-for="mode in modes">
-            <b-radio
-              :key="mode"
-              v-model="settings.general.defaultMode"
-              :native-value="mode">
-              {{ $i18n('mode_'+modeNames[mode]) }}
-            </b-radio>
-          </template>
-        </config-field>
-        <config-field
-          :label="$i18n('options_labels_general_rememberLogin')"
-          :description="$i18n('options_descriptions_general_rememberLogin')">
-          <b-checkbox v-model="settings.general.rememberLoginDetails">
-          </b-checkbox>
-        </config-field>
-      </b-tab-item>
-      <b-tab-item :label="$i18n('options_tabs_sms')">
-        <config-field
-          :label="$i18n('options_labels_sms_hideSimBoxes')"
-          :description="$i18n('options_descriptions_sms_hideSimBoxes')">
-          <b-checkbox v-model="settings.sms.hideSimBoxes">
-          </b-checkbox>
-        </config-field>
-        <config-field
-          :label="$i18n('options_labels_sms_confirmDialogsToShow')"
-          :description="$i18n('options_descriptions_sms_confirmDialogsToShow')">
-          <b-checkbox
-            v-model="settings.sms.confirmDialogsToShow"
-            native-value="delete">
-            {{ $i18n('sms_action_delete') }}
-          </b-checkbox>
-          <b-checkbox
-            v-model="settings.sms.confirmDialogsToShow"
-            native-value="import">
-            {{ $i18n('sms_action_import') }}
-          </b-checkbox>
-        </config-field>
-        <config-field
-          :label="$i18n('options_labels_sms_typeIcons')"
-          :description="$i18n('options_descriptions_sms_typeIcons')">
-          <b-field
-            horizontal
-            v-for="smsType in smsTypes"
-            :key="smsType"
-            :label="getSmsTypeName(smsType)">
-            <icon-picker v-model="settings.sms.typeIcons[smsType]"></icon-picker>
-          </b-field>
-        </config-field>
-      </b-tab-item>
-    </b-tabs>
-    <div class="buttons is-centered">
-      <button
-        class="button is-primary"
-        type="submit"
-        :class="{'is-loading': saving || formLoading}">
-        {{ $i18n('options_button_save') }}
-      </button>
+  <div class="page-content">
+    <div class="padding-container">
+      <h4 class="title is-4">{{ $i18n('options_header') }}</h4>
     </div>
-  </form>
-</div>
+    <form
+      ref="form"
+      @submit.prevent="submit">
+      <b-tabs v-if="loadedSettings">
+        <b-tab-item :label="$i18n('options_tabs_general')">
+          <config-field :label="$i18n('options_labels_general_routerUrl')">
+            <b-field
+              :type="validation.routerUrl.type"
+              :message="validation.routerUrl.message">
+              <b-input
+                v-model="settings.general.routerUrl"
+                :loading="pinging"
+                type="url"
+                @blur="onBlurRouterUrl"/>
+            </b-field>
+          </config-field>
+          <config-field :label="$i18n('options_labels_general_loginDetails')">
+            <b-field :label="$i18n('options_labels_general_username')">
+              <b-input
+                v-model="settings.general.username"
+                type="text"/>
+            </b-field>
+            <b-field :label="$i18n('options_labels_general_password')">
+              <b-input
+                v-model="settings.general.password"
+                type="password"
+                password-reveal/>
+            </b-field>
+          </config-field>
+          <config-field
+            :label="$i18n('options_labels_general_defaultMode')"
+            :description="$i18n('options_descriptions_general_defaultMode')">
+            <template v-for="mode in modes">
+              <b-radio
+                :key="mode"
+                v-model="settings.general.defaultMode"
+                :native-value="mode">
+                {{ $i18n('mode_'+modeNames[mode]) }}
+              </b-radio>
+            </template>
+          </config-field>
+          <config-field
+            :label="$i18n('options_labels_general_rememberLogin')"
+            :description="$i18n('options_descriptions_general_rememberLogin')">
+            <b-checkbox v-model="settings.general.rememberLoginDetails"/>
+          </config-field>
+        </b-tab-item>
+        <b-tab-item :label="$i18n('options_tabs_sms')">
+          <config-field
+            :label="$i18n('options_labels_sms_hideSimBoxes')"
+            :description="$i18n('options_descriptions_sms_hideSimBoxes')">
+            <b-checkbox v-model="settings.sms.hideSimBoxes"/>
+          </config-field>
+          <config-field
+            :label="$i18n('options_labels_sms_confirmDialogsToShow')"
+            :description="$i18n('options_descriptions_sms_confirmDialogsToShow')">
+            <b-checkbox
+              v-model="settings.sms.confirmDialogsToShow"
+              native-value="delete">
+              {{ $i18n('sms_action_delete') }}
+            </b-checkbox>
+            <b-checkbox
+              v-model="settings.sms.confirmDialogsToShow"
+              native-value="import">
+              {{ $i18n('sms_action_import') }}
+            </b-checkbox>
+          </config-field>
+          <config-field
+            :label="$i18n('options_labels_sms_typeIcons')"
+            :description="$i18n('options_descriptions_sms_typeIcons')">
+            <b-field
+              v-for="smsType in smsTypes"
+              :key="smsType"
+              :label="getSmsTypeName(smsType)"
+              horizontal>
+              <icon-picker v-model="settings.sms.typeIcons[smsType]"/>
+            </b-field>
+          </config-field>
+        </b-tab-item>
+      </b-tabs>
+      <div class="buttons is-centered">
+        <button
+          :class="{'is-loading': saving || formLoading}"
+          class="button is-primary"
+          type="submit">
+          {{ $i18n('options_button_save') }}
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -102,11 +106,11 @@ const smsTypes = router.sms.types;
 
 // TODO: Add a button to reset settings to their defaults
 export default {
-  mixins: [smsTypeMixin],
   components: {
     IconPicker,
     ConfigField,
   },
+  mixins: [smsTypeMixin],
   data() {
     return {
       loadedSettings: false,
@@ -127,6 +131,12 @@ export default {
     modeNames: () => modeNames,
     smsTypes: () => smsTypes,
   },
+  watch: {
+    'settings.general.routerUrl'() {
+      this.validation.routerUrl.type = '';
+      this.validation.routerUrl.message = '';
+    },
+  },
   async beforeMount() {
     await this.$store.dispatch('settings/load');
     const stateSettings = this.$store.state.settings.internal;
@@ -137,12 +147,6 @@ export default {
       }
     }
     this.loadedSettings = true;
-  },
-  watch: {
-    'settings.general.routerUrl'() {
-      this.validation.routerUrl.type = '';
-      this.validation.routerUrl.message = '';
-    },
   },
   methods: {
     async setSetting(path, value) {

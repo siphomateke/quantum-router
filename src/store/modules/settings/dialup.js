@@ -8,9 +8,7 @@ export default {
     networkSearchMode: null,
   },
   getters: {
-    roaming: state => {
-      return state.connection !== null ? state.connection.RoamAutoConnectEnable : null;
-    },
+    roaming: state => state.connection !== null ? state.connection.RoamAutoConnectEnable : null,
   },
   actions: {
     // FIXME: Handle errors

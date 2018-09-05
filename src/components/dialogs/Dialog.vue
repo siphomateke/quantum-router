@@ -1,52 +1,60 @@
 <template>
-<div class="modal-card">
-  <header class="modal-card-head" v-if="title">
-    <p class="modal-card-title">{{ title }}</p>
-  </header>
+  <div class="modal-card">
+    <header
+      v-if="title"
+      class="modal-card-head">
+      <p class="modal-card-title">{{ title }}</p>
+    </header>
 
-  <section
-    class="modal-card-body"
-    :class="{ 'is-titleless': !title}">
-    <div class="media" :class="{'is-flex': hasIcon, 'has-extra': typeof this.$slots['extra'] !== 'undefined'}">
-      <div class="media-left" v-if="hasIcon">
-        <b-icon
-          :icon="icon ? icon : iconByType"
-          :type="type"
-          :both="!icon"
-          size="is-large"/>
+    <section
+      :class="{ 'is-titleless': !title}"
+      class="modal-card-body">
+      <div
+        :class="{'is-flex': hasIcon, 'has-extra': typeof this.$slots['extra'] !== 'undefined'}"
+        class="media">
+        <div
+          v-if="hasIcon"
+          class="media-left">
+          <b-icon
+            :icon="icon ? icon : iconByType"
+            :type="type"
+            :both="!icon"
+            size="is-large"/>
+        </div>
+        <div class="media-content">
+          <slot/>
+        </div>
       </div>
-      <div class="media-content">
-        <slot></slot>
-      </div>
-    </div>
-    <slot name="extra" class="extra"></slot>
-  </section>
+      <slot
+        name="extra"
+        class="extra"/>
+    </section>
 
-  <footer class="modal-card-foot">
-    <button
-      v-if="canCancel"
-      class="button"
-      ref="cancelButton"
-      @click="cancel">
-      {{ cancelText }}
-    </button>
-    <slot name="buttons"></slot>
-    <button
-      class="button"
-      :class="type"
-      ref="confirmButton"
-      @click="confirm">
-      {{ confirmText }}
-    </button>
-  </footer>
-</div>
+    <footer class="modal-card-foot">
+      <button
+        v-if="canCancel"
+        ref="cancelButton"
+        class="button"
+        @click="cancel">
+        {{ cancelText }}
+      </button>
+      <slot name="buttons"/>
+      <button
+        ref="confirmButton"
+        :class="type"
+        class="button"
+        @click="confirm">
+        {{ confirmText }}
+      </button>
+    </footer>
+  </div>
 </template>
 
 <script>
 import i18n from '@/platform/i18n.js';
 
 export default {
-  name: 'q-dialog',
+  name: 'QDialog',
   props: {
     title: String,
     type: {
@@ -57,15 +65,11 @@ export default {
     icon: String,
     confirmText: {
       type: String,
-      default: () => {
-        return i18n.getMessage('generic_ok');
-      },
+      default: () => i18n.getMessage('generic_ok'),
     },
     cancelText: {
       type: String,
-      default: () => {
-        return i18n.getMessage('generic_cancel');
-      },
+      default: () => i18n.getMessage('generic_cancel'),
     },
     canCancel: {
       type: Boolean,
@@ -88,6 +92,11 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.confirmButton.focus();
+    });
+  },
   methods: {
     cancel() {
       this.$emit('cancel');
@@ -95,11 +104,6 @@ export default {
     confirm() {
       this.$emit('confirm');
     },
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.confirmButton.focus();
-    });
   },
 };
 </script>

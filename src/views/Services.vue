@@ -1,47 +1,65 @@
 <template>
-<div class="page-content padding-container">
-  <form v-on:submit.prevent v-if="$adminMode">
-    <b-field :label="$i18n('services_ussd_command')">
-      <b-input v-model="ussd.content" type="text"></b-input>
-    </b-field>
-    <b-field v-if="ussd.commands.length > 0" :label="$i18n('services_ussd_presets')">
-      <b-select :value="ussd.selectedCommand" @input="ussdSelectedCommandChanged">
-        <option value="">--</option>
-        <option
-          v-for="command in ussd.commands"
-          :value="command.Command"
-          :key="command.Command"
+  <div class="page-content padding-container">
+    <form
+      v-if="$adminMode"
+      @submit.prevent>
+      <b-field :label="$i18n('services_ussd_command')">
+        <b-input
+          v-model="ussd.content"
+          type="text"/>
+      </b-field>
+      <b-field
+        v-if="ussd.commands.length > 0"
+        :label="$i18n('services_ussd_presets')">
+        <b-select
+          :value="ussd.selectedCommand"
+          @input="ussdSelectedCommandChanged">
+          <option value="">--</option>
+          <option
+            v-for="command in ussd.commands"
+            :value="command.Command"
+            :key="command.Command"
           >{{ command.Name }}</option>
-      </b-select>
-    </b-field>
-    <b-message type="is-danger" has-icon v-if="error">{{ error }}</b-message>
-    <div class="box" v-if="ussd.result.length > 0 || ussdOptionsExist">
-      <p style="white-space: pre-wrap;">{{ ussd.result }}</p>
-      <template v-for="(option, key) in ussd.options">
-        <b-radio :key="key"
-          :value="ussd.selectedOption"
-          @input="ussdSelectedOptionChanged"
-          :native-value="key">
+        </b-select>
+      </b-field>
+      <b-message
+        v-if="error"
+        type="is-danger"
+        has-icon>{{ error }}</b-message>
+      <div
+        v-if="ussd.result.length > 0 || ussdOptionsExist"
+        class="box">
+        <p style="white-space: pre-wrap;">{{ ussd.result }}</p>
+        <template v-for="(option, key) in ussd.options">
+          <b-radio
+            :key="key"
+            :value="ussd.selectedOption"
+            :native-value="key"
+            @input="ussdSelectedOptionChanged">
             {{ key + '. ' + option }}
-        </b-radio>
-        <br :key="key">
-      </template>
-    </div>
-    <button @click="send"
-    class="button is-primary"
-    :class="{'is-loading': loading}"
-    :disabled="ussd.content.length === 0">{{ $i18n('generic_send') }}</button>
-    <button @click="cancel"
-    class="button is-danger"
-    v-show="loading"
-    :disabled="cancelling">{{ $i18n('generic_cancel') }}</button>
-  </form>
-  <template v-else>
-    <b-message type="is-info" has-icon>
-      {{ $i18n('services_admin_only') }}
-    </b-message>
-  </template>
-</div>
+          </b-radio>
+          <br :key="key">
+        </template>
+      </div>
+      <button
+        :class="{'is-loading': loading}"
+        :disabled="ussd.content.length === 0"
+        class="button is-primary"
+        @click="send">{{ $i18n('generic_send') }}</button>
+      <button
+        v-show="loading"
+        :disabled="cancelling"
+        class="button is-danger"
+        @click="cancel">{{ $i18n('generic_cancel') }}</button>
+    </form>
+    <template v-else>
+      <b-message
+        type="is-info"
+        has-icon>
+        {{ $i18n('services_admin_only') }}
+      </b-message>
+    </template>
+  </div>
 </template>
 
 <script>

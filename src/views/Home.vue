@@ -1,27 +1,28 @@
 <template>
-<div class="padding-container">
-  <div class="card">
-    <header class="card-header">
-      <span class="card-header-title">{{ $i18n('home_cards_data_usage_graph') }}</span>
-    </header>
-    <div class="card-content">
-      <template v-if="!offline">
-        <template v-if="usage">
-          {{ $i18n('home_data_usage', {received: round(usage.received, 2), sent: round(usage.sent, 2)}) }}
+  <div class="padding-container">
+    <div class="card">
+      <header class="card-header">
+        <span class="card-header-title">{{ $i18n('home_cards_data_usage_graph') }}</span>
+      </header>
+      <div class="card-content">
+        <template v-if="!offline">
+          <template v-if="usage">
+            {{ $i18n('home_data_usage', {received: round(usage.received, 2), sent: round(usage.sent, 2)}) }}
+          </template>
+          <line-chart
+            :chart-data="lineChartData"
+            :options="chartOptions"
+            :height="400"
+          />
         </template>
-        <line-chart
-        :chart-data="lineChartData"
-        :options="chartOptions"
-        :height="400"
-        >
-        </line-chart>
-      </template>
-      <template v-else>
-        <b-message type="is-info" has-icon>{{ $i18n('home_admin_only') }}</b-message>
-      </template>
+        <template v-else>
+          <b-message
+            type="is-info"
+            has-icon>{{ $i18n('home_admin_only') }}</b-message>
+        </template>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>

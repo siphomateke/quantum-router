@@ -1,26 +1,28 @@
 <template>
   <div class="toolbar">
-    <div class="toolbar-start" v-if="checkSlot('toolbar-start')">
-      <slot name="toolbar-start"></slot>
+    <div
+      v-if="checkSlot('toolbar-start')"
+      class="toolbar-start">
+      <slot name="toolbar-start"/>
     </div>
     <div class="toolbar-end">
-      <slot name="toolbar-end"></slot>
+      <slot name="toolbar-end"/>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'q-toolbar',
-    data() {
-      return { };
+export default {
+  name: 'QToolbar',
+  data() {
+    return { };
+  },
+  methods: {
+    checkSlot: function(slotName) {
+      return typeof this.$slots[slotName] !== 'undefined';
     },
-    methods: {
-      checkSlot: function(slotName) {
-        return typeof this.$slots[slotName] !== 'undefined';
-      },
-    },
-  };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

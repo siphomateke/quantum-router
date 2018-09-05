@@ -1,19 +1,21 @@
 <template>
-  <div class='control'>
+  <div class="control">
     <button
-    class="button"
-    :class="[type, loading ? 'is-loading' : null]"
-    @click="click"
-    :disabled="disabled">
-      <b-icon v-if="icon" :icon="icon"></b-icon>
-      <span v-if="label">{{label}}</span>
+      :class="[type, loading ? 'is-loading' : null]"
+      :disabled="disabled"
+      class="button"
+      @click="click">
+      <b-icon
+        v-if="icon"
+        :icon="icon"/>
+      <span v-if="label">{{ label }}</span>
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'action-button',
+  name: 'ActionButton',
   props: {
     type: String,
     icon: String,

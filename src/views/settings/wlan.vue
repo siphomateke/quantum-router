@@ -1,84 +1,92 @@
 <template>
-<div>
-  <section class="section">
-    <h3 class="title is-3">Basic settings</h3>
-    <p class="content">
-      WPS is not available if security mode is set to WEP.<br>
-      If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
-    </p>
-    <div class="field">
-      <b-switch v-model="settings.basic.moduleEnabled">WLAN module</b-switch>
-    </div>
+  <div>
+    <section class="section">
+      <h3 class="title is-3">Basic settings</h3>
+      <p class="content">
+        WPS is not available if security mode is set to WEP.<br>
+        If security mode is set to WEP, a wireless network adapter working only in 802.11n mode may not be able to access the device.
+      </p>
+      <div class="field">
+        <b-switch v-model="settings.basic.moduleEnabled">WLAN module</b-switch>
+      </div>
 
-    <div class="field">
-      <b-switch v-model="editMode">Edit mode</b-switch>
-    </div>
+      <div class="field">
+        <b-switch v-model="editMode">Edit mode</b-switch>
+      </div>
 
-    <b-table
-      :data="settings.basic.table"
-      :bordered="true"
-      :striped="true"
-      :mobile-cards="true">
+      <b-table
+        :data="settings.basic.table"
+        :bordered="true"
+        :striped="true"
+        :mobile-cards="true">
 
-      <template slot-scope="props">
-        <b-table-column label="SSID">
-          <b-field v-if="editMode">
-            <b-input v-model="props.row.ssid"></b-input>
-          </b-field>
-          <template v-if="!editMode">
-            {{ props.row.ssid }}
-          </template>
-        </b-table-column>
-        <b-table-column label="Security mode">
+        <template slot-scope="props">
+          <b-table-column label="SSID">
+            <b-field v-if="editMode">
+              <b-input v-model="props.row.ssid"/>
+            </b-field>
+            <template v-if="!editMode">
+              {{ props.row.ssid }}
+            </template>
+          </b-table-column>
+          <b-table-column label="Security mode">
+            <q-select
+              v-if="editMode"
+              :options="options.basic.table.security"
+              v-model="props.row.security"/>
+            <template v-if="!editMode">
+              {{ props.row.security }}
+            </template>
+          </b-table-column>
+          <b-table-column label="Status">
+            <div
+              v-if="editMode"
+              class="field">
+              <b-switch v-model="props.row.status">{{ getStatusString(props.row.status) }}</b-switch>
+            </div>
+            <template v-if="!editMode">
+              {{ getStatusString(props.row.status) }}
+            </template>
+          </b-table-column>
+        </template>
+
+        <template slot="empty">
+          <section class="section">
+            <div class="content has-text-grey has-text-centered">
+              <p><b-icon
+                icon="frown-o"
+                size="is-large"/></p>
+              <p>Error!</p>
+            </div>
+          </section>
+        </template>
+      </b-table>
+    </section>
+    <section class="section">
+      <h3 class="title is-3">Advanced settings</h3>
+      <div class="columns">
+        <div class="column">
           <q-select
-          v-if="editMode"
-          :options="options.basic.table.security"
-          v-model="props.row.security"></q-select>
-          <template v-if="!editMode">
-            {{ props.row.security }}
-          </template>
-        </b-table-column>
-        <b-table-column label="Status">
-          <div v-if="editMode" class="field">
-            <b-switch v-model="props.row.status">{{ getStatusString(props.row.status) }}</b-switch>
-          </div>
-          <template v-if="!editMode">
-            {{ getStatusString(props.row.status) }}
-          </template>
-        </b-table-column>
-      </template>
-
-      <template slot="empty">
-        <section class="section">
-          <div class="content has-text-grey has-text-centered">
-            <p><b-icon icon="frown-o" size="is-large"></b-icon></p>
-            <p>Error!</p>
-          </div>
-        </section>
-      </template>
-    </b-table>
-  </section>
-  <section class="section">
-    <h3 class="title is-3">Advanced settings</h3>
-    <div class="columns">
-      <div class="column">
-        <q-select label="Channel"
-        :options="options.advanced.channel"
-        v-model="settings.advanced.channel"></q-select>
+            :options="options.advanced.channel"
+            v-model="settings.advanced.channel"
+            label="Channel"/>
+        </div>
+        <div class="column">
+          <q-select
+            :options="options.advanced.wifiBandwidth"
+            v-model="settings.advanced.wifiBandwidth"
+            label="WiFi Bandwidth"/>
+        </div>
       </div>
-      <div class="column">
-        <q-select label="WiFi Bandwidth"
-        :options="options.advanced.wifiBandwidth"
-        v-model="settings.advanced.wifiBandwidth"></q-select>
+    </section>
+    <section class="section">
+      <div class="control">
+        <button
+          class="button is-primary"
+          @click="apply">Apply</button>
       </div>
-    </div>
-  </section>
-  <section class="section">
-    <div class="control">
-      <button class="button is-primary" @click="apply">Apply</button>
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -137,9 +145,7 @@ export default {
     };
   },
   methods: {
-    getStatusString: status => {
-      return status ? 'On' : 'Off';
-    },
+    getStatusString: status => status ? 'On' : 'Off',
     apply() {
 
     },

@@ -5,7 +5,9 @@
         <span class="popup-card-title">{{ $i18n('notifications_title') }}</span>
       </header>
       <section class="popup-card-body">
-        <q-notification-list :list="list" :loading="loading"></q-notification-list>
+        <q-notification-list
+          :list="list"
+          :loading="loading"/>
       </section>
     </div>
   </div>

@@ -1,26 +1,33 @@
 <template>
   <div class="sms-list">
-    <div class="level" v-if="paginated && pageCount > 1">
+    <div
+      v-if="paginated && pageCount > 1"
+      class="level">
       <div class="level-left">
-        <div class="level-item" v-if="showGoToPage">
-          <form v-on:submit.prevent="goToPage">
+        <div
+          v-if="showGoToPage"
+          class="level-item">
+          <form @submit.prevent="goToPage">
             <b-field grouped>
               <b-input
                 ref="goToPageInput"
-                type="number"
                 :min="1"
                 :max="pageCount"
-                v-model="goToPageNumber">
-              </b-input>
+                v-model="goToPageNumber"
+                type="number"/>
               <p class="control">
-                <button type="submit" class="button is-primary">Go</button>
+                <button
+                  type="submit"
+                  class="button is-primary">Go</button>
               </p>
             </b-field>
           </form>
         </div>
       </div>
       <div class="level-right">
-        <div class="level-item" v-if="showTopPagination">
+        <div
+          v-if="showTopPagination"
+          class="level-item">
           <b-pagination
             :total="internalTotal"
             :per-page="perPage"
@@ -29,51 +36,67 @@
       </div>
     </div>
     <b-table
-    :data="list"
-    :bordered="false"
-    :striped="true"
-    :narrowed="true"
-    :loading="loading"
-    :mobile-cards="true"
-    :checked-rows.sync="internalCheckedRows"
-    :checkable="checkable"
+      :data="list"
+      :bordered="false"
+      :striped="true"
+      :narrowed="true"
+      :loading="loading"
+      :mobile-cards="true"
+      :checked-rows.sync="internalCheckedRows"
+      :checkable="checkable"
 
-    :paginated="paginated"
-    :backend-pagination="backendPagination"
-    :total="total"
-    :current-page.sync="internalPage"
-    :per-page="perPage"
+      :paginated="paginated"
+      :backend-pagination="backendPagination"
+      :total="total"
+      :current-page.sync="internalPage"
+      :per-page="perPage"
 
-    :backend-sorting="backendSorting"
-    :default-sort-direction="sortOrder"
-    :default-sort="['date', sortOrder]"
-    @sort="onSort">
+      :backend-sorting="backendSorting"
+      :default-sort-direction="sortOrder"
+      :default-sort="['date', sortOrder]"
+      @sort="onSort">
       <template slot-scope="props">
-        <b-table-column field="read"
-          v-if="typeof props.row.read === 'boolean' && showReadStatus">
-          <b-icon :title="$i18n(props.row.read ? 'sms_read' : 'sms_unread')" :icon="props.row.read ? 'envelope-open-o' : 'envelope'"></b-icon>
+        <b-table-column
+          v-if="typeof props.row.read === 'boolean' && showReadStatus"
+          field="read">
+          <b-icon
+            :title="$i18n(props.row.read ? 'sms_read' : 'sms_unread')"
+            :icon="props.row.read ? 'envelope-open-o' : 'envelope'"/>
         </b-table-column>
-        <b-table-column field="type" :label="$i18n('sms_message_type')"
-          v-if="showType">
+        <b-table-column
+          v-if="showType"
+          :label="$i18n('sms_message_type')"
+          field="type">
           <b-icon
             :title="getSmsTypeName(props.row.parsed.type)"
             :pack="smsTypeIcons[props.row.parsed.type].pack"
-            :icon="smsTypeIcons[props.row.parsed.type].id">
-          </b-icon>
+            :icon="smsTypeIcons[props.row.parsed.type].id"/>
         </b-table-column>
-        <b-table-column field="number" :label="$i18n('sms_message_number')">{{ props.row.number }}</b-table-column>
-        <b-table-column field="content" :label="$i18n('sms_message_content')">
+        <b-table-column
+          :label="$i18n('sms_message_number')"
+          field="number">{{ props.row.number }}</b-table-column>
+        <b-table-column
+          :label="$i18n('sms_message_content')"
+          field="content">
           <div class="content">{{ props.row.content }}</div>
         </b-table-column>
-        <b-table-column field="date" :label="$i18n('sms_message_date')" sortable centered>
-          <time style="white-space:nowrap;" :datetime="props.row.date">{{ formatDate(props.row.date) }}</time>
+        <b-table-column
+          :label="$i18n('sms_message_date')"
+          field="date"
+          sortable
+          centered>
+          <time
+            :datetime="props.row.date"
+            style="white-space:nowrap;">{{ formatDate(props.row.date) }}</time>
         </b-table-column>
-        <td v-if="showEditButton" class="edit-button-column">
+        <td
+          v-if="showEditButton"
+          class="edit-button-column">
           <button
+            :title="$i18n('sms_edit_tooltip')"
             class="button is-primary"
-            @click="editMessage(props.index)"
-            :title="$i18n('sms_edit_tooltip')">
-              <b-icon icon="edit"></b-icon>
+            @click="editMessage(props.index)">
+            <b-icon icon="edit"/>
           </button>
         </td>
       </template>
@@ -86,7 +109,9 @@
         </section>
       </template>
 
-      <template slot="bottom-left" v-if="internalTotal > 1">
+      <template
+        v-if="internalTotal > 1"
+        slot="bottom-left">
         <span>{{ pageInfo }}</span>
       </template>
     </b-table>

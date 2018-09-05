@@ -5,29 +5,35 @@
       <b-field grouped>
         <b-field :title="this.$i18n('sms_action_select_tooltip')">
           <p class="control">
-            <button class="button" @click="toggleSelection">
-              <b-icon :icon="selectionState === selectionStates.NONE ? 'square-o' : 'check-square-o'"></b-icon>
+            <button
+              class="button"
+              @click="toggleSelection">
+              <b-icon :icon="selectionState === selectionStates.NONE ? 'square-o' : 'check-square-o'"/>
             </button>
           </p>
           <p class="control">
             <b-dropdown>
-              <button class="button" slot="trigger">
-                <b-icon icon="caret-down"></b-icon>
+              <button
+                slot="trigger"
+                class="button">
+                <b-icon icon="caret-down"/>
               </button>
               <b-dropdown-item
                 v-for="selector in selectors"
                 :key="selector"
                 @click="changeSelection(selector)">
-                 {{ $i18n('sms_action_select_'+selector) }}
+                {{ $i18n('sms_action_select_'+selector) }}
               </b-dropdown-item>
-              <b-dropdown-item separator></b-dropdown-item>
+              <b-dropdown-item separator/>
               <b-dropdown-item custom><b>{{ $i18n('sms_action_select_dropdown_types_group') }}</b></b-dropdown-item>
               <b-dropdown-item
                 v-for="smsType in smsTypes"
                 :key="smsType"
                 @click="changeSelection(smsType)">
-                  <b-icon :pack="smsTypeIcons[smsType].pack" :icon="smsTypeIcons[smsType].id"></b-icon>
-                  <span style="padding-left:0.5em;">{{ getSmsTypeName(smsType) }}</span>
+                <b-icon
+                  :pack="smsTypeIcons[smsType].pack"
+                  :icon="smsTypeIcons[smsType].id"/>
+                <span style="padding-left:0.5em;">{{ getSmsTypeName(smsType) }}</span>
               </b-dropdown-item>
             </b-dropdown>
           </p>
@@ -37,16 +43,14 @@
           <action-button
             v-if="isVisible('delete')"
             :disabled="isDisabled('delete')"
-            icon="trash"
             :title="this.$i18n('sms_action_delete')"
-            @click="deleteMessages">
-          </action-button>
+            icon="trash"
+            @click="deleteMessages"/>
           <action-button
             v-if="isVisible('markAsRead')"
             :disabled="isDisabled('markAsRead')"
             :label="this.$i18n('sms_action_mark_as_read')"
-            @click="markMessagesAsRead">
-          </action-button>
+            @click="markMessagesAsRead"/>
         </b-field>
       </b-field>
     </div>
@@ -59,8 +63,7 @@
             :disabled="isDisabled('new')"
             :label="this.$i18n('sms_action_new_message')"
             icon="plus"
-            @click="newMessage">
-          </action-button>
+            @click="newMessage"/>
         </b-field>
         <b-field>
           <action-button
@@ -68,8 +71,7 @@
             :disabled="isDisabled('import')"
             :label="this.$i18n('sms_action_import')"
             icon="upload"
-            @click="importClick">
-          </action-button>
+            @click="importClick"/>
         </b-field>
       </b-field>
     </div>

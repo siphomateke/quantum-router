@@ -1,71 +1,88 @@
 <template>
   <div id="app">
-    <b-loading :active.sync="loading" :canCancel="false"></b-loading>
+    <b-loading
+      :active.sync="loading"
+      :can-cancel="false"/>
     <div class="app-wrapper columns is-gapless">
-      <drawer title="Quantum Router" class="column is-2">
+      <drawer
+        title="Quantum Router"
+        class="column is-2">
         <drawer-item
+          :label="this.$i18n('menu_home')"
           link="home"
-          icon="home"
-          :label="this.$i18n('menu_home')">
-        </drawer-item>
+          icon="home"/>
         <drawer-item
+          :label="this.$i18n('menu_sms')"
           link="sms"
-          icon="comment"
-          :label="this.$i18n('menu_sms')">
-        </drawer-item>
+          icon="comment"/>
         <drawer-item
+          :label="this.$i18n('menu_statistics')"
           link="statistics"
-          icon="pie-chart"
-          :label="this.$i18n('menu_statistics')">
-        </drawer-item>
+          icon="pie-chart"/>
         <drawer-item
+          :label="this.$i18n('menu_services')"
           link="services"
-          icon="terminal"
-          :label="this.$i18n('menu_services')">
-        </drawer-item>
+          icon="terminal"/>
         <drawer-item
+          :label="this.$i18n('menu_settings')"
           link="settings"
-          icon="cog"
-          :label="this.$i18n('menu_settings')">
-        </drawer-item>
+          icon="cog"/>
         <drawer-item
+          :label="this.$i18n('menu_app_settings')"
           link="app-settings"
-          icon="sliders"
-          :label="this.$i18n('menu_app_settings')">
-        </drawer-item>
+          icon="sliders"/>
       </drawer>
       <div class="column">
         <q-toolbar>
           <template slot="toolbar-start">
-            <q-toolbar-item :title="$i18n('change_mode_tooltip')" icon="bolt" :color="modeColor" ref="modeToolbarItem">
+            <q-toolbar-item
+              ref="modeToolbarItem"
+              :title="$i18n('change_mode_tooltip')"
+              :color="modeColor"
+              icon="bolt">
               <template slot="dropdown">
-                <q-dropdown-select :value="$mode" @input="userChangedMode">
+                <q-dropdown-select
+                  :value="$mode"
+                  @input="userChangedMode">
                   <q-dropdown-item
                     v-for="mode in modes"
                     :key="mode"
                     :value="mode">
-                   {{ $i18n('mode_'+modeNames[mode]) }}
+                    {{ $i18n('mode_'+modeNames[mode]) }}
                   </q-dropdown-item>
                 </q-dropdown-select>
               </template>
             </q-toolbar-item>
           </template>
           <template slot="toolbar-end">
-            <q-toolbar-item :title="$i18n('notifications_tooltip')" icon="bell" :badge="unreadNotifications.length" :badge-visible="unreadNotifications.length > 0"
-              position="is-bottom-left" class="notification-dropdown" :mobile-modal="false">
+            <q-toolbar-item
+              :title="$i18n('notifications_tooltip')"
+              :badge="unreadNotifications.length"
+              :badge-visible="unreadNotifications.length > 0"
+              :mobile-modal="false"
+              icon="bell"
+              position="is-bottom-left"
+              class="notification-dropdown">
               <template slot="dropdown">
-                <b-dropdown-item custom paddingless>
-                  <q-notifications-popup :list="unreadNotifications" :loading="loadingNotifications"></q-notifications-popup>
+                <b-dropdown-item
+                  custom
+                  paddingless>
+                  <q-notifications-popup
+                    :list="unreadNotifications"
+                    :loading="loadingNotifications"/>
                 </b-dropdown-item>
               </template>
             </q-toolbar-item>
-            <q-toolbar-item :title="$i18n('mobile_data_tooltip')" icon="plug" :is-active="mobileDataState"></q-toolbar-item>
-            <q-toolbar-item icon="wifi"></q-toolbar-item>
+            <q-toolbar-item
+              :title="$i18n('mobile_data_tooltip')"
+              :is-active="mobileDataState"
+              icon="plug"/>
+            <q-toolbar-item icon="wifi"/>
           </template>
         </q-toolbar>
         <div class="page-wrapper">
           <keep-alive>
-            <router-view></router-view>
+            <router-view/>
           </keep-alive>
         </div>
       </div>
@@ -86,7 +103,7 @@ import NotificationsPopup from '@/components/notifications/NotificationsPopup.vu
 
 // TODO: Finish moving to Vuex
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     'drawer': Drawer,
     'drawer-item': DrawerItem,
@@ -137,6 +154,24 @@ export default {
       }
     },
   },
+  watch: {
+    ['$mode'](val, oldVal) {
+      switch (val) {
+      case modes.ADMIN:
+        this.globalBus.$emit('mode-change:admin');
+        break;
+      case modes.BASIC:
+        this.globalBus.$emit('mode-change:basic');
+        break;
+      case modes.OFFLINE:
+        this.globalBus.$emit('mode-change:offline');
+        break;
+      }
+      if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
+        this.loadNotifications();
+      }
+    },
+  },
   async mounted() {
     await this.$store.dispatch('settings/load');
 
@@ -167,24 +202,6 @@ export default {
       // TODO: Make sure this works
       this.tryChangeMode(this.internalSettings.general.defaultMode);
     });
-  },
-  watch: {
-    ['$mode'](val, oldVal) {
-      switch (val) {
-      case modes.ADMIN:
-        this.globalBus.$emit('mode-change:admin');
-        break;
-      case modes.BASIC:
-        this.globalBus.$emit('mode-change:basic');
-        break;
-      case modes.OFFLINE:
-        this.globalBus.$emit('mode-change:offline');
-        break;
-      }
-      if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
-        this.loadNotifications();
-      }
-    },
   },
   methods: {
     ...mapActions({

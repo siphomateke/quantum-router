@@ -1,16 +1,20 @@
 <template>
-<div class="q-notification">
-  <span class="q-title">{{ title }}</span>
-  <span class="q-subtitle"><time :datetime="machineDate">{{ time }}</time></span>
-  <div class="q-message">{{ message }}</div>
-  <progress v-if="progress" class="progress is-primary is-small" :value="progress" max="1">{{progress * 100}}%</progress>
-</div>
+  <div class="q-notification">
+    <span class="q-title">{{ title }}</span>
+    <span class="q-subtitle"><time :datetime="machineDate">{{ time }}</time></span>
+    <div class="q-message">{{ message }}</div>
+    <progress
+      v-if="progress"
+      :value="progress"
+      class="progress is-primary is-small"
+      max="1">{{ progress * 100 }}%</progress>
+  </div>
 </template>
 
 <script>
 import moment from 'moment';
 export default {
-  name: 'q-notification',
+  name: 'QNotification',
   props: {
     title: String,
     message: String,
@@ -22,21 +26,6 @@ export default {
     return {
       _date: null,
     };
-  },
-  created() {
-    this.updateDate(this.date);
-  },
-  watch: {
-    date(date) {
-      this.updateDate(date);
-    },
-  },
-  methods: {
-    updateDate(date) {
-      if (date) {
-        this._date = moment(date);
-      }
-    },
   },
   computed: {
     machineDate() {
@@ -54,6 +43,21 @@ export default {
         }
       } else {
         return null;
+      }
+    },
+  },
+  watch: {
+    date(date) {
+      this.updateDate(date);
+    },
+  },
+  created() {
+    this.updateDate(this.date);
+  },
+  methods: {
+    updateDate(date) {
+      if (date) {
+        this._date = moment(date);
       }
     },
   },

@@ -5,7 +5,6 @@
       :loading="loading"
       :checkable="true"
       :checked-rows="checkedRows"
-      @update:checkedRows="updateCheckedRows"
       :total="count"
       :paginated="pageCount > 1"
       :page="page"
@@ -16,12 +15,12 @@
       :backend-sorting="true"
       :sort-order="sortOrder"
       :show-read-status="isInbox"
+      @update:checkedRows="updateCheckedRows"
       :show-type="isInbox"
       :show-edit-button="isDraft"
       @page-change="onPageChange"
       @sort="onSort"
-      @edit="editMessage">
-    </sms-list>
+      @edit="editMessage"/>
   </div>
 </template>
 
@@ -32,7 +31,7 @@ import {boxTypes} from '@/store/modules/sms';
 import {mapState, mapGetters} from 'vuex';
 
 export default {
-  name: 'sms-box',
+  name: 'SmsBox',
   components: {
     SmsList,
   },

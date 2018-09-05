@@ -1,35 +1,37 @@
 <template>
-<div class="page-content">
-  <template v-if="$adminMode">
-    <div class="card">
-      <nav class="navbar has-shadow">
-        <div class="container">
-          <div class="navbar-tabs">
-            <router-link
-              v-for="item in nav"
-              :key="item.name"
-              class="navbar-item is-tab"
-              active-class="is-active"
-              tag="a"
-              :to="{ name: item.name }">
-              {{ item.label }}
-            </router-link>
+  <div class="page-content">
+    <template v-if="$adminMode">
+      <div class="card">
+        <nav class="navbar has-shadow">
+          <div class="container">
+            <div class="navbar-tabs">
+              <router-link
+                v-for="item in nav"
+                :key="item.name"
+                :to="{ name: item.name }"
+                class="navbar-item is-tab"
+                active-class="is-active"
+                tag="a">
+                {{ item.label }}
+              </router-link>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      <router-view></router-view>
+        <router-view/>
 
-    </div>
-  </template>
-  <template v-else>
-    <div class="padding-container">
-      <b-message type="is-info" has-icon>
-        {{ $i18n('settings_admin_only') }}
-      </b-message>
-    </div>
+      </div>
     </template>
-</div>
+    <template v-else>
+      <div class="padding-container">
+        <b-message
+          type="is-info"
+          has-icon>
+          {{ $i18n('settings_admin_only') }}
+        </b-message>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>

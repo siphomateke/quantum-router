@@ -1,60 +1,62 @@
 <template>
-<q-dialog
-  :title="this.$i18n('sms_dialog_title')"
-  :confirm-text="this.$i18n('sms_dialog_action_send')"
-  @confirm="send"
-  @cancel="cancel"
+  <q-dialog
+    :title="this.$i18n('sms_dialog_title')"
+    :confirm-text="this.$i18n('sms_dialog_action_send')"
+    @confirm="send"
+    @cancel="cancel"
   >
-  <form ref="form" v-on:submit.prevent>
-    <b-field
-      :label="this.$i18n('sms_dialog_field_numbers')"
-      :type="fields.numbers.type"
-      :message="fields.numbers.message">
+    <form
+      ref="form"
+      @submit.prevent>
+      <b-field
+        :label="this.$i18n('sms_dialog_field_numbers')"
+        :type="fields.numbers.type"
+        :message="fields.numbers.message">
         <b-taginput
           v-model="internalNumbers"
-          @input="validateNumbers"
+          :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')"
           icon="phone"
-          :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')">
-        </b-taginput>
-    </b-field>
-    <b-field
-      :label="this.$i18n('sms_dialog_field_content')"
-      :addons="false">
-      <b-input
-        ref="content"
-        type="textarea"
-        v-model="internalContent"
-        :maxlength="sms7bitMaxSize"
-        :has-counter="false">
-      </b-input>
-      <small class="help">
-        <span>
-          <span
-            class="help-cursor"
-            :title="this.$i18n('sms_dialog_character_count')">
-            {{ internalContent.length }}
+          @input="validateNumbers"/>
+      </b-field>
+      <b-field
+        :label="this.$i18n('sms_dialog_field_content')"
+        :addons="false">
+        <b-input
+          ref="content"
+          v-model="internalContent"
+          :maxlength="sms7bitMaxSize"
+          :has-counter="false"
+          type="textarea"/>
+        <small class="help">
+          <span>
+            <span
+              :title="this.$i18n('sms_dialog_character_count')"
+              class="help-cursor">
+              {{ internalContent.length }}
+            </span>
+            {{ ' / ' }}
+            <span
+              :title="this.$i18n('sms_dialog_character_count_max')"
+              class="help-cursor">
+              {{ sms7bitMaxSize }}
+            </span>
           </span>
-          {{' / '}}
-          <span
-            class="help-cursor"
-            :title="this.$i18n('sms_dialog_character_count_max')">
-            {{ sms7bitMaxSize }}
+          <span class="counter help-cursor">
+            <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">{{ counterText.remaining }}</span>
+            <span :title="this.$i18n('sms_dialog_message_count')">({{ counterText.numberOfMessages }})</span>
+            <span :title="this.$i18n('sms_dialog_segment_help', {normalMax, longMax})">
+              <b-icon icon="question-circle"/>
+            </span>
           </span>
-        </span>
-        <span class="counter help-cursor">
-          <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">{{ counterText.remaining }}</span>
-          <span :title="this.$i18n('sms_dialog_message_count')">({{ counterText.numberOfMessages }})</span>
-          <span :title="this.$i18n('sms_dialog_segment_help', {normalMax, longMax})">
-            <b-icon icon="question-circle"></b-icon>
-          </span>
-        </span>
-      </small>
-    </b-field>
-  </form>
-  <template slot="buttons">
-    <button class="button" @click="save">{{ this.$i18n('sms_dialog_action_save') }}</button>
-  </template>
-</q-dialog>
+        </small>
+      </b-field>
+    </form>
+    <template slot="buttons">
+      <button
+        class="button"
+        @click="save">{{ this.$i18n('sms_dialog_action_save') }}</button>
+    </template>
+  </q-dialog>
 </template>
 
 <script>
@@ -65,7 +67,7 @@ import router from 'huawei-router-api/browser';
  * Used for creating, editing and sending sms messages
  */
 export default {
-  name: 'sms-dialog',
+  name: 'SmsDialog',
   components: {
     [Dialog.name]: Dialog,
   },

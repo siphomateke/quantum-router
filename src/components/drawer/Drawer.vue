@@ -1,12 +1,12 @@
 <template>
-<aside class="app-drawer">
-  <div>
-    <div class="main">
-      <div class="header drawer-item">{{ title }}</div>
-      <slot></slot>
+  <aside class="app-drawer">
+    <div>
+      <div class="main">
+        <div class="header drawer-item">{{ title }}</div>
+        <slot/>
+      </div>
     </div>
-  </div>
-</aside>
+  </aside>
 </template>
 
 <script>

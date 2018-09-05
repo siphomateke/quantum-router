@@ -1,34 +1,39 @@
 <template>
-<div class="q-notification-list"
-  :class="{'is-loading': loading}"
-  style="width:400px;max-height:500px;overflow-y:scroll;">
-  <template v-if="list.length>0">
-    <notification
-      v-for="(n, key) in list"
-      :key="key"
-      :title="n.title"
-      :message="n.message"
-      :date="n.date"
-      :read="n.read"
-      :progress="n.progress"
-    ></notification>
-  </template>
-  <template class="content" v-else>
-    <section class="section">
-      <div v-if="!loading" class="content has-text-grey has-text-centered">
-        <p>
-          {{ $i18n('notifications_empty') }}
-        </p>
-      </div>
-    </section>
-  </template>
-</div>
+  <div
+    :class="{'is-loading': loading}"
+    class="q-notification-list"
+    style="width:400px;max-height:500px;overflow-y:scroll;">
+    <template v-if="list.length>0">
+      <notification
+        v-for="(n, key) in list"
+        :key="key"
+        :title="n.title"
+        :message="n.message"
+        :date="n.date"
+        :read="n.read"
+        :progress="n.progress"
+      />
+    </template>
+    <template
+      v-else
+      class="content">
+      <section class="section">
+        <div
+          v-if="!loading"
+          class="content has-text-grey has-text-centered">
+          <p>
+            {{ $i18n('notifications_empty') }}
+          </p>
+        </div>
+      </section>
+    </template>
+  </div>
 </template>
 
 <script>
 import Notification from './Notification';
 export default {
-  name: 'q-notification-list',
+  name: 'QNotificationList',
   components: {
     'notification': Notification,
   },

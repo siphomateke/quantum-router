@@ -1,52 +1,63 @@
 <template>
-<nav class="navbar has-shadow">
-  <div class="navbar-brand">
-    <slot name="navbar-brand"></slot>
+  <nav class="navbar has-shadow">
+    <div class="navbar-brand">
+      <slot name="navbar-brand"/>
 
-    <span class="navbar-burger" @click="navToggle" :class="{'is-active': isActive}">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
-  </div>
-  <div class="navbar-menu" :class="{'is-active': isActive}">
-    <div class="navbar-start" v-if="checkSlot('navbar-start')">
-      <slot name="navbar-start"></slot>
+      <span
+        :class="{'is-active': isActive}"
+        class="navbar-burger"
+        @click="navToggle">
+        <span/>
+        <span/>
+        <span/>
+      </span>
     </div>
-    <div class="navbar-end">
-      <slot name="navbar-end"></slot>
-      <a
-        v-for="item in items"
-        :key="item.link"
-        class="navbar-item"
-        :href="item.link"
-        :class="{'is-active': item.isActive}">
-        <b-icon v-if="item.icon" pack="fa" :icon="item.icon" class="fa-fw"></b-icon> {{ item.label }}
-      </a>
+    <div
+      :class="{'is-active': isActive}"
+      class="navbar-menu">
+      <div
+        v-if="checkSlot('navbar-start')"
+        class="navbar-start">
+        <slot name="navbar-start"/>
+      </div>
+      <div class="navbar-end">
+        <slot name="navbar-end"/>
+        <a
+          v-for="item in items"
+          :key="item.link"
+          :href="item.link"
+          :class="{'is-active': item.isActive}"
+          class="navbar-item">
+          <b-icon
+            v-if="item.icon"
+            :icon="item.icon"
+            pack="fa"
+            class="fa-fw"/> {{ item.label }}
+        </a>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        isActive: false,
-      };
+export default {
+  props: {
+    items: Array,
+  },
+  data() {
+    return {
+      isActive: false,
+    };
+  },
+  methods: {
+    checkSlot: function(slotName) {
+      return typeof this.$slots[slotName] !== 'undefined';
     },
-    props: {
-      items: Array,
+    navToggle: function() {
+      this.isActive = !this.isActive;
     },
-    methods: {
-      checkSlot: function(slotName) {
-        return typeof this.$slots[slotName] !== 'undefined';
-      },
-      navToggle: function() {
-        this.isActive = !this.isActive;
-      },
-    },
-  };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

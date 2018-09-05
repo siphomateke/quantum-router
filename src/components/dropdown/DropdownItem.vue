@@ -1,14 +1,15 @@
 <template>
-<a class="dropdown-item"
-  @click="click"
-  :class="{'is-active' : value !== null && value === $parent.value}" >
-  <slot></slot>
-</a>
+  <a
+    :class="{'is-active' : value !== null && value === $parent.value}"
+    class="dropdown-item"
+    @click="click" >
+    <slot/>
+  </a>
 </template>
 
 <script>
 export default {
-  name: 'q-dropdown-item',
+  name: 'QDropdownItem',
   props: ['value'],
   methods: {
     click() {

@@ -14,10 +14,11 @@
             'new': localFull,
             'import': !importEnabled || localFull,
           }"
-          :selection-state="selectionState">
-        </sms-actions>
+          :selection-state="selectionState"/>
       </div>
-      <div v-if="localFull" class="message-wrapper">
+      <div
+        v-if="localFull"
+        class="message-wrapper">
         <b-message
           type="is-info"
           has-icon
@@ -25,19 +26,27 @@
           {{ $i18n('sms_box_full') }}
         </b-message>
       </div>
-      <b-tabs type="is-boxed" expanded @change="changedTab">
+      <b-tabs
+        type="is-boxed"
+        expanded
+        @change="changedTab">
         <b-tab-item
-          v-for="(tab, idx) in tabs" :key="idx">
+          v-for="(tab, idx) in tabs"
+          :key="idx">
 
           <template slot="header">
-            <b-icon :icon="tab.icon" size="is-small"/>
+            <b-icon
+              :icon="tab.icon"
+              size="is-small"/>
             <span>
               {{ tab.label }}
               <b-tag rounded>
                 <template v-if="!countLoading">
-                  {{boxes[tab.boxType].count}}
+                  {{ boxes[tab.boxType].count }}
                 </template>
-                <span v-else class="tag-loader"></span>
+                <span
+                  v-else
+                  class="tag-loader"/>
               </b-tag>
             </span>
           </template>
@@ -46,10 +55,13 @@
             :bus="buses[idx]"
             :box-type="tab.boxType"
             @edit="editMessage"
-          ></sms-box>
+          />
         </b-tab-item>
       </b-tabs>
-      <b-modal ref="smsDialogModal" :active.sync="showSmsDialog" has-modal-card>
+      <b-modal
+        ref="smsDialogModal"
+        :active.sync="showSmsDialog"
+        has-modal-card>
         <sms-dialog
           :id.sync="dialog.id"
           :numbers.sync="dialog.numbers"
@@ -57,12 +69,14 @@
           @save="smsDialogSave"
           @send="smsDialogSend"
           @cancel="smsDialogClose"
-        ></sms-dialog>
+        />
       </b-modal>
     </template>
     <template v-else>
       <div class="padding-container">
-        <b-message type="is-info" has-icon>
+        <b-message
+          type="is-info"
+          has-icon>
           {{ $i18n('sms_admin_only') }}
         </b-message>
       </div>
@@ -110,7 +124,7 @@ export default {
   },
   mounted() {
     for (const event of eventsToRedirect) {
-      callbacks[event] = data => {
+      callbacks[event] = (data) => {
         this.currentBus.$emit(event, data);
       };
       this.bus.$on(event, callbacks[event]);

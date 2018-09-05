@@ -133,7 +133,7 @@ for (const boxType of Object.values(boxTypes)) {
  * @return {number}
  */
 function boxSum(boxTypes) {
-  return state => {
+  return (state) => {
     let sum = 0;
     for (const boxType of boxTypes) {
       sum += state.boxes[boxType].count;
@@ -155,11 +155,11 @@ const getters = {
   ]),
   localFull: (state, getters) => (state.local.max === getters.localTotal),
   simFull: (state, getters) => (state.sim.max === getters.simTotal),
-  getVisibleMessagesIds: state => box => {
+  getVisibleMessagesIds: state => (box) => {
     const boxItem = state.boxes[box];
     return boxItem.messages[boxItem.page];
   },
-  actualMessages: state => ids => {
+  actualMessages: state => (ids) => {
     const messages = [];
     for (const id of ids) {
       if (id in state.messages) {
@@ -168,7 +168,7 @@ const getters = {
     }
     return messages;
   },
-  allMessages: state => box => {
+  allMessages: state => (box) => {
     let messages = [];
     const boxPages = state.boxes[box].messages;
     for (const page of Object.keys(boxPages)) {
@@ -176,10 +176,8 @@ const getters = {
     }
     return messages;
   },
-  isInbox: state => box => {
-    return (box === boxTypes.LOCAL_INBOX) || (box === boxTypes.SIM_INBOX);
-  },
-  numPages: state => box => {
+  isInbox: state => box => (box === boxTypes.LOCAL_INBOX) || (box === boxTypes.SIM_INBOX),
+  numPages: state => (box) => {
     const boxItem = state.boxes[box];
     return Math.ceil(boxItem.count / boxItem.perPage);
   },
@@ -352,7 +350,7 @@ const actions = {
         });
 
         // Don't add message if it exists
-        messages = messages.filter(m => {
+        messages = messages.filter((m) => {
           const id = parseInt(m.Index, 10);
           if (!(id in state.messages)) {
             return true;

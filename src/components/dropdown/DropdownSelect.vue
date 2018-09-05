@@ -1,12 +1,12 @@
 <template>
-<div>
-  <slot></slot>
-</div>
+  <div>
+    <slot/>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'q-dropdown-select',
+  name: 'QDropdownSelect',
   props: ['value'],
   data() {
     return {

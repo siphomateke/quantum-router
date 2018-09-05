@@ -1,56 +1,78 @@
 <template>
-  <router-link v-if="!checkSlot('dropdown')" :to="{ name: link }" class="toolbar-item" :class="{'active': isActive}" :style="{color: color}">
-    <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
-    <div class="badge" v-if="badgeVisible">{{ badge }}</div>
-    <slot></slot>
+  <router-link
+    v-if="!checkSlot('dropdown')"
+    :to="{ name: link }"
+    :class="{'active': isActive}"
+    :style="{color: color}"
+    class="toolbar-item">
+    <b-icon
+      v-if="icon"
+      :icon="icon"
+      pack="fa"
+      class="fa-fw"/> {{ label }}
+    <div
+      v-if="badgeVisible"
+      class="badge">{{ badge }}</div>
+    <slot/>
   </router-link>
   <b-dropdown
-  v-else
-  :value="value"
-  @input="input"
-  ref="dropdown"
-  :position="position"
-  :mobile-modal="mobileModal"
-   class="toolbar-item" :class="{'active': isActive}">
-    <router-link class="toolbar-item-trigger" slot="trigger" :to="{ name: link }" :style="{color: color}">
-      <b-icon v-if="icon" pack="fa" :icon="icon" class="fa-fw"></b-icon> {{ label }}
-      <div class="badge" v-if="badgeVisible">{{ badge }}</div>
-      <slot></slot>
+    v-else
+    ref="dropdown"
+    :value="value"
+    :position="position"
+    :mobile-modal="mobileModal"
+    :class="{'active': isActive}"
+    class="toolbar-item"
+    @input="input">
+    <router-link
+      slot="trigger"
+      :to="{ name: link }"
+      :style="{color: color}"
+      class="toolbar-item-trigger">
+      <b-icon
+        v-if="icon"
+        :icon="icon"
+        pack="fa"
+        class="fa-fw"/> {{ label }}
+      <div
+        v-if="badgeVisible"
+        class="badge">{{ badge }}</div>
+      <slot/>
     </router-link>
-    <slot name="dropdown"></slot>
+    <slot name="dropdown"/>
   </b-dropdown>
 </template>
 
 <script>
-  export default {
-    name: 'q-toolbar-item',
-    props: {
-      icon: String,
-      label: String,
-      isActive: {
-        type: Boolean,
-        default: false,
-      },
-      link: String,
-      badgeVisible: {
-        type: Boolean,
-        default: false,
-      },
-      badge: [Number, String],
-      color: String,
-      value: {},
-      position: String,
-      mobileModal: Boolean,
+export default {
+  name: 'QToolbarItem',
+  props: {
+    icon: String,
+    label: String,
+    isActive: {
+      type: Boolean,
+      default: false,
     },
-    methods: {
-      checkSlot(slotName) {
-        return typeof this.$slots[slotName] !== 'undefined';
-      },
-      input(value) {
-        this.$emit('input', value);
-      },
+    link: String,
+    badgeVisible: {
+      type: Boolean,
+      default: false,
     },
-  };
+    badge: [Number, String],
+    color: String,
+    value: {},
+    position: String,
+    mobileModal: Boolean,
+  },
+  methods: {
+    checkSlot(slotName) {
+      return typeof this.$slots[slotName] !== 'undefined';
+    },
+    input(value) {
+      this.$emit('input', value);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,61 +1,65 @@
 <template>
-<div>
-  <b-modal :active.sync="modalOpen" has-modal-card>
-    <icon-picker-modal
-      :icon-packs="iconPacks"
-      v-model="icon"
-      :title="pickerTitle">
-    </icon-picker-modal>
-  </b-modal>
-  <b-field
-    :type="fieldType"
-    :message="errorMessage">
+  <div>
+    <b-modal
+      :active.sync="modalOpen"
+      has-modal-card>
+      <icon-picker-modal
+        :icon-packs="iconPacks"
+        v-model="icon"
+        :title="pickerTitle"/>
+    </b-modal>
     <b-field
-      v-if="!compact"
-      :type="fieldType">
-      <p class="control">
-        <span
-          class="button is-static"
-          :title="iconName">
+      :type="fieldType"
+      :message="errorMessage">
+      <b-field
+        v-if="!compact"
+        :type="fieldType">
+        <p class="control">
+          <span
+            :title="iconName"
+            class="button is-static">
+            <b-icon
+              :pack="iconPackId"
+              :icon="iconId"/>
+          </span>
+        </p>
+        <b-select
+          v-if="iconPacks.length > 1"
+          :value="iconPackId"
+          @input="iconPackSelectionChanged">
+          <option
+            v-for="pack in iconPacks"
+            :value="pack.id"
+            :key="pack.id">
+            {{ pack.name }}
+          </option>
+        </b-select>
+        <b-input
+          :value="iconId"
+          type="text"
+          @input="setIconId"
+          @blur="validate"/>
+        <p class="control">
+          <button
+            type="button"
+            class="button"
+            @click="open">{{ pickerButtonText }}</button>
+        </p>
+      </b-field>
+      <template v-else>
+        <button
+          type="button"
+          class="button"
+          @click="open">
           <b-icon
             :pack="iconPackId"
-            :icon="iconId">
-          </b-icon>
-        </span>
-      </p>
-      <b-select
-        v-if="iconPacks.length > 1"
-        :value="iconPackId"
-        @input="iconPackSelectionChanged">
-        <option
-          v-for="pack in iconPacks"
-          :value="pack.id"
-          :key="pack.id">
-          {{ pack.name }}
-        </option>
-      </b-select>
-      <b-input
-        type="text"
-        :value="iconId"
-        @input="setIconId"
-        @blur="validate">
-      </b-input>
-      <p class="control">
-        <button type="button" class="button" @click="open">{{ pickerButtonText }}</button>
-      </p>
+            :icon="iconId"
+            :title="iconName"/>
+          <span>{{ iconId }}</span>
+        </button>
+      </template>
     </b-field>
-    <template v-else>
-      <button type="button" class="button" @click="open">
-        <b-icon
-          :pack="iconPackId"
-          :icon="iconId"
-          :title="iconName">
-        </b-icon>
-        <span>{{ iconId }}</span>
-      </button>
-    </template>
-  </b-field>
-</div>
+  </div>
 </template>
 
 <script>
@@ -69,7 +73,7 @@ import icons from '@/icons';
 import i18n from '@/platform/i18n.js';
 
 export default {
-  name: 'q-icon-picker',
+  name: 'QIconPicker',
   components: {
     IconPickerModal,
   },
@@ -124,6 +128,9 @@ export default {
       deep: true,
     },
   },
+  mounted() {
+    this.setIcon(this.value);
+  },
   methods: {
     open() {
       this.modalOpen = true;
@@ -172,9 +179,6 @@ export default {
         this.errorMessage = '';
       }
     },
-  },
-  mounted() {
-    this.setIcon(this.value);
   },
 };
 </script>

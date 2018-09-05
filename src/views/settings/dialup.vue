@@ -1,42 +1,59 @@
 <template>
-<div class="section">
-  <div class="columns">
-    <div class="column">
-      <b-panel>
-        <h5 slot="header" class="title is-5">Connection</h5>
-        <div class="content">
-          <div class="field">
-            <b-switch v-model="values.mobileData" :disabled="disabled.mobileData">Mobile data</b-switch>
+  <div class="section">
+    <div class="columns">
+      <div class="column">
+        <b-panel>
+          <h5
+            slot="header"
+            class="title is-5">Connection</h5>
+          <div class="content">
+            <div class="field">
+              <b-switch
+                v-model="values.mobileData"
+                :disabled="disabled.mobileData">Mobile data</b-switch>
+            </div>
+            <div class="field">
+              <b-switch
+                v-model="values.roaming"
+                :disabled="disabled.roaming">Data roaming <b-tag type="is-warning">Not implemented</b-tag></b-switch>
+            </div>
           </div>
-          <div class="field">
-            <b-switch v-model="values.roaming" :disabled="disabled.roaming">Data roaming <b-tag type="is-warning">Not implemented</b-tag></b-switch>
+        </b-panel>
+      </div>
+
+      <div class="column">
+        <b-panel>
+          <h5
+            slot="header"
+            class="title is-5">Network <b-tag type="is-warning">Not implemented</b-tag></h5>
+          <div class="content">
+            <div class="field">
+              <b-switch
+                v-model="values.lte"
+                :disabled="disabled.lte">Support LTE networks</b-switch>
+            </div>
+            <b-field label="Search mode">
+              <b-select
+                v-model="values.networkSearchMode"
+                :disabled="disabled.networkSearchMode">
+                <option
+                  v-for="option in networkSearchModes"
+                  :value="option.value"
+                  :key="option.value">
+                  {{ option.label }}
+                </option>
+              </b-select>
+            </b-field>
           </div>
-        </div>
-      </b-panel>
+        </b-panel>
+      </div>
     </div>
 
-    <div class="column">
-      <b-panel>
-        <h5 slot="header" class="title is-5">Network <b-tag type="is-warning">Not implemented</b-tag></h5>
-        <div class="content">
-          <div class="field">
-            <b-switch v-model="values.lte" :disabled="disabled.lte">Support LTE networks</b-switch>
-          </div>
-          <b-field label="Search mode">
-            <b-select v-model="values.networkSearchMode" :disabled="disabled.networkSearchMode">
-              <option v-for="option in networkSearchModes" :value="option.value" :key="option.value">
-                {{ option.label }}
-              </option>
-            </b-select>
-          </b-field>
-        </div>
-      </b-panel>
-    </div>
+    <button
+      class="button is-primary"
+      @click="apply">Apply</button>
+
   </div>
-
-  <button class="button is-primary" @click="apply">Apply</button>
-
-</div>
 </template>
 
 <script>
