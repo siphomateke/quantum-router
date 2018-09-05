@@ -1,13 +1,8 @@
 'use strict';
 
-import {app, protocol, BrowserWindow, ipcMain} from 'electron';
-import * as path from 'path';
-import {format as formatUrl} from 'url';
-import {
-  createProtocol,
-  installVueDevtools,
-} from 'vue-cli-plugin-electron-builder/lib';
-import iconConfig from '@/config/icons';
+import {app, protocol, ipcMain} from 'electron';
+import {installVueDevtools} from 'vue-cli-plugin-electron-builder/lib';
+import {mainWindow, createMainWindow} from '@/electron/window';
 import i18n, {getCurrentLanguageData} from '@/electron/i18n';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
@@ -15,78 +10,37 @@ if (isDevelopment) {
   require('module').globalPaths.push(process.env.NODE_MODULES_PATH);
 }
 
-// global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow;
-
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], {secure: true});
-function createMainWindow() {
-  const window = new BrowserWindow({
-    // Allow cross-origin requests
-    webPreferences: {webSecurity: false},
-    icon: iconConfig.windowIcon,
+
+let readyPromises = [];
+
+readyPromises.push(new Promise((resolve) => {
+  app.on('ready', async () => {
+    resolve();
+    if (isDevelopment && !process.env.IS_TEST) {
+      // Install Vue Devtools
+      await installVueDevtools();
+    }
+  });
+}));
+
+readyPromises.push(new Promise((resolve) => {
+  // If languages are ever loaded asynchronously, this will need to change
+  i18n.on('loaded', resolve);
+}));
+
+// create main BrowserWindow when electron and i18n is ready
+Promise.all(readyPromises).then(() => {
+  createMainWindow();
+
+  // send initial translations to client
+  ipcMain.on('get-initial-language-data', (event, arg) => {
+    event.returnValue = getCurrentLanguageData();
   });
 
-  if (isDevelopment) {
-    // Load the url of the dev server if in development mode
-    window.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    if (!process.env.IS_TEST) window.webContents.openDevTools();
-  } else {
-    createProtocol('app');
-    //   Load the index.html when not in development
-    window.loadURL(
-      formatUrl({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file',
-        slashes: true,
-      })
-    );
-  }
-
-  window.on('closed', () => {
-    mainWindow = null;
+  // send new translations to client each time the language changes
+  i18n.on('languageChanged', () => {
+    mainWindow.webContents.send('language-changed', getCurrentLanguageData());
   });
-
-  window.webContents.on('devtools-opened', () => {
-    window.focus();
-    setImmediate(() => {
-      window.focus();
-    });
-  });
-
-  return window;
-}
-
-// quit application when all windows are closed
-app.on('window-all-closed', () => {
-  // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow();
-  }
-});
-
-// create main BrowserWindow when electron is ready
-app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    await installVueDevtools();
-  }
-  mainWindow = createMainWindow();
-});
-
-// send initial translations to client
-ipcMain.on('get-initial-language-data', (event, arg) => {
-  event.returnValue = getCurrentLanguageData();
-});
-
-// send new translations to client each time the language changes
-i18n.on('languageChanged', () => {
-  mainWindow.webContents.send('language-changed', getCurrentLanguageData());
 });
