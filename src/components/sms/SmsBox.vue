@@ -15,9 +15,9 @@
       :backend-sorting="true"
       :sort-order="sortOrder"
       :show-read-status="isInbox"
-      @update:checkedRows="updateCheckedRows"
       :show-type="isInbox"
       :show-edit-button="isDraft"
+      @update:checkedRows="updateCheckedRows"
       @page-change="onPageChange"
       @sort="onSort"
       @edit="editMessage"/>
