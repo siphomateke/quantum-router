@@ -146,5 +146,12 @@
   "settings_admin_only": "You must be in administrator mode to change settings.",
 
   "icon_picker_button": "Choose",
-  "icon_picker_title": "Choose an icon"
+  "icon_picker_title": "Choose an icon",
+
+  "tray": {
+    "contextMenu": {
+      "toggle": "Toggle",
+      "quit": "Quit"
+    }
+  }
 }

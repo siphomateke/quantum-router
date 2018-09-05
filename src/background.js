@@ -4,6 +4,7 @@ import {app, protocol, ipcMain} from 'electron';
 import {installVueDevtools} from 'vue-cli-plugin-electron-builder/lib';
 import {mainWindow, createMainWindow} from '@/electron/window';
 import i18n, {getCurrentLanguageData} from '@/electron/i18n';
+import tray from '@/electron/tray';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
   // Don't load any native (external) modules until the following line is run:
@@ -33,6 +34,7 @@ readyPromises.push(new Promise((resolve) => {
 // create main BrowserWindow when electron and i18n is ready
 Promise.all(readyPromises).then(() => {
   createMainWindow();
+  tray.create(mainWindow);
 
   // send initial translations to client
   ipcMain.on('get-initial-language-data', (event, arg) => {
