@@ -13,7 +13,14 @@ module.exports = {
     'no-return-await': ['error'],
     'require-jsdoc': ['off'],
     'indent': ['error', 2],
-    'max-len': ['error', 120,]
+    'max-len': ['error', 120],
+    'arrow-body-style': ['error', 'as-needed', {
+      requireReturnForObjectLiteral: false,
+    }],
+    'arrow-parens': ['error', 'as-needed', {
+      requireForBlockBody: true,
+    }],
+    'arrow-spacing': ['error', { before: true, after: true }],
   },
 
   parserOptions: {
@@ -22,6 +29,6 @@ module.exports = {
 
   extends: [
     'plugin:vue/recommended',
-    'google'
-  ]
+    'google',
+  ],
 };
