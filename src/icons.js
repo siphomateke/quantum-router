@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // FIXME: Dynamically retreive this from
 // https://raw.githubusercontent.com/FortAwesome/Font-Awesome/v4.7.0/src/icons.yml
 const data = [
