@@ -22,7 +22,7 @@
         <button
           v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
           :key="icon.id"
-          :class="{'is-primary': icon.id === value}"
+          :class="{'is-primary': icon.id === value.id}"
           :title="icon.name"
           type="button"
           class="button is-white"
