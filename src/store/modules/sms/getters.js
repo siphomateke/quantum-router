@@ -3,7 +3,7 @@ import {boxTypes} from './constants';
 /**
  * Sums boxes counts
  * @param {array} boxTypes The boxes to add to the sum
- * @return {number}
+ * @return {function(): number}
  */
 function boxSum(boxTypes) {
   return (state) => {
