@@ -70,7 +70,7 @@
 // TODO: Add autocomplete to icon ID input
 import IconPickerModal from './IconPickerModal';
 import icons from '@/icons';
-import i18n from '@/platform/i18n.js';
+import i18n from '@/platform/i18n';
 
 export default {
   name: 'QIconPicker',

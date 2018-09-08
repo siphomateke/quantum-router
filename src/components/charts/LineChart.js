@@ -1,4 +1,4 @@
-import {Line, mixins} from 'vue-chartjs/dist/vue-chartjs.js';
+import {Line, mixins} from 'vue-chartjs/dist/vue-chartjs';
 
 export default Line.extend({
   name: 'line-chart',

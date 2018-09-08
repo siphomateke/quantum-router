@@ -5,7 +5,7 @@ import {mapState, mapGetters} from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import i18n from '@/platform/i18n';
-import {bus} from './events.js';
+import {bus} from './events';
 
 Vue.config.productionTip = false;
 

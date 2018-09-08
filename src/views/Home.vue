@@ -27,7 +27,7 @@
 
 <script>
 import {modes} from '@/store';
-import LineChart from '@/components/charts/LineChart.js';
+import LineChart from '@/components/charts/LineChart';
 import router from 'huawei-router-api/browser';
 export default {
   name: 'Home',
