@@ -231,7 +231,7 @@ export default {
   async markSelectedMessagesAsRead({state, dispatch}, {box}) {
     await dispatch('markMessagesAsRead', {box, ids: state.boxes[box].selected});
   },
-  select({commit, dispatch}, {box, selector}) {
+  select({state, commit, dispatch}, {box, selector}) {
     commit(types.CLEAR_SELECTED, {box});
     // TODO: Improve selector validation
     const validSelectorKeys = ['type', 'read'];
