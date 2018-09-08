@@ -305,7 +305,7 @@ export default {
   },
   /**
    * Checks if importing messages from the SIM card is supported on this router
-   * @return {boolean}
+   * @return {Promise.<boolean>}
    */
   async checkImport({state, commit, dispatch}) {
     try {
