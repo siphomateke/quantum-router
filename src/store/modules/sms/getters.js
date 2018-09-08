@@ -1,0 +1,57 @@
+import {boxTypes} from './constants';
+
+/**
+ * Sums boxes counts
+ * @param {array} boxTypes The boxes to add to the sum
+ * @return {number}
+ */
+function boxSum(boxTypes) {
+  return (state) => {
+    let sum = 0;
+    for (const boxType of boxTypes) {
+      sum += state.boxes[boxType].count;
+    }
+    return sum;
+  };
+}
+
+export default {
+  localTotal: boxSum([
+    boxTypes.LOCAL_INBOX,
+    boxTypes.LOCAL_SENT,
+    boxTypes.LOCAL_DRAFT,
+  ]),
+  simTotal: boxSum([
+    boxTypes.SIM_INBOX,
+    boxTypes.SIM_SENT,
+    boxTypes.SIM_DRAFT,
+  ]),
+  localFull: (state, getters) => (state.local.max === getters.localTotal),
+  simFull: (state, getters) => (state.sim.max === getters.simTotal),
+  getVisibleMessagesIds: state => (box) => {
+    const boxItem = state.boxes[box];
+    return boxItem.messages[boxItem.page];
+  },
+  actualMessages: state => (ids) => {
+    const messages = [];
+    for (const id of ids) {
+      if (id in state.messages) {
+        messages.push(state.messages[id]);
+      }
+    }
+    return messages;
+  },
+  allMessages: state => (box) => {
+    let messages = [];
+    const boxPages = state.boxes[box].messages;
+    for (const page of Object.keys(boxPages)) {
+      messages = messages.concat(boxPages[page]);
+    }
+    return messages;
+  },
+  isInbox: state => box => (box === boxTypes.LOCAL_INBOX) || (box === boxTypes.SIM_INBOX),
+  numPages: state => (box) => {
+    const boxItem = state.boxes[box];
+    return Math.ceil(boxItem.count / boxItem.perPage);
+  },
+};
