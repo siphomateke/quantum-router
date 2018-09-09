@@ -1,4 +1,4 @@
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 import router from 'huawei-router-api/browser';
 
 const smsTypes = router.sms.types;
@@ -18,24 +18,24 @@ export default {
      */
     getSmsTypeCode(type) {
       switch (type) {
-      case smsTypes.RECHARGE:
-        return 'recharge';
-      case smsTypes.DATA:
-        return 'data';
-      case smsTypes.DATA_PERCENT:
-        return 'data_percent';
-      case smsTypes.ACTIVATED:
-        return 'activated';
-      case smsTypes.DEPLETED:
-        return 'depleted';
-      case smsTypes.AD:
-        return 'ad';
-      default:
-        return '';
+        case smsTypes.RECHARGE:
+          return 'recharge';
+        case smsTypes.DATA:
+          return 'data';
+        case smsTypes.DATA_PERCENT:
+          return 'data_percent';
+        case smsTypes.ACTIVATED:
+          return 'activated';
+        case smsTypes.DEPLETED:
+          return 'depleted';
+        case smsTypes.AD:
+          return 'ad';
+        default:
+          return '';
       }
     },
     getSmsTypeName(type) {
-      return this.$i18n('sms_types_'+this.getSmsTypeCode(type));
+      return this.$i18n(`sms_types_${this.getSmsTypeCode(type)}`);
     },
   },
 };

@@ -10,17 +10,9 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-return-await': ['error'],
-    'require-jsdoc': ['off'],
-    'indent': ['error', 2],
-    'max-len': ['error', 120],
-    'arrow-body-style': ['error', 'as-needed', {
-      requireReturnForObjectLiteral: false,
-    }],
-    'arrow-parens': ['error', 'as-needed', {
-      requireForBlockBody: true,
-    }],
-    'arrow-spacing': ['error', {before: true, after: true}],
+    'no-restricted-syntax': ['off'],
+    'no-param-reassign': 'off',
+    'no-shadow': 'off',
   },
 
   parserOptions: {
@@ -29,6 +21,6 @@ module.exports = {
 
   extends: [
     'plugin:vue/recommended',
-    'google',
+    '@vue/airbnb',
   ],
 };

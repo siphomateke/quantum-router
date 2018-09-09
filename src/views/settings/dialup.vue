@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'SettingsDialUp',
@@ -77,8 +77,8 @@ export default {
       },
       synced: false,
       networkSearchModes: [
-        {value: 0, label: 'Auto'},
-        {value: 1, label: 'Manual'},
+        { value: 0, label: 'Auto' },
+        { value: 1, label: 'Manual' },
       ],
     };
   },

@@ -1,8 +1,8 @@
-import {Notification} from '@/common/notifications';
+import { Notification } from '@/common/notifications';
 import router from 'huawei-router-api/browser';
-import {Notifier} from '@/platform/notifications';
-import {bus} from '@/events';
-import {boxTypes} from '@/store/modules/sms';
+import { Notifier } from '@/platform/notifications';
+import { bus } from '@/events';
+import { boxTypes } from '@/store/modules/sms';
 import storage from '@/platform/storage';
 
 export const types = {
@@ -37,7 +37,7 @@ export default {
     [types.ADD](state, notifications) {
       state.all = state.all.concat(notifications);
     },
-    [types.UPDATE](state, {index, notification}) {
+    [types.UPDATE](state, { index, notification }) {
       state.all[index] = notification;
     },
     [types.REMOVE](state, notifications) {
@@ -48,7 +48,7 @@ export default {
     },
   },
   actions: {
-    async load({commit}) {
+    async load({ commit }) {
       commit(types.CLEAR);
       const notifications = [];
       // TODO: Consider getting notifications and lastCount at the same time
@@ -66,36 +66,36 @@ export default {
       return notifications.length;
     },
     // TODO: Evaluate better persistent storage methods
-    save({state}) {
+    save({ state }) {
       return storage.set({
         notifications: state.all,
         lastCount: state.lastCount,
       });
     },
-    add({commit, dispatch}, notifications) {
+    add({ commit, dispatch }, notifications) {
       commit(types.ADD, notifications);
       dispatch('save');
     },
-    remove({commit, dispatch}, notifications) {
+    remove({ commit, dispatch }, notifications) {
       commit(types.REMOVE, notifications);
       dispatch('save');
     },
-    setLastCount({commit, dispatch}, count) {
+    setLastCount({ commit, dispatch }, count) {
       commit(types.SET_LAST_COUNT, count);
       dispatch('save');
     },
-    reduceLastCount({state, dispatch}, amount) {
+    reduceLastCount({ state, dispatch }, amount) {
       dispatch('setLastCount', state.lastCount - amount);
     },
-    async newNotifications({rootState, dispatch}, {count, first}) {
+    async newNotifications({ rootState, dispatch }, { count, first }) {
       // NOTE: This won't wait to run. Instead it depends on being called again
       // This is to prevent a backlog of router requests
       if (!rootState.sms.gettingSmsList) {
-        dispatch('sms/setGettingSmsList', true, {root: true});
+        dispatch('sms/setGettingSmsList', true, { root: true });
         try {
           const newMessages = await router.sms.getFullSmsList({
             total: count,
-            filter: {read: false},
+            filter: { read: false },
           }, {
             sortOrder: 'desc',
           });
@@ -113,13 +113,13 @@ export default {
             bus.$emit('refresh:sms', boxTypes.LOCAL_INBOX);
           }
         } catch (e) {
-          dispatch('handleError', e, {root: true});
+          dispatch('handleError', e, { root: true });
         } finally {
-          dispatch('sms/setGettingSmsList', false, {root: true});
+          dispatch('sms/setGettingSmsList', false, { root: true });
         }
       }
     },
-    async refresh({state, dispatch}) {
+    async refresh({ state, dispatch }) {
       try {
         const data = await router.monitoring.checkNotifications();
         const count = data.UnreadMessage;
@@ -135,7 +135,7 @@ export default {
           });
         }
       } catch (e) {
-        dispatch('handleError', e, {root: true});
+        dispatch('handleError', e, { root: true });
       }
     },
   },

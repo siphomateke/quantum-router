@@ -57,25 +57,25 @@ export class Notification {
 
     let message = '';
     switch (parsed.type) {
-    case router.sms.types.AD:
-      message = '[[ ADVERTISEMENT  ]]';
-      break;
-    case router.sms.types.DATA:
-      message = 'You have ' + parsed.data[0].amount + parsed.data[0].unit;
-      if (parsed.expires[0]) {
-        message += ' valid until ' + moment(parsed.expires[0]).format('Y-M-D HH:mm:ss');
-      }
-      break;
-    default:
-      message = sms.Content;
+      case router.sms.types.AD:
+        message = '[[ ADVERTISEMENT  ]]';
+        break;
+      case router.sms.types.DATA:
+        message = `You have ${parsed.data[0].amount}${parsed.data[0].unit}`;
+        if (parsed.expires[0]) {
+          message += ` valid until ${moment(parsed.expires[0]).format('Y-M-D HH:mm:ss')}`;
+        }
+        break;
+      default:
+        message = sms.Content;
     }
 
     return new Notification({
-      title: 'SMS from '+sms.Phone,
-      message: message,
+      title: `SMS from ${sms.Phone}`,
+      message,
       date: moment(sms.Date).valueOf(),
       read: parseInt(sms.Smstat, 10) === 1,
-      progress: progress,
+      progress,
       metadata: parsed,
     });
   }

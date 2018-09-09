@@ -113,7 +113,7 @@ export default {
         numberOfMessages = Math.ceil(length / this.longMax);
         remaining = (numberOfMessages * this.longMax) - length;
       }
-      return {remaining, numberOfMessages};
+      return { remaining, numberOfMessages };
     },
   },
   watch: {

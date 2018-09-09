@@ -1,4 +1,4 @@
-import {boxTypes} from './constants';
+import { boxTypes } from './constants';
 
 const state = {
   local: {

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import types from './mutation_types';
 
 const boxMutation = {
-  set(prop, valueName='value') {
+  set(prop, valueName = 'value') {
     return (state, payload) => {
       state.boxes[payload.box][prop] = payload[valueName];
     };
@@ -31,7 +31,7 @@ export default {
   [types.ADD_MESSAGE](state, message) {
     Vue.set(state.messages, message.id, message);
   },
-  [types.ADD_MESSAGE_TO_BOX](state, {box, page, id}) {
+  [types.ADD_MESSAGE_TO_BOX](state, { box, page, id }) {
     const messages = state.boxes[box].messages;
     // Add page if it doesn't exist
     if (!(page in messages)) {
@@ -39,13 +39,13 @@ export default {
     }
     messages[page].push(id);
   },
-  [types.SET_MESSAGE_READ](state, {id, value}) {
+  [types.SET_MESSAGE_READ](state, { id, value }) {
     state.messages[id].read = value;
   },
   [types.SET_PAGE]: boxMutation.set('page'),
   [types.SET_SORT_ORDER]: boxMutation.set('sortOrder'),
   [types.SET_PER_PAGE]: boxMutation.set('perPage'),
-  [types.RESET_MESSAGES](state, {box}) {
+  [types.RESET_MESSAGES](state, { box }) {
     // TODO: Auto-expire messages after a certain amount of time
     const boxItem = state.boxes[box];
     for (const messages of Object.values(boxItem.messages)) {
@@ -55,10 +55,10 @@ export default {
     }
     boxItem.messages = {};
   },
-  [types.ADD_TO_SELECTED](state, {box, id}) {
+  [types.ADD_TO_SELECTED](state, { box, id }) {
     state.boxes[box].selected.push(id);
   },
-  [types.SET_SELECTED](state, {box, ids}) {
+  [types.SET_SELECTED](state, { box, ids }) {
     const currentValue = state.boxes[box].selected;
     // Only mutate if value has changed.
     // This is to prevent infinite loops due to vue not being able
@@ -67,7 +67,7 @@ export default {
       state.boxes[box].selected = ids;
     }
   },
-  [types.CLEAR_SELECTED](state, {box}) {
+  [types.CLEAR_SELECTED](state, { box }) {
     state.boxes[box].selected = [];
   },
   [types.SET_LOCAL_MAX](state, max) {

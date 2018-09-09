@@ -199,13 +199,12 @@ export default {
   },
   computed: {
     pageInfo() {
-      const first = ((this.internalPage-1)*this.perPage)+1;
-      const last = (((this.internalPage-1)*this.perPage)+this.perPage)+1;
+      const first = ((this.internalPage - 1) * this.perPage) + 1;
+      const last = (((this.internalPage - 1) * this.perPage) + this.perPage) + 1;
       if (last > this.internalTotal) {
-        return this.$i18n('sms_first_to_last', {first, last: this.internalTotal});
-      } else {
-        return this.$i18n('sms_first_to_last_of_total', {first, last, total: this.internalTotal});
+        return this.$i18n('sms_first_to_last', { first, last: this.internalTotal });
       }
+      return this.$i18n('sms_first_to_last_of_total', { first, last, total: this.internalTotal });
     },
     internalTotal() {
       return this.backendPagination ? this.total : this.list.length;
@@ -215,9 +214,8 @@ export default {
 
       if (!isNaN(this.internalTotal) && !isNaN(this.perPage)) {
         return Math.ceil(this.internalTotal / this.perPage);
-      } else {
-        return 0;
       }
+      return 0;
     },
   },
   watch: {

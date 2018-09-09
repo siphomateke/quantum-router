@@ -18,10 +18,10 @@ export default {
     wlan: {
       moduleEnabled: false,
       ssidList: [
-        {'ssid': 'HUAWEI-B315-6DEE', 'security': 'WPA2-PSK', 'status': true},
-        {'ssid': 'HUAWEI-B315-6DEE-1', 'security': 'WPA2-PSK', 'status': false},
-        {'ssid': 'HUAWEI-B315-6DEE-2', 'security': 'WPA2-PSK', 'status': false},
-        {'ssid': 'HUAWEI-B315-6DEE-3', 'security': 'WPA2-PSK', 'status': false},
+        { ssid: 'HUAWEI-B315-6DEE', security: 'WPA2-PSK', status: true },
+        { ssid: 'HUAWEI-B315-6DEE-1', security: 'WPA2-PSK', status: false },
+        { ssid: 'HUAWEI-B315-6DEE-2', security: 'WPA2-PSK', status: false },
+        { ssid: 'HUAWEI-B315-6DEE-3', security: 'WPA2-PSK', status: false },
       ],
       channel: 'auto',
       wifiBandwidth: 'auto',
@@ -33,25 +33,25 @@ export default {
     },
   },
   actions: {
-    async set({commit}, payload) {
+    async set({ commit }, payload) {
       commit(types.SET, payload);
     },
-    async refreshStatus({dispatch}) {
+    async refreshStatus({ dispatch }) {
       try {
         await dispatch('set', {
           path: 'dialup.mobileData',
           value: await router.dialup.getMobileDataSwitch(),
         });
       } catch (e) {
-        dispatch('handleError', e, {root: true});
+        dispatch('handleError', e, { root: true });
       }
     },
-    save({state}) {
+    save({ state }) {
       return storage.set({
         settings: state.internal,
       });
     },
-    async load({dispatch}) {
+    async load({ dispatch }) {
       if (await storage.has('settings')) {
         dispatch('set', {
           path: 'internal',

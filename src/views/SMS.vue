@@ -87,11 +87,11 @@
 <script>
 import Vue from 'vue';
 import SmsActions from '@/components/sms/SmsActions.vue';
-import {selectionStates} from '@/components/sms/select';
+import { selectionStates } from '@/components/sms/select';
 import SmsBox from '@/components/sms/SmsBox.vue';
 import SmsDialog from '@/components/sms/dialogs/SmsDialog.vue';
-import {mapState, mapGetters} from 'vuex';
-import {boxTypes} from '@/store/modules/sms';
+import { mapState, mapGetters } from 'vuex';
+import { boxTypes } from '@/store/modules/sms';
 
 // Redirect these events to the active tab
 const eventsToRedirect = [
@@ -134,22 +134,22 @@ export default {
     }),
     tabs() {
       let tabs = [
-        {boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox'},
-        {boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms_box_sent'), icon: 'send'},
-        {boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file'},
+        { boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox' },
+        { boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms_box_sent'), icon: 'send' },
+        { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file' },
       ];
       if (!this.internalSettings.sms.hideSimBoxes) {
         tabs = tabs.concat([
-          {boxType: boxTypes.SIM_INBOX, label: this.$i18n('sms_sim_box_inbox'), icon: 'inbox'},
-          {boxType: boxTypes.SIM_SENT, label: this.$i18n('sms_sim_box_sent'), icon: 'send'},
-          {boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_sim_box_draft'), icon: 'file'},
+          { boxType: boxTypes.SIM_INBOX, label: this.$i18n('sms_sim_box_inbox'), icon: 'inbox' },
+          { boxType: boxTypes.SIM_SENT, label: this.$i18n('sms_sim_box_sent'), icon: 'send' },
+          { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_sim_box_draft'), icon: 'file' },
         ]);
       }
       return tabs;
     },
     buses() {
       const buses = [];
-      for (let i=0; i<this.tabs.length; i++) {
+      for (let i = 0; i < this.tabs.length; i++) {
         buses[i] = new Vue();
       }
       return buses;
@@ -225,7 +225,7 @@ export default {
 
     /* SMS dialog */
     smsDialogClose() {
-      this.$refs['smsDialogModal'].close();
+      this.$refs.smsDialogModal.close();
     },
     async smsDialogSave(data) {
       await this.$store.dispatch('sms/save', data);

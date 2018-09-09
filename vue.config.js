@@ -8,7 +8,7 @@ module.exports = {
   lintOnSave: false,
 
   pages: {
-    'index': {
+    index: {
       entry: 'src/main.js',
       chunks: ['chunk-vendors', 'chunk-common', 'index', 'preload'],
     },

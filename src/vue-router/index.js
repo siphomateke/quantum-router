@@ -14,7 +14,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: {name: 'home'},
+      redirect: { name: 'home' },
     },
     {
       path: '/home',
@@ -39,7 +39,7 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings,
-      redirect: {name: 'settings/wlan'},
+      redirect: { name: 'settings/wlan' },
       children: [
         {
           path: 'wlan',

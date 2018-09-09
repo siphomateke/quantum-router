@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import App from './App';
 import router from './vue-router';
-import {mapState, mapGetters} from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import Buefy from 'buefy';
 import store from './store';
 import i18n from '@/platform/i18n';
-import {bus} from './events';
+import { bus } from './events';
 
 Vue.config.productionTip = false;
 
@@ -14,7 +14,7 @@ Vue.use(Buefy, {
 });
 
 Vue.mixin({
-  data: function() {
+  data() {
     return {
       globalBus: bus,
     };

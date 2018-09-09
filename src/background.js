@@ -1,10 +1,9 @@
-'use strict';
-
-import {app, protocol, ipcMain} from 'electron';
-import {installVueDevtools} from 'vue-cli-plugin-electron-builder/lib';
-import {mainWindow, createMainWindow} from '@/electron/window';
-import i18n, {getCurrentLanguageData} from '@/electron/i18n';
+import { app, protocol, ipcMain } from 'electron';
+import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
+import { mainWindow, createMainWindow } from '@/electron/window';
+import i18n, { getCurrentLanguageData } from '@/electron/i18n';
 import tray from '@/electron/tray';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
   // Don't load any native (external) modules until the following line is run:
@@ -12,9 +11,9 @@ if (isDevelopment) {
 }
 
 // Standard scheme must be registered before the app is ready
-protocol.registerStandardSchemes(['app'], {secure: true});
+protocol.registerStandardSchemes(['app'], { secure: true });
 
-let readyPromises = [];
+const readyPromises = [];
 
 readyPromises.push(new Promise((resolve) => {
   app.on('ready', async () => {

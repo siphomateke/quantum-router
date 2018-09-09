@@ -97,15 +97,15 @@ import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
-import {modes, modeNames} from '@/store';
-import {mapState, mapGetters, mapActions} from 'vuex';
+import { modes, modeNames } from '@/store';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 
 // TODO: Finish moving to Vuex
 export default {
   name: 'App',
   components: {
-    'drawer': Drawer,
+    drawer: Drawer,
     'drawer-item': DrawerItem,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
@@ -135,37 +135,37 @@ export default {
       unreadNotifications: 'notifications/unread',
     }),
     loadingNotifications() {
-      return this.allNotifications.length===0 && this.gettingSmsList;
+      return this.allNotifications.length === 0 && this.gettingSmsList;
     },
     // needed to send imported modes to html
     modes: () => modes,
     modeNames: () => modeNames,
     modeColor() {
       switch (this.$mode) {
-      case modes.OFFLINE: {
-        return '#f00';
-      }
-      case modes.BASIC: {
-        return '#ffa500';
-      }
-      case modes.ADMIN: {
-        return '#0f0';
-      }
+        case modes.OFFLINE: {
+          return '#f00';
+        }
+        case modes.BASIC: {
+          return '#ffa500';
+        }
+        case modes.ADMIN: {
+          return '#0f0';
+        }
       }
     },
   },
   watch: {
-    ['$mode'](val, oldVal) {
+    $mode(val, oldVal) {
       switch (val) {
-      case modes.ADMIN:
-        this.globalBus.$emit('mode-change:admin');
-        break;
-      case modes.BASIC:
-        this.globalBus.$emit('mode-change:basic');
-        break;
-      case modes.OFFLINE:
-        this.globalBus.$emit('mode-change:offline');
-        break;
+        case modes.ADMIN:
+          this.globalBus.$emit('mode-change:admin');
+          break;
+        case modes.BASIC:
+          this.globalBus.$emit('mode-change:basic');
+          break;
+        case modes.OFFLINE:
+          this.globalBus.$emit('mode-change:offline');
+          break;
       }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.loadNotifications();
@@ -215,7 +215,7 @@ export default {
       for (const name of Object.keys(this.refreshIntervals)) {
         const interval = this.refreshIntervals[name];
         const func = () => {
-          this.globalBus.$emit('refresh:'+name);
+          this.globalBus.$emit(`refresh:${name}`);
           setTimeout(func, interval);
         };
         func();

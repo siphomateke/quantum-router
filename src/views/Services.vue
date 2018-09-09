@@ -64,7 +64,8 @@
 
 <script>
 import router from 'huawei-router-api/browser';
-const {RouterError} = router.errors;
+
+const { RouterError } = router.errors;
 
 export default {
   data() {
@@ -90,7 +91,7 @@ export default {
     },
   },
   watch: {
-    ['ussd.selectedCommand'](val) {
+    'ussd.selectedCommand': function (val) {
       if (val.length === 0) {
         this.ussd.content = '';
       }
@@ -148,9 +149,7 @@ export default {
         this.ussd.selectedCommand = '';
         this.ussd.content = '';
       } catch (e) {
-        if (e instanceof RouterError && e.code === 'ussd_cancelled') {
-          return;
-        } else {
+        if (!(e instanceof RouterError && e.code === 'ussd_cancelled')) {
           this.error = e.message;
         }
       }

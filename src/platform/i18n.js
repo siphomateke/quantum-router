@@ -1,5 +1,5 @@
 import defaultOptions from '@/config/i18next';
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron';
 import i18next from 'i18next';
 
 if (!i18next.isInitialized) {
@@ -11,7 +11,7 @@ if (!i18next.isInitialized) {
   });
 }
 
-function changeLanguage({lng, resources}) {
+function changeLanguage({ lng, resources }) {
   for (const lng of Object.keys(resources)) {
     const languageObject = resources[lng];
     for (const namespace of Object.keys(languageObject)) {

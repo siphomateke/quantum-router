@@ -53,10 +53,10 @@ export default {
     };
   },
   methods: {
-    checkSlot: function(slotName) {
+    checkSlot(slotName) {
       return typeof this.$slots[slotName] !== 'undefined';
     },
-    navToggle: function() {
+    navToggle() {
       this.isActive = !this.isActive;
     },
   },

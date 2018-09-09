@@ -1,6 +1,7 @@
 import router from 'huawei-router-api/browser';
-const {RouterError} = router.errors;
 import electronStorage from '@/electron/storage';
+
+const { RouterError } = router.errors;
 
 const storage = {
   async get(...args) {
@@ -19,10 +20,8 @@ const storage = {
   async getRouterUrl() {
     if (await this.has('settings.general.routerUrl')) {
       return this.get('settings.general.routerUrl');
-    } else {
-      return Promise.reject(new RouterError(
-        'router_url_not_set', 'No router url set in storage'));
     }
+    return Promise.reject(new RouterError('router_url_not_set', 'No router url set in storage'));
   },
 
   /**
@@ -38,16 +37,14 @@ const storage = {
   async getLoginDetails() {
     if (await this.has('settings.general.username')
     && await this.has('settings.general.password')) {
-      const {username, password} = await this.get('settings.general');
+      const { username, password } = await this.get('settings.general');
       return {
         username,
         password,
       };
-    } else {
-      // TODO: Make this error more detailed and not use 'Error' object
-      return Promise.reject(new Error(
-        'username or password is not set in storage'));
     }
+    // TODO: Make this error more detailed and not use 'Error' object
+    return Promise.reject(new Error('username or password is not set in storage'));
   },
 };
 

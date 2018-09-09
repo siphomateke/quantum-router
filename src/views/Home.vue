@@ -26,9 +26,10 @@
 </template>
 
 <script>
-import {modes} from '@/store';
+import { modes } from '@/store';
 import LineChart from '@/components/charts/LineChart';
 import router from 'huawei-router-api/browser';
+
 export default {
   name: 'Home',
   components: {
@@ -112,7 +113,7 @@ export default {
         }
 
         this.usage.received = data.CurrentDownload / (1024 * 1024);
-        this.usage.sent = data.CurrentUpload/ (1024 * 1024);
+        this.usage.sent = data.CurrentUpload / (1024 * 1024);
 
         if (this.previousUsage) {
           if (this.lineChartData.datasets[0].data.length > 60) {

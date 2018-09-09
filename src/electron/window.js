@@ -1,8 +1,9 @@
-import {app, BrowserWindow} from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
-import {format as formatUrl} from 'url';
-import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
+import { format as formatUrl } from 'url';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import iconConfig from '@/config/icons';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 /**
@@ -14,7 +15,7 @@ export let mainWindow = null;
 export function createMainWindow() {
   mainWindow = new BrowserWindow({
     // Allow cross-origin requests
-    webPreferences: {webSecurity: false},
+    webPreferences: { webSecurity: false },
     icon: iconConfig.windowIcon,
   });
 
@@ -25,13 +26,11 @@ export function createMainWindow() {
   } else {
     createProtocol('app');
     //   Load the index.html when not in development
-    mainWindow.loadURL(
-      formatUrl({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file',
-        slashes: true,
-      })
-    );
+    mainWindow.loadURL(formatUrl({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file',
+      slashes: true,
+    }));
   }
 
   mainWindow.on('closed', () => {

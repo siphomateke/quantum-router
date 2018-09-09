@@ -57,7 +57,7 @@ export default {
         }
       }
       for (const child of children) {
-        this.nav.push({name: child.name, label: child.label});
+        this.nav.push({ name: child.name, label: child.label });
       }
     },
   },

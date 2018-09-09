@@ -88,16 +88,16 @@ export default {
   computed: {
     iconByType() {
       switch (this.type) {
-      case 'is-info':
-        return 'information';
-      case 'is-success':
-        return 'check-circle';
-      case 'is-warning':
-        return 'alert';
-      case 'is-danger':
-        return 'alert-circle';
-      default:
-        return null;
+        case 'is-info':
+          return 'information';
+        case 'is-success':
+          return 'check-circle';
+        case 'is-warning':
+          return 'alert';
+        case 'is-danger':
+          return 'alert-circle';
+        default:
+          return null;
       }
     },
   },

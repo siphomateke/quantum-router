@@ -18,7 +18,7 @@ export default {
     return { };
   },
   methods: {
-    checkSlot: function(slotName) {
+    checkSlot(slotName) {
       return typeof this.$slots[slotName] !== 'undefined';
     },
   },

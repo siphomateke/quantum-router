@@ -27,8 +27,8 @@
 <script>
 import Vue from 'vue';
 import SmsList from '@/components/sms/SmsList.vue';
-import {boxTypes} from '@/store/modules/sms';
-import {mapState, mapGetters} from 'vuex';
+import { boxTypes } from '@/store/modules/sms';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'SmsBox',
@@ -117,7 +117,7 @@ export default {
     this.bus.$off('sms-actions:mark-as-read', this.markMessagesAsRead);
   },
   methods: {
-    async dispatch(name, payload={}) {
+    async dispatch(name, payload = {}) {
       payload.box = this.boxType;
       await this.$store.dispatch(name, payload);
     },
@@ -139,10 +139,10 @@ export default {
       });
     },
     onPageChange(page) {
-      this.dispatch('sms/setPage', {value: page});
+      this.dispatch('sms/setPage', { value: page });
     },
     onSort(order) {
-      this.dispatch('sms/setSortOrder', {value: order});
+      this.dispatch('sms/setSortOrder', { value: order });
     },
     deleteMessagesConfirm() {
       this.dispatch('sms/deleteSelectedMessagesConfirm');
@@ -155,7 +155,7 @@ export default {
       this.dispatch('sms/selectAll');
     },
     select(selector) {
-      this.dispatch('sms/select', {selector});
+      this.dispatch('sms/select', { selector });
     },
     clearSelected() {
       this.dispatch('sms/clearSelected');

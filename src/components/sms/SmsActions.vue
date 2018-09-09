@@ -83,7 +83,7 @@ import Vue from 'vue';
 import ActionButton from '@/components/ActionButton.vue';
 import smsTypeMixin from '@/mixins/smsType';
 import router from 'huawei-router-api/browser';
-import {selectors, selectionStates} from './select';
+import { selectors, selectionStates } from './select';
 
 const smsTypes = router.sms.types;
 
@@ -185,21 +185,21 @@ export default {
     },
     changeSelection(selector) {
       switch (selector) {
-      case selectors.ALL:
-        this.bus.$emit('sms-actions:select-all');
-        break;
-      case selectors.NONE:
-        this.bus.$emit('sms-actions:clear-selection');
-        break;
-      case selectors.READ:
-        this.bus.$emit('sms-actions:select', {read: true});
-        break;
-      case selectors.UNREAD:
-        this.bus.$emit('sms-actions:select', {read: false});
-        break;
+        case selectors.ALL:
+          this.bus.$emit('sms-actions:select-all');
+          break;
+        case selectors.NONE:
+          this.bus.$emit('sms-actions:clear-selection');
+          break;
+        case selectors.READ:
+          this.bus.$emit('sms-actions:select', { read: true });
+          break;
+        case selectors.UNREAD:
+          this.bus.$emit('sms-actions:select', { read: false });
+          break;
       }
       if (Object.values(smsTypes).includes(selector)) {
-        this.bus.$emit('sms-actions:select', {type: selector});
+        this.bus.$emit('sms-actions:select', { type: selector });
       }
     },
   },

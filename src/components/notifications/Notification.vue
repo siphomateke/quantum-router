@@ -13,6 +13,7 @@
 
 <script>
 import moment from 'moment';
+
 export default {
   name: 'QNotification',
   props: {
@@ -54,12 +55,10 @@ export default {
           return this.internalDate.fromNow();
         } else if (duration.asDays() < 1) {
           return this.internalDate.format('HH:mm');
-        } else {
-          return this.internalDate.format('Y-M-D HH:mm');
         }
-      } else {
-        return null;
+        return this.internalDate.format('Y-M-D HH:mm');
       }
+      return null;
     },
   },
   watch: {

@@ -1,9 +1,10 @@
-import {Toast} from 'buefy';
+import { Toast } from 'buefy';
 import i18n from '@/platform/i18n';
 import storage from '@/platform/storage';
 import router from 'huawei-router-api/browser';
 import vueRouter from '@/vue-router';
-const {RouterError} = router.errors;
+
+const { RouterError } = router.errors;
 
 export const modes = {
   OFFLINE: 0,
@@ -58,7 +59,7 @@ export default {
         name: 'app-settings',
       });
     },
-    handleError({dispatch}, e) {
+    handleError({ dispatch }, e) {
       if (process.env.NODE_ENV === 'development') {
         console.error(e.toString());
       }
@@ -77,7 +78,7 @@ export default {
         } else if (e.code === 'invalid_router_url') {
           if (router.config.getUrl().length > 0) {
             dispatch('dialog/warning', {
-              message: i18n.getMessage('invalid_router_url_error', {url: router.config.getUrl()}),
+              message: i18n.getMessage('invalid_router_url_error', { url: router.config.getUrl() }),
               confirmText: i18n.getMessage('dialog_open_settings'),
               onConfirm: () => {
                 dispatch('openSettingsPage');
@@ -103,27 +104,27 @@ export default {
       if (unknown) {
         let message;
         if (e instanceof RouterError) {
-          message = e.code+' : '+e.message;
+          message = `${e.code} : ${e.message}`;
         } else {
           message = e.message;
         }
         Toast.open({
           type: 'is-danger',
-          message: 'Error: ' + message,
+          message: `Error: ${message}`,
         });
       }
       // TODO: log errors
     },
-    setMode({commit}, mode) {
+    setMode({ commit }, mode) {
       commit(types.MODE, mode);
     },
-    changeMode({state, dispatch}, mode) {
+    changeMode({ state, dispatch }, mode) {
       if (mode !== state.mode) {
         dispatch('setMode', mode);
-        Toast.open(i18n.getMessage('changed_mode_to', {mode: i18n.getMessage('mode_'+modeNames[mode])}));
+        Toast.open(i18n.getMessage('changed_mode_to', { mode: i18n.getMessage(`mode_${modeNames[mode]}`) }));
       }
     },
-    async prepChangeMode({commit, dispatch}, newMode) {
+    async prepChangeMode({ commit, dispatch }, newMode) {
       try {
         await updateConfig();
         if (newMode === modes.BASIC || newMode === modes.ADMIN) {
@@ -150,8 +151,8 @@ export default {
                     'api_login_username_pwd_orerrun',
                   ];
                   if (knownErrors.includes(e.code)) {
-                    const actualError = i18n.getMessage('router_module_error_'+e.code);
-                    errorMessage = i18n.getMessage('router_error_logging_in', {error: actualError});
+                    const actualError = i18n.getMessage(`router_module_error_${e.code}`);
+                    errorMessage = i18n.getMessage('router_error_logging_in', { error: actualError });
                   }
                 } else {
                   dispatch('handleError', e);
@@ -171,7 +172,7 @@ export default {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
               dispatch('dialog/warning', {
-                message: i18n.getMessage('connection_error', {url: router.config.getUrl()}),
+                message: i18n.getMessage('connection_error', { url: router.config.getUrl() }),
                 confirmText: i18n.getMessage('dialog_retry'),
                 onConfirm: () => {
                   dispatch('tryChangeMode', newMode);
@@ -179,9 +180,8 @@ export default {
                 category: 'admin',
               });
               return false;
-            } else {
-              throw e;
             }
+            throw e;
           }
         } else {
           return true;
@@ -191,7 +191,7 @@ export default {
         return false;
       }
     },
-    async tryChangeMode({state, commit, dispatch}, newMode) {
+    async tryChangeMode({ state, commit, dispatch }, newMode) {
       if (newMode === modes.ADMIN) {
         dispatch('dialog/closeCategory', 'admin');
       }

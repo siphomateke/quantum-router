@@ -32,10 +32,11 @@
 
 <script>
 import Notification from './Notification';
+
 export default {
   name: 'QNotificationList',
   components: {
-    'notification': Notification,
+    notification: Notification,
   },
   props: {
     list: {

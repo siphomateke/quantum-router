@@ -104,10 +104,10 @@ export default {
         basic: {
           moduleEnabled: false,
           table: [
-            {'ssid': 'HUAWEI-B315-6DEE', 'security': 'WPA2-PSK', 'status': true},
-            {'ssid': 'HUAWEI-B315-6DEE-1', 'security': 'WPA2-PSK', 'status': false},
-            {'ssid': 'HUAWEI-B315-6DEE-2', 'security': 'WPA2-PSK', 'status': false},
-            {'ssid': 'HUAWEI-B315-6DEE-3', 'security': 'WPA2-PSK', 'status': false},
+            { ssid: 'HUAWEI-B315-6DEE', security: 'WPA2-PSK', status: true },
+            { ssid: 'HUAWEI-B315-6DEE-1', security: 'WPA2-PSK', status: false },
+            { ssid: 'HUAWEI-B315-6DEE-2', security: 'WPA2-PSK', status: false },
+            { ssid: 'HUAWEI-B315-6DEE-3', security: 'WPA2-PSK', status: false },
           ],
         },
         advanced: {
@@ -116,36 +116,40 @@ export default {
         },
       },
       options: {
-        basic: {table: {security: [
-          {label: 'WPA2-PSK', value: 'WPA2-PSK'},
-        ]}},
+        basic: {
+          table: {
+            security: [
+              { label: 'WPA2-PSK', value: 'WPA2-PSK' },
+            ],
+          },
+        },
         advanced: {
           channel: [
-            {label: 'Auto', value: '0'},
-            {label: '1', value: '1'},
-            {label: '2', value: '2'},
-            {label: '3', value: '3'},
-            {label: '4', value: '4'},
-            {label: '5', value: '5'},
-            {label: '6', value: '6'},
-            {label: '7', value: '7'},
-            {label: '8', value: '8'},
-            {label: '9', value: '9'},
-            {label: '10', value: '10'},
-            {label: '11', value: '11'},
-            {label: '12', value: '12'},
-            {label: '13', value: '13'},
+            { label: 'Auto', value: '0' },
+            { label: '1', value: '1' },
+            { label: '2', value: '2' },
+            { label: '3', value: '3' },
+            { label: '4', value: '4' },
+            { label: '5', value: '5' },
+            { label: '6', value: '6' },
+            { label: '7', value: '7' },
+            { label: '8', value: '8' },
+            { label: '9', value: '9' },
+            { label: '10', value: '10' },
+            { label: '11', value: '11' },
+            { label: '12', value: '12' },
+            { label: '13', value: '13' },
           ],
           wifiBandwidth: [
-            {label: 'Auto (default)', value: '0'},
-            {label: '20MHz', value: '20'},
+            { label: 'Auto (default)', value: '0' },
+            { label: '20MHz', value: '20' },
           ],
         },
       },
     };
   },
   methods: {
-    getStatusString: status => status ? 'On' : 'Off',
+    getStatusString: status => (status ? 'On' : 'Off'),
     apply() {
 
     },

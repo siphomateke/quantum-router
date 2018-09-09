@@ -90,9 +90,8 @@ export default {
           }
           return false;
         });
-      } else {
-        return icons;
       }
+      return icons;
     },
   },
   mounted() {
@@ -103,7 +102,7 @@ export default {
       this.search = value.toLowerCase();
     },
     select(id, pack, name) {
-      this.$emit('input', {id, pack, name});
+      this.$emit('input', { id, pack, name });
       if ('close' in this.$parent && typeof this.$parent.close === 'function') {
         this.$parent.close();
       }

@@ -1,4 +1,4 @@
-import {Dialog} from 'buefy';
+import { Dialog } from 'buefy';
 import i18n from '@/platform/i18n';
 
 export const types = {
@@ -20,12 +20,12 @@ export const types = {
  * @param {*} data
  * @return {DialogData}
  */
-function processDialogData(data={}) {
+function processDialogData(data = {}) {
   if (['warning', 'info', 'danger', 'success'].includes(data.type) && !('hasIcon' in data)) {
     data.hasIcon = true;
   }
   if (data.type) {
-    data.type = 'is-'+data.type;
+    data.type = `is-${data.type}`;
   }
   const defaults = {};
   defaults.confirmText = i18n.getMessage('generic_ok');
@@ -47,12 +47,12 @@ export default {
     [types.RESET_CATEGORY](state, category) {
       state.categories[category] = [];
     },
-    [types.ADD_DIALOG](state, {category, dialog}) {
+    [types.ADD_DIALOG](state, { category, dialog }) {
       state.categories[category].push(dialog);
     },
   },
   actions: {
-    closeCategory({state, commit}, category) {
+    closeCategory({ state, commit }, category) {
       if (category in state.categories) {
         for (const dialog of state.categories[category]) {
           dialog.close();
@@ -60,7 +60,7 @@ export default {
         commit(types.RESET_CATEGORY, category);
       }
     },
-    open({commit}, {type, data}) {
+    open({ commit }, { type, data }) {
       data = processDialogData(data);
       // NOTE: We are currently not checking when a dialog is closed.
       // Thus, we can't use this module to check if a dialog is open.
@@ -70,16 +70,16 @@ export default {
         dialog: Dialog[type](data),
       });
     },
-    alert({dispatch}, data) {
-      dispatch('open', {type: 'alert', data});
+    alert({ dispatch }, data) {
+      dispatch('open', { type: 'alert', data });
     },
-    confirm({dispatch}, data) {
-      dispatch('open', {type: 'confirm', data});
+    confirm({ dispatch }, data) {
+      dispatch('open', { type: 'confirm', data });
     },
-    prompt({dispatch}, data) {
-      dispatch('open', {type: 'prompt', data});
+    prompt({ dispatch }, data) {
+      dispatch('open', { type: 'prompt', data });
     },
-    warning({dispatch}, data) {
+    warning({ dispatch }, data) {
       data.type = 'warning';
       dispatch('confirm', data);
     },

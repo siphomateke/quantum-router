@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import {modes, modeNames} from '@/store';
+import { modes, modeNames } from '@/store';
 import smsTypeMixin from '@/mixins/smsType';
 import router from 'huawei-router-api/browser';
 import IconPicker from '@/components/iconpicker';
@@ -132,7 +132,7 @@ export default {
     smsTypes: () => smsTypes,
   },
   watch: {
-    'settings.general.routerUrl'() {
+    'settings.general.routerUrl': function () {
       this.validation.routerUrl.type = '';
       this.validation.routerUrl.message = '';
     },
@@ -150,10 +150,10 @@ export default {
   },
   methods: {
     async setSetting(path, value) {
-      await this.$store.dispatch('settings/set', {path: 'internal.'+path, value});
+      await this.$store.dispatch('settings/set', { path: `internal.${path}`, value });
     },
     showMessage(message, type) {
-      this.$toast.open({message, type});
+      this.$toast.open({ message, type });
     },
     async submit() {
       if (this.$refs.form.checkValidity()) {
@@ -161,7 +161,7 @@ export default {
         const promises = [];
         for (const domain of Object.keys(this.settings)) {
           for (const name of Object.keys(this.settings[domain])) {
-            promises.push(this.setSetting(domain+'.'+name, this.settings[domain][name]));
+            promises.push(this.setSetting(`${domain}.${name}`, this.settings[domain][name]));
           }
         }
         try {

@@ -1,4 +1,4 @@
-import {boxTypes} from './constants';
+import { boxTypes } from './constants';
 
 /**
  * Sums boxes counts
