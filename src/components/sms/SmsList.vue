@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import { momentFormat } from '@/utils';
 import smsTypeMixin from '@/mixins/smsType';
 
 export default {
@@ -235,7 +235,7 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return moment(date).format('Y-M-D HH:mm:ss');
+      return momentFormat(date, 'Y-M-D HH:mm:ss');
     },
     goToPage() {
       const page = this.goToPageNumber;

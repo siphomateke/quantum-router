@@ -13,6 +13,7 @@
 
 <script>
 import moment from 'moment';
+import { momentFormat } from '@/utils';
 
 export default {
   name: 'QNotification',
@@ -46,7 +47,7 @@ export default {
   },
   computed: {
     machineDate() {
-      return moment(this.date).format('Y-M-D HH:mm:ss');
+      return momentFormat(this.date, 'Y-M-D HH:mm:ss');
     },
     time() {
       if (this.internalDate) {

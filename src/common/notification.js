@@ -1,5 +1,6 @@
 import router from 'huawei-router-api/browser';
 import moment from 'moment';
+import { momentFormat } from '@/utils';
 
 export default class Notification {
   /**
@@ -63,7 +64,7 @@ export default class Notification {
       case router.sms.types.DATA:
         message = `You have ${parsed.data[0].amount}${parsed.data[0].unit}`;
         if (parsed.expires[0]) {
-          message += ` valid until ${moment(parsed.expires[0]).format('Y-M-D HH:mm:ss')}`;
+          message += ` valid until ${momentFormat(parsed.expires[0], 'Y-M-D HH:mm:ss')}`;
         }
         break;
       default:
