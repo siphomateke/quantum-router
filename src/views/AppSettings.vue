@@ -62,12 +62,12 @@
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="delete">
-              {{ $i18n('sms.actions.delete') }}
+              {{ $i18n('sms.actions.delete.name') }}
             </b-checkbox>
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="import">
-              {{ $i18n('sms.actions.import') }}
+              {{ $i18n('sms.actions.import.name') }}
             </b-checkbox>
           </config-field>
           <config-field

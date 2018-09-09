@@ -81,25 +81,6 @@
   },
 
   "sms": {
-    "actions": {
-      "newMessage": "New message",
-      "delete": "Delete",
-      "import": "Import",
-      "markAsRead": "Mark as read",
-      "selectTooltip": "Select",
-      "selectDropdownTypesGroup": "SMS Types",
-      "selectType": {
-        "none": "None",
-        "all": "All",
-        "read": "Read",
-        "unread": "Unread"
-      }
-    },
-    "adminOnly": "You must have administrator access to view SMS messages.",
-    "firstToLast": "{{first}} - {{last}}",
-    "firstToLastOfTotal": "{{first}} - {{last}} of {{total}}",
-    "empty": "There are no SMSs",
-    "editMessageTooltip": "Edit message",
     "boxes": {
       "localInbox": "Inbox",
       "localSent": "Outbox",
@@ -108,13 +89,63 @@
       "simSent": "SIM Outbox",
       "simDraft": "SIM Drafts"
     },
+    "actions": {
+      "newMessage": {
+        "name": "New message"
+      },
+      "delete": {
+        "name": "Delete",
+        "confirm": "Are you sure you want to delete {{count}} message(s)?"
+      },
+      "import": {
+        "name": "Import",
+        "confirm": "Are you sure you want to import {{count}} message(s) from the SIM card?",
+        "notEnoughSpaceWarning": "There is only enough space to import {{available}} message(s) out of {{count}}. Would you like to import anyways?",
+        "notEnoughSpaceError": "Not enough space to import messages.",
+        "genericError": "Failed to import messages.",
+        "success": "Imported {{count}} message(s) successfully.",
+        "complete": "Imported {{success}} message(s) successfully. Failed to import {{fail}} message(s)."
+      },
+      "markAsRead": {
+        "name": "Mark as read",
+        "partialError": "Error: Could only mark {{successful}}/{{total}} message(s) as read",
+        "error": "Error marking messages as read."
+      },
+      "select": {
+        "name": "Select",
+        "dropdownTypesGroup": "SMS Types",
+        "types": {
+          "none": "None",
+          "all": "All",
+          "read": "Read",
+          "unread": "Unread"
+        }
+      }
+    },
+    "adminOnly": "You must have administrator access to view SMS messages.",
+    "firstToLast": "{{first}} - {{last}}",
+    "firstToLastOfTotal": "{{first}} - {{last}} of {{total}}",
+    "empty": "There are no SMSs",
+    "editMessageTooltip": "Edit message",
     "listHeaders": {
       "type": "Type",
       "number": "Number",
       "content": "Content",
       "date": "Date"
     },
-    "dialog": {
+    "messageTypes": {
+      "recharge": "Recharge",
+      "data": "Data remaining",
+      "dataPercent": "Percentage data used",
+      "activated": "Activated",
+      "depleted": "Depleted",
+      "ad": "Advert"
+    },
+    "message": {
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "composeDialog": {
       "title": "Message",
       "fields": {
         "numbers": {
@@ -135,40 +166,15 @@
         "save": "Save as draft"
       }
     },
-    "markAsRead": {
-      "partialError": "Error: Could only mark {{successful}}/{{total}} message(s) as read",
-      "error": "Error marking messages as read."
-    },
     "actionDialog": {
       "hideMessages": "Hide messages",
       "showMessages": "Show messages",
       "confirmText": "OK"
     },
-    "confirmDelete": "Are you sure you want to delete {{count}} message(s)?",
-    "confirmImport": "Are you sure you want to import {{count}} message(s) from the SIM card?",
-    "import": {
-      "notEnoughSpaceWarning": "There is only enough space to import {{available}} message(s) out of {{count}}. Would you like to import anyways?",
-      "notEnoughSpaceError": "Not enough space to import messages.",
-      "genericError": "Failed to import messages.",
-      "success": "Imported {{count}} message(s) successfully.",
-      "complete": "Imported {{success}} message(s) successfully. Failed to import {{fail}} message(s)."
-    },
     "save": {
       "notEnoughSpaceError": "Not enough space to save message."
     },
-    "messageTypes": {
-      "recharge": "Recharge",
-      "data": "Data remaining",
-      "dataPercent": "Percentage data used",
-      "activated": "Activated",
-      "depleted": "Depleted",
-      "ad": "Advert"
-    },
-    "boxFull": "Your message box is full. To receive new messages, delete some existing ones.",
-    "message": {
-      "read": "Read",
-      "unread": "Unread"
-    }
+    "boxFull": "Your message box is full. To receive new messages, delete some existing ones."
   },
 
   "services": {

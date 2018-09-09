@@ -3,7 +3,7 @@
     <div class="level-left">
       <!-- TODO: Make action buttons show loading progress -->
       <b-field grouped>
-        <b-field :title="this.$i18n('sms.actions.selectTooltip')">
+        <b-field :title="this.$i18n('sms.actions.select.name')">
           <p class="control">
             <button
               class="button"
@@ -22,11 +22,11 @@
                 v-for="selector in selectors"
                 :key="selector"
                 @click="changeSelection(selector)">
-                {{ $i18n('sms.actions.selectType.'+selector) }}
+                {{ $i18n('sms.actions.select.types.'+selector) }}
               </b-dropdown-item>
               <b-dropdown-item separator/>
               <b-dropdown-item custom>
-                <b>{{ $i18n('sms.actions.selectDropdownTypesGroup') }}</b>
+                <b>{{ $i18n('sms.actions.select.dropdownTypesGroup') }}</b>
               </b-dropdown-item>
               <b-dropdown-item
                 v-for="smsType in smsTypes"
@@ -45,13 +45,13 @@
           <action-button
             v-if="isVisible('delete')"
             :disabled="isDisabled('delete')"
-            :title="this.$i18n('sms.actions.delete')"
+            :title="this.$i18n('sms.actions.delete.name')"
             icon="trash"
             @click="deleteMessages"/>
           <action-button
             v-if="isVisible('markAsRead')"
             :disabled="isDisabled('markAsRead')"
-            :label="this.$i18n('sms.actions.markAsRead')"
+            :label="this.$i18n('sms.actions.markAsRead.name')"
             @click="markMessagesAsRead"/>
         </b-field>
       </b-field>
@@ -63,7 +63,7 @@
           <action-button
             v-if="isVisible('new')"
             :disabled="isDisabled('new')"
-            :label="this.$i18n('sms.actions.newMessage')"
+            :label="this.$i18n('sms.actions.newMessage.name')"
             icon="plus"
             @click="newMessage"/>
         </b-field>
@@ -71,7 +71,7 @@
           <action-button
             v-if="isVisible('import')"
             :disabled="isDisabled('import')"
-            :label="this.$i18n('sms.actions.import')"
+            :label="this.$i18n('sms.actions.import.name')"
             icon="upload"
             @click="importClick"/>
         </b-field>

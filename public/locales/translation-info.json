@@ -37,7 +37,7 @@
       }
     }
   },
-  "sms.actions.selectDropdownTypesGroup": {
+  "sms.actions.select.dropdownTypesGroup": {
     "description": "Label given to the SMS types group in the dropdown used to select SMS messages."
   },
   "sms.firstToLast": {
@@ -85,7 +85,7 @@
       }
     }
   },
-  "sms.markAsRead.partialError": {
+  "sms.actions.markAsRead.partialError": {
     "description": "Shown when there is an error marking sms as read",
     "placeholders": {
       "successful": {
@@ -96,21 +96,21 @@
       }
     }
   },
-  "sms.confirmDelete": {
+  "sms.actions.delete.confirm": {
     "placeholders": {
       "count": {
         "example": "13"
       }
     }
   },
-  "sms.confirmImport": {
+  "sms.actions.import.confirm": {
     "placeholders": {
       "count": {
         "example": "13"
       }
     }
   },
-  "sms.import.notEnoughSpaceWarning": {
+  "sms.actions.import.notEnoughSpaceWarning": {
     "placeholders": {
       "available": {
         "example": "5"
@@ -120,14 +120,14 @@
       }
     }
   },
-  "sms.import.success": {
+  "sms.actions.import.success": {
     "placeholders": {
       "success": {
         "example": "15"
       }
     }
   },
-  "sms.import.complete": {
+  "sms.actions.import.complete": {
     "placeholders": {
       "success": {
         "example": "15"

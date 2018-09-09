@@ -1,7 +1,7 @@
 <template>
   <q-dialog
-    :title="this.$i18n('sms.dialog.title')"
-    :confirm-text="this.$i18n('sms.dialog.actions.send')"
+    :title="this.$i18n('sms.composeDialog.title')"
+    :confirm-text="this.$i18n('sms.composeDialog.actions.send')"
     @confirm="send"
     @cancel="cancel"
   >
@@ -9,17 +9,17 @@
       ref="form"
       @submit.prevent>
       <b-field
-        :label="this.$i18n('sms.dialog.fields.numbers.label')"
+        :label="this.$i18n('sms.composeDialog.fields.numbers.label')"
         :type="fields.numbers.type"
         :message="fields.numbers.message">
         <b-taginput
           v-model="internalNumbers"
-          :placeholder="this.$i18n('sms.dialog.fields.numbers.placeholder')"
+          :placeholder="this.$i18n('sms.composeDialog.fields.numbers.placeholder')"
           icon="phone"
           @input="validateNumbers"/>
       </b-field>
       <b-field
-        :label="this.$i18n('sms.dialog.fields.content.label')"
+        :label="this.$i18n('sms.composeDialog.fields.content.label')"
         :addons="false">
         <b-input
           ref="content"
@@ -30,25 +30,25 @@
         <small class="help">
           <span>
             <span
-              :title="this.$i18n('sms.dialog.characterCount')"
+              :title="this.$i18n('sms.composeDialog.characterCount')"
               class="help-cursor">
               {{ internalContent.length }}
             </span>
             {{ ' / ' }}
             <span
-              :title="this.$i18n('sms.dialog.characterCountMax')"
+              :title="this.$i18n('sms.composeDialog.characterCountMax')"
               class="help-cursor">
               {{ sms7bitMaxSize }}
             </span>
           </span>
           <span class="counter help-cursor">
-            <span :title="this.$i18n('sms.dialog.remainingCharactersInSegment')">
+            <span :title="this.$i18n('sms.composeDialog.remainingCharactersInSegment')">
               {{ counterText.remaining }}
             </span>
-            <span :title="this.$i18n('sms.dialog.messageCount')">
+            <span :title="this.$i18n('sms.composeDialog.messageCount')">
               {{ `(${counterText.numberOfMessages})` }}
             </span>
-            <span :title="this.$i18n('sms.dialog.segmentHelp', {normalMax, longMax})">
+            <span :title="this.$i18n('sms.composeDialog.segmentHelp', {normalMax, longMax})">
               <b-icon icon="question-circle"/>
             </span>
           </span>
@@ -58,7 +58,7 @@
     <template slot="buttons">
       <button
         class="button"
-        @click="save">{{ this.$i18n('sms.dialog.actions.save') }}</button>
+        @click="save">{{ this.$i18n('sms.composeDialog.actions.save') }}</button>
     </template>
   </q-dialog>
 </template>
