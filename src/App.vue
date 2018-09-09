@@ -132,8 +132,10 @@ export default {
     }),
     ...mapGetters({
       modeName: 'modeName',
-      unreadNotifications: 'notifications/unread',
     }),
+    unreadNotifications() {
+      return [...this.$store.getters['notifications/unread']].reverse();
+    },
     loadingNotifications() {
       return this.allNotifications.length === 0 && this.gettingSmsList;
     },

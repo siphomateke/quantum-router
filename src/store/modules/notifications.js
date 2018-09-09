@@ -93,12 +93,15 @@ export default {
       if (!rootState.sms.gettingSmsList) {
         dispatch('sms/setGettingSmsList', true, { root: true });
         try {
+          // Get most recent notifications
           const newMessages = await router.sms.getFullSmsList({
             total: count,
             filter: { read: false },
           }, {
             sortOrder: 'desc',
           });
+          // Sort oldest to newest (ascending)
+          newMessages.reverse();
           const newNotifications = [];
           for (const message of newMessages) {
             const n = Notification.fromSms(message);
