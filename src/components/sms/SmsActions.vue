@@ -8,7 +8,17 @@
             <button
               class="button"
               @click="toggleSelection">
-              <b-icon :icon="selectionState === selectionStates.NONE ? 'square-o' : 'check-square-o'"/>
+              <span
+                :style="{'font-size': (1-1/3) +'em'}"
+                class="icon fa-stack">
+                <i class="fa fa-square-o fa-stack-2x"/>
+                <i
+                  v-show="selectionState === selectionStates.ALL"
+                  class="fa fa-check fa-stack-1x"/>
+                <i
+                  v-show="selectionState === selectionStates.SOME"
+                  class="fa fa-minus fa-stack-1x"/>
+              </span>
             </button>
           </p>
           <p class="control">
