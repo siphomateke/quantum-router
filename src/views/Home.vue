@@ -2,12 +2,12 @@
   <div class="padding-container">
     <div class="card">
       <header class="card-header">
-        <span class="card-header-title">{{ $i18n('home_cards_data_usage_graph') }}</span>
+        <span class="card-header-title">{{ $i18n('home.cards.dataUsageGraph') }}</span>
       </header>
       <div class="card-content">
         <template v-if="!offline">
           <template v-if="usage">
-            {{ $i18n('home_data_usage', {
+            {{ $i18n('home.dataUsageAmount', {
               received: round(usage.received, 2),
               sent: round(usage.sent, 2)
             }) }}
@@ -21,7 +21,7 @@
         <template v-else>
           <b-message
             type="is-info"
-            has-icon>{{ $i18n('home_admin_only') }}</b-message>
+            has-icon>{{ $i18n('home.adminOnly') }}</b-message>
         </template>
       </div>
     </div>

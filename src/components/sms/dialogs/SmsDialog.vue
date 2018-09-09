@@ -1,7 +1,7 @@
 <template>
   <q-dialog
-    :title="this.$i18n('sms_dialog_title')"
-    :confirm-text="this.$i18n('sms_dialog_action_send')"
+    :title="this.$i18n('sms.dialog.title')"
+    :confirm-text="this.$i18n('sms.dialog.actions.send')"
     @confirm="send"
     @cancel="cancel"
   >
@@ -9,17 +9,17 @@
       ref="form"
       @submit.prevent>
       <b-field
-        :label="this.$i18n('sms_dialog_field_numbers')"
+        :label="this.$i18n('sms.dialog.fields.numbers.label')"
         :type="fields.numbers.type"
         :message="fields.numbers.message">
         <b-taginput
           v-model="internalNumbers"
-          :placeholder="this.$i18n('sms_dialog_field_numbers_placeholder')"
+          :placeholder="this.$i18n('sms.dialog.fields.numbers.placeholder')"
           icon="phone"
           @input="validateNumbers"/>
       </b-field>
       <b-field
-        :label="this.$i18n('sms_dialog_field_content')"
+        :label="this.$i18n('sms.dialog.fields.content.label')"
         :addons="false">
         <b-input
           ref="content"
@@ -30,25 +30,25 @@
         <small class="help">
           <span>
             <span
-              :title="this.$i18n('sms_dialog_character_count')"
+              :title="this.$i18n('sms.dialog.characterCount')"
               class="help-cursor">
               {{ internalContent.length }}
             </span>
             {{ ' / ' }}
             <span
-              :title="this.$i18n('sms_dialog_character_count_max')"
+              :title="this.$i18n('sms.dialog.characterCountMax')"
               class="help-cursor">
               {{ sms7bitMaxSize }}
             </span>
           </span>
           <span class="counter help-cursor">
-            <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">
+            <span :title="this.$i18n('sms.dialog.remainingCharactersInSegment')">
               {{ counterText.remaining }}
             </span>
-            <span :title="this.$i18n('sms_dialog_message_count')">
+            <span :title="this.$i18n('sms.dialog.messageCount')">
               {{ `(${counterText.numberOfMessages})` }}
             </span>
-            <span :title="this.$i18n('sms_dialog_segment_help', {normalMax, longMax})">
+            <span :title="this.$i18n('sms.dialog.segmentHelp', {normalMax, longMax})">
               <b-icon icon="question-circle"/>
             </span>
           </span>
@@ -58,7 +58,7 @@
     <template slot="buttons">
       <button
         class="button"
-        @click="save">{{ this.$i18n('sms_dialog_action_save') }}</button>
+        @click="save">{{ this.$i18n('sms.dialog.actions.save') }}</button>
     </template>
   </q-dialog>
 </template>
@@ -138,7 +138,7 @@ export default {
     validateNumbers() {
       if (this.internalNumbers.length === 0) {
         this.fields.numbers.type = 'is-danger';
-        this.fields.numbers.message = this.$i18n('validation_tag_input_required');
+        this.fields.numbers.message = this.$i18n('validation.tagInput.required');
         return false;
       }
       let valid = true;
@@ -146,7 +146,7 @@ export default {
         if (Number.isNaN(Number(number))) {
           valid = false;
           this.fields.numbers.type = 'is-danger';
-          this.fields.numbers.message = this.$i18n('validation_tag_input_number');
+          this.fields.numbers.message = this.$i18n('validation.tagInput.numbersOnly');
           break;
         }
       }

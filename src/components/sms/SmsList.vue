@@ -60,12 +60,12 @@
           v-if="typeof props.row.read === 'boolean' && showReadStatus"
           field="read">
           <b-icon
-            :title="$i18n(props.row.read ? 'sms_read' : 'sms_unread')"
+            :title="$i18n(props.row.read ? 'sms.message.read' : 'sms.message.unread')"
             :icon="props.row.read ? 'envelope-open-o' : 'envelope'"/>
         </b-table-column>
         <b-table-column
           v-if="showType"
-          :label="$i18n('sms_message_type')"
+          :label="$i18n('sms.listHeaders.type')"
           field="type">
           <b-icon
             :title="getSmsTypeName(props.row.parsed.type)"
@@ -73,15 +73,15 @@
             :icon="smsTypeIcons[props.row.parsed.type].id"/>
         </b-table-column>
         <b-table-column
-          :label="$i18n('sms_message_number')"
+          :label="$i18n('sms.listHeaders.number')"
           field="number">{{ props.row.number }}</b-table-column>
         <b-table-column
-          :label="$i18n('sms_message_content')"
+          :label="$i18n('sms.listHeaders.content')"
           field="content">
           <div class="content">{{ props.row.content }}</div>
         </b-table-column>
         <b-table-column
-          :label="$i18n('sms_message_date')"
+          :label="$i18n('sms.listHeaders.date')"
           field="date"
           sortable
           centered>
@@ -93,7 +93,7 @@
           v-if="showEditButton"
           class="edit-button-column">
           <button
-            :title="$i18n('sms_edit_tooltip')"
+            :title="$i18n('sms.editMessageTooltip')"
             class="button is-primary"
             @click="editMessage(props.index)">
             <b-icon icon="edit"/>
@@ -104,7 +104,7 @@
       <template slot="empty">
         <section class="section">
           <template v-if="!loading">
-            <p>{{ $i18n('sms_empty') }}</p>
+            <p>{{ $i18n('sms.empty') }}</p>
           </template>
         </section>
       </template>
@@ -202,9 +202,9 @@ export default {
       const first = ((this.internalPage - 1) * this.perPage) + 1;
       const last = (((this.internalPage - 1) * this.perPage) + this.perPage) + 1;
       if (last > this.internalTotal) {
-        return this.$i18n('sms_first_to_last', { first, last: this.internalTotal });
+        return this.$i18n('sms.firstToLast', { first, last: this.internalTotal });
       }
-      return this.$i18n('sms_first_to_last_of_total', { first, last, total: this.internalTotal });
+      return this.$i18n('sms.firstToLastOfTotal', { first, last, total: this.internalTotal });
     },
     internalTotal() {
       return this.backendPagination ? this.total : this.list.length;

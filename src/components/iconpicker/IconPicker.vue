@@ -97,11 +97,11 @@ export default {
     },
     pickerTitle: {
       type: String,
-      default: i18n.getMessage('icon_picker_title'),
+      default: i18n.getMessage('iconPicker.title'),
     },
     pickerButtonText: {
       type: String,
-      default: i18n.getMessage('icon_picker_button'),
+      default: i18n.getMessage('iconPicker.button'),
     },
   },
   data() {

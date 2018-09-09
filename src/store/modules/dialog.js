@@ -28,8 +28,8 @@ function processDialogData(data = {}) {
     data.type = `is-${data.type}`;
   }
   const defaults = {};
-  defaults.confirmText = i18n.getMessage('generic_ok');
-  defaults.cancelText = i18n.getMessage('generic_cancel');
+  defaults.confirmText = i18n.getMessage('generic.ok');
+  defaults.cancelText = i18n.getMessage('generic.cancel');
   return Object.assign(defaults, data);
 }
 

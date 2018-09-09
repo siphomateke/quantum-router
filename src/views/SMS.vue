@@ -23,7 +23,7 @@
           type="is-info"
           has-icon
           icon-size="small">
-          {{ $i18n('sms_box_full') }}
+          {{ $i18n('sms.boxFull') }}
         </b-message>
       </div>
       <b-tabs
@@ -77,7 +77,7 @@
         <b-message
           type="is-info"
           has-icon>
-          {{ $i18n('sms_admin_only') }}
+          {{ $i18n('sms.adminOnly') }}
         </b-message>
       </div>
     </template>
@@ -134,15 +134,15 @@ export default {
     }),
     tabs() {
       let tabs = [
-        { boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms_box_inbox'), icon: 'inbox' },
-        { boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms_box_sent'), icon: 'send' },
-        { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_box_draft'), icon: 'file' },
+        { boxType: boxTypes.LOCAL_INBOX, label: this.$i18n('sms.boxes.localInbox'), icon: 'inbox' },
+        { boxType: boxTypes.LOCAL_SENT, label: this.$i18n('sms.boxes.localSent'), icon: 'send' },
+        { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms.boxes.localDraft'), icon: 'file' },
       ];
       if (!this.internalSettings.sms.hideSimBoxes) {
         tabs = tabs.concat([
-          { boxType: boxTypes.SIM_INBOX, label: this.$i18n('sms_sim_box_inbox'), icon: 'inbox' },
-          { boxType: boxTypes.SIM_SENT, label: this.$i18n('sms_sim_box_sent'), icon: 'send' },
-          { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms_sim_box_draft'), icon: 'file' },
+          { boxType: boxTypes.SIM_INBOX, label: this.$i18n('sms.boxes.simInbox'), icon: 'inbox' },
+          { boxType: boxTypes.SIM_SENT, label: this.$i18n('sms.boxes.simSent'), icon: 'send' },
+          { boxType: boxTypes.LOCAL_DRAFT, label: this.$i18n('sms.boxes.simDraft'), icon: 'file' },
         ]);
       }
       return tabs;

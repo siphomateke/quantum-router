@@ -23,7 +23,7 @@ export default {
         case smsTypes.DATA:
           return 'data';
         case smsTypes.DATA_PERCENT:
-          return 'data_percent';
+          return 'dataPercent';
         case smsTypes.ACTIVATED:
           return 'activated';
         case smsTypes.DEPLETED:
@@ -35,7 +35,7 @@ export default {
       }
     },
     getSmsTypeName(type) {
-      return this.$i18n(`sms_types_${this.getSmsTypeCode(type)}`);
+      return this.$i18n(`sms.messageTypes.${this.getSmsTypeCode(type)}`);
     },
   },
 };
