@@ -1,6 +1,7 @@
 import defaultOptions from '@/config/i18next';
 import { ipcRenderer } from 'electron';
 import i18next from 'i18next';
+import { memoize } from '@/utils';
 
 if (!i18next.isInitialized) {
   i18next.init({
@@ -32,8 +33,6 @@ ipcRenderer.on('language-changed', (event, message) => {
 const initialLanguageData = ipcRenderer.sendSync('get-initial-language-data');
 changeLanguage(initialLanguageData);
 
-export default class i18n {
-  static getMessage(key, ...args) {
-    return i18next.t(key, ...args);
-  }
-}
+export default {
+  getMessage: memoize((key, ...args) => i18next.t(key, ...args)),
+};
