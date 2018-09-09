@@ -10,7 +10,11 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
  * global reference to mainWindow (necessary to prevent window from being garbage collected)
  * @type {BrowserWindow}
  */
-export let mainWindow = null;
+let mainWindow = null;
+
+export function getMainWindow() {
+  return mainWindow;
+}
 
 export function createMainWindow() {
   mainWindow = new BrowserWindow({

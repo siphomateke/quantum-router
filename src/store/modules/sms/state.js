@@ -37,7 +37,8 @@ const state = {
  * @property {number} count Total number of messages in this box
  * @property {boolean} loading
  * @property {number} page The current page
- * @property {('desc'|'asc')} sortOrder The direction messages should be sorted in (ascending or descending)
+ * @property {('desc'|'asc')} sortOrder
+ * The direction messages should be sorted in (ascending or descending)
  * @property {number} perPage
  */
 

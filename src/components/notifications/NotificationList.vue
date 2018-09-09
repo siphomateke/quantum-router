@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Notification from './Notification';
+import Notification from './Notification.vue';
 
 export default {
   name: 'QNotificationList',

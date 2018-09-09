@@ -212,7 +212,7 @@ export default {
     pageCount() {
       if (!this.paginated) return 0;
 
-      if (!isNaN(this.internalTotal) && !isNaN(this.perPage)) {
+      if (typeof this.internalTotal === 'number' && typeof this.perPage === 'number') {
         return Math.ceil(this.internalTotal / this.perPage);
       }
       return 0;

@@ -1,5 +1,5 @@
-import IconPicker from './IconPicker';
-import IconPickerModal from './IconPickerModal';
+import IconPicker from './IconPicker.vue';
+import IconPickerModal from './IconPickerModal.vue';
 
 export default IconPicker;
 

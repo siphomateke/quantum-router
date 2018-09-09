@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/views/Home';
-import Sms from '@/views/SMS';
-import Services from '@/views/Services';
-import Settings from '@/views/Settings';
-import Wlan from '@/views/settings/wlan';
-import DialUp from '@/views/settings/dialup';
-import AppSettings from '@/views/AppSettings';
+import Home from '@/views/Home.vue';
+import Sms from '@/views/SMS.vue';
+import Services from '@/views/Services.vue';
+import Settings from '@/views/Settings.vue';
+import Wlan from '@/views/settings/wlan.vue';
+import DialUp from '@/views/settings/dialup.vue';
+import AppSettings from '@/views/AppSettings.vue';
 
 Vue.use(Router);
 

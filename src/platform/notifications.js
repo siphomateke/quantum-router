@@ -1,6 +1,6 @@
 import iconConfig from '@/config/icons';
 
-export class Notifier {
+export default class Notifier {
   /**
    * @param {Object} options
    * @param {string} options.message
@@ -12,6 +12,7 @@ export class Notifier {
       title: 'Quantum Router',
       icon: iconConfig.notificationIcon,
     }, options);
+    /* eslint-disable-next-line no-new */
     new Notification(options.title, {
       body: options.message,
       icon: options.icon,

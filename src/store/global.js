@@ -168,6 +168,7 @@ export default {
                 return false;
               }
             }
+            return true;
           } catch (e) {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
@@ -191,7 +192,7 @@ export default {
         return false;
       }
     },
-    async tryChangeMode({ state, commit, dispatch }, newMode) {
+    async tryChangeMode({ commit, dispatch }, newMode) {
       if (newMode === modes.ADMIN) {
         dispatch('dialog/closeCategory', 'admin');
       }

@@ -1,5 +1,5 @@
 import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
-import { bus } from '@/events';
+import bus from '@/events';
 import i18n from '@/platform/i18n';
 import { ModalProgrammatic, Toast } from 'buefy';
 import router from 'huawei-router-api/browser';
@@ -36,7 +36,7 @@ export default {
   TODO: Do this in a better way so each 'run' or execution has the same count
   rather than using a timeout.
   */
-  async getCountLenient({ state, commit, dispatch }) {
+  async getCountLenient({ state, dispatch }) {
     const now = Date.now();
     if ((now - state.countLastUpdated > state.smsCountTimeout)
     || state.countLastUpdated === null) {
@@ -63,7 +63,7 @@ export default {
     if (currentPage > numPages) {
       let page = currentPage;
       while (page > numPages && page > 1) {
-        page--;
+        page -= 1;
       }
       commit(types.SET_PAGE, { box, value: page });
     }
@@ -138,7 +138,7 @@ export default {
   async getAllMessages({ getters, dispatch }, { box }) {
     await dispatch('reset', { box });
     const promises = [];
-    for (let i = 0; i < getters.numPages(box); i++) {
+    for (let i = 0; i < getters.numPages(box); i += 1) {
       promises.push(dispatch('getMessages', {
         box,
         page: i + 1, // PageIndex starts at 1
@@ -154,7 +154,7 @@ export default {
     commit(types.SET_PAGE, { box, value });
     await dispatch('getCurrentPageMessages', { box });
   },
-  async setSortOrder({ state, commit, dispatch }, { box, value }) {
+  async setSortOrder({ commit, dispatch }, { box, value }) {
     commit(types.SET_SORT_ORDER, { box, value });
     commit(types.RESET_MESSAGES, { box });
     await dispatch('getCurrentPageMessages', { box });
@@ -176,7 +176,7 @@ export default {
   clearSelected({ commit }, payload) {
     commit(types.CLEAR_SELECTED, payload);
   },
-  openSmsActionDialog({ state, getters }, { props, events }) {
+  openSmsActionDialog({ getters }, { props, events }) {
     const defaultProps = {
       list: [],
       type: 'warning',
@@ -274,7 +274,7 @@ export default {
       let unread = 0;
       for (const id of ids) {
         if (!state.messages[id].read) {
-          unread++;
+          unread += 1;
         }
       }
       dispatch('notifications/reduceLastCount', unread, { root: true });
@@ -286,7 +286,7 @@ export default {
     await dispatch('deleteMessages', { box, ids: state.boxes[box].selected });
   },
   deleteSelectedMessagesConfirm({ rootState, state, dispatch }, { box }) {
-    const confirmDialogsToShow = rootState.settings.internal.sms.confirmDialogsToShow;
+    const { confirmDialogsToShow } = rootState.settings.internal.sms;
     if (confirmDialogsToShow.includes('delete')) {
       const messages = state.boxes[box].selected;
       dispatch('openSmsActionDialog', {
@@ -400,7 +400,7 @@ export default {
           type: 'warning',
         }, { root: true });
       } else {
-        const confirmDialogsToShow = rootState.settings.internal.sms.confirmDialogsToShow;
+        const { confirmDialogsToShow } = rootState.settings.internal.sms;
         if (confirmDialogsToShow.includes('import')) {
           await dispatch('getAllMessages', { box: boxTypes.SIM_INBOX });
           const messages = getters.allMessages(boxTypes.SIM_INBOX);

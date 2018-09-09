@@ -68,9 +68,9 @@
 // from the outside
 // TODO: Fix title attribute on static icon button when compact=false
 // TODO: Add autocomplete to icon ID input
-import IconPickerModal from './IconPickerModal';
 import icons from '@/icons';
 import i18n from '@/platform/i18n';
+import IconPickerModal from './IconPickerModal.vue';
 
 export default {
   name: 'QIconPicker',

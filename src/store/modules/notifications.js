@@ -1,7 +1,7 @@
-import { Notification } from '@/common/notifications';
+import Notification from '@/common/notification';
 import router from 'huawei-router-api/browser';
-import { Notifier } from '@/platform/notifications';
-import { bus } from '@/events';
+import Notifier from '@/platform/notifications';
+import bus from '@/events';
 import { boxTypes } from '@/store/modules/sms';
 import storage from '@/platform/storage';
 
@@ -119,11 +119,10 @@ export default {
         }
       }
     },
-    async refresh({ state, dispatch }) {
+    async refresh({ state: { lastCount }, dispatch }) {
       try {
         const data = await router.monitoring.checkNotifications();
         const count = data.UnreadMessage;
-        const lastCount = state.lastCount;
         dispatch('setLastCount', count);
         // NOTE: If an SMS is deleted or marked as read and then a
         // notification is received  before the next refresh,

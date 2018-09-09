@@ -15,7 +15,10 @@
             <div class="field">
               <b-switch
                 v-model="values.roaming"
-                :disabled="disabled.roaming">Data roaming <b-tag type="is-warning">Not implemented</b-tag></b-switch>
+                :disabled="disabled.roaming">
+                {{ 'Data roaming ' }}
+                <b-tag type="is-warning">Not implemented</b-tag>
+              </b-switch>
             </div>
           </div>
         </b-panel>

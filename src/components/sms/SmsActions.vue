@@ -25,7 +25,9 @@
                 {{ $i18n('sms_action_select_'+selector) }}
               </b-dropdown-item>
               <b-dropdown-item separator/>
-              <b-dropdown-item custom><b>{{ $i18n('sms_action_select_dropdown_types_group') }}</b></b-dropdown-item>
+              <b-dropdown-item custom>
+                <b>{{ $i18n('sms_action_select_dropdown_types_group') }}</b>
+              </b-dropdown-item>
               <b-dropdown-item
                 v-for="smsType in smsTypes"
                 :key="smsType"
@@ -197,6 +199,8 @@ export default {
         case selectors.UNREAD:
           this.bus.$emit('sms-actions:select', { read: false });
           break;
+        default:
+          // do nothing
       }
       if (Object.values(smsTypes).includes(selector)) {
         this.bus.$emit('sms-actions:select', { type: selector });

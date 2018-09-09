@@ -91,7 +91,7 @@ export default {
     },
   },
   watch: {
-    'ussd.selectedCommand': function (val) {
+    'ussd.selectedCommand': function ussdSelectedCommand(val) {
       if (val.length === 0) {
         this.ussd.content = '';
       }
@@ -136,7 +136,7 @@ export default {
       this.ussd.result = parsed.content;
       this.ussd.options = parsed.options;
     },
-    async _send() {
+    async realSend() {
       try {
         await router.ussd.sendUssdCommand(this.ussd.content);
         if (this.cancelling) return;
@@ -159,7 +159,7 @@ export default {
       this.loading = true;
       this.error = '';
       this.resetCommandResult();
-      await this._send();
+      await this.realSend();
       if (this.cancelling) {
         // TODO: Use Vuex
         await router.ussd.releaseUssd();

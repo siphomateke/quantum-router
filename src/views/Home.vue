@@ -7,7 +7,10 @@
       <div class="card-content">
         <template v-if="!offline">
           <template v-if="usage">
-            {{ $i18n('home_data_usage', {received: round(usage.received, 2), sent: round(usage.sent, 2)}) }}
+            {{ $i18n('home_data_usage', {
+              received: round(usage.received, 2),
+              sent: round(usage.sent, 2)
+            }) }}
           </template>
           <line-chart
             :chart-data="lineChartData"
@@ -100,7 +103,7 @@ export default {
   },
   methods: {
     round(num, precision) {
-      const factor = Math.pow(10, precision);
+      const factor = 10 ** precision;
       return Math.round(num * factor) / factor;
     },
     async graph() {

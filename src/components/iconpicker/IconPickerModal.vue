@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     visibleIcons() {
-      const icons = this.iconPacks[this.activeTab].icons;
+      const { icons } = this.iconPacks[this.activeTab];
       if (this.search && this.search.length > 0) {
         return icons.filter((icon) => {
           const toMatch = ['id', 'name', 'filter', 'categories'];

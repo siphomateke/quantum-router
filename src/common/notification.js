@@ -1,7 +1,7 @@
 import router from 'huawei-router-api/browser';
 import moment from 'moment';
 
-export class Notification {
+export default class Notification {
   /**
    * @typedef NotificationData
    * @property {boolean} [read]

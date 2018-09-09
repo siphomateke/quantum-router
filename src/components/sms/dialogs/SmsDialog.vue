@@ -42,8 +42,12 @@
             </span>
           </span>
           <span class="counter help-cursor">
-            <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">{{ counterText.remaining }}</span>
-            <span :title="this.$i18n('sms_dialog_message_count')">({{ counterText.numberOfMessages }})</span>
+            <span :title="this.$i18n('sms_dialog_remaining_characters_in_segment')">
+              {{ counterText.remaining }}
+            </span>
+            <span :title="this.$i18n('sms_dialog_message_count')">
+              {{ `(${counterText.numberOfMessages})` }}
+            </span>
             <span :title="this.$i18n('sms_dialog_segment_help', {normalMax, longMax})">
               <b-icon icon="question-circle"/>
             </span>
@@ -103,7 +107,7 @@ export default {
   computed: {
     counterText() {
       // TODO: Support non english character encodings
-      const length = this.internalContent.length;
+      const { length } = this.internalContent;
       let remaining = null;
       let numberOfMessages = null;
       if (length <= this.normalMax) {
@@ -139,7 +143,7 @@ export default {
       }
       let valid = true;
       for (const number of this.internalNumbers) {
-        if (isNaN(number)) {
+        if (Number.isNaN(Number(number))) {
           valid = false;
           this.fields.numbers.type = 'is-danger';
           this.fields.numbers.message = this.$i18n('validation_tag_input_number');

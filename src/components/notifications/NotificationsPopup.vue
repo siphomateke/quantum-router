@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import NotificationList from '@/components/notifications/NotificationList';
+import NotificationList from '@/components/notifications/NotificationList.vue';
 
 export default {
   name: 'NotificationsPopup',

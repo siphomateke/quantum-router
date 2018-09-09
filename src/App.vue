@@ -142,15 +142,14 @@ export default {
     modeNames: () => modeNames,
     modeColor() {
       switch (this.$mode) {
-        case modes.OFFLINE: {
+        case modes.OFFLINE:
           return '#f00';
-        }
-        case modes.BASIC: {
+        case modes.BASIC:
           return '#ffa500';
-        }
-        case modes.ADMIN: {
+        case modes.ADMIN:
           return '#0f0';
-        }
+        default:
+          return null;
       }
     },
   },
@@ -166,6 +165,8 @@ export default {
         case modes.OFFLINE:
           this.globalBus.$emit('mode-change:offline');
           break;
+        default:
+          // do nothing
       }
       if (oldVal === modes.OFFLINE && val > modes.OFFLINE) {
         this.loadNotifications();

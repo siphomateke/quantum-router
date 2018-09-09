@@ -100,7 +100,7 @@ import { modes, modeNames } from '@/store';
 import smsTypeMixin from '@/mixins/smsType';
 import router from 'huawei-router-api/browser';
 import IconPicker from '@/components/iconpicker';
-import ConfigField from '@/components/settings/ConfigField';
+import ConfigField from '@/components/settings/ConfigField.vue';
 
 const smsTypes = router.sms.types;
 
@@ -132,7 +132,7 @@ export default {
     smsTypes: () => smsTypes,
   },
   watch: {
-    'settings.general.routerUrl': function () {
+    'settings.general.routerUrl': function routerUrlSetting() {
       this.validation.routerUrl.type = '';
       this.validation.routerUrl.message = '';
     },
@@ -193,7 +193,7 @@ export default {
         this.pinging = false;
       }
     },
-    async onBlurRouterUrl(val) {
+    async onBlurRouterUrl() {
       this.formLoading = true;
       try {
         await this.testRouterUrl();

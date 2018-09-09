@@ -42,7 +42,9 @@
             <div
               v-if="editMode"
               class="field">
-              <b-switch v-model="props.row.status">{{ getStatusString(props.row.status) }}</b-switch>
+              <b-switch v-model="props.row.status">
+                {{ getStatusString(props.row.status) }}
+              </b-switch>
             </div>
             <template v-if="!editMode">
               {{ getStatusString(props.row.status) }}
@@ -90,7 +92,7 @@
 </template>
 
 <script>
-import Select from '@/components/form/Select';
+import Select from '@/components/form/Select.vue';
 
 export default {
   name: 'SettingsWlan',

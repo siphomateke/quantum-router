@@ -32,7 +32,7 @@ export default {
     Vue.set(state.messages, message.id, message);
   },
   [types.ADD_MESSAGE_TO_BOX](state, { box, page, id }) {
-    const messages = state.boxes[box].messages;
+    const { messages } = state.boxes[box];
     // Add page if it doesn't exist
     if (!(page in messages)) {
       Vue.set(messages, page, []);

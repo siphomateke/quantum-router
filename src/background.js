@@ -1,6 +1,6 @@
 import { app, protocol, ipcMain } from 'electron';
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
-import { mainWindow, createMainWindow } from '@/electron/window';
+import { getMainWindow, createMainWindow } from '@/electron/window';
 import i18n, { getCurrentLanguageData } from '@/electron/i18n';
 import tray from '@/electron/tray';
 
@@ -33,15 +33,15 @@ readyPromises.push(new Promise((resolve) => {
 // create main BrowserWindow when electron and i18n is ready
 Promise.all(readyPromises).then(() => {
   createMainWindow();
-  tray.create(mainWindow);
+  tray.create(getMainWindow());
 
   // send initial translations to client
-  ipcMain.on('get-initial-language-data', (event, arg) => {
+  ipcMain.on('get-initial-language-data', (event) => {
     event.returnValue = getCurrentLanguageData();
   });
 
   // send new translations to client each time the language changes
   i18n.on('languageChanged', () => {
-    mainWindow.webContents.send('language-changed', getCurrentLanguageData());
+    getMainWindow().webContents.send('language-changed', getCurrentLanguageData());
   });
 });

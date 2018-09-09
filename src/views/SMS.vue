@@ -149,7 +149,7 @@ export default {
     },
     buses() {
       const buses = [];
-      for (let i = 0; i < this.tabs.length; i++) {
+      for (let i = 0; i < this.tabs.length; i += 1) {
         buses[i] = new Vue();
       }
       return buses;
