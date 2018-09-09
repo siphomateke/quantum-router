@@ -172,7 +172,7 @@ export default {
     selectionState() {
       // TODO: Consider moving into mixin for use elsewhere
       let selectionState;
-      if (this.box.selected.length === this.box.messages.length) {
+      if (this.box.selected.length === this.box.messages.length && this.box.messages.length > 0) {
         selectionState = selectionStates.ALL;
       } else if (this.box.selected.length > 0) {
         selectionState = selectionStates.SOME;
