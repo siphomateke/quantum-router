@@ -1,7 +1,7 @@
 import { app, protocol, ipcMain } from 'electron';
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 import { getMainWindow, createMainWindow } from '@/electron/window';
-import i18n, { getCurrentLanguageData } from '@/electron/i18n';
+import i18n, { getCurrentLanguageData, waitForTranslationsToLoad } from '@/electron/i18n';
 import tray from '@/electron/tray';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -36,7 +36,12 @@ Promise.all(readyPromises).then(() => {
   tray.create(getMainWindow());
 
   // send initial translations to client
-  ipcMain.on('get-initial-language-data', (event) => {
+  ipcMain.on('get-initial-language-data', async (event) => {
+    // in development mode, reload translations when the renderer process is reloaded
+    if (isDevelopment) {
+      i18n.reloadResources();
+      await waitForTranslationsToLoad();
+    }
     event.returnValue = getCurrentLanguageData();
   });
 
