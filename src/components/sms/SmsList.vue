@@ -78,7 +78,7 @@
         <b-table-column
           :label="$i18n('sms.listHeaders.content')"
           field="content">
-          <div class="content">{{ props.row.content }}</div>
+          <div class="content message-content">{{ props.row.content }}</div>
         </b-table-column>
         <b-table-column
           :label="$i18n('sms.listHeaders.date')"
@@ -257,5 +257,9 @@ export default {
 <style lang="scss">
 .edit-button-column{
   text-align: right;
+}
+.message-content {
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 </style>
