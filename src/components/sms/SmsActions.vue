@@ -98,10 +98,9 @@ const actions = [
 ];
 
 function actionOptionValidator(value) {
-  if (typeof value !== 'object') return false;
   let anyInvalid = false;
   for (const key of Object.keys(value)) {
-    if (!actions.includes(key) || typeof value[key] === 'boolean') {
+    if (!actions.includes(key) || typeof value[key] !== 'boolean') {
       anyInvalid = true;
       break;
     }
