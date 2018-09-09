@@ -74,10 +74,7 @@ export default {
       return this.box.page;
     },
     messages() {
-      if (this.page in this.box.messages) {
-        return this.getActualMessages(this.box.messages[this.page]);
-      }
-      return [];
+      return this.getActualMessages(this.box.messages);
     },
     selected() {
       return this.box.selected;

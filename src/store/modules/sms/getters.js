@@ -28,10 +28,7 @@ export default {
   ]),
   localFull: (state, getters) => (state.local.max === getters.localTotal),
   simFull: (state, getters) => (state.sim.max === getters.simTotal),
-  getVisibleMessagesIds: state => (box) => {
-    const boxItem = state.boxes[box];
-    return boxItem.messages[boxItem.page];
-  },
+  getVisibleMessagesIds: state => box => state.boxes[box].messages,
   actualMessages: state => (ids) => {
     const messages = [];
     for (const id of ids) {
@@ -41,14 +38,7 @@ export default {
     }
     return messages;
   },
-  allMessages: state => (box) => {
-    let messages = [];
-    const boxPages = state.boxes[box].messages;
-    for (const page of Object.keys(boxPages)) {
-      messages = messages.concat(boxPages[page]);
-    }
-    return messages;
-  },
+  allMessages: state => box => state.boxes[box].messages,
   isInbox: state => box => (box === boxTypes.LOCAL_INBOX) || (box === boxTypes.SIM_INBOX),
   numPages: state => (box) => {
     const boxItem = state.boxes[box];

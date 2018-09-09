@@ -31,7 +31,7 @@ const state = {
 
 /**
  * @typedef Box
- * @property {Object.<string, number[]>} messages
+ * @property {number[]} messages
  * Object containing page numbers as keys and arrays of message IDs as values
  * @property {number[]} selected Array of selected messages IDs
  * @property {number} count Total number of messages in this box
@@ -47,7 +47,7 @@ const state = {
  */
 function generateBox() {
   return {
-    messages: {},
+    messages: [],
     selected: [],
     count: 0,
     loading: false,

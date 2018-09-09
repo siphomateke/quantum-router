@@ -28,16 +28,13 @@ export default {
   [types.SET_COUNT_LOADING](state, loading) {
     state.countLoading = loading;
   },
-  [types.ADD_MESSAGE](state, message) {
-    Vue.set(state.messages, message.id, message);
-  },
-  [types.ADD_MESSAGE_TO_BOX](state, { box, page, id }) {
-    const { messages } = state.boxes[box];
-    // Add page if it doesn't exist
-    if (!(page in messages)) {
-      Vue.set(messages, page, []);
+  [types.ADD_MESSAGES](state, messages) {
+    for (const message of messages) {
+      Vue.set(state.messages, message.id, message);
     }
-    messages[page].push(id);
+  },
+  [types.ADD_MESSAGES_TO_BOX](state, { box, ids }) {
+    state.boxes[box].messages = state.boxes[box].messages.concat(ids);
   },
   [types.SET_MESSAGE_READ](state, { id, value }) {
     state.messages[id].read = value;
@@ -48,12 +45,10 @@ export default {
   [types.RESET_MESSAGES](state, { box }) {
     // TODO: Auto-expire messages after a certain amount of time
     const boxItem = state.boxes[box];
-    for (const messages of Object.values(boxItem.messages)) {
-      for (const id of messages) {
-        delete state.messages[id];
-      }
+    for (const id of boxItem.messages) {
+      delete state.messages[id];
     }
-    boxItem.messages = {};
+    boxItem.messages = [];
   },
   [types.ADD_TO_SELECTED](state, { box, id }) {
     state.boxes[box].selected.push(id);

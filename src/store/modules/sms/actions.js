@@ -72,64 +72,63 @@ export default {
     commit(types.RESET_MESSAGES, { box });
     await dispatch('checkCurrentPage', { box });
   },
-  addMessage({ commit }, { box, page, message }) {
-    commit(types.ADD_MESSAGE, message);
-    commit(types.ADD_MESSAGE_TO_BOX, { box, page, id: message.id });
+  addMessages({ commit }, { box, messages }) {
+    commit(types.ADD_MESSAGES, messages);
+    commit(types.ADD_MESSAGES_TO_BOX, {
+      box,
+      ids: messages.map(message => message.id),
+    });
   },
-  async getMessages({ state, commit, dispatch }, { box, page }) {
+  async getMessages({ state, commit, dispatch }, { box }) {
     const boxItem = state.boxes[box];
-    // Only get new messages if current page hasn't been retrieved before
-    if (!(page in boxItem.messages)) {
-      commit(types.SET_LOADING, { box, value: true });
-      // refresh count to match messages
-      await dispatch('getCountLenient');
-      try {
-        let messages = await router.sms.getSmsList({
-          boxType: mapBoxTypeToRouterBoxType[box],
-          page,
-          sortOrder: boxItem.sortOrder,
-          perPage: boxItem.perPage,
-        });
+    commit(types.SET_LOADING, { box, value: true });
+    // refresh count to match messages
+    await dispatch('getCountLenient');
+    try {
+      const messages = await router.sms.getFullSmsList({
+        total: state.boxes[box].count,
+      }, {
+        boxType: mapBoxTypeToRouterBoxType[box],
+        sortOrder: boxItem.sortOrder,
+        perPage: boxItem.perPage,
+      });
 
+      const messagesToAdd = [];
+
+      for (const m of messages) {
+        const id = parseInt(m.Index, 10);
         // Don't add message if it exists
-        messages = messages.filter((m) => {
-          const id = parseInt(m.Index, 10);
-          if (!(id in state.messages)) {
-            return true;
-          }
-          return false;
-        });
-
-        for (const m of messages) {
+        if (!(id in state.messages)) {
           const smsReadStatus = parseInt(m.Smstat, 10);
           let read = null;
           if (smsReadStatus === 0 || smsReadStatus === 1) {
             read = smsReadStatus === 1;
           }
 
-          dispatch('addMessage', {
-            box,
-            page,
-            message: {
-              id: parseInt(m.Index, 10),
-              number: m.Phone,
-              date: m.Date,
-              content: m.Content,
-              read,
-              parsed: router.sms.parse(m.Content),
-            },
+          messagesToAdd.push({
+            id: parseInt(m.Index, 10),
+            number: m.Phone,
+            date: m.Date,
+            content: m.Content,
+            read,
+            parsed: router.sms.parse(m.Content),
           });
         }
-      } catch (e) {
-      // FIXME: Handle errors
-        throw e;
-      } finally {
-        commit(types.SET_LOADING, { box, value: false });
       }
-      // NOTE: If selection is ever possible on more than one page, this will have to go;
-      // all checkedRows' IDs should be checked to see if they still exist instead
-      commit(types.CLEAR_SELECTED, { box });
+
+      dispatch('addMessages', {
+        box,
+        messages: messagesToAdd,
+      });
+    } catch (e) {
+    // FIXME: Handle errors
+      throw e;
+    } finally {
+      commit(types.SET_LOADING, { box, value: false });
     }
+    // NOTE: If selection is ever possible on more than one page, this will have to go;
+    // all checkedRows' IDs should be checked to see if they still exist instead
+    commit(types.CLEAR_SELECTED, { box });
   },
   async getCurrentPageMessages({ state, dispatch }, { box }) {
     await dispatch('checkCurrentPage', { box });
@@ -150,9 +149,8 @@ export default {
     commit(types.RESET_MESSAGES, { box });
     await dispatch('getCurrentPageMessages', { box });
   },
-  async setPage({ commit, dispatch }, { box, value }) {
+  async setPage({ commit }, { box, value }) {
     commit(types.SET_PAGE, { box, value });
-    await dispatch('getCurrentPageMessages', { box });
   },
   async setSortOrder({ commit, dispatch }, { box, value }) {
     commit(types.SET_SORT_ORDER, { box, value });
@@ -247,8 +245,7 @@ export default {
       }
     }
     if (validSelector) {
-      const boxItem = state.boxes[box];
-      for (const id of boxItem.messages[boxItem.page]) {
+      for (const id of state.boxes[box].messages) {
         const message = state.messages[id];
         let match = true;
         if ('type' in selector && selector.type !== message.parsed.type) {
