@@ -77,7 +77,7 @@
   "sms_dialog_field_content": "Content",
   "sms_dialog_character_count": "Number of characters in this message.",
   "sms_dialog_character_count_max": "The maximum number of characters per message.",
-  "sms_dialog_segment_help": "SMS messages are split up into multiple segments of {{longmax}} characters if they exceed {{normalMax} characters.",
+  "sms_dialog_segment_help": "SMS messages are split up into multiple segments of {{longMax}} characters if they exceed {{normalMax}} characters.",
   "sms_dialog_remaining_characters_in_segment": "The number of characters remaining in this segment.",
   "sms_dialog_message_count": "The number of segments this message will be split up into. In most cases, you will be billed for each segment.",
   "sms_dialog_action_send": "Send",
