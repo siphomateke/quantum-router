@@ -2,5 +2,7 @@
   "search.exclude": {
     "**/dist": true,
     "**/original_router": true
-  }
+  },
+  "npm.packageManager": "yarn",
+  "eslint.packageManager": "yarn"
 }

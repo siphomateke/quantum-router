@@ -1,4 +1,5 @@
 {
+  "version": "2.0.0",
   "tasks": [
     {
       "label": "serve",
@@ -22,7 +23,21 @@
       "label": "lint",
       "type": "npm",
       "script": "lint",
-      "problemMatcher": []
+      "problemMatcher": [
+        {
+          "owner": "eslint",
+          "fileLocation": ["relative", "${workspaceFolder}"],
+          "pattern": {
+            "regexp": "^(.+?):\\s(.+)\\s\\((.+)\\)\\sat\\s(.+?):(\\d+):(\\d+):$",
+            "severity": 1,
+            "message": 2,
+            "code": 3,
+            "file": 4,
+            "line": 5,
+            "column": 6,
+          }
+        }
+      ]
     }
   ]
 }
