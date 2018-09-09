@@ -1,152 +1,241 @@
 {
-  "generic_send": "Send",
-  "generic_yes": "Yes",
-  "generic_no": "No",
-  "generic_ok": "OK",
-  "generic_cancel": "Cancel",
-  "generic_error": "Error: {{error}}",
+  "generic": {
+    "send": "Send",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "error": "Error: {{error}}"
+  },
 
-  "menu_home":"Home",
-  "menu_sms":"SMS",
-  "menu_statistics":"Statistics",
-  "menu_services":"Services",
-  "menu_settings":"Settings",
-  "menu_app_settings":"App settings",
+  "modes": {
+    "offline":"Offline",
+    "basic":"Basic",
+    "admin":"Admin"
+  },
 
-  "mode_offline":"Offline",
-  "mode_basic":"Basic",
-  "mode_admin":"Admin",
+  "errors": {
+    "errorWhenLoggingIn": "Failed to login; {{error}}",
+    "unknownLoginError": "Failed to login to router. Make sure the username and password are correct.",
+    "connectionError": "Cannot connect to the router at <a href='{{url}}'>{{url}}</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='{{url}}'>{{url}}</a>) is correct in the app's settings.",
+    "invalidRouterUrlError": "Invalid router URL; {{url}}. Please set a valid URL in the app's options.",
+    "emptyRouterUrlError": "Router URL is empty. Please set a valid URL in the app's options.",
+    "routerModule": {
+      "api_login_username_wrong": "Incorrect username.",
+      "api_login_password_wrong": "Incorrect password.",
+      "api_login_already_login": "Already logged in.",
+      "api_login_username_pwd_wrong": "Incorrect username or password.",
+      "api_login_username_pwd_orerrun": "Maximum login attempts reached. Please try again later.",
+      "api_wrong_session": "Invalid session ID.",
+      "api_wrong_session_token": "Invalid session token.",
+      "api_system_no_rights": "No administrative rights. Please login.",
+      "invalid_router_url": "Invalid router URL."
+    }
+  },
 
-  "change_mode_tooltip": "Change mode",
-  "changed_mode_to": "Changed mode to: {{mode}}",
+  "modeDialog": {
+    "switchToBasic": "Switch to basic mode",
+    "retry": "Retry",
+    "openSettings": "Go to settings",
+    "goOffline": "Go offline"
+  },
 
-  "notifications_tooltip": "Notifications",
-  "notifications_title":"Notifications",
-  "notifications_empty":"No notifications",
-  "mobile_data_tooltip": "Mobile data status",
+  "changeModeTooltip": "Change mode",
+  "changedModeTo": "Changed mode to: {{mode}}",
 
-  "router_module_error_api_login_username_wrong": "Incorrect username.",
-  "router_module_error_api_login_password_wrong": "Incorrect password.",
-  "router_module_error_api_login_already_login": "Already logged in.",
-  "router_module_error_api_login_username_pwd_wrong": "Incorrect username or password.",
-  "router_module_error_api_login_username_pwd_orerrun": "Maximum login attempts reached. Please try again later.",
-  "router_module_error_api_wrong_session": "Invalid session ID.",
-  "router_module_error_api_wrong_session_token": "Invalid session token.",
-  "router_module_error_api_system_no_rights": "No administrative rights. Please login.",
+  "mobileDataTooltip": "Mobile data status",
 
-  "router_module_error_invalid_router_url": "Invalid router URL.",
+  "notifications": {
+    "tooltip": "Notifications",
+    "title":"Notifications",
+    "empty":"No notifications"
+  },
 
-  "router_error_logging_in": "Failed to login; {{error}}",
-  "router_unknown_error_logging_in": "Failed to login to router. Make sure the username and password are correct.",
-  "connection_error": "Cannot connect to the router at <a href='{{url}}'>{{url}}</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='{{url}}'>{{url}}</a>) is correct in the app's settings.",
-  "invalid_router_url_error": "Invalid router URL; {{url}}. Please set a valid URL in the app's options.",
-  "empty_router_url_error": "Router URL is empty. Please set a valid URL in the app's options.",
+  "validation": {
+    "tagInput": {
+      "required": "Please fill in this field.",
+      "numbersOnly": "Please only enter numbers."
+    }
+  },
 
-  "home_cards_data_usage_graph": "Data usage",
-  "home_admin_only": "Cannot view data usage while offline",
-  "home_data_usage": "Received/Sent: {{received}} / {{sent}}",
+  "iconPicker": {
+    "button": "Choose",
+    "title": "Choose an icon"
+  },
 
-  "sms_admin_only": "You must have administrator access to view SMS messages.",
-  "sms_action_new_message": "New message",
-  "sms_action_delete": "Delete",
-  "sms_action_import": "Import",
-  "sms_action_mark_as_read": "Mark as read",
-  "sms_action_select_tooltip": "Select",
-  "sms_action_select_dropdown_types_group": "SMS Types",
-  "sms_action_select_none": "None",
-  "sms_action_select_all": "All",
-  "sms_action_select_read": "Read",
-  "sms_action_select_unread": "Unread",
-  "sms_first_to_last": "{{first}} - {{last}}",
-  "sms_first_to_last_of_total": "{{first}} - {{last}} of {{total}}",
-  "sms_empty": "There are no SMSs",
-  "sms_edit_tooltip": "Edit message",
-  "sms_box_inbox": "Inbox",
-  "sms_box_sent": "Outbox",
-  "sms_box_draft": "Drafts",
-  "sms_sim_box_inbox": "SIM Inbox",
-  "sms_sim_box_sent": "SIM Outbox",
-  "sms_sim_box_draft": "SIM Drafts",
-  "sms_message_type": "Type",
-  "sms_message_number": "Number",
-  "sms_message_content": "Content",
-  "sms_message_date": "Date",
-  "sms_dialog_title": "Message",
-  "sms_dialog_field_numbers": "Recipients",
-  "sms_dialog_field_numbers_placeholder": "Add a number",
-  "sms_dialog_field_content": "Content",
-  "sms_dialog_character_count": "Number of characters in this message.",
-  "sms_dialog_character_count_max": "The maximum number of characters per message.",
-  "sms_dialog_segment_help": "SMS messages are split up into multiple segments of {{longMax}} characters if they exceed {{normalMax}} characters.",
-  "sms_dialog_remaining_characters_in_segment": "The number of characters remaining in this segment.",
-  "sms_dialog_message_count": "The number of segments this message will be split up into. In most cases, you will be billed for each segment.",
-  "sms_dialog_action_send": "Send",
-  "sms_dialog_action_save": "Save as draft",
-  "sms_mark_read_partial_error":"Error: Could only mark {{successful}}/{{total}} message(s) as read",
-  "sms_mark_read_error": "Error marking messages as read.",
-  "sms_action_dialog_hide_messages": "Hide messages",
-  "sms_action_dialog_show_messages": "Show messages",
-  "sms_action_dialog_confirm_text": "OK",
-  "sms_delete_confirm": "Are you sure you want to delete {{count}} message(s)?",
-  "sms_import_confirm": "Are you sure you want to import {{count}} message(s) from the SIM card?",
-  "sms_import_warning_not_enough_space": "There is only enough space to import {{available}} message(s) out of {{count}}. Would you like to import anyways?",
-  "sms_import_error_not_enough_space": "Not enough space to import messages.",
-  "sms_import_error_generic": "Failed to import messages.",
-  "sms_import_success": "Imported {{count}} message(s) successfully.",
-  "sms_import_complete": "Imported {{success}} message(s) successfully. Failed to import {{fail}} message(s).",
+  "menu": {
+    "home":"Home",
+    "sms":"SMS",
+    "statistics":"Statistics",
+    "services":"Services",
+    "settings":"Settings",
+    "appSettings":"App settings"
+  },
 
-  "sms_save_not_enough_space": "Not enough space to save message.",
+  "home": {
+    "adminOnly": "Cannot view data usage while offline",
+    "cards": {
+      "dataUsageGraph": "Data usage"
+    },
+    "dataUsageAmount": "Received/Sent: {{received}} / {{sent}}"
+  },
 
-  "sms_types_recharge": "Recharge",
-  "sms_types_data": "Data remaining",
-  "sms_types_data_percent": "Percentage data used",
-  "sms_types_activated": "Activated",
-  "sms_types_depleted": "Depleted",
-  "sms_types_ad": "Advert",
+  "sms": {
+    "boxes": {
+      "localInbox": "Inbox",
+      "localSent": "Outbox",
+      "localDraft": "Drafts",
+      "simInbox": "SIM Inbox",
+      "simSent": "SIM Outbox",
+      "simDraft": "SIM Drafts"
+    },
+    "actions": {
+      "newMessage": {
+        "name": "New message"
+      },
+      "delete": {
+        "name": "Delete",
+        "confirm": "Are you sure you want to delete {{count}} message(s)?"
+      },
+      "import": {
+        "name": "Import",
+        "confirm": "Are you sure you want to import {{count}} message(s) from the SIM card?",
+        "notEnoughSpaceWarning": "There is only enough space to import {{available}} message(s) out of {{count}}. Would you like to import anyways?",
+        "notEnoughSpaceError": "Not enough space to import messages.",
+        "genericError": "Failed to import messages.",
+        "success": "Imported {{count}} message(s) successfully.",
+        "complete": "Imported {{success}} message(s) successfully. Failed to import {{fail}} message(s)."
+      },
+      "markAsRead": {
+        "name": "Mark as read",
+        "partialError": "Error: Could only mark {{successful}}/{{total}} message(s) as read",
+        "error": "Error marking messages as read."
+      },
+      "select": {
+        "name": "Select",
+        "dropdownTypesGroup": "SMS Types",
+        "types": {
+          "none": "None",
+          "all": "All",
+          "read": "Read",
+          "unread": "Unread"
+        }
+      }
+    },
+    "adminOnly": "You must have administrator access to view SMS messages.",
+    "firstToLast": "{{first}} - {{last}}",
+    "firstToLastOfTotal": "{{first}} - {{last}} of {{total}}",
+    "empty": "There are no SMSs",
+    "editMessageTooltip": "Edit message",
+    "listHeaders": {
+      "type": "Type",
+      "number": "Number",
+      "content": "Content",
+      "date": "Date"
+    },
+    "messageTypes": {
+      "recharge": "Recharge",
+      "data": "Data remaining",
+      "dataPercent": "Percentage data used",
+      "activated": "Activated",
+      "depleted": "Depleted",
+      "ad": "Advert"
+    },
+    "message": {
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "composeDialog": {
+      "title": "Message",
+      "fields": {
+        "numbers": {
+          "label": "Recipients",
+          "placeholder": "Add a number"
+        },
+        "content": {
+          "label": "Content"
+        }
+      },
+      "characterCount": "Number of characters in this message.",
+      "characterCountMax": "The maximum number of characters per message.",
+      "segmentHelp": "SMS messages are split up into multiple segments of {{longMax}} characters if they exceed {{normalMax}} characters.",
+      "remainingCharactersInSegment": "The number of characters remaining in this segment.",
+      "messageCount": "The number of segments this message will be split up into. In most cases, you will be billed for each segment.",
+      "actions": {
+        "send": "Send",
+        "save": "Save as draft"
+      }
+    },
+    "actionDialog": {
+      "hideMessages": "Hide messages",
+      "showMessages": "Show messages",
+      "confirmText": "OK"
+    },
+    "save": {
+      "notEnoughSpaceError": "Not enough space to save message."
+    },
+    "boxFull": "Your message box is full. To receive new messages, delete some existing ones."
+  },
 
-  "sms_box_full": "Your message box is full. To receive new messages, delete some existing ones.",
+  "services": {
+    "ussdCommand": "USSD Command",
+    "ussdPresets": "USSD Presets",
+    "adminOnly": "You must be in administrator mode to access USSD services."
+  },
 
-  "sms_read": "Read",
-  "sms_unread": "Unread",
+  "settings": {
+    "adminOnly": "You must be in administrator mode to change settings."
+  },
 
-  "services_ussd_command" : "USSD Command",
-  "services_ussd_presets": "USSD Presets",
-  "services_admin_only": "You must be in administrator mode to access USSD services.",
-
-  "dialog_switch_to_basic": "Switch to basic mode",
-  "dialog_retry": "Retry",
-  "dialog_open_settings": "Go to settings",
-  "dialog_go_offline": "Go offline",
-
-  "options_labels_general_loginDetails": "Login details",
-  "options_labels_general_routerUrl": "Router URL",
-  "options_labels_general_username": "Username",
-  "options_labels_general_password": "Password",
-  "options_button_save": "Save",
-  "options_error_ping": "Cannot connect to specified URL.",
-  "options_save_success": "Saved changes",
-  "options_save_error": "Failed to save settings",
-  "options_header": "App settings",
-  "options_tabs_general": "General",
-  "options_tabs_sms": "SMS",
-  "options_labels_general_defaultMode": "Default mode",
-  "options_descriptions_general_defaultMode": "The mode that is the default when you first open Quantum router",
-  "options_labels_general_rememberLogin": "Remember login details",
-  "options_descriptions_general_rememberLogin": "Whether Quantum should save your login details",
-  "options_labels_sms_hideSimBoxes": "Hide SIM boxes",
-  "options_descriptions_sms_hideSimBoxes": "Whether SIM boxes (inbox, sent and draft) should be shown",
-  "options_labels_sms_confirmDialogsToShow": "Confirmation dialogs to show",
-  "options_descriptions_sms_confirmDialogsToShow": "Actions which will show confirmation dialogs before execution",
-  "options_labels_sms_typeIcons": "Message icons",
-  "options_descriptions_sms_typeIcons": "The icons to use for different message types",
-
-  "validation_tag_input_number": "Please only enter numbers.",
-  "validation_tag_input_required":"Please fill in this field.",
-
-  "settings_admin_only": "You must be in administrator mode to change settings.",
-
-  "icon_picker_button": "Choose",
-  "icon_picker_title": "Choose an icon",
+  "appSettings": {
+    "header": "App settings",
+    "tabs": {
+      "general": "General",
+      "sms": "SMS"
+    },
+    "fields": {
+      "general": {
+        "loginDetails": {
+          "label": "Login details"
+        },
+        "routerUrl": {
+          "label": "Router URL"
+        },
+        "username": {
+          "label": "Username"
+        },
+        "password": {
+          "label": "Password"
+        },
+        "defaultMode": {
+          "label": "Default mode",
+          "description": "The mode that is the default when you first open Quantum router"
+        },
+        "rememberLogin": {
+          "label": "Remember login details",
+          "description": "Whether Quantum should save your login details"
+        }
+      },
+      "sms": {
+        "hideSimBoxes": {
+          "label": "Hide SIM boxes",
+          "description": "Whether SIM boxes (inbox, sent and draft) should be shown"
+        },
+        "confirmDialogsToShow": {
+          "label": "Confirmation dialogs to show",
+          "description": "Actions which will show confirmation dialogs before execution"
+        },
+        "typeIcons": {
+          "label": "Message icons",
+          "description": "The icons to use for different message types"
+        }
+      }
+    },
+    "saveButton": "Save",
+    "pingError": "Cannot connect to specified URL.",
+    "saveSuccess": "Saved changes",
+    "saveError": "Failed to save settings"
+  },
 
   "tray": {
     "contextMenu": {

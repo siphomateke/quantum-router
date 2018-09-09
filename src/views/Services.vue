@@ -3,14 +3,14 @@
     <form
       v-if="$adminMode"
       @submit.prevent>
-      <b-field :label="$i18n('services_ussd_command')">
+      <b-field :label="$i18n('services.ussdCommand')">
         <b-input
           v-model="ussd.content"
           type="text"/>
       </b-field>
       <b-field
         v-if="ussd.commands.length > 0"
-        :label="$i18n('services_ussd_presets')">
+        :label="$i18n('services.ussdPresets')">
         <b-select
           :value="ussd.selectedCommand"
           @input="ussdSelectedCommandChanged">
@@ -45,18 +45,18 @@
         :class="{'is-loading': loading}"
         :disabled="ussd.content.length === 0"
         class="button is-primary"
-        @click="send">{{ $i18n('generic_send') }}</button>
+        @click="send">{{ $i18n('generic.send') }}</button>
       <button
         v-show="loading"
         :disabled="cancelling"
         class="button is-danger"
-        @click="cancel">{{ $i18n('generic_cancel') }}</button>
+        @click="cancel">{{ $i18n('generic.cancel') }}</button>
     </form>
     <template v-else>
       <b-message
         type="is-info"
         has-icon>
-        {{ $i18n('services_admin_only') }}
+        {{ $i18n('services.adminOnly') }}
       </b-message>
     </template>
   </div>

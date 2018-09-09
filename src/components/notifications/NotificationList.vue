@@ -22,7 +22,7 @@
           v-if="!loading"
           class="content has-text-grey has-text-centered">
           <p>
-            {{ $i18n('notifications_empty') }}
+            {{ $i18n('notifications.empty') }}
           </p>
         </div>
       </section>

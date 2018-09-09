@@ -78,8 +78,8 @@ export default {
         } else if (e.code === 'invalid_router_url') {
           if (router.config.getUrl().length > 0) {
             dispatch('dialog/warning', {
-              message: i18n.getMessage('invalid_router_url_error', { url: router.config.getUrl() }),
-              confirmText: i18n.getMessage('dialog_open_settings'),
+              message: i18n.getMessage('errors.invalidRouterUrlError', { url: router.config.getUrl() }),
+              confirmText: i18n.getMessage('sms.modeDialog.openSettings'),
               onConfirm: () => {
                 dispatch('openSettingsPage');
               },
@@ -87,8 +87,8 @@ export default {
             });
           } else {
             dispatch('dialog/warning', {
-              message: i18n.getMessage('empty_router_url_error'),
-              confirmText: i18n.getMessage('dialog_open_settings'),
+              message: i18n.getMessage('errors.emptyRouterUrlError'),
+              confirmText: i18n.getMessage('sms.modeDialog.openSettings'),
               onConfirm: () => {
                 dispatch('openSettingsPage');
               },
@@ -121,7 +121,7 @@ export default {
     changeMode({ state, dispatch }, mode) {
       if (mode !== state.mode) {
         dispatch('setMode', mode);
-        Toast.open(i18n.getMessage('changed_mode_to', { mode: i18n.getMessage(`mode_${modeNames[mode]}`) }));
+        Toast.open(i18n.getMessage('changedModeTo', { mode: i18n.getMessage(`modes.${modeNames[mode]}`) }));
       }
     },
     async prepChangeMode({ commit, dispatch }, newMode) {
@@ -139,7 +139,7 @@ export default {
                 commit(types.SET_LOGGING_IN, false);
                 return true;
               } catch (e) {
-                let errorMessage = i18n.getMessage('router_unknown_error_logging_in');
+                let errorMessage = i18n.getMessage('errors.unknownLoginError');
                 if (e instanceof RouterError) {
                   if (e.code === 'api_login_already_login') {
                     return true;
@@ -151,15 +151,15 @@ export default {
                     'api_login_username_pwd_orerrun',
                   ];
                   if (knownErrors.includes(e.code)) {
-                    const actualError = i18n.getMessage(`router_module_error_${e.code}`);
-                    errorMessage = i18n.getMessage('router_error_logging_in', { error: actualError });
+                    const actualError = i18n.getMessage(`errors.routerModule.${e.code}`);
+                    errorMessage = i18n.getMessage('errors.errorWhenLoggingIn', { error: actualError });
                   }
                 } else {
                   dispatch('handleError', e);
                 }
                 dispatch('dialog/warning', {
                   message: errorMessage,
-                  confirmText: i18n.getMessage('dialog_retry'),
+                  confirmText: i18n.getMessage('sms.modeDialog.retry'),
                   onConfirm: () => {
                     dispatch('tryChangeMode', newMode);
                   },
@@ -173,8 +173,8 @@ export default {
             // Handle ping errors
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
               dispatch('dialog/warning', {
-                message: i18n.getMessage('connection_error', { url: router.config.getUrl() }),
-                confirmText: i18n.getMessage('dialog_retry'),
+                message: i18n.getMessage('errors.connectionError', { url: router.config.getUrl() }),
+                confirmText: i18n.getMessage('sms.modeDialog.retry'),
                 onConfirm: () => {
                   dispatch('tryChangeMode', newMode);
                 },

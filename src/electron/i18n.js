@@ -43,4 +43,13 @@ export function getCurrentLanguageData() {
   };
 }
 
+export function waitForTranslationsToLoad() {
+  return new Promise((resolve) => {
+    i18next.on('loaded', function loaded() {
+      resolve();
+      i18next.off('loaded', this);
+    });
+  });
+}
+
 export default i18next;

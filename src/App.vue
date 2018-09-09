@@ -8,27 +8,27 @@
         title="Quantum Router"
         class="column is-2">
         <drawer-item
-          :label="this.$i18n('menu_home')"
+          :label="this.$i18n('menu.home')"
           link="home"
           icon="home"/>
         <drawer-item
-          :label="this.$i18n('menu_sms')"
+          :label="this.$i18n('menu.sms')"
           link="sms"
           icon="comment"/>
         <drawer-item
-          :label="this.$i18n('menu_statistics')"
+          :label="this.$i18n('menu.statistics')"
           link="statistics"
           icon="pie-chart"/>
         <drawer-item
-          :label="this.$i18n('menu_services')"
+          :label="this.$i18n('menu.services')"
           link="services"
           icon="terminal"/>
         <drawer-item
-          :label="this.$i18n('menu_settings')"
+          :label="this.$i18n('menu.settings')"
           link="settings"
           icon="cog"/>
         <drawer-item
-          :label="this.$i18n('menu_app_settings')"
+          :label="this.$i18n('menu.appSettings')"
           link="app-settings"
           icon="sliders"/>
       </drawer>
@@ -37,7 +37,7 @@
           <template slot="toolbar-start">
             <q-toolbar-item
               ref="modeToolbarItem"
-              :title="$i18n('change_mode_tooltip')"
+              :title="$i18n('changeModeTooltip')"
               :color="modeColor"
               icon="bolt">
               <template slot="dropdown">
@@ -48,7 +48,7 @@
                     v-for="mode in modes"
                     :key="mode"
                     :value="mode">
-                    {{ $i18n('mode_'+modeNames[mode]) }}
+                    {{ $i18n('modes.'+modeNames[mode]) }}
                   </q-dropdown-item>
                 </q-dropdown-select>
               </template>
@@ -56,7 +56,7 @@
           </template>
           <template slot="toolbar-end">
             <q-toolbar-item
-              :title="$i18n('notifications_tooltip')"
+              :title="$i18n('notifications.tooltip')"
               :badge="unreadNotifications.length"
               :badge-visible="unreadNotifications.length > 0"
               :mobile-modal="false"
@@ -74,7 +74,7 @@
               </template>
             </q-toolbar-item>
             <q-toolbar-item
-              :title="$i18n('mobile_data_tooltip')"
+              :title="$i18n('mobileDataTooltip')"
               :is-active="mobileDataState"
               icon="plug"/>
             <q-toolbar-item icon="wifi"/>

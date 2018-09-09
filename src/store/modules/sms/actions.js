@@ -216,7 +216,7 @@ export default {
       dispatch('handleError', e, { root: true });
       if (successful > 0) {
         Toast.open({
-          message: i18n.getMessage('sms_mark_read_partial_error', {
+          message: i18n.getMessage('sms.actions.markAsRead.partialError', {
             successful,
             total: ids.length,
           }),
@@ -224,7 +224,7 @@ export default {
         });
       } else {
         Toast.open({
-          message: i18n.getMessage('sms_mark_read_error'),
+          message: i18n.getMessage('sms.actions.markAsRead.error'),
           type: 'is-danger',
         });
       }
@@ -290,8 +290,8 @@ export default {
         props: {
           messages,
           type: 'danger',
-          confirmButton: i18n.getMessage('sms_action_delete'),
-          confirmMessage: i18n.getMessage('sms_delete_confirm', { count: messages.length }),
+          confirmButton: i18n.getMessage('sms.actions.delete.name'),
+          confirmMessage: i18n.getMessage('sms.actions.delete.confirm', { count: messages.length }),
         },
         events: {
           confirm: () => dispatch('deleteSelectedMessages', { box }),
@@ -329,7 +329,7 @@ export default {
       }
       Toast.open({
         type: info.successNumber > 0 && info.failNumber === 0 ? 'is-success' : 'is-dark',
-        message: i18n.getMessage('sms_import_complete', { success: info.successNumber, fail: info.failNumber }),
+        message: i18n.getMessage('sms.actions.import.complete', { success: info.successNumber, fail: info.failNumber }),
       });
     } catch (e) {
       try {
@@ -337,19 +337,19 @@ export default {
           switch (e.code) {
             case 'sms_import_sim_empty':
             // No messages to import
-              Toast.open(i18n.getMessage('sms_import_complete', { success: 0, fail: 0 }));
+              Toast.open(i18n.getMessage('sms.actions.import.complete', { success: 0, fail: 0 }));
               break;
             case 'sms_not_enough_space':
               dispatch('dialog/alert', {
                 type: 'danger',
-                message: i18n.getMessage('sms_import_error_not_enough_space'),
+                message: i18n.getMessage('sms.actions.import.notEnoughSpaceError'),
               }, { root: true });
               break;
             case 'sms_import_invalid_response':
             // Generic unknown error
               dispatch('dialog/alert', {
                 type: 'danger',
-                message: i18n.getMessage('sms_import_error_generic'),
+                message: i18n.getMessage('sms.actions.import.genericError'),
               }, { root: true });
               // TODO: Consider if this should bubble to the global event handler.
               // It may be a bit much having two error messages pop-up
@@ -372,10 +372,10 @@ export default {
     const toImport = getters.simTotal;
     if (!getters.localFull && toImport > available) {
       dispatch('dialog/confirm', {
-        message: i18n.getMessage('sms_import_warning_not_enough_space', { available, count: toImport }),
+        message: i18n.getMessage('sms.actions.import.notEnoughSpaceWarning', { available, count: toImport }),
         type: 'warning',
-        confirmText: i18n.getMessage('generic_yes'),
-        cancelText: i18n.getMessage('generic_no'),
+        confirmText: i18n.getMessage('generic.yes'),
+        cancelText: i18n.getMessage('generic.no'),
         onConfirm: () => {
           dispatch('import');
         },
@@ -393,7 +393,7 @@ export default {
         // This shouldn't happen since the import button gets disabled
         // when the local box is full
         dispatch('dialog/alert', {
-          message: i18n.getMessage('sms_import_error_not_enough_space'),
+          message: i18n.getMessage('sms.actions.import.notEnoughSpaceError'),
           type: 'warning',
         }, { root: true });
       } else {
@@ -405,8 +405,8 @@ export default {
             props: {
               messages,
               type: 'warning',
-              confirmButton: i18n.getMessage('generic_yes'),
-              confirmMessage: i18n.getMessage('sms_import_confirm', getters.simTotal),
+              confirmButton: i18n.getMessage('generic.yes'),
+              confirmMessage: i18n.getMessage('sms.actions.import.confirm', getters.simTotal),
             },
             events: {
               confirm: () => {
@@ -439,7 +439,7 @@ export default {
       if (e instanceof router.errors.RouterError && e.code === 'api_sms_not_enough_space') {
         dispatch('dialog/alert', {
           type: 'danger',
-          message: i18n.getMessage('sms_save_not_enough_space'),
+          message: i18n.getMessage('sms.save.notEnoughSpaceError'),
         }, { root: true });
       } else {
         dispatch('handleError', e, { root: true });

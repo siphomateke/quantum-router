@@ -1,14 +1,14 @@
 <template>
   <div class="page-content">
     <div class="padding-container">
-      <h4 class="title is-4">{{ $i18n('options_header') }}</h4>
+      <h4 class="title is-4">{{ $i18n('appSettings.header') }}</h4>
     </div>
     <form
       ref="form"
       @submit.prevent="submit">
       <b-tabs v-if="loadedSettings">
-        <b-tab-item :label="$i18n('options_tabs_general')">
-          <config-field :label="$i18n('options_labels_general_routerUrl')">
+        <b-tab-item :label="$i18n('appSettings.tabs.general')">
+          <config-field :label="$i18n('appSettings.fields.general.routerUrl.label')">
             <b-field
               :type="validation.routerUrl.type"
               :message="validation.routerUrl.message">
@@ -19,13 +19,13 @@
                 @blur="onBlurRouterUrl"/>
             </b-field>
           </config-field>
-          <config-field :label="$i18n('options_labels_general_loginDetails')">
-            <b-field :label="$i18n('options_labels_general_username')">
+          <config-field :label="$i18n('appSettings.fields.general.loginDetails.label')">
+            <b-field :label="$i18n('appSettings.fields.general.username.label')">
               <b-input
                 v-model="settings.general.username"
                 type="text"/>
             </b-field>
-            <b-field :label="$i18n('options_labels_general_password')">
+            <b-field :label="$i18n('appSettings.fields.general.password.label')">
               <b-input
                 v-model="settings.general.password"
                 type="password"
@@ -33,46 +33,46 @@
             </b-field>
           </config-field>
           <config-field
-            :label="$i18n('options_labels_general_defaultMode')"
-            :description="$i18n('options_descriptions_general_defaultMode')">
+            :label="$i18n('appSettings.fields.general.defaultMode.label')"
+            :description="$i18n('appSettings.fields.general.defaultMode.description')">
             <template v-for="mode in modes">
               <b-radio
                 :key="mode"
                 v-model="settings.general.defaultMode"
                 :native-value="mode">
-                {{ $i18n('mode_'+modeNames[mode]) }}
+                {{ $i18n('modes.'+modeNames[mode]) }}
               </b-radio>
             </template>
           </config-field>
           <config-field
-            :label="$i18n('options_labels_general_rememberLogin')"
-            :description="$i18n('options_descriptions_general_rememberLogin')">
+            :label="$i18n('appSettings.fields.general.rememberLogin.label')"
+            :description="$i18n('appSettings.fields.general.rememberLogin.description')">
             <b-checkbox v-model="settings.general.rememberLoginDetails"/>
           </config-field>
         </b-tab-item>
-        <b-tab-item :label="$i18n('options_tabs_sms')">
+        <b-tab-item :label="$i18n('appSettings.tabs.sms')">
           <config-field
-            :label="$i18n('options_labels_sms_hideSimBoxes')"
-            :description="$i18n('options_descriptions_sms_hideSimBoxes')">
+            :label="$i18n('appSettings.fields.sms.hideSimBoxes.label')"
+            :description="$i18n('appSettings.fields.sms.hideSimBoxes.description')">
             <b-checkbox v-model="settings.sms.hideSimBoxes"/>
           </config-field>
           <config-field
-            :label="$i18n('options_labels_sms_confirmDialogsToShow')"
-            :description="$i18n('options_descriptions_sms_confirmDialogsToShow')">
+            :label="$i18n('appSettings.fields.sms.confirmDialogsToShow.label')"
+            :description="$i18n('appSettings.fields.sms.confirmDialogsToShow.description')">
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="delete">
-              {{ $i18n('sms_action_delete') }}
+              {{ $i18n('sms.actions.delete.name') }}
             </b-checkbox>
             <b-checkbox
               v-model="settings.sms.confirmDialogsToShow"
               native-value="import">
-              {{ $i18n('sms_action_import') }}
+              {{ $i18n('sms.actions.import.name') }}
             </b-checkbox>
           </config-field>
           <config-field
-            :label="$i18n('options_labels_sms_typeIcons')"
-            :description="$i18n('options_descriptions_sms_typeIcons')">
+            :label="$i18n('appSettings.fields.sms.typeIcons.label')"
+            :description="$i18n('appSettings.fields.sms.typeIcons.description')">
             <b-field
               v-for="smsType in smsTypes"
               :key="smsType"
@@ -88,7 +88,7 @@
           :class="{'is-loading': saving || formLoading}"
           class="button is-primary"
           type="submit">
-          {{ $i18n('options_button_save') }}
+          {{ $i18n('appSettings.saveButton') }}
         </button>
       </div>
     </form>
@@ -167,11 +167,11 @@ export default {
         try {
           await Promise.all(promises);
           await this.$store.dispatch('settings/save');
-          this.showMessage(this.$i18n('options_save_success'), 'is-success');
+          this.showMessage(this.$i18n('appSettings.saveSuccess'), 'is-success');
           this.globalBus.$emit('options-saved');
           this.$emit('save');
         } catch (e) {
-          this.showMessage(this.$i18n('options_save_error'), 'is-danger');
+          this.showMessage(this.$i18n('appSettings.saveError'), 'is-danger');
           this.$store.dispatch('handleError', e);
         } finally {
           this.saving = false;
@@ -188,7 +188,7 @@ export default {
         this.validation.routerUrl.message = '';
       } catch (e) {
         this.validation.routerUrl.type = 'is-danger';
-        this.validation.routerUrl.message = this.$i18n('options_error_ping');
+        this.validation.routerUrl.message = this.$i18n('appSettings.pingError');
       } finally {
         this.pinging = false;
       }

@@ -27,7 +27,7 @@
         <b-message
           type="is-info"
           has-icon>
-          {{ $i18n('settings_admin_only') }}
+          {{ $i18n('settings.adminOnly') }}
         </b-message>
       </div>
     </template>

@@ -16,7 +16,7 @@
           slot-scope="props"
           class="card-header">
           <p class="card-header-title">
-            {{ $i18n(props.open ? 'sms_action_dialog_hide_messages' : 'sms_action_dialog_show_messages') }}
+            {{ $i18n(props.open ? 'sms.actionDialog.hideMessages' : 'sms.actionDialog.showMessages') }}
           </p>
           <a class="card-header-icon">
             <b-icon
@@ -51,7 +51,7 @@ export default {
     },
     confirmButton: {
       type: String,
-      default: i18n.getMessage('sms_action_dialog_confirm_text'),
+      default: i18n.getMessage('sms.actionDialog.confirmText'),
     },
     confirmMessage: {
       type: String,

@@ -74,11 +74,11 @@ export default {
     },
     confirmText: {
       type: String,
-      default: () => i18n.getMessage('generic_ok'),
+      default: () => i18n.getMessage('generic.ok'),
     },
     cancelText: {
       type: String,
-      default: () => i18n.getMessage('generic_cancel'),
+      default: () => i18n.getMessage('generic.cancel'),
     },
     canCancel: {
       type: Boolean,
