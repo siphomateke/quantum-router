@@ -22,10 +22,10 @@
         <button
           v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
           :key="icon.id"
-          :class="{'is-primary': icon.id === value.id}"
+          :class="{'is-primary': icon.id === value.id, 'is-transparent': icon.id !== value.id}"
           :title="icon.name"
           type="button"
-          class="button is-white"
+          class="button"
           @click="() => select(icon.id, iconPack.id, icon.name)">
           <b-icon
             :pack="iconPack.id"
@@ -114,17 +114,17 @@ export default {
 </script>
 
 <style lang="scss">
-  .modal-card-tabs.b-tabs {
-    background-color: white;
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-height: 0;
+.modal-card-tabs.b-tabs {
+  background-color: white;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: 0;
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    .tab-content {
-      overflow: auto;
-    }
+  .tab-content {
+    overflow: auto;
   }
+}
 </style>
