@@ -3,15 +3,15 @@
     <div class="topbar">
       <div class="topbar-left">
         <button
+          :title="$i18n('topbar.tooltips.toggleSidebar')"
           class="button is-transparent is-inverted"
-          title="Toggle sidebar"
           @click="$emit('toggleSidebar')">
           <b-icon icon="bars"/>
         </button>
       </div>
       <div class="topbar-right">
         <toolbar-item
-          :title="$i18n('notifications.tooltip')"
+          :title="$i18n('topbar.tooltips.notifications')"
           :badge="unreadNotifications.length"
           :badge-visible="unreadNotifications.length > 0"
           icon="bell"
@@ -27,13 +27,13 @@
           </template>
         </toolbar-item>
         <toolbar-item
-          :title="$i18n('mobileDataTooltip')"
+          :title="$i18n('topbar.tooltips.mobileData')"
           :is-active="mobileDataState"
           icon="plug"/>
         <toolbar-item icon="wifi"/>
         <toolbar-item
           ref="modeToolbarItem"
-          :title="$i18n('changeModeTooltip')"
+          :title="$i18n('topbar.tooltips.changeMode')"
           :color="modeColor"
           icon="bolt">
           <template slot="dropdown">

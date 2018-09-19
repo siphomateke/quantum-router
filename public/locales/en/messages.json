@@ -40,13 +40,9 @@
     "goOffline": "Go offline"
   },
 
-  "changeModeTooltip": "Change mode",
   "changedModeTo": "Changed mode to: {{mode}}",
 
-  "mobileDataTooltip": "Mobile data status",
-
   "notifications": {
-    "tooltip": "Notifications",
     "title":"Notifications",
     "empty":"No notifications"
   },
@@ -61,6 +57,15 @@
   "iconPicker": {
     "button": "Choose",
     "title": "Choose an icon"
+  },
+
+  "topbar": {
+    "tooltips": {
+      "toggleSidebar": "Toggle sidebar",
+      "notifications": "Notifications",
+      "changeMode": "Change mode",
+      "mobileData": "Mobile data status"
+    }
   },
 
   "menu": {
