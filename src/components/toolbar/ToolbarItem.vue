@@ -81,11 +81,11 @@ export default {
     },
     position: {
       type: String,
-      default: null,
+      default: 'is-bottom-left',
     },
     mobileModal: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   methods: {

@@ -59,9 +59,7 @@
               :title="$i18n('notifications.tooltip')"
               :badge="unreadNotifications.length"
               :badge-visible="unreadNotifications.length > 0"
-              :mobile-modal="false"
               icon="bell"
-              position="is-bottom-left"
               class="notification-dropdown">
               <template slot="dropdown">
                 <b-dropdown-item
