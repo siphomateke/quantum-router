@@ -45,7 +45,7 @@
                 <b-icon
                   :pack="smsTypeIcons[smsType].pack"
                   :icon="smsTypeIcons[smsType].id"/>
-                <span style="padding-left:0.5em;">{{ getSmsTypeName(smsType) }}</span>
+                <span class="text-after-icon">{{ getSmsTypeName(smsType) }}</span>
               </b-dropdown-item>
             </b-dropdown>
           </p>

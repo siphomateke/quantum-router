@@ -30,7 +30,7 @@
             </template>
           </b-table-column>
           <b-table-column label="Security mode">
-            <q-select
+            <FormSelect
               v-if="editMode"
               :options="options.basic.table.security"
               v-model="props.row.security"/>
@@ -68,13 +68,13 @@
       <h3 class="title is-3">Advanced settings</h3>
       <div class="columns">
         <div class="column">
-          <q-select
+          <FormSelect
             :options="options.advanced.channel"
             v-model="settings.advanced.channel"
             label="Channel"/>
         </div>
         <div class="column">
-          <q-select
+          <FormSelect
             :options="options.advanced.wifiBandwidth"
             v-model="settings.advanced.wifiBandwidth"
             label="WiFi Bandwidth"/>
@@ -92,12 +92,12 @@
 </template>
 
 <script>
-import Select from '@/components/form/Select.vue';
+import FormSelect from '@/components/form/FormSelect.vue';
 
 export default {
   name: 'SettingsWlan',
   components: {
-    'q-select': Select,
+    FormSelect,
   },
   data() {
     return {

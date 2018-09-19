@@ -3,115 +3,30 @@
     <b-loading
       :active.sync="loading"
       :can-cancel="false"/>
-    <div class="app-wrapper columns is-gapless">
-      <drawer
-        title="Quantum Router"
-        class="column is-2">
-        <drawer-item
-          :label="this.$i18n('menu.home')"
-          link="home"
-          icon="home"/>
-        <drawer-item
-          :label="this.$i18n('menu.sms')"
-          link="sms"
-          icon="comment"/>
-        <drawer-item
-          :label="this.$i18n('menu.statistics')"
-          link="statistics"
-          icon="pie-chart"/>
-        <drawer-item
-          :label="this.$i18n('menu.services')"
-          link="services"
-          icon="terminal"/>
-        <drawer-item
-          :label="this.$i18n('menu.settings')"
-          link="settings"
-          icon="cog"/>
-        <drawer-item
-          :label="this.$i18n('menu.appSettings')"
-          link="app-settings"
-          icon="sliders"/>
-      </drawer>
-      <div class="column">
-        <q-toolbar>
-          <template slot="toolbar-start">
-            <q-toolbar-item
-              ref="modeToolbarItem"
-              :title="$i18n('changeModeTooltip')"
-              :color="modeColor"
-              icon="bolt">
-              <template slot="dropdown">
-                <q-dropdown-select
-                  :value="$mode"
-                  @input="userChangedMode">
-                  <q-dropdown-item
-                    v-for="mode in modes"
-                    :key="mode"
-                    :value="mode">
-                    {{ $i18n('modes.'+modeNames[mode]) }}
-                  </q-dropdown-item>
-                </q-dropdown-select>
-              </template>
-            </q-toolbar-item>
-          </template>
-          <template slot="toolbar-end">
-            <q-toolbar-item
-              :title="$i18n('notifications.tooltip')"
-              :badge="unreadNotifications.length"
-              :badge-visible="unreadNotifications.length > 0"
-              :mobile-modal="false"
-              icon="bell"
-              position="is-bottom-left"
-              class="notification-dropdown">
-              <template slot="dropdown">
-                <b-dropdown-item
-                  custom
-                  paddingless>
-                  <q-notifications-popup
-                    :list="unreadNotifications"
-                    :loading="loadingNotifications"/>
-                </b-dropdown-item>
-              </template>
-            </q-toolbar-item>
-            <q-toolbar-item
-              :title="$i18n('mobileDataTooltip')"
-              :is-active="mobileDataState"
-              icon="plug"/>
-            <q-toolbar-item icon="wifi"/>
-          </template>
-        </q-toolbar>
-        <div class="page-wrapper">
-          <keep-alive>
-            <router-view/>
-          </keep-alive>
-        </div>
+    <TheTopbar @toggleSidebar="toggleSidebar"/>
+    <div class="app-wrapper">
+      <TheSidebar :collapsed.sync="sidebarCollapsed"/>
+      <div class="page-wrapper">
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Drawer from '@/components/drawer/Drawer.vue';
-import DrawerItem from '@/components/drawer/DrawerItem.vue';
-import Toolbar from '@/components/toolbar/Toolbar.vue';
-import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
-import DropdownItem from '@/components/dropdown/DropdownItem.vue';
-import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
-import { modes, modeNames } from '@/store';
 import { mapState, mapGetters, mapActions } from 'vuex';
-import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
+import { modes } from '@/store';
+import TheTopbar from '@/components/topbar/TheTopbar.vue';
+import TheSidebar from '@/components/sidebar/TheSidebar.vue';
 
 // TODO: Finish moving to Vuex
 export default {
   name: 'App',
   components: {
-    drawer: Drawer,
-    'drawer-item': DrawerItem,
-    'q-toolbar': Toolbar,
-    'q-toolbar-item': ToolbarItem,
-    'q-dropdown-item': DropdownItem,
-    'q-dropdown-select': DropdownSelect,
-    'q-notifications-popup': NotificationsPopup,
+    TheSidebar,
+    TheTopbar,
   },
   data() {
     return {
@@ -119,41 +34,14 @@ export default {
         graph: 1000,
         basic: 3000,
       },
+      sidebarCollapsed: false,
     };
   },
   computed: {
     ...mapState({
       loading: state => state.loading,
-      allNotifications: state => state.notifications.all,
-      boxes: state => state.sms.boxes,
-      gettingSmsList: state => state.gettingSmsList,
-      mobileDataState: state => state.settings.dialup.mobileData,
       internalSettings: state => state.settings.internal,
     }),
-    ...mapGetters({
-      modeName: 'modeName',
-    }),
-    unreadNotifications() {
-      return [...this.$store.getters['notifications/unread']].reverse();
-    },
-    loadingNotifications() {
-      return this.allNotifications.length === 0 && this.gettingSmsList;
-    },
-    // needed to send imported modes to html
-    modes: () => modes,
-    modeNames: () => modeNames,
-    modeColor() {
-      switch (this.$mode) {
-        case modes.OFFLINE:
-          return '#f00';
-        case modes.BASIC:
-          return '#ffa500';
-        case modes.ADMIN:
-          return '#0f0';
-        default:
-          return null;
-      }
-    },
   },
   watch: {
     $mode(val, oldVal) {
@@ -208,11 +96,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      setMode: 'setMode',
       tryChangeMode: 'tryChangeMode',
-      addNotifications: 'notifications/add',
       loadNotifications: 'notifications/load',
-      getSmsCount: 'sms/getCount',
     }),
     startRefreshCycle() {
       for (const name of Object.keys(this.refreshIntervals)) {
@@ -224,8 +109,8 @@ export default {
         func();
       }
     },
-    userChangedMode(newMode) {
-      this.tryChangeMode(newMode);
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
     },
   },
 };

@@ -5,7 +5,7 @@
         <span class="popup-card-title">{{ $i18n('notifications.title') }}</span>
       </header>
       <section class="popup-card-body">
-        <q-notification-list
+        <notification-list
           :list="list"
           :loading="loading"/>
       </section>
@@ -19,7 +19,7 @@ import NotificationList from '@/components/notifications/NotificationList.vue';
 export default {
   name: 'NotificationsPopup',
   components: {
-    'q-notification-list': NotificationList,
+    NotificationList,
   },
   props: {
     list: {
@@ -35,20 +35,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .notification-popup{
-    .popup-card{
-      .popup-card-head{
-        border-bottom: 1px solid #dbdbdb;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        background-color: #f5f5f5;
-        padding: 15px;
-        .popup-card-title{
-          color: #363636;
-          font-weight: bold;
-          line-height: 1;
-        }
-      }
-    }
+.notification-popup .popup-card .popup-card-head{
+  border-bottom: 1px solid #dbdbdb;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: #f5f5f5;
+  padding: 15px;
+  .popup-card-title{
+    color: #363636;
+    font-weight: bold;
+    line-height: 1;
   }
+}
 </style>

@@ -73,7 +73,7 @@ import i18n from '@/platform/i18n';
 import IconPickerModal from './IconPickerModal.vue';
 
 export default {
-  name: 'QIconPicker',
+  name: 'IconPicker',
   components: {
     IconPickerModal,
   },

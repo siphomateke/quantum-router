@@ -1,8 +1,8 @@
 <template>
   <div class="q-notification">
-    <span class="q-title">{{ title }}</span>
-    <span class="q-subtitle"><time :datetime="machineDate">{{ time }}</time></span>
-    <div class="q-message">{{ message }}</div>
+    <span class="notification-title">{{ title }}</span>
+    <span class="notification-subtitle"><time :datetime="machineDate">{{ time }}</time></span>
+    <div class="notification-message">{{ message }}</div>
     <progress
       v-if="progress"
       :value="progress"
@@ -16,7 +16,7 @@ import moment from 'moment';
 import { momentFormat } from '@/utils';
 
 export default {
-  name: 'QNotification',
+  name: 'Notification',
   props: {
     title: {
       type: String,
@@ -85,19 +85,15 @@ export default {
     border-bottom: 1px solid #eee;
     padding:0.5em 1em;
 
-    .q-title{
+    .notification-title{
       font-weight: bold;
       font-size: 1em;
     }
 
-    .q-subtitle {
+    .notification-subtitle {
       font-size: 1em;
       color: #7f7f7f;
       float: right;
-    }
-
-    .q-message{
-
     }
   }
 </style>

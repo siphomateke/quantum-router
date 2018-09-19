@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'QDropdownSelect',
+  name: 'DropdownSelect',
   props: {
     value: {
       type: [String, Number, Boolean, Object, Array, Symbol, Function],

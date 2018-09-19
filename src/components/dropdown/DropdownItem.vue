@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'QDropdownItem',
+  name: 'DropdownItem',
   props: {
     value: {
       type: [String, Number, Boolean, Object, Array, Symbol, Function],

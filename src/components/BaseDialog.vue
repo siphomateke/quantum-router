@@ -54,7 +54,7 @@
 import i18n from '@/platform/i18n';
 
 export default {
-  name: 'QDialog',
+  name: 'BaseDialog',
   props: {
     title: {
       type: String,

@@ -40,7 +40,10 @@
 </template>
 
 <script>
+import slotsMixin from '@/mixins/slots';
+
 export default {
+  mixins: [slotsMixin],
   props: {
     items: {
       type: Array,
@@ -53,9 +56,6 @@ export default {
     };
   },
   methods: {
-    checkSlot(slotName) {
-      return typeof this.$slots[slotName] !== 'undefined';
-    },
     navToggle() {
       this.isActive = !this.isActive;
     },

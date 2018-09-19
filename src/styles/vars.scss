@@ -36,20 +36,16 @@ $link-focus-border: $primary;
 
 /* Custom colors
 --------------------------------------*/
-$drawer-header-color: #F6F7F7;
-$drawer-background-color: #333645;
+$sidebar-background-color: #333645;
+$sidebar-item-color: #b1c5cc;
+$sidebar-item-active-background-color: #202334;
+$sidebar-item-active-color: #F6F7F7;
+$sidebar-item-hover-background-color: lighten(#333645, 5);
+$sidebar-z-index: 10;
 
-$drawer-item-color: #b1c5cc;
-$drawer-item-active-background-color: #202334;
-$drawer-item-active-color: #F6F7F7;
-$drawer-item-hover-background-color: lighten(#333645, 5);
-
-// Toolbar
-$toolbar-background-color: #fff;
-$toolbar-border-color: #dddee0;
-$toolbar-item-color: #bdc4ca;
-$toolbar-item-active-color: $success;
-$toolbar-item-hover-color: darken($toolbar-item-color, 20);
+// Topbar
+$topbar-background-color: darken($sidebar-background-color, 10%);
+$topbar-item-active-color: $success;
 
 // Page
 $page-background-color: #eee;

@@ -39,7 +39,7 @@
 // TODO: Only show tabs if there is more than one iconPack
 // TODO: Don't remake modal everytime it's opened, use a global instance
 export default {
-  name: 'QIconPickerModal',
+  name: 'IconPickerModal',
   props: {
     iconPacks: {
       type: Array,

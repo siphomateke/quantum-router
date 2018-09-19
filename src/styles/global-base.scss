@@ -7,13 +7,34 @@
 
 @import "~font-awesome/css/font-awesome.min.css";
 
+html {
+  overflow-y: hidden;
+}
+
+html, body, #app, .app-wrapper, .page-wrapper {
+  height: 100%;
+}
+
 body {
   background: $page-background-color;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
 // For use in App.vue. Is a wrapper for all pages
 .page-wrapper {
   position: relative;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .page-content {
@@ -31,12 +52,6 @@ body {
   z-index: 1;
 }
 
-.notification-dropdown .dropdown-content{
-  box-shadow: 0 0 15px rgba(0,0,0,0.18);
-  border: solid 1px rgba(10,10,10,0.2);
-  padding: 0;
-}
-
 // TODO: Give this a better name and put it in a better place
 .help-cursor {
   cursor: help;
@@ -49,4 +64,8 @@ body {
   &:after {
     @include loader;
   }
+}
+
+.text-after-icon {
+  padding-left: 1em;
 }

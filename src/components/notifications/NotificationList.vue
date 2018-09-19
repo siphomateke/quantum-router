@@ -1,8 +1,7 @@
 <template>
   <div
     :class="{'is-loading': loading}"
-    class="q-notification-list"
-    style="width:400px;max-height:500px;overflow-y:scroll;">
+    class="notification-list">
     <template v-if="list.length>0">
       <notification
         v-for="(n, key) in list"
@@ -34,9 +33,9 @@
 import Notification from './Notification.vue';
 
 export default {
-  name: 'QNotificationList',
+  name: 'NotificationList',
   components: {
-    notification: Notification,
+    Notification,
   },
   props: {
     list: {
@@ -52,10 +51,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '~styles/vars.scss';
-  @import "~bulma/sass/utilities/mixins";
+@import "~styles/vars.scss";
+@import "~bulma/sass/utilities/mixins";
 
-  .q-notification-list.is-loading {
+.notification-list {
+  min-width: 400px;
+  max-height: 500px;
+  overflow-y: scroll;
+  &.is-loading {
     position: relative;
     pointer-events: none;
     opacity: 0.5;
@@ -69,4 +72,5 @@ export default {
       border-width: 0.25em;
     }
   }
+}
 </style>

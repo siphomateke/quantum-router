@@ -57,7 +57,7 @@ export default new Router({
     },
     {
       path: '/app-settings',
-      name: 'app-settings',
+      name: 'appSettings',
       component: AppSettings,
     },
   ],
