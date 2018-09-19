@@ -133,3 +133,10 @@ export default {
 }
 </style>
 
+<style lang="scss">
+.notification-dropdown .dropdown-content{
+  box-shadow: 0 0 15px rgba(0,0,0,0.18);
+  border: solid 1px rgba(10,10,10,0.2);
+  padding: 0;
+}
+</style>
