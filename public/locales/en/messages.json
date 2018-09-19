@@ -9,9 +9,9 @@
   },
 
   "modes": {
-    "offline":"Offline",
-    "basic":"Basic",
-    "admin":"Admin"
+    "offline": "Offline",
+    "basic": "Basic",
+    "admin": "Admin"
   },
 
   "errors": {
@@ -43,8 +43,8 @@
   "changedModeTo": "Changed mode to: {{mode}}",
 
   "notifications": {
-    "title":"Notifications",
-    "empty":"No notifications"
+    "title": "Notifications",
+    "empty": "No notifications"
   },
 
   "validation": {
@@ -69,12 +69,12 @@
   },
 
   "menu": {
-    "home":"Home",
-    "sms":"SMS",
-    "statistics":"Statistics",
-    "services":"Services",
-    "settings":"Settings",
-    "appSettings":"App settings"
+    "home": "Home",
+    "sms": "SMS",
+    "statistics": "Statistics",
+    "services": "Services",
+    "settings": "Settings",
+    "appSettings": "App settings"
   },
 
   "home": {
