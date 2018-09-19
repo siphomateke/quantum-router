@@ -5,14 +5,16 @@
     :class="{'active': isActive}"
     :style="{color: color}"
     class="toolbar-item">
-    <b-icon
-      v-if="icon"
-      :icon="icon"
-      pack="fa"
-      class="fa-fw"/> {{ label }}
     <div
-      v-if="badgeVisible"
-      class="badge">{{ badge }}</div>
+      :data-badge="badgeVisible ? badge : false"
+      :class="{badge: badgeVisible}">
+      <b-icon
+        v-if="icon"
+        :icon="icon"
+        pack="fa"
+        class="fa-fw"/>
+      {{ label }}
+    </div>
     <slot/>
   </router-link>
   <b-dropdown
@@ -29,14 +31,16 @@
       :to="{ name: link }"
       :style="{color: color}"
       class="toolbar-item-trigger">
-      <b-icon
-        v-if="icon"
-        :icon="icon"
-        pack="fa"
-        class="fa-fw"/> {{ label }}
       <div
-        v-if="badgeVisible"
-        class="badge">{{ badge }}</div>
+        :data-badge="badgeVisible ? badge : false"
+        :class="{badge: badgeVisible}">
+        <b-icon
+          v-if="icon"
+          :icon="icon"
+          pack="fa"
+          class="fa-fw"/>
+        {{ label }}
+      </div>
       <slot/>
     </router-link>
     <slot name="dropdown"/>

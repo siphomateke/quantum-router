@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "buefy": "^0.6.6",
+    "bulma-badge": "^2.0.0",
     "chart.js": "^2.7.2",
     "dotty": "^0.1.0",
     "electron": "^2.0.2",
