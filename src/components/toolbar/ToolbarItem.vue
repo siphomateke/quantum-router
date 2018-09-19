@@ -44,8 +44,11 @@
 </template>
 
 <script>
+import slotsMixin from '@/mixins/slots';
+
 export default {
   name: 'QToolbarItem',
+  mixins: [slotsMixin],
   props: {
     icon: {
       type: String,
@@ -89,9 +92,6 @@ export default {
     },
   },
   methods: {
-    checkSlot(slotName) {
-      return typeof this.$slots[slotName] !== 'undefined';
-    },
     input(value) {
       this.$emit('input', value);
     },

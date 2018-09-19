@@ -12,16 +12,11 @@
 </template>
 
 <script>
+import slotsMixin from '@/mixins/slots';
+
 export default {
   name: 'QToolbar',
-  data() {
-    return { };
-  },
-  methods: {
-    checkSlot(slotName) {
-      return typeof this.$slots[slotName] !== 'undefined';
-    },
-  },
+  mixins: [slotsMixin],
 };
 </script>
 
