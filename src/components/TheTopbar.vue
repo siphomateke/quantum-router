@@ -3,7 +3,7 @@
     <div class="topbar">
       <div class="topbar-left">
         <button
-          class="button is-inverted"
+          class="button is-transparent is-inverted"
           title="Toggle sidebar"
           @click="$emit('toggleSidebar')">
           <b-icon icon="bars"/>

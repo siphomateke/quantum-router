@@ -1,1 +1,52 @@
 @import "~bulma-badge/src/sass/index.sass";
+
+// Buttons
+$button-transparent-color: $text;
+$button-transparent-color-inverted: $text-invert;
+$button-transparent-hover-background-color: rgba(0, 0, 0, 0.2);
+
+@mixin button-transparent($color, $color-invert) {
+  background-color: transparent;
+  border-color: transparent;
+  color: $color;
+
+  &:hover,
+  &.is-hovered,
+  &:focus,
+  &.is-focused {
+    background-color: $button-transparent-hover-background-color;
+    color: $color;
+  }
+
+  &:active,
+  &.is-active {
+    background-color: darken($button-transparent-hover-background-color, 5%);
+    color: $color;
+  }
+
+  &.is-inverted {
+    color: $color-invert;
+  }
+}
+
+.button.is-transparent {
+  @include button-transparent(
+    $button-transparent-color,
+    $button-transparent-color-inverted
+  );
+
+  &[disabled] {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+
+    &.is-#{$name} {
+      @include button-transparent($color, $color-invert);
+    }
+  }
+}

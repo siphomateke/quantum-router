@@ -4,7 +4,7 @@
     :to="{ name: link }"
     :class="{'active': isActive}"
     :style="{color: color}"
-    class="toolbar-item button is-inverted">
+    class="toolbar-item button is-transparent is-inverted">
     <div
       :data-badge="badgeVisible ? badge : false"
       :class="{badge: badgeVisible}">
@@ -29,7 +29,7 @@
       slot="trigger"
       :to="{ name: link }"
       :style="{color: color}"
-      class="toolbar-item-trigger button is-inverted">
+      class="toolbar-item-trigger button is-transparent is-inverted">
       <div
         :data-badge="badgeVisible ? badge : false"
         :class="{badge: badgeVisible}">
