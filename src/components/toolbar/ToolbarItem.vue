@@ -4,7 +4,7 @@
     :to="{ name: link }"
     :class="{'active': isActive}"
     :style="{color: color}"
-    class="toolbar-item">
+    class="toolbar-item button is-inverted">
     <div
       :data-badge="badgeVisible ? badge : false"
       :class="{badge: badgeVisible}">
@@ -19,7 +19,6 @@
   </router-link>
   <b-dropdown
     v-else
-    ref="dropdown"
     :value="value"
     :position="position"
     :mobile-modal="mobileModal"
@@ -30,7 +29,7 @@
       slot="trigger"
       :to="{ name: link }"
       :style="{color: color}"
-      class="toolbar-item-trigger">
+      class="toolbar-item-trigger button is-inverted">
       <div
         :data-badge="badgeVisible ? badge : false"
         :class="{badge: badgeVisible}">
@@ -106,15 +105,7 @@ export default {
 <style lang="scss" scoped>
 @import '~styles/vars.scss';
 
-.toolbar-item{
-  position: relative;
-  padding: 0.5rem 1rem;
-  align-items: center;
-  display: flex;
-  line-height: 1.5;
-  position: relative;
-  color: $toolbar-item-color;
-
+.button.toolbar-item{
   &:hover{
     color: $toolbar-item-hover-color;
   }
