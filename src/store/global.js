@@ -56,7 +56,7 @@ export default {
   actions: {
     openSettingsPage() {
       vueRouter.push({
-        name: 'app-settings',
+        name: 'appSettings',
       });
     },
     handleError({ dispatch }, e) {
