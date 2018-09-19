@@ -1,5 +1,5 @@
 <template>
-  <q-dialog
+  <BaseDialog
     :title="this.$i18n('sms.composeDialog.title')"
     :confirm-text="this.$i18n('sms.composeDialog.actions.send')"
     @confirm="send"
@@ -60,11 +60,11 @@
         class="button"
         @click="save">{{ this.$i18n('sms.composeDialog.actions.save') }}</button>
     </template>
-  </q-dialog>
+  </BaseDialog>
 </template>
 
 <script>
-import Dialog from '@/components/dialogs/Dialog.vue';
+import BaseDialog from '@/components/BaseDialog.vue';
 
 /**
  * Used for creating, editing and sending sms messages
@@ -72,7 +72,7 @@ import Dialog from '@/components/dialogs/Dialog.vue';
 export default {
   name: 'SmsDialog',
   components: {
-    [Dialog.name]: Dialog,
+    BaseDialog,
   },
   props: {
     id: {

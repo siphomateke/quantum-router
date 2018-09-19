@@ -16,7 +16,7 @@ import moment from 'moment';
 import { momentFormat } from '@/utils';
 
 export default {
-  name: 'QNotification',
+  name: 'Notification',
   props: {
     title: {
       type: String,

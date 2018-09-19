@@ -1,5 +1,5 @@
 <template>
-  <q-dialog
+  <BaseDialog
     v-bind="$attrs"
     :confirm-text="confirmButton"
     @confirm="confirm"
@@ -29,19 +29,19 @@
         </div>
       </b-collapse>
     </template>
-  </q-dialog>
+  </BaseDialog>
 </template>
 
 <script>
 import SmsList from '@/components/sms/SmsList.vue';
-import Dialog from '@/components/dialogs/Dialog.vue';
+import BaseDialog from '@/components/BaseDialog.vue';
 import i18n from '@/platform/i18n';
 
 export default {
-  name: 'QSmsActionDialog',
+  name: 'SmsActionDialog',
   components: {
     SmsList,
-    [Dialog.name]: Dialog,
+    BaseDialog,
   },
   inheritAttrs: false,
   props: {

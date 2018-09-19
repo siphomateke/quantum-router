@@ -33,9 +33,9 @@
 import Notification from './Notification.vue';
 
 export default {
-  name: 'QNotificationList',
+  name: 'NotificationList',
   components: {
-    notification: Notification,
+    Notification,
   },
   props: {
     list: {

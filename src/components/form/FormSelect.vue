@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'QSelect',
+  name: 'FormSelect',
   props: {
     label: {
       type: String,

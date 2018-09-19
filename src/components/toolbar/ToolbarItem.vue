@@ -50,7 +50,7 @@
 import slotsMixin from '@/mixins/slots';
 
 export default {
-  name: 'QToolbarItem',
+  name: 'ToolbarItem',
   mixins: [slotsMixin],
   props: {
     icon: {
