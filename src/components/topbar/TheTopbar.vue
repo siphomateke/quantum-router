@@ -12,14 +12,14 @@
       <div class="topbar-right">
         <b-dropdown
           :mobile-modal="false"
-          position="is-bottom-left">
+          position="is-bottom-left"
+          class="notification-dropdown">
           <TopbarItem
             slot="trigger"
             :badge="unreadNotifications.length"
             :badge-visible="unreadNotifications.length > 0"
             :title="$i18n('topbar.tooltips.notifications')"
-            icon="bell"
-            class="notification-dropdown"/>
+            icon="bell"/>
           <b-dropdown-item
             custom
             paddingless>
