@@ -1,8 +1,7 @@
 <template>
   <div class="topbar-wrapper">
     <div class="topbar">
-      <div class="topbar-left"/>
-      <div class="topbar-right">
+      <div class="topbar-left">
         <button
           class="button is-inverted"
           title="Toggle sidebar"
@@ -10,6 +9,7 @@
           <b-icon icon="bars"/>
         </button>
       </div>
+      <div class="topbar-right"/>
     </div>
   </div>
 </template>
@@ -39,7 +39,7 @@ export default {
   background: $topbar-background-color;
 
   .topbar-right {
-    flex-grow: 1;
+    margin-left: auto;
   }
 }
 </style>
