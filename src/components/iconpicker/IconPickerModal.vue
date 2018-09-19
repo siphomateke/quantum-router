@@ -27,7 +27,9 @@
           type="button"
           class="button is-white"
           @click="() => select(icon.id, iconPack.id, icon.name)">
-          <b-icon :icon="icon.id"/>
+          <b-icon
+            :pack="iconPack.id"
+            :icon="icon.id"/>
         </button>
       </b-tab-item>
     </b-tabs>
