@@ -21,6 +21,8 @@ export function createMainWindow() {
     // Allow cross-origin requests
     webPreferences: { webSecurity: false },
     icon: iconConfig.windowIcon,
+    minWidth: 300,
+    minHeight: 250,
   });
 
   if (isDevelopment) {
