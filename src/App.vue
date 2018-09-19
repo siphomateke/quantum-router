@@ -18,7 +18,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { modes } from '@/store';
-import TheTopbar from '@/components/TheTopbar.vue';
+import TheTopbar from '@/components/topbar/TheTopbar.vue';
 import TheSidebar from '@/components/sidebar/TheSidebar.vue';
 
 // TODO: Finish moving to Vuex

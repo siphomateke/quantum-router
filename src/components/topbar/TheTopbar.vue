@@ -10,45 +10,48 @@
         </button>
       </div>
       <div class="topbar-right">
-        <toolbar-item
-          :title="$i18n('topbar.tooltips.notifications')"
-          :badge="unreadNotifications.length"
-          :badge-visible="unreadNotifications.length > 0"
-          icon="bell"
-          class="notification-dropdown">
-          <template slot="dropdown">
-            <b-dropdown-item
-              custom
-              paddingless>
-              <notifications-popup
-                :list="unreadNotifications"
-                :loading="loadingNotifications"/>
-            </b-dropdown-item>
-          </template>
-        </toolbar-item>
-        <toolbar-item
+        <b-dropdown
+          :mobile-modal="false"
+          position="is-bottom-left">
+          <TopbarItem
+            slot="trigger"
+            :badge="unreadNotifications.length"
+            :badge-visible="unreadNotifications.length > 0"
+            :title="$i18n('topbar.tooltips.notifications')"
+            icon="bell"
+            class="notification-dropdown"/>
+          <b-dropdown-item
+            custom
+            paddingless>
+            <notifications-popup
+              :list="unreadNotifications"
+              :loading="loadingNotifications"/>
+          </b-dropdown-item>
+        </b-dropdown>
+        <TopbarItem
           :title="$i18n('topbar.tooltips.mobileData')"
           :is-active="mobileDataState"
           icon="plug"/>
-        <toolbar-item icon="wifi"/>
-        <toolbar-item
-          ref="modeToolbarItem"
-          :title="$i18n('topbar.tooltips.changeMode')"
-          :color="modeColor"
-          icon="bolt">
-          <template slot="dropdown">
-            <dropdown-select
-              :value="$mode"
-              @input="userChangedMode">
-              <dropdown-item
-                v-for="mode in modes"
-                :key="mode"
-                :value="mode">
-                {{ $i18n('modes.'+modeNames[mode]) }}
-              </dropdown-item>
-            </dropdown-select>
-          </template>
-        </toolbar-item>
+        <TopbarItem icon="wifi"/>
+        <b-dropdown
+          :mobile-modal="false"
+          position="is-bottom-left">
+          <TopbarItem
+            slot="trigger"
+            :title="$i18n('topbar.tooltips.changeMode')"
+            :color="modeColor"
+            icon="bolt"/>
+          <dropdown-select
+            :value="$mode"
+            @input="userChangedMode">
+            <dropdown-item
+              v-for="mode in modes"
+              :key="mode"
+              :value="mode">
+              {{ $i18n('modes.'+modeNames[mode]) }}
+            </dropdown-item>
+          </dropdown-select>
+        </b-dropdown>
       </div>
     </div>
   </div>
@@ -57,7 +60,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { modes, modeNames } from '@/store';
-import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
+import TopbarItem from './TopbarItem.vue';
 import NotificationsPopup from '@/components/notifications/NotificationsPopup.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
@@ -65,7 +68,7 @@ import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
 export default {
   name: 'TheTopbar',
   components: {
-    ToolbarItem,
+    TopbarItem,
     NotificationsPopup,
     DropdownItem,
     DropdownSelect,
@@ -129,3 +132,4 @@ export default {
   }
 }
 </style>
+

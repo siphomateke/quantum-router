@@ -45,10 +45,7 @@ $sidebar-z-index: 10;
 
 // Topbar
 $topbar-background-color: darken($sidebar-background-color, 10%);
-
-$toolbar-item-color: #fff;
-$toolbar-item-active-color: $success;
-$toolbar-item-hover-color: darken($toolbar-item-color, 20);
+$topbar-item-active-color: $success;
 
 // Page
 $page-background-color: #eee;
