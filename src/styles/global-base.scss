@@ -7,13 +7,34 @@
 
 @import "~font-awesome/css/font-awesome.min.css";
 
+html {
+  overflow-y: hidden;
+}
+
+html, body, #app, .app-wrapper, .page-wrapper {
+  height: 100%;
+}
+
 body {
   background: $page-background-color;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
 // For use in App.vue. Is a wrapper for all pages
 .page-wrapper {
   position: relative;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .page-content {

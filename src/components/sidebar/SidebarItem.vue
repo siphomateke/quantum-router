@@ -1,19 +1,22 @@
 <template>
   <router-link
     :to="{ name: link }"
-    class="drawer-item link"
-    active-class="active">
+    :title="label"
+    class="sidebar-item link"
+    active-class="active"
+    @click.native="$emit('click')">
     <b-icon
       v-if="icon"
       :icon="icon"
       pack="fa"
       class="fa-fw"/>
-    <span class="name">{{ label }}</span>
+    <span class="name text-after-icon">{{ label }}</span>
   </router-link>
 </template>
 
 <script>
 export default {
+  name: 'SidebarItem',
   props: {
     link: {
       type: String,

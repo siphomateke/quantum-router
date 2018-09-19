@@ -3,36 +3,8 @@
     <b-loading
       :active.sync="loading"
       :can-cancel="false"/>
-    <div class="app-wrapper columns is-gapless">
-      <drawer
-        title="Quantum Router"
-        class="column is-2">
-        <drawer-item
-          :label="this.$i18n('menu.home')"
-          link="home"
-          icon="home"/>
-        <drawer-item
-          :label="this.$i18n('menu.sms')"
-          link="sms"
-          icon="comment"/>
-        <drawer-item
-          :label="this.$i18n('menu.statistics')"
-          link="statistics"
-          icon="pie-chart"/>
-        <drawer-item
-          :label="this.$i18n('menu.services')"
-          link="services"
-          icon="terminal"/>
-        <drawer-item
-          :label="this.$i18n('menu.settings')"
-          link="settings"
-          icon="cog"/>
-        <drawer-item
-          :label="this.$i18n('menu.appSettings')"
-          link="app-settings"
-          icon="sliders"/>
-      </drawer>
-      <div class="column">
+    <TheTopbar @toggleSidebar="toggleSidebar">
+      <template slot="topbar-right">
         <q-toolbar>
           <template slot="toolbar-start">
             <q-toolbar-item
@@ -78,19 +50,22 @@
             <q-toolbar-item icon="wifi"/>
           </template>
         </q-toolbar>
-        <div class="page-wrapper">
-          <keep-alive>
-            <router-view/>
-          </keep-alive>
-        </div>
+      </template>
+    </TheTopbar>
+    <div class="app-wrapper">
+      <TheSidebar :collapsed.sync="sidebarCollapsed"/>
+      <div class="page-wrapper">
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Drawer from '@/components/drawer/Drawer.vue';
-import DrawerItem from '@/components/drawer/DrawerItem.vue';
+import TheSidebar from '@/components/sidebar/TheSidebar.vue';
+import TheTopbar from '@/components/TheTopbar.vue';
 import Toolbar from '@/components/toolbar/Toolbar.vue';
 import ToolbarItem from '@/components/toolbar/ToolbarItem.vue';
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
@@ -103,8 +78,8 @@ import NotificationsPopup from '@/components/notifications/NotificationsPopup.vu
 export default {
   name: 'App',
   components: {
-    drawer: Drawer,
-    'drawer-item': DrawerItem,
+    TheSidebar,
+    TheTopbar,
     'q-toolbar': Toolbar,
     'q-toolbar-item': ToolbarItem,
     'q-dropdown-item': DropdownItem,
@@ -117,6 +92,7 @@ export default {
         graph: 1000,
         basic: 3000,
       },
+      sidebarCollapsed: false,
     };
   },
   computed: {
@@ -224,6 +200,9 @@ export default {
     },
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
+    },
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
     },
   },
 };
