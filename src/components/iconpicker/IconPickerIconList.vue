@@ -23,7 +23,11 @@ export default {
     iconPack: {
       type: Object,
       default: null,
-      validator: value => 'icons' in value && 'id' in value && 'name' in value,
+      validator(value) {
+        return Array.isArray(value.icons)
+            && typeof value.id === 'string'
+            && typeof value.name === 'string';
+      },
     },
     search: {
       type: String,
