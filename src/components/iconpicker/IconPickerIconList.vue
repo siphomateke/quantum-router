@@ -49,7 +49,7 @@ export default {
               if (typeof icon[prop] === 'string' && icon[prop].toLowerCase().includes(this.searchLowerCase)) {
                 return true;
               } else if (Array.isArray(icon[prop])) {
-                const regex = new RegExp(this.searchLowerCase);
+                const regex = new RegExp(this.searchLowerCase, 'i');
                 const match = regex.test(icon[prop].join('|'));
                 if (match) {
                   return true;
