@@ -6,7 +6,7 @@
         <b-input
           ref="search"
           :value="search"
-          placeholder="Search (en)"
+          :placeholder="searchPlaceholder"
           type="search"
           icon="search"
           @input="searchChange"/>
@@ -50,6 +50,10 @@ export default {
     title: {
       type: String,
       default: 'Choose an icon',
+    },
+    searchPlaceholder: {
+      type: String,
+      default: 'Search (en)',
     },
   },
   data() {

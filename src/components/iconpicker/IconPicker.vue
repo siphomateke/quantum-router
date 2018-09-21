@@ -6,7 +6,8 @@
       <icon-picker-modal
         :icon-packs="iconPacks"
         v-model="icon"
-        :title="pickerTitle"/>
+        :title="pickerTitle"
+        :search-placeholder="$i18n('iconPicker.searchPlaceholder')"/>
     </b-modal>
     <b-field
       :type="fieldType"

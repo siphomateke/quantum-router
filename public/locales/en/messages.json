@@ -56,7 +56,8 @@
 
   "iconPicker": {
     "button": "Choose",
-    "title": "Choose an icon"
+    "title": "Choose an icon",
+    "searchPlaceholder": "Search (en)"
   },
 
   "topbar": {
