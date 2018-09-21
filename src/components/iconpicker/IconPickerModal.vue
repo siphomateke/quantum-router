@@ -37,7 +37,6 @@
 import { selectedIcon } from './props';
 import IconPickerIconList from './IconPickerIconList.vue';
 
-// FIXME: tab change animation lag
 // TODO: Only show tabs if there is more than one iconPack
 // TODO: Don't remake modal everytime it's opened, use a global instance
 export default {
