@@ -10,7 +10,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "buefy": "^0.6.6",
+    "buefy": "0.6.6",
     "bulma-badge": "^2.0.0",
     "chart.js": "^2.7.2",
     "dotty": "^0.1.0",
@@ -27,6 +27,7 @@
     "vue-cli-plugin-electron-builder": "^1.0.0-rc.2",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
+    "vue-virtual-collection": "^1.3.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

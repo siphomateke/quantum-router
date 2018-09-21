@@ -12,20 +12,24 @@
           @input="searchChange"/>
       </b-field>
     </header>
-    <b-tabs
-      v-model="activeTab"
-      class="modal-card-tabs">
-      <b-tab-item
-        v-for="iconPack in iconPacks"
-        :key="iconPack.id"
-        :label="iconPack.name">
-        <IconPickerIconList
-          :search="search"
-          :icon-pack="iconPack"
-          :value="value"
-          @select="select"/>
-      </b-tab-item>
-    </b-tabs>
+    <main class="modal-card-body">
+      <div class="tabs">
+        <ul>
+          <li
+            v-for="(iconPack, index) in iconPacks"
+            :key="iconPack.id"
+            :label="iconPack.name"
+            :class="{'is-active': index === activeTab}">
+            <a @click="activeTab = index"><span>{{ iconPack.name }}</span></a>
+          </li>
+        </ul>
+      </div>
+      <IconPickerIconList
+        :search="search"
+        :icon-pack="iconPacks[activeTab]"
+        :value="value"
+        @select="select"/>
+    </main>
   </div>
 </template>
 
@@ -79,18 +83,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-card-tabs.b-tabs {
-  background-color: white;
-  flex-grow: 1;
-  flex-shrink: 1;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  .tab-content {
-    overflow: auto;
-  }
+<style lang="scss" scoped>
+.modal-card-body {
+  padding: 0;
 }
 </style>
