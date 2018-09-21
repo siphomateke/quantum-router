@@ -5,7 +5,11 @@
 @import "~buefy/src/scss/buefy";
 @import "~styles/bulma-extensions";
 
-@import "~font-awesome/css/font-awesome.min.css";
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons";
 
 html {
   overflow-y: hidden;

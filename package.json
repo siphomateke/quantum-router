@@ -10,6 +10,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@mdi/font": "^2.7.94",
     "buefy": "0.6.6",
     "bulma-badge": "^2.0.0",
     "chart.js": "^2.7.2",
@@ -35,6 +36,8 @@
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-airbnb": "^3.0.1",
     "imports-loader": "^0.8.0",
+    "js-yaml": "^3.12.0",
+    "node-fetch": "^2.2.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"
