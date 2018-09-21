@@ -1,9 +1,9 @@
 import moment from 'moment';
 
-export function memoize(func) {
+export function memoizeAdvanced(func, keyFunc) {
   const cache = {};
   return (...args) => {
-    const key = JSON.stringify(args);
+    const key = keyFunc(...args);
     if (cache[key]) {
       return cache[key];
     }
@@ -12,6 +12,11 @@ export function memoize(func) {
     cache[key] = val;
     return val;
   };
+}
+
+
+export function memoize(func) {
+  return memoizeAdvanced(func, (...args) => JSON.stringify(args));
 }
 
 export const momentFormat = memoize((date, format) => moment(date).format(format));

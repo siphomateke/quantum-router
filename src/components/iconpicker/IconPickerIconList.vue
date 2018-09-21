@@ -29,6 +29,27 @@
 
 <script>
 import { selectedIcon } from './props';
+import { memoizeAdvanced } from '@/utils';
+
+const searchProps = ['id', 'name', 'filter', 'categories'];
+let iconSearchIndex = [];
+
+const getIconSearchIndex = memoizeAdvanced((iconPack) => {
+  const { icons } = iconPack;
+  return icons.map((icon) => {
+    let toSearch = [];
+    for (const prop of searchProps) {
+      if (icon[prop]) {
+        if (typeof icon[prop] === 'string') {
+          toSearch.push(icon[prop]);
+        } else if (Array.isArray(icon[prop])) {
+          toSearch = toSearch.concat(icon[prop]);
+        }
+      }
+    }
+    return toSearch.join('|').toLowerCase();
+  });
+}, iconPack => iconPack.id);
 
 export default {
   props: {
@@ -59,24 +80,8 @@ export default {
     },
     visibleIcons() {
       const { icons } = this.iconPack;
-      if (this.search && this.search.length > 0) {
-        return icons.filter((icon) => {
-          const toMatch = ['id', 'name', 'filter', 'categories'];
-          for (const prop of toMatch) {
-            if (icon[prop]) {
-              if (typeof icon[prop] === 'string' && icon[prop].toLowerCase().includes(this.searchLowerCase)) {
-                return true;
-              } else if (Array.isArray(icon[prop])) {
-                const regex = new RegExp(this.searchLowerCase, 'i');
-                const match = regex.test(icon[prop].join('|'));
-                if (match) {
-                  return true;
-                }
-              }
-            }
-          }
-          return false;
-        });
+      if (this.search) {
+        return icons.filter((icon, i) => iconSearchIndex[i].includes(this.searchLowerCase));
       }
       return icons;
     },
@@ -84,7 +89,13 @@ export default {
       return this.visibleIcons.map(icon => ({ data: icon }));
     },
   },
+  watch: {
+    iconPack() {
+      this.refreshIconSearchIndex();
+    },
+  },
   async mounted() {
+    this.refreshIconSearchIndex();
     this.$nextTick(() => {
       this.onWindowResize();
       window.addEventListener('resize', this.onWindowResize);
@@ -116,6 +127,9 @@ export default {
     onWindowResize() {
       this.collectionWidth = this.$refs.wrapper.clientWidth;
       this.collectionHeight = this.$refs.wrapper.clientHeight;
+    },
+    refreshIconSearchIndex() {
+      iconSearchIndex = getIconSearchIndex(this.iconPack);
     },
   },
 };
