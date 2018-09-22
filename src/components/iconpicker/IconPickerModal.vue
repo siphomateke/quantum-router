@@ -69,6 +69,9 @@ export default {
     };
   },
   mounted() {
+    if (this.value.pack) {
+      this.activeTab = this.iconPacks.findIndex(pack => pack.id === this.value.pack);
+    }
     this.$refs.search.focus();
   },
   methods: {
