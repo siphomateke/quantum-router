@@ -110,7 +110,7 @@ export default {
         }
         Toast.open({
           type: 'is-danger',
-          message: `Error: ${message}`,
+          message: i18n.getMessage('generic.error', { error: message }),
         });
       }
       // TODO: log errors
