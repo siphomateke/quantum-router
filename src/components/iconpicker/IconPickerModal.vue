@@ -6,63 +6,60 @@
         <b-input
           ref="search"
           :value="search"
-          placeholder="Search (en)"
+          :placeholder="searchPlaceholder"
           type="search"
           icon="search"
           @input="searchChange"/>
       </b-field>
     </header>
-    <b-tabs
-      v-model="activeTab"
-      class="modal-card-tabs">
-      <b-tab-item
-        v-for="iconPack in iconPacks"
-        :key="iconPack.id"
-        :label="iconPack.name">
-        <button
-          v-for="icon in (search.length > 0 ? visibleIcons : iconPack.icons)"
-          :key="icon.id"
-          :class="{'is-primary': icon.id === value.id, 'is-transparent': icon.id !== value.id}"
-          :title="icon.name"
-          type="button"
-          class="button"
-          @click="() => select(icon.id, iconPack.id, icon.name)">
-          <b-icon
-            :pack="iconPack.id"
-            :icon="icon.id"/>
-        </button>
-      </b-tab-item>
-    </b-tabs>
+    <main class="modal-card-body">
+      <div
+        v-if="iconPacks.length > 1"
+        class="tabs">
+        <ul>
+          <li
+            v-for="(iconPack, index) in iconPacks"
+            :key="iconPack.id"
+            :label="iconPack.name"
+            :class="{'is-active': index === activeTab}">
+            <a @click="activeTab = index">
+              <span>{{ iconPack.name }}</span
+            ></a>
+          </li>
+        </ul>
+      </div>
+      <IconPickerIconList
+        :search="search"
+        :icon-pack="iconPacks[activeTab]"
+        :value="value"
+        @input="input"/>
+    </main>
   </div>
 </template>
 
 <script>
-// FIXME: tab change animation lag
-// TODO: Only show tabs if there is more than one iconPack
+import { selectedIcon } from './props';
+import IconPickerIconList from './IconPickerIconList.vue';
+
 // TODO: Don't remake modal everytime it's opened, use a global instance
 export default {
   name: 'IconPickerModal',
+  components: {
+    IconPickerIconList,
+  },
   props: {
     iconPacks: {
       type: Array,
       default: () => [],
     },
-    value: {
-      type: Object,
-      default() {
-        return {
-          id: '',
-          pack: '',
-        };
-      },
-      validator(value) {
-        return typeof value.id === 'string'
-            && typeof value.pack === 'string';
-      },
-    },
+    value: selectedIcon,
     title: {
       type: String,
       default: 'Choose an icon',
+    },
+    searchPlaceholder: {
+      type: String,
+      default: 'Search (en)',
     },
   },
   data() {
@@ -71,39 +68,17 @@ export default {
       search: '',
     };
   },
-  computed: {
-    visibleIcons() {
-      const { icons } = this.iconPacks[this.activeTab];
-      if (this.search && this.search.length > 0) {
-        return icons.filter((icon) => {
-          const toMatch = ['id', 'name', 'filter', 'categories'];
-          for (const prop of toMatch) {
-            if (icon[prop]) {
-              if (typeof icon[prop] === 'string' && icon[prop].toLowerCase().includes(this.search)) {
-                return true;
-              } else if (Array.isArray(icon[prop])) {
-                const regex = new RegExp(this.search, 'i');
-                const match = regex.test(icon[prop].join('|'));
-                if (match) {
-                  return true;
-                }
-              }
-            }
-          }
-          return false;
-        });
-      }
-      return icons;
-    },
-  },
   mounted() {
+    if (this.value.pack) {
+      this.activeTab = this.iconPacks.findIndex(pack => pack.id === this.value.pack);
+    }
     this.$refs.search.focus();
   },
   methods: {
     searchChange(value) {
-      this.search = value.toLowerCase();
+      this.search = value;
     },
-    select(id, pack, name) {
+    input({ id, pack, name }) {
       this.$emit('input', { id, pack, name });
       if ('close' in this.$parent && typeof this.$parent.close === 'function') {
         this.$parent.close();
@@ -113,18 +88,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-card-tabs.b-tabs {
-  background-color: white;
-  flex-grow: 1;
-  flex-shrink: 1;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  .tab-content {
-    overflow: auto;
-  }
+<style lang="scss" scoped>
+.modal-card-body {
+  padding: 0;
 }
 </style>

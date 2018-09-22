@@ -6,12 +6,15 @@ import App from './App.vue';
 import router from './vue-router';
 import store from './store';
 import bus from './events';
+import VirtualCollection from 'vue-virtual-collection';
 
 Vue.config.productionTip = false;
 
 Vue.use(Buefy, {
   defaultIconPack: 'fa',
 });
+
+Vue.use(VirtualCollection);
 
 Vue.mixin({
   data() {
