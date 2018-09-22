@@ -30,27 +30,9 @@
 <script>
 import { selectedIcon } from './props';
 import { memoizeAdvanced } from '@/utils';
+import { searchIcons, generateCacheId } from './search';
 
-const searchProps = ['id', 'name', 'filter', 'categories'];
-let iconSearchIndex = [];
-
-const getIconSearchIndex = memoizeAdvanced((iconPack) => {
-  const { icons } = iconPack;
-  return icons.map((icon) => {
-    let toSearch = [];
-    for (const prop of searchProps) {
-      if (icon[prop]) {
-        if (typeof icon[prop] === 'string') {
-          toSearch.push(icon[prop]);
-        } else if (Array.isArray(icon[prop])) {
-          toSearch = toSearch.concat(icon[prop]);
-        }
-      }
-    }
-    return toSearch.join('|').toLowerCase();
-  });
-}, iconPack => iconPack.id);
-
+// TODO: Update icon search index when an icon pack has been modified
 export default {
   props: {
     iconPack: {
@@ -79,23 +61,17 @@ export default {
       return this.search.toLowerCase();
     },
     visibleIcons() {
-      const { icons } = this.iconPack;
-      if (this.search) {
-        return icons.filter((icon, i) => iconSearchIndex[i].includes(this.searchLowerCase));
+      if (this.searchLowerCase) {
+        const cacheId = generateCacheId({ iconPackId: this.iconPack.id });
+        return searchIcons(cacheId, this.iconPack.icons, this.searchLowerCase);
       }
-      return icons;
+      return this.iconPack.icons;
     },
     visibleCollection() {
       return this.visibleIcons.map(icon => ({ data: icon }));
     },
   },
-  watch: {
-    iconPack() {
-      this.refreshIconSearchIndex();
-    },
-  },
   async mounted() {
-    this.refreshIconSearchIndex();
     this.$nextTick(() => {
       this.onWindowResize();
       window.addEventListener('resize', this.onWindowResize);
@@ -127,9 +103,6 @@ export default {
     onWindowResize() {
       this.collectionWidth = this.$refs.wrapper.clientWidth;
       this.collectionHeight = this.$refs.wrapper.clientHeight;
-    },
-    refreshIconSearchIndex() {
-      iconSearchIndex = getIconSearchIndex(this.iconPack);
     },
   },
 };
