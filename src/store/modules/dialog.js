@@ -18,9 +18,10 @@ export const types = {
 /**
  * Adds default dialog parameters
  * @param {*} data
+ * @param {string} type
  * @return {DialogData}
  */
-function processDialogData(data = {}) {
+function processDialogData(data = {}, type) {
   if (['warning', 'info', 'danger', 'success'].includes(data.type) && !('hasIcon' in data)) {
     data.hasIcon = true;
   }
@@ -28,8 +29,13 @@ function processDialogData(data = {}) {
     data.type = `is-${data.type}`;
   }
   const defaults = {};
-  defaults.confirmText = i18n.getMessage('generic.ok');
-  defaults.cancelText = i18n.getMessage('generic.cancel');
+  if (type !== 'confirm') {
+    defaults.confirmText = i18n.getMessage('generic.ok');
+    defaults.cancelText = i18n.getMessage('generic.cancel');
+  } else {
+    defaults.confirmText = i18n.getMessage('generic.yes');
+    defaults.cancelText = i18n.getMessage('generic.no');
+  }
   return Object.assign(defaults, data);
 }
 
@@ -61,7 +67,7 @@ export default {
       }
     },
     open({ commit }, { type, data }) {
-      data = processDialogData(data);
+      data = processDialogData(data, type);
       // NOTE: We are currently not checking when a dialog is closed.
       // Thus, we can't use this module to check if a dialog is open.
       commit(types.ADD_CATEGORY, data.category);

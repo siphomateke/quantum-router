@@ -374,8 +374,6 @@ export default {
       dispatch('dialog/confirm', {
         message: i18n.getMessage('sms.actions.import.notEnoughSpaceWarning', { available, count: toImport }),
         type: 'warning',
-        confirmText: i18n.getMessage('generic.yes'),
-        cancelText: i18n.getMessage('generic.no'),
         onConfirm: () => {
           dispatch('import');
         },
