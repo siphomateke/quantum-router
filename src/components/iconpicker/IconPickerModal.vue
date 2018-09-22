@@ -13,14 +13,18 @@
       </b-field>
     </header>
     <main class="modal-card-body">
-      <div class="tabs">
+      <div
+        v-if="iconPacks.length > 1"
+        class="tabs">
         <ul>
           <li
             v-for="(iconPack, index) in iconPacks"
             :key="iconPack.id"
             :label="iconPack.name"
             :class="{'is-active': index === activeTab}">
-            <a @click="activeTab = index"><span>{{ iconPack.name }}</span></a>
+            <a @click="activeTab = index">
+              <span>{{ iconPack.name }}</span
+            ></a>
           </li>
         </ul>
       </div>
@@ -37,7 +41,6 @@
 import { selectedIcon } from './props';
 import IconPickerIconList from './IconPickerIconList.vue';
 
-// TODO: Only show tabs if there is more than one iconPack
 // TODO: Don't remake modal everytime it's opened, use a global instance
 export default {
   name: 'IconPickerModal',
