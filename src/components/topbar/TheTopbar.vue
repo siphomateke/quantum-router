@@ -31,7 +31,8 @@
         <TopbarItem
           :title="$i18n('topbar.tooltips.mobileData')"
           :is-active="mobileDataState"
-          icon="plug"/>
+          icon="plug"
+          @click="toggleMobileData"/>
         <TopbarItem icon="wifi"/>
         <b-dropdown
           :mobile-modal="false"
@@ -65,6 +66,7 @@ import NotificationsPopup from '@/components/notifications/NotificationsPopup.vu
 import DropdownItem from '@/components/dropdown/DropdownItem.vue';
 import DropdownSelect from '@/components/dropdown/DropdownSelect.vue';
 
+// TODO: Give a hint to the user to let them know they can toggle mobile data by pressing the mobile data icon.
 export default {
   name: 'TheTopbar',
   components: {
@@ -109,6 +111,30 @@ export default {
     }),
     userChangedMode(newMode) {
       this.tryChangeMode(newMode);
+    },
+    async toggleMobileData() {
+      if (this.$mode > modes.OFFLINE) {
+        try {
+          await this.$store.dispatch('settings/getMobileDataSwitch');
+          await this.$store.dispatch('dialog/confirm', {
+            message: this.$i18n(`settings.${this.mobileDataState ? 'confirmTurnOffMobileData' : 'confirmTurnOnMobileData'}`),
+            onConfirm: async () => {
+              try {
+                await this.$store.dispatch('settings/setMobileDataSwitch', !this.mobileDataState);
+              } catch (e) {
+                this.$store.dispatch('handleError', e);
+              }
+            },
+          });
+        } catch (e) {
+          this.$store.dispatch('handleError', e);
+        }
+      } else {
+        await this.$store.dispatch('dialog/alert', {
+          message: this.$i18n('settings.mobileDataOfflineError'),
+          type: 'danger',
+        });
+      }
     },
   },
 };

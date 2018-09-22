@@ -2,7 +2,8 @@
   <div
     :class="{'active': isActive}"
     :style="{color: color}"
-    class="topbar-item button is-transparent is-inverted">
+    class="topbar-item button is-transparent is-inverted"
+    @click="$emit('click')">
     <BaseBadge
       :content="badge"
       :visible="badgeVisible">

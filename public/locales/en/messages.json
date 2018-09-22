@@ -190,7 +190,10 @@
   },
 
   "settings": {
-    "adminOnly": "You must be in administrator mode to change settings."
+    "adminOnly": "You must be in administrator mode to change settings.",
+    "confirmTurnOffMobileData": "Are you sure you want to turn off mobile data?",
+    "confirmTurnOnMobileData": "Are you sure you want to turn on mobile data?",
+    "mobileDataOfflineError": "You must be connected to the router to turn mobile data on or off."
   },
 
   "appSettings": {
