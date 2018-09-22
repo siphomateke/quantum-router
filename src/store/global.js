@@ -79,7 +79,7 @@ export default {
           if (router.config.getUrl().length > 0) {
             dispatch('dialog/warning', {
               message: i18n.getMessage('errors.invalidRouterUrlError', { url: router.config.getUrl() }),
-              confirmText: i18n.getMessage('sms.modeDialog.openSettings'),
+              confirmText: i18n.getMessage('modeDialog.openSettings'),
               onConfirm: () => {
                 dispatch('openSettingsPage');
               },
@@ -88,7 +88,7 @@ export default {
           } else {
             dispatch('dialog/warning', {
               message: i18n.getMessage('errors.emptyRouterUrlError'),
-              confirmText: i18n.getMessage('sms.modeDialog.openSettings'),
+              confirmText: i18n.getMessage('modeDialog.openSettings'),
               onConfirm: () => {
                 dispatch('openSettingsPage');
               },
@@ -159,7 +159,7 @@ export default {
                 }
                 dispatch('dialog/warning', {
                   message: errorMessage,
-                  confirmText: i18n.getMessage('sms.modeDialog.retry'),
+                  confirmText: i18n.getMessage('modeDialog.retry'),
                   onConfirm: () => {
                     dispatch('tryChangeMode', newMode);
                   },
@@ -174,7 +174,7 @@ export default {
             if (e instanceof RouterError && router.errors.isErrorInCategory(e.code, 'connection')) {
               dispatch('dialog/warning', {
                 message: i18n.getMessage('errors.connectionError', { url: router.config.getUrl() }),
-                confirmText: i18n.getMessage('sms.modeDialog.retry'),
+                confirmText: i18n.getMessage('modeDialog.retry'),
                 onConfirm: () => {
                   dispatch('tryChangeMode', newMode);
                 },
