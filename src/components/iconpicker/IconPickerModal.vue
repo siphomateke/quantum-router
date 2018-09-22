@@ -32,7 +32,7 @@
         :search="search"
         :icon-pack="iconPacks[activeTab]"
         :value="value"
-        @select="select"/>
+        @input="input"/>
     </main>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default {
     searchChange(value) {
       this.search = value;
     },
-    select({ id, pack, name }) {
+    input({ id, pack, name }) {
       this.$emit('input', { id, pack, name });
       if ('close' in this.$parent && typeof this.$parent.close === 'function') {
         this.$parent.close();

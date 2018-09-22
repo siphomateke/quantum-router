@@ -17,7 +17,7 @@
         :title="icon.name"
         type="button"
         class="button is-large"
-        @click="select(icon)">
+        @click="input(icon)">
         <b-icon
           :pack="iconPack.id"
           :icon="icon.id"
@@ -105,8 +105,8 @@ export default {
     window.removeEventListener('resize', this.onWindowResize);
   },
   methods: {
-    select(icon) {
-      this.$emit('select', {
+    input(icon) {
+      this.$emit('input', {
         id: icon.id,
         name: icon.name,
         pack: this.iconPack.id,
