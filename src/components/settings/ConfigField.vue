@@ -1,7 +1,7 @@
 <template>
   <div class="config-field">
     <div class="columns">
-      <div class="column is-3">
+      <div class="column is-5">
         <h6 class="title is-6">{{ label }}</h6>
         <h6
           v-if="description"
