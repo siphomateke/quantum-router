@@ -18,7 +18,7 @@
         <p class="control">
           <span
             :title="iconName"
-            class="button is-static">
+            class="button is-static icon-preview">
             <b-icon
               :pack="iconPackId"
               :icon="iconId"/>
@@ -67,7 +67,6 @@
 // TODO: Improve validation messages; we don't need multiple nested fields.
 // Perhaps make the root element a field so it's label can be modified
 // from the outside
-// TODO: Fix title attribute on static icon button when compact=false
 // TODO: Add autocomplete to icon ID input
 import icons from '@/icons';
 import i18n from '@/platform/i18n';
@@ -195,3 +194,16 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+/*
+Make sure title attribute shows up on icon attached to input.
+Bulma disables all pointer events instead of just resetting the cursor.
+*/
+.icon-preview.button.is-static {
+  pointer-events: auto;
+  &, &:hover {
+    cursor: default;
+  }
+}
+</style>
