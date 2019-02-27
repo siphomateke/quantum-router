@@ -1,6 +1,6 @@
 let router = null;
 if (process.type === 'renderer') {
-  router = require('huawei-router-api/dist/browser.cjs').default;
+  router = require('huawei-router-api/dist/browser.es').default;
 } else {
   router = require('huawei-router-api').default;
 }
