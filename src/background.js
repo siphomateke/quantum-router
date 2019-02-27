@@ -1,7 +1,7 @@
 import { app, protocol, ipcMain } from 'electron';
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 import { getMainWindow, createMainWindow } from '@/electron/window';
-import i18n, { getCurrentLanguageData, waitForTranslationsToLoad } from '@/electron/i18n';
+import { getCurrentLanguageData, waitForTranslationsToLoad, i18next as i18n } from '@/electron/i18n';
 import tray from '@/electron/tray';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';

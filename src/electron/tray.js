@@ -20,13 +20,13 @@ export default {
     tray = new Tray(iconConfig.trayIcon);
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: i18n.t('tray.contextMenu.toggle'),
+        label: i18n.getMessage('tray.contextMenu.toggle'),
         click: () => {
           toggleWindow(win);
         },
       },
       { type: 'separator' },
-      { label: i18n.t('tray.contextMenu.quit'), role: 'quit' },
+      { label: i18n.getMessage('tray.contextMenu.quit'), role: 'quit' },
     ]);
     tray.setToolTip(app.getName());
     tray.setContextMenu(contextMenu);

@@ -3,6 +3,7 @@ import LanguageDetector from 'i18next-electron-language-detector';
 import Backend from 'i18next-node-fs-backend';
 import * as path from 'path';
 import defaultOptions from '@/config/i18next';
+import { memoize } from '@/utils';
 
 i18next.use(Backend).use(LanguageDetector);
 
@@ -52,4 +53,8 @@ export function waitForTranslationsToLoad() {
   });
 }
 
-export default i18next;
+export { i18next };
+
+export default {
+  getMessage: memoize((key, ...args) => i18next.t(key, ...args)),
+};
