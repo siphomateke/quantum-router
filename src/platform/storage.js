@@ -1,4 +1,4 @@
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import electronStorage from '@/electron/storage';
 
 const { RouterError } = router.errors;

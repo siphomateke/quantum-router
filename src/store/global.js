@@ -1,7 +1,7 @@
 import { Toast } from 'buefy';
 import i18n from '@/common/i18n';
 import storage from '@/platform/storage';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import vueRouter from '@/vue-router';
 
 const { RouterError } = router.errors;

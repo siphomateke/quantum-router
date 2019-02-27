@@ -98,7 +98,7 @@
 <script>
 import { modes, modeNames } from '@/store';
 import smsTypeMixin from '@/mixins/smsType';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import IconPicker from '@/components/iconpicker';
 import ConfigField from '@/components/settings/ConfigField.vue';
 

@@ -1,6 +1,6 @@
 import storage from '@/platform/storage';
 import dotty from 'dotty';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import dialup from './dialup';
 import internal from './internal';
 

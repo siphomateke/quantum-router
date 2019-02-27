@@ -1,5 +1,5 @@
 import { mapState } from 'vuex';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 
 const smsTypes = router.sms.types;
 

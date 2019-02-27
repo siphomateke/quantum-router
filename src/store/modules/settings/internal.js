@@ -1,5 +1,5 @@
 import { modes } from '@/store/global';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 
 const smsTypes = router.sms.types;
 

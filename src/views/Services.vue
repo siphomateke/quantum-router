@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 
 const { RouterError } = router.errors;
 

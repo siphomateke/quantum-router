@@ -1,5 +1,5 @@
 import Notification from '@/common/notification';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import Notifier from '@/platform/notifications';
 import bus from '@/events';
 import { boxTypes } from '@/store/modules/sms';

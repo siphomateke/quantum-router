@@ -94,7 +94,7 @@
 import Vue from 'vue';
 import ActionButton from '@/components/ActionButton.vue';
 import smsTypeMixin from '@/mixins/smsType';
-import router from 'huawei-router-api/browser';
+import router from '@/common/huawei-router-api';
 import { selectors, selectionStates } from './select';
 
 const smsTypes = router.sms.types;
