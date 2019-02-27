@@ -53,10 +53,13 @@ export default {
     },
     async load({ dispatch }) {
       if (await storage.has('settings')) {
-        dispatch('set', {
+        await dispatch('set', {
           path: 'internal',
           value: await storage.get('settings'),
         });
+      } else {
+        // No settings found, use default settings instead
+        await dispatch('save');
       }
     },
   },
