@@ -1,4 +1,4 @@
-import { Toast } from 'buefy';
+import { Toast } from 'buefy/dist/components/toast';
 import i18n from '@/common/i18n';
 import storage from '@/platform/storage';
 import router from 'huawei-router-api/browser';

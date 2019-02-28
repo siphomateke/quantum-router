@@ -1,7 +1,8 @@
 import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
 import bus from '@/events';
 import i18n from '@/common/i18n';
-import { ModalProgrammatic, Toast } from 'buefy';
+import { ModalProgrammatic } from 'buefy/dist/components/modal';
+import { Toast } from 'buefy/dist/components/toast';
 import router from 'huawei-router-api/browser';
 import { boxTypes, mapBoxTypeToApi, mapBoxTypeToRouterBoxType } from './constants';
 import types from './mutation_types';
