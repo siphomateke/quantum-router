@@ -3,6 +3,7 @@ import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 import { getMainWindow, createMainWindow } from '@/electron/window';
 import { getCurrentLanguageData, waitForTranslationsToLoad, i18next as i18n } from '@/electron/i18n';
 import tray from '@/electron/tray';
+import createStore from '@/store/process-main';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 if (isDevelopment) {
@@ -32,6 +33,7 @@ readyPromises.push(new Promise((resolve) => {
 
 // create main BrowserWindow when electron and i18n is ready
 Promise.all(readyPromises).then(() => {
+  createStore();
   createMainWindow();
   tray.create(getMainWindow());
 

@@ -2002,6 +2002,10 @@ deepmerge@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-1.5.2.tgz#10499d868844cdad4fee0842df8c7f6f0c95a753"
 
+deepmerge@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.1.1.tgz#e862b4e45ea0555072bf51e7fd0d9845170ae768"
+
 deepmerge@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.0.1.tgz#25c1c24f110fb914f80001b925264dd77f3f4312"
@@ -7716,6 +7720,14 @@ vue-virtual-collection@^1.3.0:
 vue@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
+
+vuex-electron@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vuex-electron/-/vuex-electron-1.0.3.tgz#c8ce0fd06ed9d3beb8881bce39bf76c9fcdc5611"
+  integrity sha512-fPv6nQa3yllKHy+8GT/xBMLw95slnLQRAV7Rddr1rNwc369vZvT6j9mQs7easwWgdk/Cnqqcq2Uay1SQE9KahQ==
+  dependencies:
+    deepmerge "^2.1.1"
+    electron-store "^2.0.0"
 
 vuex@^3.0.1:
   version "3.0.1"

@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import Buefy from 'buefy';
+import VirtualCollection from 'vue-virtual-collection';
 import i18n from '@/platform/i18n';
 import App from './App.vue';
 import router from './vue-router';
-import store from './store';
+import store from './store/process-renderer';
 import bus from './events';
-import VirtualCollection from 'vue-virtual-collection';
 
 Vue.config.productionTip = false;
 

@@ -1,19 +1,24 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import settings from '@/store/modules/settings';
-import notifications from '@/store/modules/notifications';
-import sms from '@/store/modules/sms';
-import dialog from '@/store/modules/dialog';
-import global, { modes, modeNames } from '@/store/global';
+import { createSharedMutations } from 'vuex-electron';
+import settings from './modules/settings';
+import notifications from './modules/notifications';
+import sms from './modules/sms';
+import dialog from './modules/dialog';
+import global, { modes, modeNames } from './global';
 
 export { modes, modeNames };
 
 Vue.use(Vuex);
-export default new Vuex.Store(Object.assign(global, {
+
+export default Object.assign(global, {
   modules: {
     settings,
     notifications,
     sms,
     dialog,
   },
-}));
+  plugins: [
+    createSharedMutations(),
+  ],
+});
