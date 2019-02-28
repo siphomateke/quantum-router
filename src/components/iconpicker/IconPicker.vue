@@ -45,7 +45,7 @@
             <div class="media icon-autocomplete-list">
               <div class="media-left">
                 <b-icon
-                  :pack="icon.pack"
+                  :pack="iconPackId"
                   :icon="icon.id"
                 />
               </div>
