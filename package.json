@@ -2,6 +2,11 @@
   "name": "quantum",
   "version": "1.0.0",
   "private": true,
+  "description": "An app that replaces the default Huawei router interface",
+  "author": {
+    "name": "nextgensparx",
+    "email": "siphomateke@gmail.com"
+  },
   "scripts": {
     "lint": "vue-cli-service lint",
     "build:electron": "vue-cli-service build:electron",
@@ -41,11 +46,6 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"
-  },
-  "description": "An app that replaces the default Huawei router interface",
-  "author": {
-    "name": "nextgensparx",
-    "email": "siphomateke@gmail.com"
   },
   "main": "dist_electron/bundled/background.js"
 }
