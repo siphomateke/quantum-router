@@ -17,7 +17,7 @@
   "errors": {
     "errorWhenLoggingIn": "Failed to login; {{error}}",
     "unknownLoginError": "Failed to login to router. Make sure the username and password are correct.",
-    "connectionError": "Cannot connect to the router at <a href='{{url}}'>{{url}}</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='{{url}}'>{{url}}</a>) is correct in the app's settings.",
+    "connectionError": "Cannot connect to the router at <a href='{{url}}'>{{url}}</a>. Please make sure you are connected to the network. If the problem persists, make sure the router URL(<a href='{{url}}'>{{url}}</a>) is correct in the app's settings. Would you like to retry connecting to the router?",
     "invalidRouterUrlError": "Invalid router URL; {{url}}. Please set a valid URL in the app's options.",
     "emptyRouterUrlError": "Router URL is empty. Please set a valid URL in the app's options.",
     "routerModule": {
