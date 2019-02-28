@@ -43,6 +43,8 @@ Until I publish `huawei-router-api` to NPM, building this is a bit of a pain. Yo
 "huawei-router-api": "link:/path/to/huawei-router-api"
 ```
 
+Alternatively, download [huawei-router-api]([huawei-router-api](https://github.com/nextgensparx/huawei-router-api/)), then run `yarn link` in huawei-router-api and `yarn link "huawei-router-api"` in this repository.
+
 ### Project setup
 ```
 yarn install
