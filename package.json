@@ -23,7 +23,7 @@
     "electron": "^2.0.2",
     "electron-store": "^2.0.0",
     "font-awesome": "^4.7.0",
-    "huawei-router-api": "/media/storage/Programming/Web/NPM packages/huawei-router-api/",
+    "huawei-router-api": "file:../../NPM packages/huawei-router-api",
     "i18next": "^11.6.0",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-node-fs-backend": "^2.0.0",
