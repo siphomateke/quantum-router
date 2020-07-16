@@ -19,7 +19,7 @@ export function getMainWindow() {
 export function createMainWindow() {
   mainWindow = new BrowserWindow({
     // Allow cross-origin requests
-    webPreferences: { webSecurity: false },
+    webPreferences: { webSecurity: false, nodeIntegration: true },
     icon: iconConfig.windowIcon,
     minWidth: 300,
     minHeight: 250,

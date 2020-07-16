@@ -1,5 +1,5 @@
 import { app, protocol, ipcMain } from 'electron';
-import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { getMainWindow, createMainWindow } from '@/electron/window';
 import { getCurrentLanguageData, waitForTranslationsToLoad, i18next as i18n } from '@/electron/i18n';
 import tray from '@/electron/tray';
@@ -11,7 +11,9 @@ if (isDevelopment) {
 }
 
 // Standard scheme must be registered before the app is ready
-protocol.registerStandardSchemes(['app'], { secure: true });
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { standard: true, secure: true } },
+]);
 
 const readyPromises = [];
 
@@ -20,7 +22,7 @@ readyPromises.push(new Promise((resolve) => {
     resolve();
     if (isDevelopment && !process.env.IS_TEST) {
       // Install Vue Devtools
-      await installVueDevtools();
+      await installExtension(VUEJS_DEVTOOLS)
     }
   });
 }));

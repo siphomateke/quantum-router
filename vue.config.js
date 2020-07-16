@@ -28,6 +28,7 @@ module.exports = {
 
   pluginOptions: {
     electronBuilder: {
+      nodeIntegration: true,
       chainWebpackMainProcess: (config) => {
         config.resolve.alias.set('@', resolvePath('src'));
         return config;
@@ -36,4 +37,12 @@ module.exports = {
       builderOptions: electronBuilderOptions,
     },
   },
+
+  css: {
+    loaderOptions: {
+      sass: {
+        implementation: require('sass'),
+      },
+    },
+  }
 };

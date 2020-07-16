@@ -1,10 +1,11 @@
-import { Line, mixins } from 'vue-chartjs/dist/vue-chartjs';
+import { Line, mixins } from 'vue-chartjs';
 
-export default Line.extend({
+export default {
+  extends: Line,
   name: 'line-chart',
   mixins: [mixins.reactiveProp],
   props: ['options'],
   mounted() {
     this.renderChart(this.chartData, this.options);
   },
-});
+};

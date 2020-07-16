@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-electron-language-detector';
-import Backend from 'i18next-node-fs-backend';
+import Backend from 'i18next-fs-backend';
 import * as path from 'path';
 import defaultOptions from '@/config/i18next';
 import { memoize } from '@/utils';
