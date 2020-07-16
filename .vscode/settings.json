@@ -1,7 +1,8 @@
 {
   "search.exclude": {
     "**/dist": true,
-    "**/original_router": true
+    "**/original_router": true,
+    "build/*-icons.json": true
   },
   "npm.packageManager": "yarn",
   "eslint.packageManager": "yarn",
