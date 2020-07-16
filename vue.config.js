@@ -1,4 +1,5 @@
 const path = require('path');
+const electronBuilderOptions = require('./electron-builder.json');
 
 function resolvePath(pathToResolve) {
   return path.resolve(__dirname, pathToResolve);
@@ -31,6 +32,8 @@ module.exports = {
         config.resolve.alias.set('@', resolvePath('src'));
         return config;
       },
+      // TODO: Fix icons not showing in Linux package installers
+      builderOptions: electronBuilderOptions,
     },
   },
 };

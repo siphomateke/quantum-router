@@ -4,5 +4,13 @@
     "**/original_router": true
   },
   "npm.packageManager": "yarn",
-  "eslint.packageManager": "yarn"
+  "eslint.packageManager": "yarn",
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/electron-builder.json"
+      ],
+      "url": "https://json.schemastore.org/electron-builder"
+    }
+  ]
 }

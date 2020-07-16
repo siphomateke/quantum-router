@@ -1,0 +1,17 @@
+{
+  "appId": "com.siphomateke.quantum",
+  "productName": "Quantum Router",
+  "copyright": "Copyright © 2019 Sipho Mateke",
+  "win": {
+    "target": ["nsis", "portable"]
+  },
+  "linux": {
+    "category": "Network;Utility;System",
+    "target": ["AppImage", "tar.gz", "deb", "rpm"],
+    "synopsis": "Alternative Huawei router interface",
+    "icon": "build/icon.icns"
+  },
+  "deb": {
+    "packageCategory": "net"
+  }
+}
