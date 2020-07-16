@@ -23,7 +23,10 @@ export function createMainWindow() {
     icon: iconConfig.windowIcon,
     minWidth: 300,
     minHeight: 250,
+    autoHideMenuBar: true,
   });
+
+  mainWindow.setMenuBarVisibility(true);
 
   if (isDevelopment) {
     // Load the url of the dev server if in development mode
