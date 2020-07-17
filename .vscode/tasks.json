@@ -4,19 +4,19 @@
     {
       "label": "serve",
       "type": "npm",
-      "script": "serve:electron",
+      "script": "serve",
       "problemMatcher": []
     },
     {
       "label": "debug",
       "type": "npm",
-      "script": "debug:electron",
+      "script": "debug",
       "problemMatcher": []
     },
     {
       "label": "build",
       "type": "npm",
-      "script": "build:electron",
+      "script": "build",
       "problemMatcher": []
     },
     {
@@ -26,7 +26,10 @@
       "problemMatcher": [
         {
           "owner": "eslint",
-          "fileLocation": ["relative", "${workspaceFolder}"],
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
           "pattern": {
             "regexp": "^(.+?):\\s(.+)\\s\\((.+)\\)\\sat\\s(.+?):(\\d+):(\\d+):$",
             "severity": 1,
