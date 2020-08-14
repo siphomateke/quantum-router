@@ -6,7 +6,7 @@ function resolvePath(pathToResolve) {
 }
 
 module.exports = {
-  lintOnSave: false,
+  lintOnSave: true,
 
   pages: {
     index: {
@@ -18,6 +18,10 @@ module.exports = {
   chainWebpack: (config) => {
     config.resolve.alias.set('styles', resolvePath('src/styles'));
     config.entry('preload').add(resolvePath('src/styles/preload.scss'));
+    config.module
+      .rule('eslint')
+      .use('eslint-loader')
+      .tap(options => Object.assign(options, { fix: true }));
   },
 
   configureWebpack: {
