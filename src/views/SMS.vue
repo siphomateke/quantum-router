@@ -58,6 +58,16 @@
           />
         </b-tab-item>
       </b-tabs>
+      <div
+        v-show="selected.length > 0"
+        class="status-bar">
+        <template v-if="selected.length > 0">
+          {{ selected.length }} / {{ box.count }} messages selected
+        </template>
+        <template v-else>
+          {{ box.messages.length }} messages
+        </template>
+      </div>
       <b-modal
         ref="smsDialogModal"
         :active.sync="showSmsDialog"
@@ -255,11 +265,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import '~styles/vars.scss';
+
   .sms-action-wrapper{
     padding: 1rem;
   }
   .message-wrapper {
     padding: 1rem;
     padding-top: 0;
+  }
+  .page-content {
+    position: relative;
+  }
+  .status-bar {
+    position: fixed;
+    bottom: 0;
+    left:0;
+    right:0;
+    padding: 0.5em;
+    background: $success;
+    color: $text-invert;
+    border-top: 1px solid #a5a5a5;
+    text-align: center;
   }
 </style>
