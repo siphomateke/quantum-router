@@ -1,4 +1,4 @@
-import { modes } from '@/store/global';
+import { modes } from '@/store/renderer/global';
 import router from '@/common/huawei-router-api';
 
 const smsTypes = router.sms.types;

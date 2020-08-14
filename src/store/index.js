@@ -1,24 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { createSharedMutations } from 'vuex-electron';
-import settings from './modules/settings';
-import notifications from './modules/notifications';
-import sms from './modules/sms';
-import dialog from './modules/dialog';
-import global, { modes, modeNames } from './global';
+import store from './renderer';
+import { modes, modeNames } from './renderer/global';
 
 export { modes, modeNames };
 
-Vue.use(Vuex);
-
-export default Object.assign(global, {
-  modules: {
-    settings,
-    notifications,
-    sms,
-    dialog,
-  },
-  plugins: [
-    createSharedMutations(),
-  ],
-});
+export default store;

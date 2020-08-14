@@ -2,7 +2,7 @@ import Notification from '@/common/notification';
 import router from '@/common/huawei-router-api';
 import Notifier from '@/platform/notifications';
 import bus from '@/events';
-import { boxTypes } from '@/store/modules/sms';
+import { boxTypes } from '@/store/renderer/modules/sms';
 import storage from '@/platform/storage';
 
 export const types = {
