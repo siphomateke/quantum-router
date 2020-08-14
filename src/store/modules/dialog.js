@@ -1,5 +1,20 @@
-import { Dialog } from 'buefy';
+// import { Dialog } from 'buefy';
 import i18n from '@/common/i18n';
+import { webContents } from 'electron';
+
+const dummyDialog = (data) => {
+  console.log(`Dialog: ${JSON.stringify(data)}`);
+  return {
+    close() {
+      console.log(`Closed dialog ${JSON.stringify(data)}`);
+    },
+  };
+};
+const Dialog = {
+  alert: dummyDialog,
+  confirm: dummyDialog,
+  error: dummyDialog,
+};
 
 export const types = {
   ADD_CATEGORY: 'ADD_CATEGORY',
@@ -61,7 +76,8 @@ export default {
     closeCategory({ state, commit }, category) {
       if (category in state.categories) {
         for (const dialog of state.categories[category]) {
-          dialog.close();
+          // dialog.close();
+          // FIXME: Do me
         }
         commit(types.RESET_CATEGORY, category);
       }
@@ -74,6 +90,9 @@ export default {
       commit(types.ADD_DIALOG, {
         category: data.category,
         dialog: Dialog[type](data),
+      });
+      webContents.getAllWebContents().forEach((wc) => {
+        wc.send('show-dialog', { type, data });
       });
     },
     alert({ dispatch }, data) {

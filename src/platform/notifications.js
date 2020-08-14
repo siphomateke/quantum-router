@@ -1,4 +1,5 @@
 import iconConfig from '@/config/icons';
+import { Notification } from 'electron';
 
 export default class Notifier {
   /**
@@ -13,7 +14,8 @@ export default class Notifier {
       icon: iconConfig.notificationIcon,
     }, options);
     /* eslint-disable-next-line no-new */
-    new Notification(options.title, {
+    new Notification({
+      title: options.title,
       body: options.message,
       icon: options.icon,
     });

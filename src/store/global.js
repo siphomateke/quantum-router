@@ -1,8 +1,10 @@
-import { Toast } from 'buefy';
+// import { Toast } from 'buefy';
 import i18n from '@/common/i18n';
 import storage from '@/platform/storage';
 import router from '@/common/huawei-router-api';
-import vueRouter from '@/vue-router';
+// import vueRouter from '@/vue-router';
+
+const Toast = { open(...args) { console.log(`Toast: ${JSON.stringify(args)}`); } };
 
 const { RouterError } = router.errors;
 
@@ -55,9 +57,9 @@ export default {
   },
   actions: {
     openSettingsPage() {
-      vueRouter.push({
+      /* vueRouter.push({
         name: 'appSettings',
-      });
+      }); */
     },
     handleError({ dispatch }, e) {
       if (process.env.NODE_ENV === 'development') {
@@ -106,7 +108,7 @@ export default {
         if (e instanceof RouterError) {
           message = `${e.code} : ${e.message}`;
         } else {
-          message = e.message;
+          ({ message } = e);
         }
         Toast.open({
           type: 'is-danger',

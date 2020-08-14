@@ -1,10 +1,14 @@
-import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
+// import SmsActionDialog from '@/components/sms/dialogs/SmsActionDialog.vue';
 import bus from '@/events';
 import i18n from '@/common/i18n';
-import { ModalProgrammatic, Toast } from 'buefy';
+// import { ModalProgrammatic, Toast } from 'buefy';
 import router from '@/common/huawei-router-api';
 import { boxTypes, mapBoxTypeToApi, mapBoxTypeToRouterBoxType } from './constants';
 import types from './mutation_types';
+
+const SmsActionDialog = null;
+const ModalProgrammatic = { open() { console.log('modal'); } };
+const Toast = { open(...args) { console.log(`Toast: ${JSON.stringify(args)}`); } };
 
 export default {
   setCount({ commit }, count) {

@@ -17,6 +17,13 @@
             :options="chartOptions"
             :height="400"
           />
+          {{ lineChartData.labels }}
+          {{ lineChartData.datasets }}
+          <div
+            v-for="(item, index) in lineChartData.datasets[0].data"
+            :key="index">
+            {{ item }}
+          </div>
         </template>
         <template v-else>
           <b-message
@@ -31,7 +38,7 @@
 <script>
 import { modes } from '@/store';
 import LineChart from '@/components/charts/LineChart';
-import router from '@/common/huawei-router-api';
+// import router from '@/common/huawei-router-api';
 
 export default {
   name: 'Home',
@@ -88,11 +95,36 @@ export default {
       },
       usage: null,
       previousUsage: null,
+      historySize: 60,
     };
   },
   computed: {
     offline() {
       return !(this.$mode > modes.OFFLINE);
+    },
+    statisticsHistory() {
+      const { history } = this.$store.state.monitoring;
+      return history.slice(history.length - this.historySize, -1);
+    },
+  },
+  watch: {
+    statisticsHistory() {
+      let previousUsage = null;
+      for (let i = 0; i < this.statisticsHistory.length; i++) {
+        const data = this.statisticsHistory[i];
+
+        const usage = {};
+        usage.received = data.CurrentDownload / (1024 * 1024);
+        usage.sent = data.CurrentUpload / (1024 * 1024);
+
+        if (previousUsage) {
+          const diff = usage.received - previousUsage.received;
+          this.$set(this.lineChartData.labels, i, data.date);
+          this.$set(this.lineChartData.datasets[0].data, i, diff);
+        }
+
+        previousUsage = usage;
+      }
     },
   },
   mounted() {
@@ -108,7 +140,8 @@ export default {
     },
     async graph() {
       if (!this.offline) {
-        const data = await router.monitoring.getTrafficStatistics();
+        await this.$store.dispatch('monitoring/getTrafficStatistics');
+        /* const data = await router.monitoring.getTrafficStatistics();
         this.lineChartData = Object.assign({}, this.lineChartData);
 
         if (!this.usage) {
@@ -128,7 +161,7 @@ export default {
           this.lineChartData.datasets[0].data.push(diff);
         }
 
-        this.previousUsage = Object.assign({}, this.usage);
+        this.previousUsage = Object.assign({}, this.usage); */
       }
     },
   },
