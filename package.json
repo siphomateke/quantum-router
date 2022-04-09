@@ -28,7 +28,7 @@
     "i18next": "^19.6.2",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-fs-backend": "^1.0.7",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "vue": "^2.5.17",
     "vue-chartjs": "^3.5.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
